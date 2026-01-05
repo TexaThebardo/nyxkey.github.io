@@ -9,33 +9,89 @@
     <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/96/000000/hexagon.png">
 </head>
 <body>
-    <!-- Pantalla de carga -->
+    <!-- Pantalla de carga circular mejorada -->
     <div class="loading-screen" id="loadingScreen">
-        <div class="loading-content">
-            <div class="loading-logo">
-                <span class="logo-n">N</span>
-                <span class="logo-y">Y</span>
-                <span class="logo-x">X</span>
-            </div>
-            <h2 class="loading-title">Cargando Generator Key NYX Freemium</h2>
-            <p class="loading-subtitle">Esto demorará unos segundos porfavor tenga paciencia.</p>
-            
-            <div class="loading-animation">
-                <div class="spinner">
-                    <div class="spinner-circle"></div>
-                    <div class="spinner-circle"></div>
-                    <div class="spinner-circle"></div>
-                    <div class="spinner-circle"></div>
-                </div>
-                <div class="loading-progress">
-                    <div class="progress-bar" id="progressBar"></div>
-                    <span class="progress-text" id="progressText">0%</span>
+        <div class="loading-container">
+            <!-- Círculo de carga principal -->
+            <div class="circular-loader">
+                <div class="circular-track"></div>
+                <div class="circular-progress" id="circularProgress"></div>
+                <div class="circular-content">
+                    <div class="logo-loading">
+                        <span class="logo-n">N</span>
+                        <span class="logo-y">Y</span>
+                        <span class="logo-x">X</span>
+                    </div>
+                    <div class="loading-percentage" id="loadingPercentage">0%</div>
                 </div>
             </div>
             
-            <div class="loading-tip">
-                <i class="fas fa-lightbulb"></i>
-                <span>Tip: Las keys generadas son válidas por 24 horas</span>
+            <!-- Texto de carga -->
+            <div class="loading-text">
+                <h2 class="loading-title">Cargando Generator Key NYX Freemium</h2>
+                <p class="loading-subtitle">Esto demorará unos segundos porfavor tenga paciencia.</p>
+                
+                <!-- Mini loader adicional -->
+                <div class="mini-loader">
+                    <div class="mini-dots">
+                        <div class="mini-dot"></div>
+                        <div class="mini-dot"></div>
+                        <div class="mini-dot"></div>
+                        <div class="mini-dot"></div>
+                    </div>
+                    <span class="mini-text">Inicializando sistema...</span>
+                </div>
+                
+                <!-- Información de progreso -->
+                <div class="progress-steps">
+                    <div class="step active">
+                        <div class="step-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="step-text">
+                            <span class="step-title">Conectando al servidor</span>
+                            <span class="step-status" id="step1Status">Iniciando...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <div class="step-text">
+                            <span class="step-title">Cargando generador</span>
+                            <span class="step-status" id="step2Status">En espera</span>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fab fa-discord"></i>
+                        </div>
+                        <div class="step-text">
+                            <span class="step-title">Verificando Discord</span>
+                            <span class="step-status" id="step3Status">En espera</span>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="step-text">
+                            <span class="step-title">Preparando interfaz</span>
+                            <span class="step-status" id="step4Status">En espera</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Efectos decorativos -->
+            <div class="loading-effects">
+                <div class="effect-dot" style="top: 20%; left: 15%;"></div>
+                <div class="effect-dot" style="top: 40%; right: 20%;"></div>
+                <div class="effect-dot" style="bottom: 30%; left: 25%;"></div>
+                <div class="effect-dot" style="bottom: 15%; right: 30%;"></div>
             </div>
         </div>
     </div>
