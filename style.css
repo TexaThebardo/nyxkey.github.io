@@ -1,168 +1,146 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: "Segoe UI", sans-serif;
     box-sizing: border-box;
 }
 
 body {
-    background: #0b0b0f;
+    height: 100vh;
+    background: linear-gradient(180deg, #1a102b, #0b0614);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
-    height: 100vh;
-    overflow: hidden;
 }
 
-/* LOADING */
-#loading-screen {
-    position: fixed;
-    inset: 0;
-    background: #0b0b0f;
+/* PANEL */
+.panel {
+    width: 360px;
+    background: linear-gradient(180deg, #2a1c47, #12081f);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow:
+        0 0 30px rgba(139,92,246,0.45),
+        inset 0 0 0 1px rgba(255,255,255,0.05);
+    animation: panelIn 0.9s ease;
+}
+
+/* HEADER */
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    font-size: 22px;
+    letter-spacing: 6px;
+    font-weight: bold;
+    color: #b18cff;
+    text-shadow: 0 0 12px #8b5cf6;
+}
+
+.icons span {
+    margin-left: 10px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+/* TEXT */
+h2 {
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    text-align: center;
+    opacity: 0.7;
+    font-size: 14px;
+}
+
+.expire {
+    text-align: center;
+    margin: 10px 0 20px;
+    font-size: 13px;
+    opacity: 0.6;
+}
+
+/* INPUTS */
+.input-box {
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: opacity 0.8s ease;
-    z-index: 10;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 12px;
 }
 
-.loader {
-    position: relative;
-    width: 140px;
-    height: 140px;
+.input-box span {
+    margin-right: 10px;
+    opacity: 0.6;
 }
 
-svg {
-    width: 140px;
-    height: 140px;
-    transform: rotate(-90deg);
+.input-box input {
+    background: none;
+    border: none;
+    outline: none;
+    color: white;
+    width: 100%;
 }
 
-circle {
-    fill: none;
-    stroke-width: 10;
-    stroke: #222;
-}
-
-#progress-circle {
-    stroke: #7f5cff;
-    stroke-dasharray: 377;
-    stroke-dashoffset: 377;
-    transition: stroke-dashoffset 0.3s;
-}
-
-#progress-text {
-    position: absolute;
-    inset: 0;
+/* REMEMBER */
+.remember {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 20px;
+    gap: 8px;
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 18px;
 }
 
-/* MENU */
-#menu {
-    height: 100vh;
+/* BUTTONS */
+.buttons {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-}
-
-.hidden {
-    display: none;
-}
-
-h1 {
-    font-size: 48px;
-    letter-spacing: 10px;
-}
-
-.key-box {
-    background: #16161f;
-    padding: 15px 30px;
-    border-radius: 8px;
-    font-size: 18px;
+    gap: 12px;
 }
 
 button {
-    padding: 12px 30px;
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
     border: none;
-    border-radius: 6px;
-    background: #7f5cff;
-    color: white;
     cursor: pointer;
-    font-size: 16px;
+    font-weight: bold;
 }
 
-button:hover {
-    background: #6846e3;
+.login {
+    background: #5bd05b;
+    color: #0b1f0b;
 }
 
-/* NYX NEON BOX */
-.nyx-box {
-    width: 220px;
-    height: 220px;
-    border: 3px solid #8b5cf6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 14px;
-    box-shadow:
-        0 0 15px #8b5cf6,
-        0 0 30px rgba(139, 92, 246, 0.6);
-    animation: neonIn 1.2s ease forwards;
+.discord {
+    background: #6f7cff;
+    color: white;
 }
 
-/* TEXTO */
-.nyx-title {
-    font-size: 42px;
-    letter-spacing: 12px;
-    color: #b18cff;
-    text-shadow:
-        0 0 8px #8b5cf6,
-        0 0 18px #8b5cf6,
-        0 0 35px rgba(139, 92, 246, 0.9);
-    animation: neonPulse 2s infinite ease-in-out;
+/* FOOTER */
+.version {
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.5;
+    margin-top: 18px;
 }
 
-/* ENTRADA */
-@keyframes neonIn {
+/* ANIM */
+@keyframes panelIn {
     from {
         opacity: 0;
-        transform: scale(0.7) translateY(20px);
-        box-shadow: none;
+        transform: translateY(20px) scale(0.95);
     }
     to {
         opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
-/* SALIDA (para futuro uso) */
-.nyx-exit {
-    animation: neonOut 0.8s ease forwards;
-}
-
-@keyframes neonOut {
-    to {
-        opacity: 0;
-        transform: scale(1.2);
-        box-shadow: 0 0 60px #8b5cf6;
-    }
-}
-
-/* PULSO NEON */
-@keyframes neonPulse {
-    0%, 100% {
-        text-shadow:
-            0 0 8px #8b5cf6,
-            0 0 18px #8b5cf6,
-            0 0 35px rgba(139, 92, 246, 0.9);
-    }
-    50% {
-        text-shadow:
-            0 0 16px #a78bfa,
-            0 0 32px #a78bfa,
-            0 0 60px rgba(167, 139, 250, 1);
+        transform: none;
     }
 }
