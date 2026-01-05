@@ -204,4 +204,140 @@ loginForm.addEventListener('submit', async (e) => {
     loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...';
     loginButton.disabled = true;
     
-    // Simular ver
+    // Simular verificación con delay
+    await simulateVerification();
+    
+    // Verificar intentos máximos
+    if (loginAttempts >= MAX_ATTEMPTS) {
+        showToast('error', 'Maximum Attempts', 'Too many failed attempts. Please contact support.');
+        loginButton.innerHTML = '<i class="fas fa-lock"></i> LOCKED';
+        loginButton.disabled = true;
+        return;
+    }
+    
+    // Mostrar mensaje de clave expirada
+    showToast('warning', 'License Expired', 'Your key has expired. Please renew your subscription.');
+    
+    // Restaurar botón
+    loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> VERIFY & LOGIN';
+    loginButton.disabled = false;
+    
+    // Abrir modal con información
+    setTimeout(() => {
+        keyModal.classList.add('active');
+    }, 1000);
+});
+
+// Simular verificación de clave
+function simulateVerification() {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            // Aquí iría la lógica real de verificación
+            resolve({ valid: false, reason: 'expired' });
+        }, 2000);
+    });
+}
+
+// Botón Discord
+discordButton.addEventListener('click', () => {
+    showToast('info', 'Discord', 'Redirecting to Discord server...');
+    discordButton.innerHTML = '<i class="fab fa-discord fa-spin"></i> REDIRECTING...';
+    
+    setTimeout(() => {
+        window.open('https://discord.gg/example', '_blank');
+        discordButton.innerHTML = '<i class="fab fa-discord"></i> GET KEY ON DISCORD';
+    }, 1000);
+});
+
+// Botones de autenticación alternativa
+document.getElementById('hwidBtn').addEventListener('click', () => {
+    showToast('info', 'HWID Login', 'This feature requires the Nyx Executor application');
+});
+
+document.getElementById('fileBtn').addEventListener('click', () => {
+    // Simular selector de archivos
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.key,.txt,.nyx';
+    
+    fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            showToast('info', 'File Selected', `Loaded: ${file.name}`);
+            // Aquí iría la lógica para procesar el archivo
+        }
+    };
+    
+    fileInput.click();
+});
+
+// Manejar tecla Escape para cerrar modal
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && keyModal.classList.contains('active')) {
+        keyModal.classList.remove('active');
+    }
+});
+
+// Simular cambio de estado de conexión
+setInterval(() => {
+    const statusElement = document.getElementById('connectionStatus');
+    if (Math.random() > 0.95) {
+        statusElement.textContent = '● OFFLINE';
+        statusElement.classList.remove('connected');
+        statusElement.style.color = '#e74c3c';
+        showToast('warning', 'Connection Lost', 'Trying to reconnect...');
+        
+        setTimeout(() => {
+            statusElement.textContent = '● ONLINE';
+            statusElement.classList.add('connected');
+            statusElement.style.color = '#2ecc71';
+            showToast('success', 'Reconnected', 'Connection restored');
+        }, 3000);
+    }
+}, 15000);
+
+// Efecto de partículas para fondo (opcional)
+function createParticles() {
+    const container = document.querySelector('.container');
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.style.position = 'absolute';
+        particle.style.width = `${Math.random() * 3 + 1}px`;
+        particle.style.height = particle.style.width;
+        particle.style.background = `rgba(108, 99, 255, ${Math.random() * 0.3 + 0.1})`;
+        particle.style.borderRadius = '50%';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.pointerEvents = 'none';
+        container.appendChild(particle);
+        
+        // Animación
+        animateParticle(particle);
+    }
+}
+
+function animateParticle(particle) {
+    let x = parseFloat(particle.style.left);
+    let y = parseFloat(particle.style.top);
+    let xSpeed = (Math.random() - 0.5) * 0.1;
+    let ySpeed = (Math.random() - 0.5) * 0.1;
+    
+    function move() {
+        x += xSpeed;
+        y += ySpeed;
+        
+        // Rebotar en bordes
+        if (x < 0 || x > 100) xSpeed *= -1;
+        if (y < 0 || y > 100) ySpeed *= -1;
+        
+        particle.style.left = `${x}%`;
+        particle.style.top = `${y}%`;
+        
+        requestAnimationFrame(move);
+    }
+    
+    move();
+}
+
+// Iniciar partículas cuando la página esté cargada
+window.addEventListener('load', createParticles);
