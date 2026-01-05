@@ -8,268 +8,247 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-:root {
-    --bg: #f2f4f8;
-    --card: #ffffffcc;
-    --text: #1a1a1a;
-    --accent: #6c63ff;
+:root{
+    --bg:#f3f6fb;
+    --card:rgba(255,255,255,.85);
+    --text:#1a1a1a;
+    --accent:#4da3ff;
+    --accent-glow:rgba(77,163,255,.6);
 }
 
-[data-theme="dark"] {
-    --bg: linear-gradient(135deg, #0a0a15, #1a0033);
-    --card: rgba(20,20,40,0.9);
-    --text: #eaeaea;
-    --accent: #9b6bff;
+[data-theme="dark"]{
+    --bg:#0a0f1e;
+    --card:rgba(18,25,45,.92);
+    --text:#eaeaea;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
-}
-
-body {
-    background: var(--bg);
-    color: var(--text);
-    overflow: hidden;
-}
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
+body{background:var(--bg);color:var(--text);overflow:hidden}
 
 /* PARTICLES */
-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-}
+canvas{position:fixed;inset:0;z-index:-1}
 
-/* LOADING */
-#loader {
-    position: fixed;
-    inset: 0;
-    background: #0a0a15;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    z-index: 999;
+/* LOADER */
+#loader{
+    position:fixed;inset:0;
+    background:#0a0f1e;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999
 }
-
-.circle {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    border: 8px solid #333;
-    border-top-color: var(--accent);
-    animation: spin 1.5s linear infinite;
+.loader-circle{
+    width:120px;height:120px;
+    border-radius:50%;
+    border:8px solid #1e2a44;
+    border-top-color:var(--accent);
+    animation:spin 1.2s linear infinite
 }
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-bar{
+    width:220px;height:6px;
+    background:#1e2a44;
+    border-radius:10px;
+    overflow:hidden;
+    margin-top:20px
 }
-
-.progress {
-    width: 200px;
-    height: 6px;
-    background: #333;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 20px;
+.loader-bar span{
+    display:block;height:100%;
+    width:0%;
+    background:var(--accent);
+    transition:width .25s ease
 }
-
-.progress span {
-    display: block;
-    height: 100%;
-    width: 0%;
-    background: var(--accent);
-    transition: width .3s;
-}
-
-.check {
-    display: none;
-    font-size: 48px;
-    color: #2ecc71;
-    margin-top: 20px;
+.loader-check{
+    display:none;
+    font-size:46px;
+    color:#2ecc71;
+    margin-top:20px
 }
 
 /* SIDEBAR */
-.sidebar {
-    position: fixed;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: var(--card);
-    border-radius: 12px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.sidebar{
+    position:fixed;
+    left:14px;
+    top:50%;
+    transform:translateY(-50%);
+    background:var(--card);
+    backdrop-filter:blur(12px);
+    border-radius:14px;
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    gap:12px
 }
-
-.sidebar button {
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: var(--text);
+.sidebar button{
+    background:none;
+    border:none;
+    color:var(--text);
+    font-size:18px;
+    cursor:pointer
 }
 
 /* TOPBAR */
-.topbar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    padding: 15px 25px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--card);
-    border-bottom-left-radius: 16px;
+.topbar{
+    position:fixed;
+    top:0;right:0;
+    padding:14px 22px;
+    background:var(--card);
+    backdrop-filter:blur(12px);
+    border-bottom-left-radius:16px;
+    display:flex;
+    align-items:center;
+    gap:10px
 }
-
-.topbar img {
-    width: 32px;
-    border-radius: 50%;
-}
+.topbar img{width:32px;border-radius:50%}
 
 /* MAIN */
-.container {
-    display: none;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 1s ease forwards;
+.container{
+    display:none;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    animation:fade .8s ease forwards
 }
+@keyframes fade{from{opacity:0;transform:scale(.96)}to{opacity:1}}
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(.95); }
-    to { opacity: 1; }
-}
-
-.box {
-    background: var(--card);
-    padding: 30px;
-    border-radius: 18px;
-    width: 380px;
-    text-align: center;
-    backdrop-filter: blur(12px);
+.box{
+    width:380px;
+    background:var(--card);
+    backdrop-filter:blur(14px);
+    padding:30px;
+    border-radius:20px;
+    text-align:center
 }
 
 /* LOGO */
-.logo img {
-    width: 90px;
-    animation: scalePulse 2.5s infinite;
+.logo img{
+    width:90px;
+    animation:scalePulse 2.6s ease-in-out infinite
+}
+@keyframes scalePulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.1)}
 }
 
-@keyframes scalePulse {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.08); }
+/* TITLE */
+.title{
+    font-size:36px;
+    letter-spacing:6px;
+    color:var(--accent);
+    text-shadow:0 0 14px var(--accent-glow);
+    animation:neon 2s infinite alternate;
+    margin-bottom:20px
 }
+@keyframes neon{from{opacity:.6}to{opacity:1}}
 
-.title {
-    font-size: 36px;
-    letter-spacing: 6px;
-    color: var(--accent);
-    text-shadow: 0 0 12px var(--accent);
-    animation: neon 2s infinite alternate;
+/* KEY */
+.key-box{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px
 }
-
-@keyframes neon {
-    from { opacity: .6; }
-    to { opacity: 1; }
+.key-box input{
+    flex:1;
+    padding:14px;
+    border-radius:12px;
+    border:none;
+    background:#00000010;
+    color:var(--text);
+    filter:blur(5px)
 }
-
-/* INPUT */
-input {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    border: none;
-    background: #00000010;
-    color: var(--text);
-    margin: 15px 0;
-}
-
-.key-box {
-    display: flex;
-    gap: 10px;
-}
-
-.key-box input {
-    flex: 1;
-    filter: blur(5px);
-}
-
-.key-box button {
-    padding: 0 14px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
+.key-box button{
+    padding:0 14px;
+    border-radius:12px;
+    border:none;
+    background:var(--accent);
+    color:#fff;
+    cursor:pointer
 }
 
 /* BUTTONS */
-.btn {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    border: none;
-    background: linear-gradient(135deg, var(--accent), #b08cff);
-    color: #fff;
-    cursor: pointer;
-    margin-top: 10px;
+.btn{
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    border:none;
+    background:linear-gradient(135deg,var(--accent),#6fb9ff);
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:10px
+}
+.discord{
+    background:#5865f2
 }
 
-.discord {
-    background: #5865f2;
+/* MODAL */
+.modal{
+    position:fixed;
+    inset:0;
+    background:#000000aa;
+    display:none;
+    justify-content:center;
+    align-items:center
 }
-
-/* MODALS */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: #000000aa;
-    display: none;
-    align-items: center;
-    justify-content: center;
+.modal-box{
+    width:320px;
+    background:var(--card);
+    padding:24px;
+    border-radius:18px;
+    text-align:center
 }
-
-.modal-box {
-    background: var(--card);
-    padding: 25px;
-    border-radius: 16px;
-    width: 320px;
-    text-align: center;
+.modal-bar{
+    width:100%;
+    height:6px;
+    background:#1e2a44;
+    border-radius:10px;
+    overflow:hidden;
+    margin:15px 0
+}
+.modal-bar span{
+    display:block;
+    height:100%;
+    width:0%;
+    background:var(--accent)
+}
+.modal-check{
+    display:none;
+    font-size:40px;
+    color:#2ecc71
 }
 
 /* NOTIFY */
-.notify {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: var(--accent);
-    color: #fff;
-    padding: 14px 20px;
-    border-radius: 12px;
-    display: none;
+.notify{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:var(--accent);
+    color:#fff;
+    padding:14px 22px;
+    border-radius:14px;
+    display:none
 }
 </style>
 </head>
-<body data-theme="light">
+<body>
 
 <canvas id="particles"></canvas>
 
 <!-- LOADING -->
 <div id="loader">
-    <div class="circle"></div>
-    <div class="progress"><span></span></div>
-    <div class="check"><i class="fas fa-check-circle"></i></div>
+    <div class="loader-circle"></div>
+    <div class="loader-bar"><span></span></div>
+    <div class="loader-check"><i class="fas fa-check-circle"></i></div>
 </div>
 
 <!-- SIDEBAR -->
 <div class="sidebar">
     <button onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
-    <button onclick="openDiscordInfo()"><i class="fab fa-discord"></i></button>
-    <button onclick="openMusic()"><i class="fas fa-music"></i></button>
+    <button onclick="joinDiscord()"><i class="fab fa-discord"></i></button>
+    <button><i class="fas fa-music"></i></button>
 </div>
 
 <!-- TOPBAR -->
@@ -297,13 +276,13 @@ input {
     </div>
 </div>
 
-<!-- MODALS -->
+<!-- MODAL -->
 <div class="modal" id="genModal">
     <div class="modal-box">
         <p>Generating Key...</p>
-        <div class="progress"><span id="genProg"></span></div>
+        <div class="modal-bar"><span id="genProg"></span></div>
         <p id="time">30s</p>
-        <div class="check"><i class="fas fa-check-circle"></i></div>
+        <div class="modal-check"><i class="fas fa-check-circle"></i></div>
     </div>
 </div>
 
@@ -311,73 +290,62 @@ input {
 
 <script>
 /* LOADING */
-let p=0;
-let bar=document.querySelector('.progress span');
+let load=0;
+let lbar=document.querySelector('.loader-bar span');
+let lcheck=document.querySelector('.loader-check');
 let loader=document.getElementById('loader');
-let check=document.querySelector('.check');
 
-let load=setInterval(()=>{
-    p+=2;
-    bar.style.width=p+"%";
-    if(p>=100){
-        clearInterval(load);
-        check.style.display="block";
+let int=setInterval(()=>{
+    load+=2;
+    lbar.style.width=load+"%";
+    if(load>=100){
+        clearInterval(int);
+        lcheck.style.display="block";
         setTimeout(()=>{
             loader.style.display="none";
             document.querySelector('.container').style.display="flex";
             notify("Launcher loaded");
-        },800);
+        },700);
     }
 },60);
 
 /* KEY */
 function generateKey(){
     document.getElementById('genModal').style.display="flex";
-    let t=30, prog=0;
+    let t=30,p=0;
     let bar=document.getElementById('genProg');
     let timer=setInterval(()=>{
-        t--;
-        prog+=100/30;
-        bar.style.width=prog+"%";
-        document.getElementById('time').innerText=t+"s";
+        t--;p+=100/30;
+        bar.style.width=p+"%";
+        time.innerText=t+"s";
         if(t<=0){
             clearInterval(timer);
-            document.querySelector('#genModal .check').style.display="block";
-            let k="KEY-"+Math.random().toString(36).substring(2,6).toUpperCase()+"-"+Math.random().toString(36).substring(2,6).toUpperCase();
-            document.getElementById('key').value=k;
+            document.querySelector('.modal-check').style.display="block";
+            key.value="KEY-"+Math.random().toString(36).substring(2,6).toUpperCase()+"-"+Math.random().toString(36).substring(2,6).toUpperCase();
             notify("Key generated successfully");
-            setTimeout(()=>document.getElementById('genModal').style.display="none",1200);
+            setTimeout(()=>genModal.style.display="none",1200);
         }
     },1000);
 }
 
 function toggleKey(){
-    let k=document.getElementById('key');
-    k.style.filter = k.style.filter ? "" : "blur(5px)";
+    key.style.filter=key.style.filter?"":"blur(5px)";
 }
-
 function copyKey(){
-    navigator.clipboard.writeText(document.getElementById('key').value);
+    navigator.clipboard.writeText(key.value);
     notify("Key copied");
 }
-
-/* DISCORD */
 function joinDiscord(){
     notify("Redirecting to Discord");
     setTimeout(()=>window.open("https://discord.gg/F3SDzkZa6U","_blank"),800);
 }
-
-/* THEME */
 function toggleTheme(){
-    document.body.dataset.theme = document.body.dataset.theme==="dark"?"light":"dark";
+    document.body.dataset.theme=document.body.dataset.theme==="dark"?"light":"dark";
 }
-
-/* NOTIFY */
 function notify(t){
-    let n=document.getElementById('notify');
-    n.innerText=t;
-    n.style.display="block";
-    setTimeout(()=>n.style.display="none",2500);
+    notifyBox.innerText=t;
+    notifyBox.style.display="block";
+    setTimeout(()=>notifyBox.style.display="none",2500);
 }
 </script>
 </body>
