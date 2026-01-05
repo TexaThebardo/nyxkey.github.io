@@ -413,6 +413,8 @@ canvas {
     border: 1px solid rgba(255,255,255,.2);
     animation: panelSlideIn 0.8s ease-out 0.2s both;
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 @keyframes panelSlideIn {
     from { opacity: 0; transform: translateX(-30px); }
@@ -764,15 +766,21 @@ canvas {
     opacity: 0.8;
 }
 
-/* MAIN LOGIN BOX */
+/* MAIN LOGIN BOX - CORREGIDO PARA CENTRAR */
 .login-container {
     width: 100%;
-    text-align: right;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
 .logo-img {
     width: 120px;
     filter: drop-shadow(0 0 20px var(--accent));
     animation: logoFloat 4s ease-in-out infinite, logoGlow 3s ease-in-out infinite;
+    margin: 0 auto;
+    display: block;
 }
 @keyframes logoFloat {
     0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -793,11 +801,21 @@ canvas {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: logoTextGlow 3s ease-in-out infinite;
+    text-align: center;
+    width: 100%;
 }
 @keyframes logoTextGlow {
     0%, 100% { opacity: 0.9; }
     50% { opacity: 1; }
 }
+
+.login-box {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
 .announcement {
     background: linear-gradient(135deg, rgba(108,99,255,.2), rgba(157,78,221,.1));
     border: 1px solid rgba(108,99,255,.3);
@@ -807,14 +825,18 @@ canvas {
     font-size: 14px;
     backdrop-filter: blur(10px);
     animation: announcementPulse 2s ease-in-out infinite;
+    text-align: center;
+    width: 100%;
 }
 @keyframes announcementPulse {
     0%, 100% { border-color: rgba(108,99,255,.3); }
     50% { border-color: rgba(108,99,255,.6); }
 }
+
 .key-wrapper {
     position: relative;
     margin-bottom: 5px;
+    width: 100%;
 }
 input {
     width: 100%;
@@ -931,6 +953,14 @@ input.show {
     opacity: .7;
     text-align: center;
     letter-spacing: 1px;
+    width: 100%;
+}
+
+/* FORZAR CENTRADO DE TODO EL CONTENIDO DEL LOGIN */
+.login-container > *,
+.login-box > * {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* GENERATOR MODAL */
@@ -1219,27 +1249,29 @@ input.show {
         <!-- MAIN PANEL -->
         <div class="main-panel" id="mainPanel">
             <div class="login-container">
-                <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png" class="logo-img">
-                <div class="logo">N<span>Y</span>X</div>
+                <div style="width: 100%; max-width: 500px; margin: 0 auto; text-align: center;">
+                    <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png" class="logo-img">
+                    <div class="logo">N<span>Y</span>X</div>
 
-                <div class="login-box">
-                    <div class="announcement">Arrondissement Maintenance sans</div>
+                    <div class="login-box">
+                        <div class="announcement">Arrondissement Maintenance sans</div>
 
-                    <div class="key-wrapper">
-                        <input id="key" readonly placeholder="KEY-XXX-XXX-XXX">
-                        <div class="key-actions">
-                            <button id="eye"><i class="fas fa-eye"></i></button>
-                            <button id="copy"><i class="fas fa-copy"></i></button>
+                        <div class="key-wrapper">
+                            <input id="key" readonly placeholder="KEY-XXX-XXX-XXX">
+                            <div class="key-actions">
+                                <button id="eye"><i class="fas fa-eye"></i></button>
+                                <button id="copy"><i class="fas fa-copy"></i></button>
+                            </div>
                         </div>
-                    </div>
 
-                    <button class="generate-button" id="gen">Generate Key</button>
-                    <button class="discord-button" id="discordBtnMain"><i class="fab fa-discord"></i> Discord</button>
+                        <button class="generate-button" id="gen">Generate Key</button>
+                        <button class="discord-button" id="discordBtnMain"><i class="fab fa-discord"></i> Discord</button>
 
-                    <div class="footer">NYX Launcher</div>
-                    <div class="footer" style="margin-top: 10px; font-size: 12px;">
-                        Activar Windows<br>
-                        Vie à Configuration para activar Windows.
+                        <div class="footer">NYX Launcher</div>
+                        <div class="footer" style="margin-top: 10px; font-size: 12px;">
+                            Activar Windows<br>
+                            Vie à Configuration para activar Windows.
+                        </div>
                     </div>
                 </div>
             </div>
