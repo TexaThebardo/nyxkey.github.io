@@ -15,6 +15,9 @@
     --success: #4CAF50;
     --error: #f44336;
     --warning: #ff9800;
+    --code-bg: #1a1a2e;
+    --code-text: #8be9fd;
+    --line-number: #6272a4;
 }
 body.dark {
     --bg1: #1a0026;
@@ -22,6 +25,9 @@ body.dark {
     --card: rgba(120,80,180,0.12);
     --accent: #a56bff;
     --text: #f2eaff;
+    --code-bg: #0f0f1f;
+    --code-text: #bd93f9;
+    --line-number: #6272a4;
 }
 * {
     margin: 0;
@@ -375,11 +381,11 @@ canvas {
     transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 2;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 100px auto 30px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 }
 #app.show {
     opacity: 1;
@@ -394,7 +400,7 @@ canvas {
 /* CONTENT AREA */
 .content-area {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 400px;
     gap: 30px;
     width: 100%;
     animation: fadeIn 1s ease-out 0.3s both;
@@ -430,6 +436,203 @@ canvas {
 @keyframes panelSlideInRight {
     from { opacity: 0; transform: translateX(30px); }
     to { opacity: 1; transform: translateX(0); }
+}
+
+/* CODE PANEL - NUEVO PANEL DE CÓDIGO */
+.code-panel {
+    background: var(--code-bg);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(108, 99, 255, 0.3);
+    animation: panelSlideInRight 0.8s ease-out 0.6s both;
+    width: 100%;
+    max-height: 700px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(108, 99, 255, 0.3);
+}
+.code-title {
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--accent);
+}
+.code-title i {
+    animation: iconBounce 2s ease-in-out infinite;
+}
+.code-controls {
+    display: flex;
+    gap: 10px;
+}
+.code-btn {
+    background: rgba(108, 99, 255, 0.2);
+    border: none;
+    color: var(--text);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+.code-btn:hover {
+    background: var(--accent);
+    transform: scale(1.1);
+}
+.code-wrapper {
+    background: #0a0a1a;
+    border-radius: 12px;
+    overflow: hidden;
+    flex: 1;
+    border: 1px solid rgba(108, 99, 255, 0.2);
+}
+.code-tabs {
+    display: flex;
+    background: #151525;
+    border-bottom: 1px solid rgba(108, 99, 255, 0.2);
+}
+.code-tab {
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-right: 1px solid rgba(108, 99, 255, 0.1);
+}
+.code-tab.active {
+    background: rgba(108, 99, 255, 0.2);
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+}
+.code-content {
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+.code-content::-webkit-scrollbar {
+    width: 8px;
+}
+.code-content::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+.code-content::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+}
+.code-editor {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    color: var(--code-text);
+}
+.line-number {
+    color: var(--line-number);
+    display: inline-block;
+    width: 40px;
+    text-align: right;
+    padding-right: 15px;
+    user-select: none;
+    opacity: 0.7;
+}
+.code-line {
+    margin-bottom: 2px;
+}
+.code-comment {
+    color: #6272a4;
+    font-style: italic;
+}
+.code-keyword {
+    color: #ff79c6;
+    font-weight: bold;
+}
+.code-string {
+    color: #f1fa8c;
+}
+.code-function {
+    color: #50fa7b;
+}
+.code-number {
+    color: #bd93f9;
+}
+.code-operator {
+    color: #ff79c6;
+}
+
+.code-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid rgba(108, 99, 255, 0.2);
+}
+.code-status {
+    font-size: 12px;
+    color: #6272a4;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: statusPulse 2s ease-in-out infinite;
+}
+@keyframes statusPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+.code-actions {
+    display: flex;
+    gap: 10px;
+}
+.code-action-btn {
+    background: rgba(108, 99, 255, 0.2);
+    border: none;
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.code-action-btn:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+}
+.code-action-btn.run {
+    background: linear-gradient(135deg, #50fa7b, #2ecc71);
+    color: #000;
+}
+.code-action-btn.copy {
+    background: linear-gradient(135deg, #8be9fd, #3498db);
+    color: #000;
 }
 
 .discord-panel, .music-panel {
@@ -1115,10 +1318,22 @@ input.show {
 }
 
 /* RESPONSIVE DESIGN */
+@media (max-width: 1200px) {
+    .content-area {
+        grid-template-columns: 1fr 1fr;
+    }
+    .code-panel {
+        grid-column: span 2;
+        max-height: 400px;
+    }
+}
 @media (max-width: 1024px) {
     .content-area {
         grid-template-columns: 1fr;
-        max-width: 600px;
+        max-width: 800px;
+    }
+    .code-panel {
+        grid-column: span 1;
     }
     .topbar-tabs {
         flex-wrap: wrap;
@@ -1155,7 +1370,7 @@ input.show {
         padding: 15px;
         gap: 20px;
     }
-    .main-panel, .discord-panel, .music-panel {
+    .main-panel, .discord-panel, .music-panel, .code-panel {
         padding: 25px;
     }
     .logo {
@@ -1180,7 +1395,7 @@ input.show {
     .logo-img {
         width: 80px;
     }
-    .main-panel, .discord-panel, .music-panel {
+    .main-panel, .discord-panel, .music-panel, .code-panel {
         padding: 20px;
     }
     .panel-title {
@@ -1196,6 +1411,16 @@ input.show {
     .notification {
         min-width: 280px;
         right: 10px;
+    }
+    .code-tabs {
+        flex-wrap: wrap;
+    }
+    .code-tab {
+        flex: 1;
+        min-width: 80px;
+        text-align: center;
+        padding: 10px 5px;
+        font-size: 12px;
     }
 }
 </style>
@@ -1224,6 +1449,7 @@ input.show {
         <button class="tab-btn active" data-tab="main"><i class="fas fa-home"></i> Main</button>
         <button class="tab-btn" data-tab="discord"><i class="fab fa-discord"></i> Discord</button>
         <button class="tab-btn" data-tab="music"><i class="fas fa-music"></i> Music</button>
+        <button class="tab-btn" data-tab="code"><i class="fas fa-code"></i> Scripts</button>
     </div>
 </div>
 
@@ -1358,6 +1584,76 @@ input.show {
                         <i class="fas fa-volume-up"></i>
                         <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider">
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CODE PANEL - NUEVO PANEL DE CÓDIGO/SCRIPTS -->
+        <div class="code-panel" id="codePanel" style="display: none;">
+            <div class="code-header">
+                <div class="code-title">
+                    <i class="fas fa-terminal"></i> Script Executor
+                </div>
+                <div class="code-controls">
+                    <button class="code-btn" title="Minimize"><i class="fas fa-minus"></i></button>
+                    <button class="code-btn" title="Maximize"><i class="fas fa-expand"></i></button>
+                    <button class="code-btn" title="Close" data-panel="codePanel"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <div class="code-wrapper">
+                <div class="code-tabs">
+                    <button class="code-tab active" data-code="infinite">Infinite Yield</button>
+                    <button class="code-tab" data-code="solar">Solaris</button>
+                    <button class="code-tab" data-code="nyx">NYX Script</button>
+                    <button class="code-tab" data-code="custom">Custom</button>
+                </div>
+                
+                <div class="code-content">
+                    <div class="code-editor" id="codeEditor">
+                        <div class="code-line"><span class="line-number">1</span> <span class="code-comment">-- Infinite Yield v6.1</span></div>
+                        <div class="code-line"><span class="line-number">2</span> <span class="code-keyword">if</span> <span class="code-function">getgenv</span>().TY_100KDD <span class="code-keyword">and</span> <span class="code-keyword">not</span> <span class="code-function">getgenv</span>().TY_RERK == <span class="code-keyword">true</span> <span class="code-keyword">then</span></div>
+                        <div class="code-line"><span class="line-number">3</span>     <span class="code-comment">-- error("Infinite Yield is already running!", 0)</span></div>
+                        <div class="code-line"><span class="line-number">4</span>     <span class="code-keyword">return</span></div>
+                        <div class="code-line"><span class="line-number">5</span> <span class="code-keyword">end</span></div>
+                        <div class="code-line"><span class="line-number">6</span></div>
+                        <div class="code-line"><span class="line-number">7</span> <span class="code-function">getgenv</span>().TY_100KDD = <span class="code-keyword">true</span></div>
+                        <div class="code-line"><span class="line-number">8</span> <span class="code-keyword">local</span> cllower = cllower <span class="code-keyword">or</span> <span class="code-keyword">function</span>(s) <span class="code-keyword">return</span> s <span class="code-keyword">end</span></div>
+                        <div class="code-line"><span class="line-number">9</span> <span class="code-keyword">local</span> CONSULT = cllower(<span class="code-function">game</span>:<span class="code-function">GetService</span>(<span class="code-string">"CoreGui"</span>))</div>
+                        <div class="code-line"><span class="line-number">10</span> <span class="code-keyword">local</span> Player = cllower(<span class="code-function">game</span>:<span class="code-function">GetService</span>(<span class="code-string">"Players"</span>).<span class="code-function">LocalPlayer</span>)</div>
+                        <div class="code-line"><span class="line-number">11</span> <span class="code-keyword">if</span> <span class="code-keyword">not</span> <span class="code-function">game</span>:<span class="code-function">IsLoaded</span>() <span class="code-keyword">then</span></div>
+                        <div class="code-line"><span class="line-number">12</span>     <span class="code-keyword">local</span> notLoaded = <span class="code-function">Instance.new</span>(<span class="code-string">"Message"</span>)</div>
+                        <div class="code-line"><span class="line-number">13</span>     notLoaded.Parent = CONSULT</div>
+                        <div class="code-line"><span class="line-number">14</span>     notLoaded.Text = <span class="code-string">"Infinite Yield is waiting for the game to load..."</span></div>
+                        <div class="code-line"><span class="line-number">15</span>     <span class="code-function">game</span>.Loaded:<span class="code-function">Wait</span>()</div>
+                        <div class="code-line"><span class="line-number">16</span>     notLoaded:<span class="code-function">Destroy</span>()</div>
+                        <div class="code-line"><span class="line-number">17</span> <span class="code-keyword">end</span></div>
+                        <div class="code-line"><span class="line-number">18</span></div>
+                        <div class="code-line"><span class="line-number">19</span> <span class="code-keyword">local</span> currentVersion = <span class="code-string">"6.1"</span></div>
+                        <div class="code-line"><span class="line-number">20</span></div>
+                        <div class="code-line"><span class="line-number">21</span> Holder = <span class="code-function">Instance.new</span>(<span class="code-string">"Frame"</span>)</div>
+                        <div class="code-line"><span class="line-number">22</span> Title = <span class="code-function">Instance.new</span>(<span class="code-string">"TextLabel"</span>)</div>
+                        <div class="code-line"><span class="line-number">23</span> Dark = <span class="code-function">Instance.new</span>(<span class="code-string">"Frame"</span>)</div>
+                        <div class="code-line"><span class="line-number">24</span> Cushor = <span class="code-function">Instance.new</span>(<span class="code-string">"TextBox"</span>)</div>
+                        <div class="code-line"><span class="line-number">25</span> CODE = <span class="code-function">Instance.new</span>(<span class="code-string">"ScrollingFrame"</span>)</div>
+                        <div class="code-line"><span class="line-number">26</span> <span class="code-keyword">local</span> allright = <span class="code-function">Instance.new</span>(<span class="code-string">"UIListLayout"</span>)</div>
+                        <div class="code-line"><span class="line-number">27</span> <span class="code-keyword">local</span> impedition = <span class="code-function">Instance.new</span>(<span class="code-string">"ImageLabel"</span>)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-footer">
+                <div class="code-status">
+                    <div class="status-indicator"></div>
+                    <span>Script Ready - Lua 5.1</span>
+                </div>
+                <div class="code-actions">
+                    <button class="code-action-btn copy" id="copyCode">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <button class="code-action-btn run" id="runCode">
+                        <i class="fas fa-play"></i> Execute
+                    </button>
                 </div>
             </div>
         </div>
@@ -1590,12 +1886,13 @@ const discordClickHandler = () => {
 document.getElementById('joinDiscord').onclick = discordClickHandler;
 document.getElementById('discordBtnMain').onclick = discordClickHandler;
 
-// TAB SWITCHING
+// TAB SWITCHING - ACTUALIZADO CON PANEL DE CÓDIGO
 const tabBtns = document.querySelectorAll('.tab-btn');
 const panels = {
     main: document.getElementById('mainPanel'),
     discord: document.getElementById('discordPanel'),
-    music: document.getElementById('musicPanel')
+    music: document.getElementById('musicPanel'),
+    code: document.getElementById('codePanel')
 };
 
 tabBtns.forEach(btn => {
@@ -1628,14 +1925,19 @@ tabBtns.forEach(btn => {
         if (tab === 'music') {
             initMusicPlayer();
         }
+        if (tab === 'code') {
+            initCodePanel();
+        }
     });
 });
 
-// CLOSE PANEL BUTTONS
-document.querySelectorAll('.close-panel').forEach(btn => {
+// CLOSE PANEL BUTTONS - ACTUALIZADO
+document.querySelectorAll('.close-panel, .code-btn[data-panel]').forEach(btn => {
     btn.addEventListener('click', () => {
         const panelId = btn.dataset.panel;
         const panel = document.getElementById(panelId);
+        
+        if (!panel) return;
         
         // Animation for closing
         panel.style.animation = 'panelAppear 0.6s ease-out reverse';
@@ -1651,13 +1953,200 @@ document.querySelectorAll('.close-panel').forEach(btn => {
     });
 });
 
+// CODE PANEL FUNCTIONALITY
+const codeTabs = document.querySelectorAll('.code-tab');
+const codeEditor = document.getElementById('codeEditor');
+
+// Code snippets for different tabs
+const codeSnippets = {
+    infinite: `-- Infinite Yield v6.1
+if getgenv().TY_100KDD and not getgenv().TY_RERK == true then
+    -- error("Infinite Yield is already running!", 0)
+    return
+end
+
+getgenv().TY_100KDD = true
+local cllower = cllower or function(s) return s end
+local CONSULT = cllower(game:GetService("CoreGui"))
+local Player = cllower(game:GetService("Players").LocalPlayer)
+if not game:IsLoaded() then
+    local notLoaded = Instance.new("Message")
+    notLoaded.Parent = CONSULT
+    notLoaded.Text = "Infinite Yield is waiting for the game to load..."
+    game.Loaded:Wait()
+    notLoaded:Destroy()
+end
+
+local currentVersion = "6.1"
+
+Holder = Instance.new("Frame")
+Title = Instance.new("TextLabel")
+Dark = Instance.new("Frame")
+Cushor = Instance.new("TextBox")
+CODE = Instance.new("ScrollingFrame")
+local allright = Instance.new("UIListLayout")
+local impedition = Instance.new("ImageLabel")
+local uniform = Instance.new("ImageLabel")
+local flip = Instance.new("TextLabel")
+Profile = Instance.new("TextLabel")
+Profisson = Instance.new("TextLabel")
+KeyDisk = Instance.new("TextLabel")
+Stoppon = Instance.new("TextLabel")
+Button = Instance.new("TextButton")
+On = Instance.new("TextButton")
+Position = Instance.new("TextLabel")`,
+
+    solar: `-- Solaris Script
+local SolarisLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Stebulous/solaris-ui/main/library.lua"))()
+
+local win = SolarisLib:New({
+    Name = "Solaris",
+    FolderToSave = "Solaris"
+})
+
+local tab = win:Tab("Main")
+local sec = tab:Section("Auto Farm")
+
+sec:Toggle("Auto Collect", false, function(t)
+    getgenv().autocollect = t
+    while autocollect do
+        wait(0.1)
+        -- Auto collect code here
+    end
+end)
+
+sec:Toggle("Auto Attack", false, function(t)
+    getgenv().autoattack = t
+    while autoattack do
+        wait(0.5)
+        -- Auto attack code here
+    end
+end)
+
+local sec2 = tab:Section("Player")
+sec2:Slider("WalkSpeed", 16, 100, 16, function(t)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = t
+end)
+
+sec2:Slider("JumpPower", 50, 200, 50, function(t)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = t
+end)`,
+
+    nyx: `-- NYX Script v1.0
+local NYX = {}
+
+NYX.Version = "1.0.0"
+NYX.Author = "Nyx @Gohldon"
+
+function NYX:Notify(title, message, duration)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = title,
+        Text = message,
+        Duration = duration or 5
+    })
+end
+
+function NYX:Teleport(position)
+    local char = game.Players.LocalPlayer.Character
+    if char and char:FindFirstChild("HumanoidRootPart") then
+        char.HumanoidRootPart.CFrame = position
+    end
+end
+
+function NYX:GetPlayer(name)
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player.Name:lower():find(name:lower()) then
+            return player
+        end
+    end
+    return nil
+end
+
+function NYX:ExecuteCommand(cmd)
+    if cmd == "heal" then
+        -- Healing logic
+        NYX:Notify("Healed", "Player has been healed!", 3)
+    elseif cmd == "godmode" then
+        -- Godmode logic
+        NYX:Notify("Godmode", "Godmode activated!", 3)
+    end
+end
+
+-- Initialize NYX
+getgenv().NYX = NYX
+NYX:Notify("NYX Script", "Loaded successfully! Version " .. NYX.Version, 5)`
+};
+
+function initCodePanel() {
+    // Set up code tabs
+    codeTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            codeTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            const codeType = tab.dataset.code;
+            updateCodeDisplay(codeType);
+        });
+    });
+    
+    // Set up code actions
+    document.getElementById('copyCode').addEventListener('click', () => {
+        const codeText = codeEditor.textContent;
+        navigator.clipboard.writeText(codeText);
+        showNotification('Code Copied', 'Script code copied to clipboard!', 'success', 2000);
+    });
+    
+    document.getElementById('runCode').addEventListener('click', () => {
+        showNotification('Script Executed', 'Script execution simulated (demo mode)', 'info', 2000);
+        
+        // Simulate execution animation
+        const runBtn = document.getElementById('runCode');
+        const originalText = runBtn.innerHTML;
+        runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Executing...';
+        runBtn.disabled = true;
+        
+        setTimeout(() => {
+            runBtn.innerHTML = originalText;
+            runBtn.disabled = false;
+            showNotification('Execution Complete', 'Script executed successfully!', 'success', 2000);
+        }, 1500);
+    });
+    
+    // Initialize with first tab
+    updateCodeDisplay('infinite');
+}
+
+function updateCodeDisplay(codeType) {
+    let codeHTML = '';
+    const code = codeSnippets[codeType];
+    const lines = code.split('\n');
+    
+    lines.forEach((line, index) => {
+        const lineNumber = index + 1;
+        let formattedLine = line;
+        
+        // Syntax highlighting
+        formattedLine = formattedLine
+            .replace(/--.*$/g, '<span class="code-comment">$&</span>')
+            .replace(/(".*?")/g, '<span class="code-string">$1</span>')
+            .replace(/\b(function|local|if|then|else|end|return|and|or|not|while|do|for|in)\b/g, '<span class="code-keyword">$1</span>')
+            .replace(/\b(getgenv|Instance\.new|game\.|wait|loadstring|pairs)\b/g, '<span class="code-function">$1</span>')
+            .replace(/\b(true|false|nil)\b/g, '<span class="code-keyword">$1</span>')
+            .replace(/\b\d+\b/g, '<span class="code-number">$&</span>');
+        
+        codeHTML += `<div class="code-line"><span class="line-number">${lineNumber}</span> ${formattedLine}</div>`;
+    });
+    
+    codeEditor.innerHTML = codeHTML;
+}
+
 // MUSIC PLAYER CON AUDIO REAL (SIMULADO)
 const musicTracks = [
     { 
         title: 'Night Drive', 
         artist: 'Synthwave Collective', 
         duration: '3:45',
-        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-1.mp3' // URL de ejemplo
+        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-1.mp3'
     },
     { 
         title: 'Digital Dreams', 
@@ -1697,13 +2186,6 @@ let progressInterval;
 const audioPlayer = document.getElementById('audioPlayer');
 const volumeSlider = document.getElementById('volumeSlider');
 
-// URLs de audio de respaldo (pueden ser archivos locales o en línea)
-const fallbackAudioUrls = [
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
-];
-
 function initMusicPlayer() {
     const trackList = document.getElementById('trackList');
     trackList.innerHTML = '';
@@ -1739,7 +2221,6 @@ function playTrack(index) {
     
     document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
     
-    // Intentar cargar y reproducir audio
     const track = musicTracks[currentTrack];
     
     // Mostrar notificación
@@ -1753,25 +2234,7 @@ function playTrack(index) {
 }
 
 function simulateAudioPlayback() {
-    // En un entorno real, aquí cargarías el audio
-    // Por ahora simulamos la reproducción
     console.log(`Playing: ${musicTracks[currentTrack].title}`);
-    
-    // Intentar cargar el audio (comentado para evitar errores de CORS)
-    /*
-    try {
-        audioPlayer.src = musicTracks[currentTrack].audioUrl;
-        audioPlayer.load();
-        audioPlayer.play().catch(e => {
-            console.log('Audio playback failed:', e);
-            // Usar URL de respaldo
-            audioPlayer.src = fallbackAudioUrls[currentTrack % fallbackAudioUrls.length];
-            audioPlayer.play();
-        });
-    } catch (error) {
-        console.log('Audio error:', error);
-    }
-    */
 }
 
 function updatePlayerDisplay() {
@@ -1800,7 +2263,6 @@ function startProgressBar() {
         
         progressBar.style.width = progress + '%';
         
-        // Actualizar tiempo actual
         const currentSeconds = Math.floor(trackDuration * (progress / 100));
         const minutes = Math.floor(currentSeconds / 60);
         const seconds = currentSeconds % 60;
@@ -1841,7 +2303,6 @@ document.getElementById('playBtn').addEventListener('click', () => {
         showNotification('Music Playing', musicTracks[currentTrack].title, 'info', 2000);
     } else {
         if (progressInterval) clearInterval(progressInterval);
-        // Pausar audio real si está cargado
         if (!audioPlayer.paused) audioPlayer.pause();
         showNotification('Music Paused', 'Playback paused', 'info', 2000);
     }
@@ -1866,14 +2327,12 @@ document.getElementById('musicProgress').addEventListener('click', (e) => {
     const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     progressBar.style.width = (percent * 100) + '%';
     
-    // Actualizar tiempo actual
     const trackDuration = parseDuration(musicTracks[currentTrack].duration);
     const currentSeconds = Math.floor(trackDuration * percent);
     const minutes = Math.floor(currentSeconds / 60);
     const seconds = currentSeconds % 60;
     document.getElementById('currentTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
     
-    // Saltar en el audio real si está cargado
     if (audioPlayer.duration) {
         audioPlayer.currentTime = trackDuration * percent;
     }
@@ -1888,19 +2347,15 @@ function adjustLayout() {
     const app = document.getElementById('app');
     
     if (width < 768) {
-        // Para móviles
         app.style.maxWidth = '100%';
         app.style.padding = '0 10px';
     } else if (width < 1024) {
-        // Para tablets
         app.style.maxWidth = '90%';
     } else {
-        // Para escritorio
-        app.style.maxWidth = '1200px';
+        app.style.maxWidth = '1400px';
     }
 }
 
-// Ajustar layout al cargar y al cambiar tamaño
 window.addEventListener('load', adjustLayout);
 window.addEventListener('resize', adjustLayout);
 
@@ -1954,15 +2409,12 @@ function anim() {
         p.x += p.dx;
         p.y += p.dy;
         
-        // Rebotar en los bordes
         if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
         
-        // Mantener partículas dentro de los límites
         p.x = Math.max(0, Math.min(canvas.width, p.x));
         p.y = Math.max(0, Math.min(canvas.height, p.y));
         
-        // Dibujar partícula con efecto de brillo
         ctx.beginPath();
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 2);
         gradient.addColorStop(0, p.color);
@@ -1976,6 +2428,9 @@ function anim() {
     requestAnimationFrame(anim);
 }
 anim();
+
+// Inicializar panel de código
+initCodePanel();
 </script>
 </body>
 </html>
