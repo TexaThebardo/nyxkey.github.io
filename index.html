@@ -1,238 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nyx Key Generator</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nyx Loader</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+}
 
-        body {
-            background-color: #0a0a0f;
-            color: #e0e0e0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(28, 58, 173, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(200, 50, 150, 0.1) 0%, transparent 20%);
-        }
+body{
+    background:#0a0a0f;
+    color:#e0e0e0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
 
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            text-align: center;
-        }
+/* ================= LOADER ================= */
+#loader{
+    position:fixed;
+    inset:0;
+    background:#0a0a0f;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
 
-        /* LOGO */
-        .logo-img {
-            width: 90px;
-            margin: 0 auto 10px;
-            display: block;
-            filter: drop-shadow(0 0 12px rgba(108,99,255,0.6));
-        }
+.loader-icon{
+    width:90px;
+    height:90px;
+    border:6px solid rgba(108,99,255,0.2);
+    border-top:6px solid #6c63ff;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin-bottom:25px;
+}
 
-        /* TITLE WITH NEON ANIMATION */
-        .logo {
-            margin-bottom: 25px;
-            letter-spacing: 6px;
-            font-size: 30px;
-            font-weight: 800;
-            color: #fff;
-            animation: neonFade 3s ease-in-out infinite;
-        }
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
 
-        .logo span {
-            color: #6c63ff;
-        }
+.progress-container{
+    width:260px;
+    height:8px;
+    background:rgba(255,255,255,0.1);
+    border-radius:10px;
+    overflow:hidden;
+}
 
-        @keyframes neonFade {
-            0% {
-                opacity: 0.6;
-                text-shadow: 
-                    0 0 5px #6c63ff,
-                    0 0 15px rgba(108,99,255,0.4);
-            }
-            50% {
-                opacity: 1;
-                text-shadow: 
-                    0 0 10px #6c63ff,
-                    0 0 25px rgba(108,99,255,0.8),
-                    0 0 40px rgba(108,99,255,0.6);
-            }
-            100% {
-                opacity: 0.6;
-                text-shadow: 
-                    0 0 5px #6c63ff,
-                    0 0 15px rgba(108,99,255,0.4);
-            }
-        }
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#6c63ff,#8a84ff);
+    transition:width 0.2s ease;
+}
 
-        .login-box {
-            background-color: rgba(20, 20, 30, 0.85);
-            border-radius: 12px;
-            padding: 30px;
-            border: 1px solid rgba(80, 80, 120, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            text-align: left;
-        }
+.progress-text{
+    margin-top:12px;
+    font-size:14px;
+    color:#aaa;
+}
 
-        .welcome-text {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #fff;
-        }
+/* ================= MAIN ================= */
+#app{
+    opacity:0;
+    transform:translateY(30px);
+    transition:opacity 1s ease, transform 1s ease;
+}
 
-        .subtitle {
-            color: #aaa;
-            margin-bottom: 25px;
-            font-size: 14px;
-        }
+#app.show{
+    opacity:1;
+    transform:translateY(0);
+}
 
-        /* ANNOUNCEMENT */
-        .announcement {
-            background-color: rgba(50, 120, 180, 0.15);
-            border: 1px solid rgba(90, 160, 220, 0.5);
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 25px;
-            font-size: 14px;
-            color: #b6d9ff;
-            display: flex;
-            align-items: center;
-        }
+.login-container{
+    width:100%;
+    max-width:400px;
+    padding:20px;
+    text-align:center;
+}
 
-        .announcement i {
-            margin-right: 10px;
-        }
+.logo-img{
+    width:90px;
+    margin-bottom:10px;
+    filter:drop-shadow(0 0 12px rgba(108,99,255,.6));
+}
 
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
+.logo{
+    font-size:30px;
+    font-weight:800;
+    letter-spacing:6px;
+    margin-bottom:25px;
+    animation:neonFade 3s ease-in-out infinite;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #ccc;
-        }
+.logo span{color:#6c63ff;}
 
-        .key-wrapper {
-            position: relative;
-        }
+@keyframes neonFade{
+    0%,100%{opacity:.6;text-shadow:0 0 10px #6c63ff;}
+    50%{opacity:1;text-shadow:0 0 30px #6c63ff;}
+}
 
-        .form-input {
-            width: 100%;
-            padding: 14px 90px 14px 14px;
-            background-color: rgba(30, 30, 40, 0.8);
-            border: 1px solid rgba(80, 80, 120, 0.5);
-            border-radius: 6px;
-            color: #fff;
-            font-size: 15px;
-            filter: blur(6px);
-            user-select: none;
-        }
+.login-box{
+    background:rgba(20,20,30,.85);
+    border-radius:12px;
+    padding:30px;
+    border:1px solid rgba(80,80,120,.3);
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+    text-align:left;
+}
 
-        .form-input.show {
-            filter: blur(0);
-        }
+.subtitle{
+    color:#aaa;
+    font-size:14px;
+    margin-bottom:20px;
+}
 
-        .key-actions {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            display: flex;
-            gap: 10px;
-        }
+.announcement{
+    background:rgba(50,120,180,.15);
+    border:1px solid rgba(90,160,220,.5);
+    border-radius:6px;
+    padding:12px;
+    margin-bottom:25px;
+    display:flex;
+    align-items:center;
+    font-size:14px;
+    color:#b6d9ff;
+}
 
-        .key-actions button {
-            background: none;
-            border: none;
-            color: #6c63ff;
-            cursor: pointer;
-            font-size: 16px;
-        }
+.announcement i{margin-right:10px;}
 
-        .generate-button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #6c63ff, #8a84ff);
-            border: none;
-            border-radius: 6px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
+.form-group{margin-bottom:20px;}
+label{font-size:14px;color:#ccc;margin-bottom:6px;display:block;}
 
-        .generate-button:hover {
-            box-shadow: 0 0 20px rgba(108,99,255,0.6);
-        }
+.key-wrapper{position:relative;}
 
-        .discord-button {
-            width: 100%;
-            padding: 14px;
-            background-color: rgba(88, 101, 242, 0.1);
-            border: 1px solid rgba(88, 101, 242, 0.5);
-            border-radius: 6px;
-            color: #8a9cff;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+input{
+    width:100%;
+    padding:14px 90px 14px 14px;
+    background:rgba(30,30,40,.8);
+    border:1px solid rgba(80,80,120,.5);
+    border-radius:6px;
+    color:#fff;
+    font-size:15px;
+    filter:blur(6px);
+}
 
-        .discord-button i {
-            margin-right: 10px;
-        }
+input.show{filter:none;}
 
-        .footer {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 13px;
-            color: #777;
-        }
-    </style>
+.key-actions{
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    gap:10px;
+}
+
+.key-actions button{
+    background:none;
+    border:none;
+    color:#6c63ff;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.generate-button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:6px;
+    background:linear-gradient(135deg,#6c63ff,#8a84ff);
+    color:#fff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    margin-bottom:15px;
+}
+
+.generate-button:hover{
+    box-shadow:0 0 20px rgba(108,99,255,.6);
+}
+
+.discord-button{
+    width:100%;
+    padding:14px;
+    background:rgba(88,101,242,.1);
+    border:1px solid rgba(88,101,242,.5);
+    border-radius:6px;
+    color:#8a9cff;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.discord-button i{margin-right:10px;}
+
+.footer{
+    margin-top:25px;
+    text-align:center;
+    font-size:13px;
+    color:#777;
+}
+</style>
 </head>
 
 <body>
+
+<!-- LOADER -->
+<div id="loader">
+    <div class="loader-icon"></div>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="progress-text" id="progressText">Loading 0%</div>
+</div>
+
+<!-- APP -->
+<div id="app">
     <div class="login-container">
-
-        <!-- LOGO -->
-        <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png" 
-             alt="Nyx Logo" class="logo-img">
-
-        <!-- TITLE -->
+        <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png" class="logo-img">
         <div class="logo">N<span>Y</span>X</div>
 
         <div class="login-box">
-            <h2 class="welcome-text">Key Generator</h2>
             <p class="subtitle">Generate your private access key</p>
 
             <div class="announcement">
                 <i class="fas fa-bullhorn"></i>
-                <span>Announcement: New update coming soon.</span>
+                Announcement: New update coming soon.
             </div>
 
             <div class="form-group">
                 <label>Generated Key</label>
                 <div class="key-wrapper">
-                    <input type="text" id="key" class="form-input" readonly placeholder="KEY-XXX-XXX-XXX">
+                    <input type="text" id="key" readonly placeholder="KEY-XXX-XXX-XXX">
                     <div class="key-actions">
                         <button id="toggleKey"><i class="fas fa-eye"></i></button>
                         <button id="copyKey"><i class="fas fa-copy"></i></button>
@@ -246,38 +260,46 @@
                 <i class="fab fa-discord"></i> Discord
             </button>
 
-            <div class="footer">
-                <p>v3.7 Nyx @xShadow</p>
-            </div>
+            <div class="footer">v3.7 Nyx @xShadow</div>
         </div>
     </div>
+</div>
 
-    <script>
-        const keyInput = document.getElementById('key');
-        const toggleBtn = document.getElementById('toggleKey');
-        const copyBtn = document.getElementById('copyKey');
-        const generateBtn = document.getElementById('generateKey');
+<script>
+let progress = 0;
+const bar = document.getElementById('progressBar');
+const text = document.getElementById('progressText');
+const loader = document.getElementById('loader');
+const app = document.getElementById('app');
 
-        function generateKey() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            const block = () => Array.from({length: 3}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-            return `KEY-${block()}-${block()}-${block()}`;
-        }
+const interval = setInterval(()=>{
+    progress += Math.floor(Math.random()*8)+3;
+    if(progress>=100){
+        progress=100;
+        clearInterval(interval);
+        setTimeout(()=>{
+            loader.style.opacity=0;
+            setTimeout(()=>{
+                loader.style.display='none';
+                app.classList.add('show');
+            },600);
+        },500);
+    }
+    bar.style.width = progress + '%';
+    text.textContent = `Loading ${progress}%`;
+},200);
 
-        generateBtn.addEventListener('click', () => {
-            keyInput.value = generateKey();
-            keyInput.classList.remove('show');
-        });
+// Key system
+const keyInput=document.getElementById('key');
+document.getElementById('generateKey').onclick=()=>{
+    const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const b=()=>Array.from({length:3},()=>c[Math.floor(Math.random()*c.length)]).join('');
+    keyInput.value=`KEY-${b()}-${b()}-${b()}`;
+    keyInput.classList.remove('show');
+};
+document.getElementById('toggleKey').onclick=()=>keyInput.classList.toggle('show');
+document.getElementById('copyKey').onclick=()=>keyInput.value && navigator.clipboard.writeText(keyInput.value);
+</script>
 
-        toggleBtn.addEventListener('click', () => {
-            keyInput.classList.toggle('show');
-        });
-
-        copyBtn.addEventListener('click', () => {
-            if (!keyInput.value) return;
-            navigator.clipboard.writeText(keyInput.value);
-            alert('Key copied');
-        });
-    </script>
 </body>
 </html>
