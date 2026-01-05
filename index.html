@@ -15,7 +15,6 @@
     --text:#e0e0e0;
 }
 
-/* DARK WHITE (Purple + Black) */
 body.dark{
     --bg1:#1a0026;
     --bg2:#09000f;
@@ -24,12 +23,7 @@ body.dark{
     --text:#f2eaff;
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
 
 body{
     min-height:100vh;
@@ -38,16 +32,11 @@ body{
     align-items:center;
     overflow:hidden;
     color:var(--text);
-    background:
-        radial-gradient(circle at top,var(--bg1),var(--bg2));
+    background:radial-gradient(circle at top,var(--bg1),var(--bg2));
     transition:.6s ease;
 }
 
-canvas{
-    position:fixed;
-    inset:0;
-    z-index:0;
-}
+canvas{position:fixed;inset:0;z-index:0}
 
 /* THEME TAB */
 .theme-tab{
@@ -61,18 +50,9 @@ canvas{
     padding:10px 12px;
     cursor:pointer;
     z-index:5;
-    border:1px solid rgba(255,255,255,0.2);
-    transition:.4s ease;
+    border:1px solid rgba(255,255,255,.2);
 }
-
-.theme-tab:hover{
-    padding-left:18px;
-}
-
-.theme-tab i{
-    color:var(--accent);
-    font-size:18px;
-}
+.theme-tab i{color:var(--accent);font-size:18px}
 
 /* LOADER */
 #loader{
@@ -84,19 +64,40 @@ canvas{
     justify-content:center;
     align-items:center;
     z-index:10;
+    transition:.6s ease;
 }
 
-.loader-icon{
+.loader-circle{
     width:90px;
     height:90px;
-    border:6px solid rgba(255,255,255,.2);
-    border-top:6px solid var(--accent);
     border-radius:50%;
+    border:6px solid rgba(255,255,255,.2);
+    border-top-color:var(--accent);
     animation:spin 1s linear infinite;
-    margin-bottom:25px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-@keyframes spin{to{transform:rotate(360deg);}}
+.loader-circle.done{
+    animation:none;
+    border-color:var(--accent);
+}
+
+.loader-circle i{
+    font-size:36px;
+    color:var(--accent);
+    opacity:0;
+    transform:scale(.5);
+    transition:.4s ease;
+}
+
+.loader-circle.done i{
+    opacity:1;
+    transform:scale(1);
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
 
 .progress-container{
     width:260px;
@@ -104,15 +105,20 @@ canvas{
     background:rgba(255,255,255,.15);
     border-radius:10px;
     overflow:hidden;
+    margin-top:25px;
 }
 
 .progress-bar{
     height:100%;
     width:0%;
     background:linear-gradient(90deg,var(--accent),#fff);
+    transition:width .6s cubic-bezier(.4,0,.2,1);
 }
 
-.progress-text{margin-top:12px;font-size:14px;}
+.progress-text{
+    margin-top:12px;
+    font-size:14px;
+}
 
 /* APP */
 #app{
@@ -122,18 +128,11 @@ canvas{
     position:relative;
     z-index:2;
 }
+#app.show{opacity:1;transform:none}
 
-#app.show{
-    opacity:1;
-    transform:none;
-}
+/* UI */
+.login-container{width:400px;text-align:center}
 
-.login-container{
-    width:400px;
-    text-align:center;
-}
-
-/* LOGO */
 .logo-img{
     width:95px;
     filter:drop-shadow(0 0 15px var(--accent));
@@ -141,8 +140,8 @@ canvas{
 }
 
 @keyframes logoScale{
-    0%,100%{transform:scale(1);}
-    50%{transform:scale(1.08);}
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.08)}
 }
 
 .logo{
@@ -152,12 +151,11 @@ canvas{
     margin:10px 0 25px;
     animation:neon 3s ease-in-out infinite;
 }
-
-.logo span{color:var(--accent);}
+.logo span{color:var(--accent)}
 
 @keyframes neon{
-    0%,100%{opacity:.7;text-shadow:0 0 12px var(--accent);}
-    50%{opacity:1;text-shadow:0 0 30px var(--accent);}
+    0%,100%{opacity:.7;text-shadow:0 0 12px var(--accent)}
+    50%{opacity:1;text-shadow:0 0 30px var(--accent)}
 }
 
 .login-box{
@@ -177,7 +175,7 @@ canvas{
     font-size:14px;
 }
 
-.key-wrapper{position:relative;}
+.key-wrapper{position:relative}
 
 input{
     width:100%;
@@ -189,7 +187,7 @@ input{
     filter:blur(6px);
 }
 
-input.show{filter:none;}
+input.show{filter:none}
 
 .key-actions{
     position:absolute;
@@ -229,7 +227,7 @@ input.show{filter:none;}
     font-weight:600;
 }
 
-.footer{margin-top:18px;font-size:13px;opacity:.7;}
+.footer{margin-top:18px;font-size:13px;opacity:.7}
 </style>
 </head>
 
@@ -242,7 +240,9 @@ input.show{filter:none;}
 </div>
 
 <div id="loader">
-    <div class="loader-icon"></div>
+    <div class="loader-circle" id="circle">
+        <i class="fas fa-check"></i>
+    </div>
     <div class="progress-container">
         <div class="progress-bar" id="bar"></div>
     </div>
@@ -276,14 +276,11 @@ input.show{filter:none;}
 <script>
 /* THEME */
 const btn=document.getElementById('themeBtn');
-const saved=localStorage.getItem('theme');
-if(saved==='dark') document.body.classList.add('dark');
-
+if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark');
 btn.onclick=()=>{
     document.body.classList.toggle('dark');
     localStorage.setItem('theme',
-        document.body.classList.contains('dark')?'dark':'light'
-    );
+        document.body.classList.contains('dark')?'dark':'light');
 };
 
 /* LOADER */
@@ -292,24 +289,27 @@ const bar=document.getElementById('bar');
 const txt=document.getElementById('txt');
 const loader=document.getElementById('loader');
 const app=document.getElementById('app');
+const circle=document.getElementById('circle');
 
 const load=setInterval(()=>{
-    p+=Math.random()*8+4;
+    p+=Math.random()*6+4;
     if(p>=100){
-        p=100;clearInterval(load);
+        p=100;
+        clearInterval(load);
+        circle.classList.add('done');
         setTimeout(()=>{
             loader.style.opacity=0;
             setTimeout(()=>{
                 loader.remove();
                 app.classList.add('show');
             },600);
-        },400);
+        },700);
     }
     bar.style.width=p+'%';
     txt.textContent=`Loading ${Math.floor(p)}%`;
 },180);
 
-/* KEYS */
+/* KEY */
 const key=document.getElementById('key');
 document.getElementById('gen').onclick=()=>{
     const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
