@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nyx Login</title>
+    <title>Nyx Key Generator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         * {
             margin: 0;
@@ -46,7 +47,7 @@
         }
 
         .login-box {
-            background-color: rgba(20, 20, 30, 0.8);
+            background-color: rgba(20, 20, 30, 0.85);
             border-radius: 12px;
             padding: 30px;
             border: 1px solid rgba(80, 80, 120, 0.3);
@@ -62,33 +63,30 @@
 
         .subtitle {
             color: #aaa;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 14px;
         }
 
-        .key-expired {
-            background-color: rgba(180, 50, 50, 0.2);
-            border: 1px solid rgba(220, 80, 80, 0.5);
+        /* Announcement */
+        .announcement {
+            background-color: rgba(50, 120, 180, 0.15);
+            border: 1px solid rgba(90, 160, 220, 0.5);
             border-radius: 6px;
             padding: 12px;
             margin-bottom: 25px;
             font-size: 14px;
-            color: #ff9999;
+            color: #b6d9ff;
             display: flex;
             align-items: center;
         }
 
-        .key-expired i {
+        .announcement i {
             margin-right: 10px;
-            font-size: 16px;
-        }
-
-        .key-expired strong {
-            color: #ff6666;
         }
 
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .form-group label {
@@ -98,43 +96,44 @@
             color: #ccc;
         }
 
+        .key-wrapper {
+            position: relative;
+        }
+
         .form-input {
             width: 100%;
-            padding: 14px;
+            padding: 14px 90px 14px 14px;
             background-color: rgba(30, 30, 40, 0.8);
             border: 1px solid rgba(80, 80, 120, 0.5);
             border-radius: 6px;
             color: #fff;
             font-size: 15px;
-            transition: all 0.3s;
+            filter: blur(6px);
+            user-select: none;
         }
 
-        .form-input:focus {
-            outline: none;
-            border-color: #6c63ff;
-            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        .form-input.show {
+            filter: blur(0);
         }
 
-        .checkbox-container {
+        .key-actions {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
             display: flex;
-            align-items: center;
-            margin-bottom: 30px;
+            gap: 10px;
         }
 
-        .checkbox-container input {
-            margin-right: 10px;
-            width: 18px;
-            height: 18px;
-            accent-color: #6c63ff;
-        }
-
-        .checkbox-container label {
-            color: #ccc;
-            font-size: 14px;
+        .key-actions button {
+            background: none;
+            border: none;
+            color: #6c63ff;
             cursor: pointer;
+            font-size: 16px;
         }
 
-        .login-button {
+        .generate-button {
             width: 100%;
             padding: 14px;
             background: linear-gradient(135deg, #6c63ff, #8a84ff);
@@ -144,18 +143,12 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
             margin-bottom: 20px;
         }
 
-        .login-button:hover {
+        .generate-button:hover {
             background: linear-gradient(135deg, #5a52e0, #7871e6);
-            transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
-        }
-
-        .login-button:active {
-            transform: translateY(0);
         }
 
         .discord-button {
@@ -168,20 +161,13 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .discord-button:hover {
-            background-color: rgba(88, 101, 242, 0.2);
-            border-color: rgba(88, 101, 242, 0.8);
-        }
-
         .discord-button i {
             margin-right: 10px;
-            font-size: 18px;
         }
 
         .footer {
@@ -190,68 +176,43 @@
             font-size: 13px;
             color: #777;
         }
-
-        .footer a {
-            color: #8a84ff;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .version {
-            color: #6c63ff;
-            font-weight: 600;
-        }
-
-        @media (max-width: 480px) {
-            .login-box {
-                padding: 20px;
-            }
-            
-            .logo {
-                font-size: 24px;
-            }
-        }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="logo">N<span>Y</span>X</div>
-        
+
         <div class="login-box">
-            <h2 class="welcome-text">Welcome Back!</h2>
-            <p class="subtitle">Enter your Key</p>
-            
-            <div class="key-expired">
-                <i class="fas fa-exclamation-circle"></i>
-                <span>Key expired in: <strong>0d, 0m, 0s</strong></span>
+            <h2 class="welcome-text">Key Generator</h2>
+            <p class="subtitle">Generate your private access key</p>
+
+            <div class="announcement">
+                <i class="fas fa-bullhorn"></i>
+                <span>Announcement: New update coming soon. Stay tuned.</span>
             </div>
-            
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" class="form-input" placeholder="Enter your username">
+
+            <div class="form-group">
+                <label for="key">Generated Key</label>
+                <div class="key-wrapper">
+                    <input type="text" id="key" class="form-input" readonly placeholder="KEY-XXX-XXX-XXX">
+                    <div class="key-actions">
+                        <button id="toggleKey" title="Show / Hide">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button id="copyKey" title="Copy">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="key">Key:</label>
-                    <input type="password" id="key" class="form-input" placeholder="Enter your key">
-                </div>
-                
-                <div class="checkbox-container">
-                    <input type="checkbox" id="remember">
-                    <label for="remember">Remember me</label>
-                </div>
-                
-                <button type="submit" class="login-button">LOGIN</button>
-                
-                <button type="button" class="discord-button">
-                    <i class="fab fa-discord"></i> Discord
-                </button>
-            </form>
-            
+            </div>
+
+            <button class="generate-button" id="generateKey">Generate Key</button>
+
+            <button type="button" class="discord-button">
+                <i class="fab fa-discord"></i> Discord
+            </button>
+
             <div class="footer">
                 <p>v3.7 Nyx @xShadow</p>
             </div>
@@ -259,32 +220,33 @@
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const key = document.getElementById('key').value;
-            
-            if (!username || !key) {
-                alert('Please enter both username and key');
-                return;
-            }
-            
-            // Simulación de login
-            const loginButton = document.querySelector('.login-button');
-            const originalText = loginButton.textContent;
-            
-            loginButton.textContent = 'Checking...';
-            loginButton.disabled = true;
-            
-            setTimeout(() => {
-                alert('Login attempt failed. Key has expired (0d, 0m, 0s)');
-                loginButton.textContent = originalText;
-                loginButton.disabled = false;
-            }, 1500);
+        const keyInput = document.getElementById('key');
+        const toggleBtn = document.getElementById('toggleKey');
+        const copyBtn = document.getElementById('copyKey');
+        const generateBtn = document.getElementById('generateKey');
+
+        function generateKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const block = () => Array.from({length: 3}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+            return `KEY-${block()}-${block()}-${block()}`;
+        }
+
+        generateBtn.addEventListener('click', () => {
+            keyInput.value = generateKey();
+            keyInput.classList.remove('show');
         });
-        
-        document.querySelector('.discord-button').addEventListener('click', function() {
+
+        toggleBtn.addEventListener('click', () => {
+            keyInput.classList.toggle('show');
+        });
+
+        copyBtn.addEventListener('click', () => {
+            if (!keyInput.value) return;
+            navigator.clipboard.writeText(keyInput.value);
+            alert('Key copied to clipboard');
+        });
+
+        document.querySelector('.discord-button').addEventListener('click', () => {
             alert('Redirecting to Discord...');
         });
     </script>
