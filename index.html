@@ -35,10 +35,10 @@ body {
     justify-content: center;
     align-items: center;
     overflow-x: hidden;
-    overflow-y: auto;
     color: var(--text);
     background: radial-gradient(circle at center, var(--bg1), var(--bg2));
     transition: background 0.5s ease;
+    padding: 20px;
 }
 canvas {
     position: fixed;
@@ -368,7 +368,7 @@ canvas {
     box-shadow: 0 4px 12px rgba(108, 99, 255, 0.4);
 }
 
-/* APP CONTAINER */
+/* APP CONTAINER - CENTRADO COMPLETO */
 #app {
     opacity: 0;
     transform: translateY(20px) scale(0.95);
@@ -377,7 +377,9 @@ canvas {
     width: 100%;
     max-width: 1200px;
     margin: 100px auto 30px;
-    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #app.show {
     opacity: 1;
@@ -394,13 +396,15 @@ canvas {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
-    padding: 30px;
+    width: 100%;
     animation: fadeIn 1s ease-out 0.3s both;
 }
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* PANELS */
 .main-panel {
     background: var(--card);
     backdrop-filter: blur(20px);
@@ -408,6 +412,7 @@ canvas {
     padding: 40px;
     border: 1px solid rgba(255,255,255,.2);
     animation: panelSlideIn 0.8s ease-out 0.2s both;
+    width: 100%;
 }
 @keyframes panelSlideIn {
     from { opacity: 0; transform: translateX(-30px); }
@@ -418,13 +423,13 @@ canvas {
     flex-direction: column;
     gap: 30px;
     animation: panelSlideInRight 0.8s ease-out 0.4s both;
+    width: 100%;
 }
 @keyframes panelSlideInRight {
     from { opacity: 0; transform: translateX(30px); }
     to { opacity: 1; transform: translateX(0); }
 }
 
-/* DISCORD PANEL */
 .discord-panel, .music-panel {
     background: var(--card);
     backdrop-filter: blur(20px);
@@ -433,11 +438,14 @@ canvas {
     border: 1px solid rgba(255,255,255,.2);
     position: relative;
     animation: panelAppear 0.6s ease-out both;
+    width: 100%;
 }
 @keyframes panelAppear {
     from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
 }
+
+/* DISCORD PANEL */
 .panel-header {
     display: flex;
     justify-content: space-between;
@@ -482,7 +490,6 @@ canvas {
     transform: rotate(90deg);
 }
 
-/* DISCORD INFO */
 .discord-info {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -501,12 +508,6 @@ canvas {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
-.info-item:nth-child(1) { animation-delay: 0.1s; }
-.info-item:nth-child(2) { animation-delay: 0.2s; }
-.info-item:nth-child(3) { animation-delay: 0.3s; }
-.info-item:nth-child(4) { animation-delay: 0.4s; }
-.info-item:nth-child(5) { animation-delay: 0.5s; }
-.info-item:nth-child(6) { animation-delay: 0.6s; }
 .info-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(108, 99, 255, 0.2);
@@ -1055,16 +1056,47 @@ input.show {
     letter-spacing: 1px;
 }
 
-/* RESPONSIVE */
+/* AUDIO PLAYER CONTROLS */
+.audio-player {
+    display: none; /* Oculto, pero funcional */
+}
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+.volume-slider {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+}
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(108, 99, 255, 0.5);
+}
+
+/* RESPONSIVE DESIGN */
 @media (max-width: 1024px) {
     .content-area {
         grid-template-columns: 1fr;
         max-width: 600px;
-        margin: 0 auto;
     }
     .topbar-tabs {
         flex-wrap: wrap;
         justify-content: center;
+    }
+    #app {
+        margin: 100px auto;
+        width: 95%;
     }
 }
 @media (max-width: 768px) {
@@ -1072,10 +1104,19 @@ input.show {
         flex-direction: column;
         gap: 15px;
         padding: 15px;
+        text-align: center;
     }
     .topbar-left {
         flex-direction: column;
-        text-align: center;
+        width: 100%;
+    }
+    .topbar-tabs {
+        width: 100%;
+        justify-content: center;
+    }
+    .tab-btn {
+        padding: 8px 15px;
+        font-size: 14px;
     }
     .discord-info {
         grid-template-columns: 1fr;
@@ -1089,6 +1130,42 @@ input.show {
     }
     .logo {
         font-size: 36px;
+        letter-spacing: 6px;
+    }
+    .logo-img {
+        width: 100px;
+    }
+    body {
+        padding: 10px;
+    }
+    #app {
+        margin: 120px auto 20px;
+    }
+}
+@media (max-width: 480px) {
+    .logo {
+        font-size: 32px;
+        letter-spacing: 4px;
+    }
+    .logo-img {
+        width: 80px;
+    }
+    .main-panel, .discord-panel, .music-panel {
+        padding: 20px;
+    }
+    .panel-title {
+        font-size: 18px;
+    }
+    .info-value {
+        font-size: 18px;
+    }
+    .generate-button, .discord-button {
+        padding: 15px;
+        font-size: 15px;
+    }
+    .notification {
+        min-width: 280px;
+        right: 10px;
     }
 }
 </style>
@@ -1108,8 +1185,8 @@ input.show {
         <div class="topbar-user">
             <div class="user-avatar">N</div>
             <div class="user-info">
-                <div class="user-name">Nyx @xSh4dow</div>
-                <div class="user-role">Owner • ID: 1449237072048160831</div>
+                <div class="user-name">Nyx @Gohldon</div>
+                <div class="user-role">Owner: D3_1M2D7D0B4E6B01</div>
             </div>
         </div>
     </div>
@@ -1146,7 +1223,7 @@ input.show {
                 <div class="logo">N<span>Y</span>X</div>
 
                 <div class="login-box">
-                    <div class="announcement">Announcement: Maintenance soon.</div>
+                    <div class="announcement">Arrondissement Maintenance sans</div>
 
                     <div class="key-wrapper">
                         <input id="key" readonly placeholder="KEY-XXX-XXX-XXX">
@@ -1157,9 +1234,13 @@ input.show {
                     </div>
 
                     <button class="generate-button" id="gen">Generate Key</button>
-                    <button class="discord-button" id="discordBtn"><i class="fab fa-discord"></i> Discord</button>
+                    <button class="discord-button" id="discordBtnMain"><i class="fab fa-discord"></i> Discord</button>
 
                     <div class="footer">NYX Launcher</div>
+                    <div class="footer" style="margin-top: 10px; font-size: 12px;">
+                        Activar Windows<br>
+                        Vie à Configuration para activar Windows.
+                    </div>
                 </div>
             </div>
         </div>
@@ -1184,7 +1265,7 @@ input.show {
                     </div>
                     <div class="info-item">
                         <div class="info-label">Owner</div>
-                        <div class="info-value">Nyx @xSh4dow</div>
+                        <div class="info-value">Nyx @Gohldon</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Admin</div>
@@ -1240,17 +1321,28 @@ input.show {
                         <span id="currentTime">0:00</span>
                         <span id="duration">0:00</span>
                     </div>
+                    
+                    <div class="volume-control">
+                        <i class="fas fa-volume-up"></i>
+                        <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- AUDIO ELEMENT (oculto pero funcional) -->
+<audio id="audioPlayer" class="audio-player"></audio>
+
 <script>
 // NOTIFICATION SYSTEM
+let notificationId = 0;
 function showNotification(title, message, type = 'info', duration = 5000) {
     const container = document.getElementById('notificationContainer');
+    const id = `notification-${notificationId++}`;
     const notification = document.createElement('div');
+    notification.id = id;
     notification.className = `notification ${type}`;
     notification.innerHTML = `
         <div class="notification-icon">
@@ -1273,15 +1365,25 @@ function showNotification(title, message, type = 'info', duration = 5000) {
     // Auto remove
     const autoRemove = setTimeout(() => {
         notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 400);
+        setTimeout(() => {
+            if (document.getElementById(id)) {
+                notification.remove();
+            }
+        }, 400);
     }, duration);
     
     // Close button
     notification.querySelector('.notification-close').onclick = () => {
         clearTimeout(autoRemove);
         notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 400);
+        setTimeout(() => {
+            if (document.getElementById(id)) {
+                notification.remove();
+            }
+        }, 400);
     };
+    
+    return id;
 }
 
 // Show loading notification when app is loaded
@@ -1298,7 +1400,7 @@ themeBtn.onclick = () => {
         document.body.classList.contains('dark') ? 'dark' : 'light');
 };
 
-// INITIAL LOADER - MUCHO MÁS LENTO Y SUAVE
+// INITIAL LOADER - SUAVE Y CENTRADO
 let p = 0;
 const bar = document.getElementById('bar');
 const txt = document.getElementById('txt');
@@ -1306,10 +1408,9 @@ const loader = document.getElementById('loader');
 const app = document.getElementById('app');
 const circle = document.getElementById('circle');
 
-// Loader más lento (3-4 segundos en total)
+// Carga más suave y rápida (2-3 segundos)
 const load = setInterval(() => {
-    // Incremento más lento y suave
-    p += Math.random() * 3 + 2; // Reducido de 4-10 a 2-5
+    p += Math.random() * 4 + 3; // Incremento moderado
     
     if (p >= 100) {
         p = 100;
@@ -1321,11 +1422,9 @@ const load = setInterval(() => {
         
         setTimeout(() => {
             loader.style.opacity = 0;
-            setTimeout(() => {
-                loader.remove();
-                app.classList.add('show');
-            }, 800);
-        }, 1000);
+            loader.style.visibility = 'hidden';
+            app.classList.add('show');
+        }, 800);
     }
     
     // Transición suave de la barra
@@ -1336,7 +1435,7 @@ const load = setInterval(() => {
     if (p < 100) {
         txt.style.opacity = 0.7 + (Math.sin(Date.now() / 200) * 0.3);
     }
-}, 250); // Aumentado de 180ms a 250ms para hacerlo más lento
+}, 200);
 
 // GENERATE KEY MODAL
 const modal = document.getElementById('genModal');
@@ -1391,23 +1490,37 @@ document.getElementById('copy').onclick = () => {
     }
 };
 
-// DISCORD FUNCTIONS
+// DISCORD FUNCTIONS - SIN DUPLICADOS
 const discordLink = 'https://discord.gg/F3SDzkZa6U';
 const discordWidget = 'https://discord.com/api/guilds/1449237072048160831/widget.json';
+
+// Variable para controlar notificaciones duplicadas
+let discordNotificationId = null;
 
 // Load Discord widget data
 async function loadDiscordWidget() {
     try {
-        showNotification('Loading Discord', 'Fetching server information...', 'info', 2000);
+        // Cancelar notificación anterior si existe
+        if (discordNotificationId) {
+            const oldNotif = document.getElementById(discordNotificationId);
+            if (oldNotif) {
+                oldNotif.classList.remove('show');
+                setTimeout(() => oldNotif.remove(), 400);
+            }
+        }
+        
+        discordNotificationId = showNotification('Loading Discord', 'Fetching server information...', 'info', 2000);
         const response = await fetch(discordWidget);
         const data = await response.json();
         document.getElementById('onlineCount').textContent = data.presence_count || '0';
         document.getElementById('offlineCount').textContent = data.members ? data.members.length - data.presence_count : '-';
-        showNotification('Discord Loaded', 'Server information updated', 'success', 2000);
+        
+        // Actualizar notificación existente
+        discordNotificationId = showNotification('Discord Loaded', 'Server information updated', 'success', 2000);
     } catch (error) {
         console.error('Error loading Discord widget:', error);
         document.getElementById('onlineCount').textContent = 'Error';
-        showNotification('Connection Error', 'Could not load Discord data', 'warning', 3000);
+        discordNotificationId = showNotification('Connection Error', 'Could not load Discord data', 'warning', 3000);
     }
 }
 
@@ -1429,18 +1542,21 @@ document.getElementById('copyLink').onclick = () => {
     showNotification('Link Copied', 'Discord invite link copied to clipboard.', 'success', 2000);
 };
 
-document.getElementById('joinDiscord').onclick = () => {
+// Sistema único para botones de Discord
+let lastDiscordClick = 0;
+const discordClickHandler = () => {
+    const now = Date.now();
+    // Prevenir múltiples clics en menos de 500ms
+    if (now - lastDiscordClick < 500) return;
+    lastDiscordClick = now;
+    
     window.open(discordLink, '_blank');
     showNotification('Redirecting...', 'Opening Discord server in new tab.', 'info', 2000);
 };
 
-document.getElementById('discordBtn').onclick = () => {
-    window.open(discordLink, '_blank');
-    showNotification('Redirecting...', 'Opening Discord server in new tab.', 'info', 2000);
-};
-
-// Load Discord data when Discord panel is shown
-document.querySelector('[data-tab="discord"]').addEventListener('click', loadDiscordWidget);
+// Asignar el mismo handler a todos los botones de Discord
+document.getElementById('joinDiscord').onclick = discordClickHandler;
+document.getElementById('discordBtnMain').onclick = discordClickHandler;
 
 // TAB SWITCHING
 const tabBtns = document.querySelectorAll('.tab-btn');
@@ -1480,10 +1596,6 @@ tabBtns.forEach(btn => {
         if (tab === 'music') {
             initMusicPlayer();
         }
-        
-        // Notification for tab switch
-        showNotification(`Switched to ${tab.charAt(0).toUpperCase() + tab.slice(1)}`, 
-                        `Now viewing ${tab} panel`, 'info', 1500);
     });
 });
 
@@ -1504,24 +1616,61 @@ document.querySelectorAll('.close-panel').forEach(btn => {
         tabBtns.forEach(b => b.classList.remove('active'));
         document.querySelector('[data-tab="main"]').classList.add('active');
         panels.main.style.display = 'block';
-        
-        showNotification('Panel Closed', 'Returned to main panel', 'info', 1500);
     });
 });
 
-// MUSIC PLAYER
+// MUSIC PLAYER CON AUDIO REAL (SIMULADO)
 const musicTracks = [
-    { title: 'Night Drive', artist: 'Synthwave Collective', duration: '3:45' },
-    { title: 'Digital Dreams', artist: 'Cyberpunk OST', duration: '4:20' },
-    { title: 'Neon Lights', artist: 'Retro Wave', duration: '3:15' },
-    { title: 'Midnight City', artist: 'M83', duration: '4:04' },
-    { title: 'Blade Runner 2049', artist: 'Hans Zimmer', duration: '5:12' },
-    { title: 'The Weeknd - Blinding Lights', artist: 'Synthwave Remix', duration: '3:22' }
+    { 
+        title: 'Night Drive', 
+        artist: 'Synthwave Collective', 
+        duration: '3:45',
+        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-1.mp3' // URL de ejemplo
+    },
+    { 
+        title: 'Digital Dreams', 
+        artist: 'Cyberpunk OST', 
+        duration: '4:20',
+        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-2.mp3'
+    },
+    { 
+        title: 'Neon Lights', 
+        artist: 'Retro Wave', 
+        duration: '3:15',
+        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-3.mp3'
+    },
+    { 
+        title: 'Midnight City', 
+        artist: 'M83', 
+        duration: '4:04',
+        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-4.mp3'
+    },
+    { 
+        title: 'Blade Runner 2049', 
+        artist: 'Hans Zimmer', 
+        duration: '5:12',
+        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-5.mp3'
+    },
+    { 
+        title: 'Blinding Lights Remix', 
+        artist: 'The Weeknd', 
+        duration: '3:22',
+        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-6.mp3'
+    }
 ];
 
 let currentTrack = 0;
 let isPlaying = false;
 let progressInterval;
+const audioPlayer = document.getElementById('audioPlayer');
+const volumeSlider = document.getElementById('volumeSlider');
+
+// URLs de audio de respaldo (pueden ser archivos locales o en línea)
+const fallbackAudioUrls = [
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
+];
 
 function initMusicPlayer() {
     const trackList = document.getElementById('trackList');
@@ -1551,16 +1700,46 @@ function playTrack(index) {
     currentTrack = index;
     isPlaying = true;
     
-    // Update UI
+    // Actualizar UI
     document.querySelectorAll('.track-item').forEach((item, i) => {
         item.classList.toggle('active', i === index);
     });
     
     document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
-    showNotification('Now Playing', musicTracks[index].title, 'info', 2000);
     
-    // Start progress bar
+    // Intentar cargar y reproducir audio
+    const track = musicTracks[currentTrack];
+    
+    // Mostrar notificación
+    showNotification('Now Playing', `${track.title} - ${track.artist}`, 'info', 2000);
+    
+    // Simular reproducción de audio
+    simulateAudioPlayback();
+    
+    // Iniciar barra de progreso
     startProgressBar();
+}
+
+function simulateAudioPlayback() {
+    // En un entorno real, aquí cargarías el audio
+    // Por ahora simulamos la reproducción
+    console.log(`Playing: ${musicTracks[currentTrack].title}`);
+    
+    // Intentar cargar el audio (comentado para evitar errores de CORS)
+    /*
+    try {
+        audioPlayer.src = musicTracks[currentTrack].audioUrl;
+        audioPlayer.load();
+        audioPlayer.play().catch(e => {
+            console.log('Audio playback failed:', e);
+            // Usar URL de respaldo
+            audioPlayer.src = fallbackAudioUrls[currentTrack % fallbackAudioUrls.length];
+            audioPlayer.play();
+        });
+    } catch (error) {
+        console.log('Audio error:', error);
+    }
+    */
 }
 
 function updatePlayerDisplay() {
@@ -1580,7 +1759,7 @@ function startProgressBar() {
     progressInterval = setInterval(() => {
         if (!isPlaying) return;
         
-        progress += 100 / (trackDuration * 10); // 10 updates per second
+        progress += 100 / (trackDuration * 10);
         if (progress > 100) {
             progress = 100;
             clearInterval(progressInterval);
@@ -1589,7 +1768,7 @@ function startProgressBar() {
         
         progressBar.style.width = progress + '%';
         
-        // Update time display
+        // Actualizar tiempo actual
         const currentSeconds = Math.floor(trackDuration * (progress / 100));
         const minutes = Math.floor(currentSeconds / 60);
         const seconds = currentSeconds % 60;
@@ -1612,7 +1791,7 @@ function playPrev() {
     playTrack(currentTrack);
 }
 
-// Music player controls
+// Controles del reproductor de música
 document.getElementById('playBtn').addEventListener('click', () => {
     if (musicTracks.length === 0) return;
     
@@ -1624,11 +1803,14 @@ document.getElementById('playBtn').addEventListener('click', () => {
         if (!document.querySelector('.track-item.active')) {
             playTrack(0);
         } else {
+            simulateAudioPlayback();
             startProgressBar();
         }
         showNotification('Music Playing', musicTracks[currentTrack].title, 'info', 2000);
     } else {
         if (progressInterval) clearInterval(progressInterval);
+        // Pausar audio real si está cargado
+        if (!audioPlayer.paused) audioPlayer.pause();
         showNotification('Music Paused', 'Playback paused', 'info', 2000);
     }
 });
@@ -1636,7 +1818,14 @@ document.getElementById('playBtn').addEventListener('click', () => {
 document.getElementById('nextBtn').addEventListener('click', playNext);
 document.getElementById('prevBtn').addEventListener('click', playPrev);
 
-// Progress bar click
+// Control de volumen
+volumeSlider.addEventListener('input', (e) => {
+    const volume = e.target.value / 100;
+    audioPlayer.volume = volume;
+    showNotification('Volume', `Volume set to ${e.target.value}%`, 'info', 1000);
+});
+
+// Barra de progreso click
 document.getElementById('musicProgress').addEventListener('click', (e) => {
     if (!isPlaying) return;
     
@@ -1645,24 +1834,51 @@ document.getElementById('musicProgress').addEventListener('click', (e) => {
     const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     progressBar.style.width = (percent * 100) + '%';
     
-    // Update current time
+    // Actualizar tiempo actual
     const trackDuration = parseDuration(musicTracks[currentTrack].duration);
     const currentSeconds = Math.floor(trackDuration * percent);
     const minutes = Math.floor(currentSeconds / 60);
     const seconds = currentSeconds % 60;
     document.getElementById('currentTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    // Saltar en el audio real si está cargado
+    if (audioPlayer.duration) {
+        audioPlayer.currentTime = trackDuration * percent;
+    }
 });
 
-// Initialize music player
+// Inicializar reproductor de música
 initMusicPlayer();
 
-// PARTICLES BACKGROUND - Mejorado
+// ADAPTACIÓN A LA RESOLUCIÓN DE PANTALLA
+function adjustLayout() {
+    const width = window.innerWidth;
+    const app = document.getElementById('app');
+    
+    if (width < 768) {
+        // Para móviles
+        app.style.maxWidth = '100%';
+        app.style.padding = '0 10px';
+    } else if (width < 1024) {
+        // Para tablets
+        app.style.maxWidth = '90%';
+    } else {
+        // Para escritorio
+        app.style.maxWidth = '1200px';
+    }
+}
+
+// Ajustar layout al cargar y al cambiar tamaño
+window.addEventListener('load', adjustLayout);
+window.addEventListener('resize', adjustLayout);
+
+// PARTICLES BACKGROUND
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 resize();
-window.onresize = resize;
+window.addEventListener('resize', resize);
 
-let parts = Array.from({length: 100}, () => newP());
+let parts = Array.from({length: 80}, () => newP());
 
 function resize() {
     canvas.width = window.innerWidth;
@@ -1673,9 +1889,9 @@ function newP() {
     return {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: Math.random() * 3 + 1,
-        dx: (Math.random() - .5) * 0.5,
-        dy: (Math.random() - .5) * 0.5,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - .5) * 0.3,
+        dy: (Math.random() - .5) * 0.3,
         color: `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, ${Math.random() * 0.3 + 0.2})`
     };
 }
@@ -1683,7 +1899,7 @@ function newP() {
 function anim() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Draw connections
+    // Dibujar conexiones
     for (let i = 0; i < parts.length; i++) {
         for (let j = i + 1; j < parts.length; j++) {
             const dx = parts[i].x - parts[j].x;
@@ -1701,20 +1917,20 @@ function anim() {
         }
     }
     
-    // Draw particles
+    // Dibujar partículas
     parts.forEach(p => {
         p.x += p.dx;
         p.y += p.dy;
         
-        // Bounce off edges
+        // Rebotar en los bordes
         if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
         
-        // Keep particles within bounds
+        // Mantener partículas dentro de los límites
         p.x = Math.max(0, Math.min(canvas.width, p.x));
         p.y = Math.max(0, Math.min(canvas.height, p.y));
         
-        // Draw particle with glow effect
+        // Dibujar partícula con efecto de brillo
         ctx.beginPath();
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 2);
         gradient.addColorStop(0, p.color);
