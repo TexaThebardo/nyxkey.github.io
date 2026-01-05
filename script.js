@@ -1,6 +1,8 @@
 // Elementos del DOM
 const loadingScreen = document.getElementById('loadingScreen');
 const mainContent = document.getElementById('mainContent');
+const circularProgress = document.getElementById('circularProgress');
+const loadingPercentage = document.getElementById('loadingPercentage');
 const generateBtn = document.getElementById('generateBtn');
 const resetBtn = document.getElementById('resetBtn');
 const keyTypeSelect = document.getElementById('keyType');
@@ -18,6 +20,12 @@ const successModal = document.getElementById('successModal');
 const modalCloseBtn = document.getElementById('modalCloseBtn');
 const modalCopyBtn = document.getElementById('modalCopyBtn');
 const toastContainer = document.getElementById('toastContainer');
+
+// Elementos para los pasos de carga
+const step1Status = document.getElementById('step1Status');
+const step2Status = document.getElementById('step2Status');
+const step3Status = document.getElementById('step3Status');
+const step4Status = document.getElementById('step4Status');
 
 // Variables de estado
 let isGenerating = false;
@@ -39,11 +47,268 @@ let stats = {
     successRate: 98.7
 };
 
-// ===== PANTALLA DE CARGA =====
+// ===== ANIMACIÓN DE CARGA CIRCULAR =====
 document.addEventListener('DOMContentLoaded', () => {
-    // Iniciar pantalla de carga
-    simulateLoading();
+    // Iniciar animación de carga circular
+    startCircularLoading();
+});
+
+function startCircularLoading() {
+    let progress = 0;
+    const steps = [
+        { target: 25, duration: 800, step: 1, text: "Conectando al servidor..." },
+        { target: 50, duration: 1000, step: 2, text: "Cargando generador..." },
+        { target: 75, duration: 1200, step: 3, text: "Verificando Discord..." },
+        { target: 100, duration: 1500, step: 4, text: "Preparando interfaz..." }
+    ];
+
+    let currentStep = 0;
     
+    function updateStep(stepIndex, status) {
+        const stepElements = document.querySelectorAll('.step');
+        const statusElements = [step1Status, step2Status, step3Status, step4Status];
+        
+        // Actualizar paso anterior
+        if (stepIndex > 0) {
+            stepElements[stepIndex - 1].classList.remove('active');
+            stepElements[stepIndex - 1].classList.add('completed');
+            statusElements[stepIndex - 1].textContent = "Completado";
+            statusElements[stepIndex - 1].style.color = "var(--success)";
+        }
+        
+        // Activar paso actual
+        if (stepIndex < stepElements.length) {
+            stepElements[stepIndex].classList.add('active');
+            statusElements[stepIndex].textContent = status;
+            statusElements[stepIndex].style.color = "var(--primary-color)";
+        }
+    }
+
+    function animateProgress() {
+        if (currentStep >= steps.length) return;
+        
+        const step = steps[currentStep];
+        const startProgress = progress;
+        const endProgress = step.target;
+        const startTime = Date.now();
+        const duration = step.duration;
+        
+        updateStep(step.step - 1, step.text);
+        
+        function update() {
+            const now = Date.now();
+            const elapsed = now - startTime;
+            const percentage = Math.min(elapsed / duration, 1);
+            
+            // Animación ease-out
+            const easeOut = 1 - Math.pow(1 - percentage, 3);
+            progress = startProgress + (endProgress - startProgress) * easeOut;
+            
+            // Actualizar círculo
+            const degrees = (progress / 100) * 360;
+            circularProgress.style.clipPath = `polygon(50% 50%, 50% 0%, ${50 + 50 * Math.sin(degrees * Math.PI / 180)}% ${50 - 50 * Math.cos(degrees * Math.PI / 180)}%)`;
+            loadingPercentage.textContent = `${Math.round(progress)}%`;
+            
+            // Efecto de brillo en el porcentaje
+            if (progress % 10 === 0 || progress === 100) {
+                loadingPercentage.style.textShadow = '0 0 15px rgba(108, 99, 255, 0.7)';
+                setTimeout(() => {
+                    loadingPercentage.style.textShadow = '0 0 10px rgba(108, 99, 255, 0.3)';
+                }, 200);
+            }
+            
+            if (percentage < 1) {
+                requestAnimationFrame(update);
+            } else {
+                progress = endProgress;
+                currentStep++;
+                
+                // Efecto especial al completar pasos
+                if (currentStep === 1) {
+                    playSoundEffect('step1');
+                } else if (currentStep === 2) {
+                    playSoundEffect('step2');
+                } else if (currentStep === 3) {
+                    playSoundEffect('step3');
+                } else if (currentStep === 4) {
+                    playSoundEffect('complete');
+                    setTimeout(() => {
+                        finishLoading();
+                    }, 500);
+                }
+                
+                setTimeout(animateProgress, 300);
+            }
+        }
+        
+        requestAnimationFrame(update);
+    }
+    
+    // Iniciar animación
+    setTimeout(() => {
+        updateStep(0, "Iniciando...");
+        animateProgress();
+    }, 500);
+}
+
+function playSoundEffect(type) {
+    // Simulación de efectos de sonido (en una implementación real usaría Audio API)
+    console.log(`Efecto de sonido: ${type}`);
+    
+    // Efecto visual en lugar de sonido
+    const logo = document.querySelector('.logo-loading');
+    logo.style.transform = 'scale(1.1)';
+    logo.style.transition = 'transform 0.3s ease';
+    
+    setTimeout(() => {
+        logo.style.transform = 'scale(1)';
+    }, 300);
+    
+    // Efecto de partículas
+    createLoadingParticles();
+}
+
+function createLoadingParticles() {
+    const container = document.querySelector('.loading-container');
+    const particleCount = 8;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'loading-particle';
+        particle.style.cssText = `
+            position: absolute;
+            width: ${Math.random() * 6 + 2}px;
+            height: ${Math.random() * 6 + 2}px;
+            background: ${i % 2 === 0 ? 'var(--primary-color)' : 'var(--accent-color)'};
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.8;
+            box-shadow: 0 0 10px ${i % 2 === 0 ? 'rgba(108, 99, 255, 0.7)' : 'rgba(0, 212, 170, 0.7)'};
+        `;
+        
+        container.appendChild(particle);
+        
+        // Animación de partícula
+        const angle = (i / particleCount) * Math.PI * 2;
+        const distance = 120 + Math.random() * 40;
+        const duration = 800 + Math.random() * 400;
+        
+        const animation = particle.animate([
+            { 
+                transform: 'translate(-50%, -50%) scale(1)',
+                opacity: 0.8 
+            },
+            { 
+                transform: `translate(
+                    ${Math.cos(angle) * distance - 50}%,
+                    ${Math.sin(angle) * distance - 50}%
+                ) scale(0)`,
+                opacity: 0 
+            }
+        ], {
+            duration: duration,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+        });
+        
+        animation.onfinish = () => particle.remove();
+    }
+}
+
+function finishLoading() {
+    // Efecto final de carga completa
+    loadingPercentage.style.fontSize = '2.5rem';
+    loadingPercentage.style.color = 'var(--success)';
+    loadingPercentage.style.textShadow = '0 0 20px rgba(0, 212, 170, 0.7)';
+    
+    circularProgress.style.borderTopColor = 'var(--success)';
+    circularProgress.style.borderRightColor = 'var(--success)';
+    
+    // Marcar todos los pasos como completados
+    document.querySelectorAll('.step').forEach(step => {
+        step.classList.add('completed');
+        step.classList.remove('active');
+    });
+    
+    // Actualizar textos finales
+    [step1Status, step2Status, step3Status, step4Status].forEach(el => {
+        el.textContent = "Completado";
+        el.style.color = "var(--success)";
+    });
+    
+    // Efecto de explosión de partículas final
+    setTimeout(() => {
+        createFinalParticles();
+    }, 300);
+    
+    // Transición a contenido principal
+    setTimeout(() => {
+        loadingScreen.style.opacity = '0';
+        loadingScreen.style.transition = 'opacity 0.8s ease';
+        
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+            
+            // Inicializar el resto del sistema
+            initializeSystem();
+        }, 800);
+    }, 1500);
+}
+
+function createFinalParticles() {
+    const container = document.querySelector('.loading-container');
+    const particleCount = 20;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'final-particle';
+        particle.style.cssText = `
+            position: absolute;
+            width: ${Math.random() * 8 + 4}px;
+            height: ${Math.random() * 8 + 4}px;
+            background: ${Math.random() > 0.5 ? 'var(--primary-color)' : 'var(--accent-color)'};
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 1;
+            box-shadow: 0 0 15px ${Math.random() > 0.5 ? 'rgba(108, 99, 255, 0.8)' : 'rgba(0, 212, 170, 0.8)'};
+        `;
+        
+        container.appendChild(particle);
+        
+        // Animación de explosión
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 80 + Math.random() * 120;
+        const duration = 600 + Math.random() * 600;
+        
+        const animation = particle.animate([
+            { 
+                transform: 'translate(-50%, -50%) scale(1)',
+                opacity: 1 
+            },
+            { 
+                transform: `translate(
+                    ${Math.cos(angle) * distance - 50}%,
+                    ${Math.sin(angle) * distance - 50}%
+                ) scale(0)`,
+                opacity: 0 
+            }
+        ], {
+            duration: duration,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+        });
+        
+        animation.onfinish = () => particle.remove();
+    }
+}
+
+// ===== INICIALIZACIÓN DEL SISTEMA =====
+function initializeSystem() {
     // Inicializar estadísticas
     updateStats();
     
@@ -55,37 +320,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Actualizar estadísticas periódicamente
     setInterval(updateLiveStats, 10000);
-});
-
-function simulateLoading() {
-    let progress = 0;
-    const progressBar = document.getElementById('progressBar');
-    const progressText = document.getElementById('progressText');
     
-    const loadingInterval = setInterval(() => {
-        progress += Math.random() * 15;
-        if (progress > 100) progress = 100;
-        
-        progressBar.style.width = `${progress}%`;
-        progressText.textContent = `${Math.round(progress)}%`;
-        
-        if (progress === 100) {
-            clearInterval(loadingInterval);
-            
-            // Esperar un poco más para efecto
-            setTimeout(() => {
-                loadingScreen.classList.add('fade-out');
-                
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                    mainContent.style.display = 'block';
-                    
-                    // Mostrar toast de bienvenida
-                    showToast('success', '¡Sistema Cargado!', 'Generador NYX v3.7 listo para usar');
-                }, 500);
-            }, 500);
-        }
-    }, 200);
+    // Mostrar toast de bienvenida
+    setTimeout(() => {
+        showToast('success', '¡Sistema Cargado!', 'Generador NYX v3.7 listo para usar');
+    }, 500);
+    
+    // Iniciar efectos de fondo
+    createBackgroundParticles();
 }
 
 // ===== ACTUALIZACIÓN DE ESTADÍSTICAS =====
@@ -437,7 +679,7 @@ resetBtn.addEventListener('click', () => {
 
 // ===== BOTÓN DISCORD =====
 discordJoinBtn.addEventListener('click', () => {
-    showToast('info', 'Redirigiendo a Discord', 'Abrindo servidor oficial NYX...');
+    showToast('info', 'Redirigiendo a Discord', 'Abriendo servidor oficial NYX...');
     discordJoinBtn.innerHTML = '<i class="fab fa-discord fa-spin"></i> CONECTANDO...';
     
     setTimeout(() => {
@@ -541,9 +783,6 @@ function animateParticle(particle) {
     
     move();
 }
-
-// Iniciar partículas cuando el contenido esté cargado
-setTimeout(createBackgroundParticles, 1000);
 
 // ===== FUNCIONALIDAD ADICIONAL =====
 // Efectos de hover para elementos interactivos
