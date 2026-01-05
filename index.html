@@ -3,200 +3,186 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NYX</title>
+<title>NYX Launcher</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
 :root{
-    --bg1:#2a2f5a;
-    --bg2:#161a3a;
-    --card:rgba(255,255,255,0.08);
+    --bg1:#e6e9ff;
+    --bg2:#cfd6ff;
+    --card:rgba(255,255,255,0.65);
     --accent:#6c63ff;
-    --text:#e0e0e0;
+    --text:#1c1c1c;
 }
 body.dark{
-    --bg1:#1a0026;
-    --bg2:#09000f;
-    --card:rgba(120,80,180,0.12);
+    --bg1:#14001f;
+    --bg2:#08000f;
+    --card:rgba(120,80,180,0.15);
     --accent:#a56bff;
     --text:#f2eaff;
 }
+
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+
 body{
     min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-    color:var(--text);
     background:radial-gradient(circle at top,var(--bg1),var(--bg2));
+    color:var(--text);
+    overflow:hidden;
 }
+
 canvas{position:fixed;inset:0;z-index:0}
 
-/* THEME TAB */
-.theme-tab{
-    position:fixed;left:0;top:50%;
+/* TOPBAR */
+.topbar{
+    position:fixed;
+    top:15px;
+    right:20px;
+    z-index:5;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--card);
+    backdrop-filter:blur(12px);
+    padding:10px 14px;
+    border-radius:12px;
+    font-weight:600;
+}
+.topbar i{color:var(--accent)}
+
+/* SIDE TABS */
+.side-tab{
+    position:fixed;
+    top:50%;
     transform:translateY(-50%);
     background:var(--card);
     backdrop-filter:blur(12px);
-    border-radius:0 12px 12px 0;
     padding:10px 12px;
-    cursor:pointer;z-index:5;
-    border:1px solid rgba(255,255,255,.2);
+    border-radius:12px;
+    cursor:pointer;
+    z-index:6;
 }
-.theme-tab i{color:var(--accent);font-size:18px}
+.left{left:0;border-radius:0 12px 12px 0}
+.right{right:0;border-radius:12px 0 0 12px}
+.side-tab i{color:var(--accent)}
 
-/* LOADER */
-#loader{
-    position:fixed;inset:0;
-    background:rgba(10,10,30,.95);
-    display:flex;flex-direction:column;
-    justify-content:center;align-items:center;
-    z-index:10;
+/* SLIDE PANELS */
+.panel{
+    position:fixed;
+    top:0;
+    bottom:0;
+    width:300px;
+    background:var(--card);
+    backdrop-filter:blur(18px);
+    z-index:7;
+    padding:20px;
+    transition:.5s ease;
 }
-.loader-circle{
-    width:90px;height:90px;border-radius:50%;
-    border:6px solid rgba(255,255,255,.2);
-    border-top-color:var(--accent);
-    animation:spin 1s linear infinite;
-    display:flex;align-items:center;justify-content:center;
-}
-.loader-circle.done{animation:none;border-color:var(--accent)}
-.loader-circle i{
-    font-size:36px;color:var(--accent);
-    opacity:0;transform:scale(.5);
-    transition:.4s ease;
-}
-.loader-circle.done i{opacity:1;transform:scale(1)}
-@keyframes spin{to{transform:rotate(360deg)}}
+.panel.right{right:-320px}
+.panel.right.show{right:0}
 
-.progress-container{
-    width:260px;height:8px;
-    background:rgba(255,255,255,.15);
-    border-radius:10px;overflow:hidden;
-    margin-top:25px;
+/* NOTIFICATIONS */
+.toast-container{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+    z-index:20;
 }
-.progress-bar{
-    height:100%;width:0%;
-    background:linear-gradient(90deg,var(--accent),#fff);
-    transition:width .6s cubic-bezier(.4,0,.2,1);
+.toast{
+    background:var(--card);
+    backdrop-filter:blur(10px);
+    border-left:4px solid var(--accent);
+    padding:12px 16px;
+    margin-top:10px;
+    border-radius:8px;
+    animation:slideIn .4s ease;
 }
-.progress-text{margin-top:12px;font-size:14px}
+@keyframes slideIn{
+    from{opacity:0;transform:translateX(20px)}
+    to{opacity:1;transform:none}
+}
 
-/* APP */
+/* MAIN */
 #app{
-    opacity:0;transform:translateY(30px);
-    transition:1s ease;z-index:2;
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
 }
-#app.show{opacity:1;transform:none}
-
-/* UI */
 .login-container{width:400px;text-align:center}
-.logo-img{
-    width:95px;
-    filter:drop-shadow(0 0 15px var(--accent));
-    animation:logoScale 3.5s ease-in-out infinite;
-}
-@keyframes logoScale{
-    0%,100%{transform:scale(1)}
-    50%{transform:scale(1.08)}
-}
+.logo-img{width:90px;animation:pulse 3s infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+
 .logo{
-    font-size:32px;letter-spacing:6px;
-    font-weight:800;margin:10px 0 25px;
-    animation:neon 3s ease-in-out infinite;
+    font-size:32px;
+    letter-spacing:6px;
+    font-weight:800;
+    animation:neon 3s infinite;
 }
 .logo span{color:var(--accent)}
 @keyframes neon{
-    0%,100%{opacity:.7;text-shadow:0 0 12px var(--accent)}
-    50%{opacity:1;text-shadow:0 0 30px var(--accent)}
+    50%{text-shadow:0 0 25px var(--accent)}
 }
+
 .login-box{
+    margin-top:25px;
     background:var(--card);
-    backdrop-filter:blur(18px);
-    border-radius:14px;padding:30px;
-    border:1px solid rgba(255,255,255,.2);
+    padding:30px;
+    border-radius:14px;
 }
+
 .announcement{
-    background:rgba(108,99,255,.15);
     border:1px solid var(--accent);
-    padding:12px;border-radius:6px;
-    margin-bottom:20px;font-size:14px;
+    padding:12px;
+    border-radius:6px;
+    margin-bottom:20px;
 }
+
 .key-wrapper{position:relative}
 input{
-    width:100%;padding:14px 90px 14px 14px;
-    background:rgba(0,0,0,.4);
-    border:1px solid rgba(255,255,255,.25);
-    border-radius:6px;color:#fff;
+    width:100%;
+    padding:14px 90px 14px 14px;
+    border-radius:6px;
+    border:1px solid rgba(0,0,0,.2);
     filter:blur(6px);
 }
 input.show{filter:none}
+
 .key-actions{
-    position:absolute;right:10px;top:50%;
+    position:absolute;
+    right:10px;
+    top:50%;
     transform:translateY(-50%);
-    display:flex;gap:10px;
+    display:flex;
+    gap:10px;
 }
 .key-actions button{
-    background:none;border:none;
-    color:var(--accent);cursor:pointer;
+    background:none;border:none;cursor:pointer;color:var(--accent)
 }
-.generate-button{
-    width:100%;margin:20px 0 12px;
-    padding:14px;border:none;border-radius:6px;
-    background:linear-gradient(135deg,var(--accent),#fff);
-    color:#000;font-weight:700;cursor:pointer;
-}
-.discord-button{
-    width:100%;padding:14px;border-radius:6px;
-    border:1px solid var(--accent);
-    background:transparent;color:var(--text);
-    font-weight:600;
-}
-.footer{margin-top:18px;font-size:13px;opacity:.7}
 
-/* GENERATOR MODAL */
-#genModal{
-    position:fixed;inset:0;
-    background:rgba(0,0,0,.65);
-    backdrop-filter:blur(8px);
-    display:flex;justify-content:center;align-items:center;
-    z-index:20;opacity:0;pointer-events:none;
-    transition:.4s ease;
+button.main{
+    width:100%;
+    margin-top:18px;
+    padding:14px;
+    border:none;
+    border-radius:6px;
+    background:linear-gradient(135deg,var(--accent),#fff);
+    font-weight:700;
+    cursor:pointer;
 }
-#genModal.show{opacity:1;pointer-events:auto}
-.gen-box{
-    width:320px;background:var(--card);
-    border-radius:14px;padding:25px;
-    text-align:center;border:1px solid rgba(255,255,255,.2);
+
+.footer{margin-top:14px;font-size:13px;opacity:.7}
+
+/* PANELS CONTENT */
+.panel h3{margin-bottom:10px}
+.blur{
+    filter:blur(6px);
 }
-.gen-circle{
-    width:80px;height:80px;border-radius:50%;
-    border:5px solid rgba(255,255,255,.2);
-    border-top-color:var(--accent);
-    animation:spin 1s linear infinite;
-    margin:0 auto 20px;
-    display:flex;align-items:center;justify-content:center;
+.panel-actions button{
+    background:none;border:none;color:var(--accent);cursor:pointer;margin-right:8px;
 }
-.gen-circle.done{
-    animation:none;border-color:var(--accent);
-}
-.gen-circle i{
-    font-size:32px;color:var(--accent);
-    opacity:0;transform:scale(.5);
-    transition:.4s ease;
-}
-.gen-circle.done i{opacity:1;transform:scale(1)}
-.gen-bar{
-    height:6px;background:rgba(255,255,255,.2);
-    border-radius:6px;overflow:hidden;margin-top:15px;
-}
-.gen-bar div{
-    height:100%;width:0%;
-    background:linear-gradient(90deg,var(--accent),#fff);
-    transition:width .5s ease;
-}
-.gen-text{margin-top:12px;font-size:14px}
 </style>
 </head>
 
@@ -204,23 +190,51 @@ input.show{filter:none}
 
 <canvas id="particles"></canvas>
 
-<div class="theme-tab" id="themeBtn"><i class="fas fa-adjust"></i></div>
-
-<!-- INITIAL LOADER -->
-<div id="loader">
-    <div class="loader-circle" id="circle"><i class="fas fa-check"></i></div>
-    <div class="progress-container"><div class="progress-bar" id="bar"></div></div>
-    <div class="progress-text" id="txt">Loading 0%</div>
+<div class="topbar">
+    <i class="fas fa-user-shield"></i>
+    Nyx @xSh4dow — Owner
 </div>
 
-<!-- GENERATOR MODAL -->
-<div id="genModal">
-    <div class="gen-box">
-        <div class="gen-circle" id="genCircle"><i class="fas fa-check"></i></div>
-        <div class="gen-text" id="genText">Generating key… 30s</div>
-        <div class="gen-bar"><div id="genBar"></div></div>
+<div class="side-tab left" id="themeBtn">
+    <i class="fas fa-adjust"></i>
+</div>
+
+<div class="side-tab right" style="top:45%" id="infoBtn">
+    <i class="fab fa-discord"></i>
+</div>
+
+<div class="side-tab right" style="top:55%" id="musicBtn">
+    <i class="fas fa-music"></i>
+</div>
+
+<!-- DISCORD INFO PANEL -->
+<div class="panel right" id="infoPanel">
+    <h3>Discord Info</h3>
+    <p><strong>Title:</strong> NYX Community</p>
+    <p>Online Users: 123</p>
+    <p>Offline Users: 45</p>
+    <br>
+    <p><strong>Owner:</strong> Nyx</p>
+    <p><strong>Admin:</strong> xSh4dow</p>
+    <p><strong>Date Creation:</strong> 2024</p>
+    <br>
+    <p>Invite:</p>
+    <p class="blur" id="invite">https://discord.gg/F3SDzkZa6U</p>
+    <div class="panel-actions">
+        <button onclick="toggleInvite()"><i class="fas fa-eye"></i></button>
+        <button onclick="copyInvite()"><i class="fas fa-copy"></i></button>
     </div>
 </div>
+
+<!-- MUSIC PANEL -->
+<div class="panel right" id="musicPanel">
+    <h3>Music Player</h3>
+    <audio id="audio" controls style="width:100%">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+    </audio>
+</div>
+
+<div class="toast-container" id="toasts"></div>
 
 <div id="app">
     <div class="login-container">
@@ -228,18 +242,18 @@ input.show{filter:none}
         <div class="logo">N<span>Y</span>X</div>
 
         <div class="login-box">
-            <div class="announcement">Announcement: Maintenance soon.</div>
+            <div class="announcement">Announcement: Welcome to NYX Launcher</div>
 
             <div class="key-wrapper">
                 <input id="key" readonly placeholder="KEY-XXX-XXX-XXX">
                 <div class="key-actions">
-                    <button id="eye"><i class="fas fa-eye"></i></button>
-                    <button id="copy"><i class="fas fa-copy"></i></button>
+                    <button onclick="toggleKey()"><i class="fas fa-eye"></i></button>
+                    <button onclick="copyKey()"><i class="fas fa-copy"></i></button>
                 </div>
             </div>
 
-            <button class="generate-button" id="gen">Generate Key</button>
-            <button class="discord-button"><i class="fab fa-discord"></i> Discord</button>
+            <button class="main" onclick="generateKey()">Generate Key</button>
+            <button class="main" onclick="joinDiscord()">Join Discord</button>
 
             <div class="footer">NYX Launcher</div>
         </div>
@@ -247,95 +261,71 @@ input.show{filter:none}
 </div>
 
 <script>
+/* TOAST */
+function toast(msg){
+    const t=document.createElement('div');
+    t.className='toast';
+    t.textContent=msg;
+    document.getElementById('toasts').appendChild(t);
+    setTimeout(()=>t.remove(),4000);
+}
+
 /* THEME */
-const themeBtn=document.getElementById('themeBtn');
 if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');
-themeBtn.onclick=()=>{
+document.getElementById('themeBtn').onclick=()=>{
     document.body.classList.toggle('dark');
-    localStorage.setItem('theme',
-        document.body.classList.contains('dark')?'dark':'light');
+    localStorage.setItem('theme',document.body.classList.contains('dark')?'dark':'light');
 };
 
-/* INITIAL LOADER */
-let p=0;
-const bar=document.getElementById('bar');
-const txt=document.getElementById('txt');
-const loader=document.getElementById('loader');
-const app=document.getElementById('app');
-const circle=document.getElementById('circle');
+/* PANELS */
+infoBtn.onclick=()=>infoPanel.classList.toggle('show');
+musicBtn.onclick=()=>musicPanel.classList.toggle('show');
 
-const load=setInterval(()=>{
-    p+=Math.random()*6+4;
-    if(p>=100){
-        p=100;clearInterval(load);
-        circle.classList.add('done');
-        setTimeout(()=>{
-            loader.style.opacity=0;
-            setTimeout(()=>{loader.remove();app.classList.add('show')},600);
-        },700);
-    }
-    bar.style.width=p+'%';
-    txt.textContent=`Loading ${Math.floor(p)}%`;
-},180);
+/* KEY */
+function generateKey(){
+    const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const g=()=>Array.from({length:3},()=>c[Math.random()*c.length|0]).join('');
+    key.value=`KEY-${g()}-${g()}-${g()}`;
+    key.classList.remove('show');
+    toast('Key generated successfully');
+}
+function toggleKey(){key.classList.toggle('show')}
+function copyKey(){
+    navigator.clipboard.writeText(key.value);
+    toast('Key copied to clipboard');
+}
 
-/* GENERATE KEY MODAL */
-const modal=document.getElementById('genModal');
-const genBar=document.getElementById('genBar');
-const genText=document.getElementById('genText');
-const genCircle=document.getElementById('genCircle');
-const keyInput=document.getElementById('key');
-
-document.getElementById('gen').onclick=()=>{
-    modal.classList.add('show');
-    genCircle.classList.remove('done');
-    let t=30;
-    let progress=0;
-    genBar.style.width='0%';
-    genText.textContent=`Generating key… ${t}s`;
-
-    const interval=setInterval(()=>{
-        t--;
-        progress+=100/30;
-        genBar.style.width=progress+'%';
-        genText.textContent=`Generating key… ${t}s`;
-
-        if(t<=0){
-            clearInterval(interval);
-            genCircle.classList.add('done');
-
-            const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            const g=()=>Array.from({length:3},()=>c[Math.random()*c.length|0]).join('');
-            keyInput.value=`KEY-${g()}-${g()}-${g()}`;
-            keyInput.classList.remove('show');
-
-            setTimeout(()=>modal.classList.remove('show'),900);
-        }
-    },1000);
-};
-
-document.getElementById('eye').onclick=()=>keyInput.classList.toggle('show');
-document.getElementById('copy').onclick=()=>keyInput.value && navigator.clipboard.writeText(keyInput.value);
+/* DISCORD */
+function joinDiscord(){
+    toast('Redirecting to Discord...');
+    setTimeout(()=>window.open('https://discord.gg/F3SDzkZa6U','_blank'),1200);
+}
+function toggleInvite(){invite.classList.toggle('blur')}
+function copyInvite(){
+    navigator.clipboard.writeText(invite.textContent);
+    toast('Discord invite copied');
+}
 
 /* PARTICLES */
 const canvas=document.getElementById('particles');
 const ctx=canvas.getContext('2d');
 resize();window.onresize=resize;
-let parts=Array.from({length:70},()=>newP());
-function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
-function newP(){
-    return{x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3};
-}
-function anim(){
+let p=Array.from({length:60},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:2,dx:Math.random()-.5,dy:Math.random()-.5}));
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
+(function anim(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='rgba(160,160,255,.55)';
-    parts.forEach(p=>{
-        p.x+=p.dx;p.y+=p.dy;
-        if(p.x<0||p.x>canvas.width||p.y<0||p.y>canvas.height)Object.assign(p,newP());
-        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(120,120,255,.6)';
+    p.forEach(o=>{
+        o.x+=o.dx;o.y+=o.dy;
+        if(o.x<0||o.x>canvas.width||o.y<0||o.y>canvas.height){
+            o.x=Math.random()*canvas.width;o.y=Math.random()*canvas.height;
+        }
+        ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fill();
     });
     requestAnimationFrame(anim);
-}
-anim();
+})();
+
+toast('Launcher loaded successfully');
 </script>
 
 </body>
