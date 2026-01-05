@@ -14,7 +14,6 @@
     --accent:#6c63ff;
     --text:#e0e0e0;
 }
-
 body.dark{
     --bg1:#1a0026;
     --bg2:#09000f;
@@ -22,9 +21,7 @@ body.dark{
     --accent:#a56bff;
     --text:#f2eaff;
 }
-
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-
 body{
     min-height:100vh;
     display:flex;
@@ -33,201 +30,173 @@ body{
     overflow:hidden;
     color:var(--text);
     background:radial-gradient(circle at top,var(--bg1),var(--bg2));
-    transition:.6s ease;
 }
-
 canvas{position:fixed;inset:0;z-index:0}
 
 /* THEME TAB */
 .theme-tab{
-    position:fixed;
-    left:0;
-    top:50%;
+    position:fixed;left:0;top:50%;
     transform:translateY(-50%);
     background:var(--card);
     backdrop-filter:blur(12px);
     border-radius:0 12px 12px 0;
     padding:10px 12px;
-    cursor:pointer;
-    z-index:5;
+    cursor:pointer;z-index:5;
     border:1px solid rgba(255,255,255,.2);
 }
 .theme-tab i{color:var(--accent);font-size:18px}
 
 /* LOADER */
 #loader{
-    position:fixed;
-    inset:0;
+    position:fixed;inset:0;
     background:rgba(10,10,30,.95);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
+    display:flex;flex-direction:column;
+    justify-content:center;align-items:center;
     z-index:10;
-    transition:.6s ease;
 }
-
 .loader-circle{
-    width:90px;
-    height:90px;
-    border-radius:50%;
+    width:90px;height:90px;border-radius:50%;
     border:6px solid rgba(255,255,255,.2);
     border-top-color:var(--accent);
     animation:spin 1s linear infinite;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display:flex;align-items:center;justify-content:center;
 }
-
-.loader-circle.done{
-    animation:none;
-    border-color:var(--accent);
-}
-
+.loader-circle.done{animation:none;border-color:var(--accent)}
 .loader-circle i{
-    font-size:36px;
-    color:var(--accent);
-    opacity:0;
-    transform:scale(.5);
+    font-size:36px;color:var(--accent);
+    opacity:0;transform:scale(.5);
     transition:.4s ease;
 }
-
-.loader-circle.done i{
-    opacity:1;
-    transform:scale(1);
-}
-
+.loader-circle.done i{opacity:1;transform:scale(1)}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 .progress-container{
-    width:260px;
-    height:8px;
+    width:260px;height:8px;
     background:rgba(255,255,255,.15);
-    border-radius:10px;
-    overflow:hidden;
+    border-radius:10px;overflow:hidden;
     margin-top:25px;
 }
-
 .progress-bar{
-    height:100%;
-    width:0%;
+    height:100%;width:0%;
     background:linear-gradient(90deg,var(--accent),#fff);
     transition:width .6s cubic-bezier(.4,0,.2,1);
 }
-
-.progress-text{
-    margin-top:12px;
-    font-size:14px;
-}
+.progress-text{margin-top:12px;font-size:14px}
 
 /* APP */
 #app{
-    opacity:0;
-    transform:translateY(30px);
-    transition:1s ease;
-    position:relative;
-    z-index:2;
+    opacity:0;transform:translateY(30px);
+    transition:1s ease;z-index:2;
 }
 #app.show{opacity:1;transform:none}
 
 /* UI */
 .login-container{width:400px;text-align:center}
-
 .logo-img{
     width:95px;
     filter:drop-shadow(0 0 15px var(--accent));
     animation:logoScale 3.5s ease-in-out infinite;
 }
-
 @keyframes logoScale{
     0%,100%{transform:scale(1)}
     50%{transform:scale(1.08)}
 }
-
 .logo{
-    font-size:32px;
-    letter-spacing:6px;
-    font-weight:800;
-    margin:10px 0 25px;
+    font-size:32px;letter-spacing:6px;
+    font-weight:800;margin:10px 0 25px;
     animation:neon 3s ease-in-out infinite;
 }
 .logo span{color:var(--accent)}
-
 @keyframes neon{
     0%,100%{opacity:.7;text-shadow:0 0 12px var(--accent)}
     50%{opacity:1;text-shadow:0 0 30px var(--accent)}
 }
-
 .login-box{
     background:var(--card);
     backdrop-filter:blur(18px);
-    border-radius:14px;
-    padding:30px;
+    border-radius:14px;padding:30px;
     border:1px solid rgba(255,255,255,.2);
 }
-
 .announcement{
     background:rgba(108,99,255,.15);
     border:1px solid var(--accent);
-    padding:12px;
-    border-radius:6px;
-    margin-bottom:20px;
-    font-size:14px;
+    padding:12px;border-radius:6px;
+    margin-bottom:20px;font-size:14px;
 }
-
 .key-wrapper{position:relative}
-
 input{
-    width:100%;
-    padding:14px 90px 14px 14px;
+    width:100%;padding:14px 90px 14px 14px;
     background:rgba(0,0,0,.4);
     border:1px solid rgba(255,255,255,.25);
-    border-radius:6px;
-    color:#fff;
+    border-radius:6px;color:#fff;
     filter:blur(6px);
 }
-
 input.show{filter:none}
-
 .key-actions{
-    position:absolute;
-    right:10px;
-    top:50%;
+    position:absolute;right:10px;top:50%;
     transform:translateY(-50%);
-    display:flex;
-    gap:10px;
+    display:flex;gap:10px;
 }
-
 .key-actions button{
-    background:none;
-    border:none;
-    color:var(--accent);
-    cursor:pointer;
+    background:none;border:none;
+    color:var(--accent);cursor:pointer;
 }
-
 .generate-button{
-    width:100%;
-    margin:20px 0 12px;
-    padding:14px;
-    border:none;
-    border-radius:6px;
+    width:100%;margin:20px 0 12px;
+    padding:14px;border:none;border-radius:6px;
     background:linear-gradient(135deg,var(--accent),#fff);
-    color:#000;
-    font-weight:700;
-    cursor:pointer;
+    color:#000;font-weight:700;cursor:pointer;
 }
-
 .discord-button{
-    width:100%;
-    padding:14px;
-    border-radius:6px;
+    width:100%;padding:14px;border-radius:6px;
     border:1px solid var(--accent);
-    background:transparent;
-    color:var(--text);
+    background:transparent;color:var(--text);
     font-weight:600;
 }
-
 .footer{margin-top:18px;font-size:13px;opacity:.7}
+
+/* GENERATOR MODAL */
+#genModal{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,.65);
+    backdrop-filter:blur(8px);
+    display:flex;justify-content:center;align-items:center;
+    z-index:20;opacity:0;pointer-events:none;
+    transition:.4s ease;
+}
+#genModal.show{opacity:1;pointer-events:auto}
+.gen-box{
+    width:320px;background:var(--card);
+    border-radius:14px;padding:25px;
+    text-align:center;border:1px solid rgba(255,255,255,.2);
+}
+.gen-circle{
+    width:80px;height:80px;border-radius:50%;
+    border:5px solid rgba(255,255,255,.2);
+    border-top-color:var(--accent);
+    animation:spin 1s linear infinite;
+    margin:0 auto 20px;
+    display:flex;align-items:center;justify-content:center;
+}
+.gen-circle.done{
+    animation:none;border-color:var(--accent);
+}
+.gen-circle i{
+    font-size:32px;color:var(--accent);
+    opacity:0;transform:scale(.5);
+    transition:.4s ease;
+}
+.gen-circle.done i{opacity:1;transform:scale(1)}
+.gen-bar{
+    height:6px;background:rgba(255,255,255,.2);
+    border-radius:6px;overflow:hidden;margin-top:15px;
+}
+.gen-bar div{
+    height:100%;width:0%;
+    background:linear-gradient(90deg,var(--accent),#fff);
+    transition:width .5s ease;
+}
+.gen-text{margin-top:12px;font-size:14px}
 </style>
 </head>
 
@@ -235,18 +204,22 @@ input.show{filter:none}
 
 <canvas id="particles"></canvas>
 
-<div class="theme-tab" id="themeBtn">
-    <i class="fas fa-adjust"></i>
+<div class="theme-tab" id="themeBtn"><i class="fas fa-adjust"></i></div>
+
+<!-- INITIAL LOADER -->
+<div id="loader">
+    <div class="loader-circle" id="circle"><i class="fas fa-check"></i></div>
+    <div class="progress-container"><div class="progress-bar" id="bar"></div></div>
+    <div class="progress-text" id="txt">Loading 0%</div>
 </div>
 
-<div id="loader">
-    <div class="loader-circle" id="circle">
-        <i class="fas fa-check"></i>
+<!-- GENERATOR MODAL -->
+<div id="genModal">
+    <div class="gen-box">
+        <div class="gen-circle" id="genCircle"><i class="fas fa-check"></i></div>
+        <div class="gen-text" id="genText">Generating key… 30s</div>
+        <div class="gen-bar"><div id="genBar"></div></div>
     </div>
-    <div class="progress-container">
-        <div class="progress-bar" id="bar"></div>
-    </div>
-    <div class="progress-text" id="txt">Loading 0%</div>
 </div>
 
 <div id="app">
@@ -275,15 +248,15 @@ input.show{filter:none}
 
 <script>
 /* THEME */
-const btn=document.getElementById('themeBtn');
-if(localStorage.getItem('theme')==='dark') document.body.classList.add('dark');
-btn.onclick=()=>{
+const themeBtn=document.getElementById('themeBtn');
+if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');
+themeBtn.onclick=()=>{
     document.body.classList.toggle('dark');
     localStorage.setItem('theme',
         document.body.classList.contains('dark')?'dark':'light');
 };
 
-/* LOADER */
+/* INITIAL LOADER */
 let p=0;
 const bar=document.getElementById('bar');
 const txt=document.getElementById('txt');
@@ -294,38 +267,60 @@ const circle=document.getElementById('circle');
 const load=setInterval(()=>{
     p+=Math.random()*6+4;
     if(p>=100){
-        p=100;
-        clearInterval(load);
+        p=100;clearInterval(load);
         circle.classList.add('done');
         setTimeout(()=>{
             loader.style.opacity=0;
-            setTimeout(()=>{
-                loader.remove();
-                app.classList.add('show');
-            },600);
+            setTimeout(()=>{loader.remove();app.classList.add('show')},600);
         },700);
     }
     bar.style.width=p+'%';
     txt.textContent=`Loading ${Math.floor(p)}%`;
 },180);
 
-/* KEY */
-const key=document.getElementById('key');
+/* GENERATE KEY MODAL */
+const modal=document.getElementById('genModal');
+const genBar=document.getElementById('genBar');
+const genText=document.getElementById('genText');
+const genCircle=document.getElementById('genCircle');
+const keyInput=document.getElementById('key');
+
 document.getElementById('gen').onclick=()=>{
-    const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const g=()=>Array.from({length:3},()=>c[Math.random()*c.length|0]).join('');
-    key.value=`KEY-${g()}-${g()}-${g()}`;
-    key.classList.remove('show');
+    modal.classList.add('show');
+    genCircle.classList.remove('done');
+    let t=30;
+    let progress=0;
+    genBar.style.width='0%';
+    genText.textContent=`Generating key… ${t}s`;
+
+    const interval=setInterval(()=>{
+        t--;
+        progress+=100/30;
+        genBar.style.width=progress+'%';
+        genText.textContent=`Generating key… ${t}s`;
+
+        if(t<=0){
+            clearInterval(interval);
+            genCircle.classList.add('done');
+
+            const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const g=()=>Array.from({length:3},()=>c[Math.random()*c.length|0]).join('');
+            keyInput.value=`KEY-${g()}-${g()}-${g()}`;
+            keyInput.classList.remove('show');
+
+            setTimeout(()=>modal.classList.remove('show'),900);
+        }
+    },1000);
 };
-document.getElementById('eye').onclick=()=>key.classList.toggle('show');
-document.getElementById('copy').onclick=()=>key.value && navigator.clipboard.writeText(key.value);
+
+document.getElementById('eye').onclick=()=>keyInput.classList.toggle('show');
+document.getElementById('copy').onclick=()=>keyInput.value && navigator.clipboard.writeText(keyInput.value);
 
 /* PARTICLES */
 const canvas=document.getElementById('particles');
 const ctx=canvas.getContext('2d');
 resize();window.onresize=resize;
 let parts=Array.from({length:70},()=>newP());
-
 function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
 function newP(){
     return{x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3};
@@ -335,7 +330,7 @@ function anim(){
     ctx.fillStyle='rgba(160,160,255,.55)';
     parts.forEach(p=>{
         p.x+=p.dx;p.y+=p.dy;
-        if(p.x<0||p.x>canvas.width||p.y<0||p.y>canvas.height) Object.assign(p,newP());
+        if(p.x<0||p.x>canvas.width||p.y<0||p.y>canvas.height)Object.assign(p,newP());
         ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
     });
     requestAnimationFrame(anim);
