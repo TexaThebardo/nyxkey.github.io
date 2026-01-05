@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>NYX</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -20,17 +20,24 @@
 
 <!-- MENU -->
 <div id="menu" class="hidden">
-    <h1>N Y X</h1>
 
+    <!-- TITULO NEON CUADRADO -->
+    <div class="nyx-box">
+        <span class="nyx-title">N&nbsp;Y&nbsp;X</span>
+    </div>
+
+    <!-- KEY -->
     <div class="key-box" id="key">
         KEY-XXX-XXX-XXX
     </div>
 
+    <!-- BUTTONS -->
     <button onclick="generateKey()">Generate Key</button>
     <button onclick="copyKey()">Copy Key</button>
+
 </div>
 
 <script src="loading.js"></script>
-<script src="index.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
