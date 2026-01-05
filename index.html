@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NYX</title>
+    <title>NYX Key System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,51 +24,70 @@
     </div>
 </div>
 
-<!-- PANEL -->
+<!-- MAIN -->
 <div id="menu" class="hidden">
 
-    <div class="panel">
+    <div class="login-box">
+
+        <!-- LOGO -->
+        <div class="logo-section">
+            <div class="logo">
+                <span class="logo-n">N</span>
+                <span class="logo-y">Y</span>
+                <span class="logo-x">X</span>
+            </div>
+            <div class="tagline">Premium Key System</div>
+        </div>
 
         <!-- HEADER -->
-        <div class="panel-header">
-            <div class="logo">NYX</div>
-            <div class="icons">
-                <span>👤</span>
-                <span>✕</span>
+        <div class="header">
+            <h1>Welcome Back!</h1>
+            <p class="subtitle">Generate or use your Key</p>
+        </div>
+
+        <!-- STATUS -->
+        <div class="key-status expired">
+            <i class="fas fa-key"></i>
+            <div>
+                <span class="status-title">Key Status:</span>
+                <span class="status-value">NOT GENERATED</span>
             </div>
         </div>
 
-        <!-- BODY -->
-        <h2>Welcome Back!</h2>
-        <p class="subtitle">Enter your Key</p>
+        <!-- KEY DISPLAY -->
+        <div class="form-group">
+            <label>
+                <i class="fas fa-key"></i> License Key
+            </label>
 
-        <p class="expire">Key expired in: <span>0d, 0m, 0s</span></p>
-
-        <div class="input-box">
-            <span>👤</span>
-            <input type="text" placeholder="Username">
+            <div class="key-display" id="key">
+                KEY-XXX-XXX-XXX
+            </div>
         </div>
 
-        <div class="input-box">
-            <span>🔒</span>
-            <input type="text" placeholder="Key">
-        </div>
-
+        <!-- OPTIONS -->
         <label class="remember">
             <input type="checkbox">
-            Remember me
+            Remember this device
         </label>
 
         <!-- BUTTONS -->
-        <div class="buttons">
-            <button class="login">LOGIN</button>
-            <button class="discord">Discord</button>
+        <button class="login-button" onclick="generateKey()">
+            <i class="fas fa-bolt"></i> GENERATE KEY
+        </button>
+
+        <button class="discord-button" onclick="copyKey()">
+            <i class="fas fa-copy"></i> COPY KEY
+        </button>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <div class="version">
+                <i class="fas fa-code"></i> v3.7 | Nyx System @xSh4dow
+            </div>
         </div>
 
-        <p class="version">v3.7 Nyx @xSh4dow</p>
-
     </div>
-
 </div>
 
 <script src="loading.js"></script>
