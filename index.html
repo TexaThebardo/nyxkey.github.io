@@ -15,9 +15,6 @@
     --success: #4CAF50;
     --error: #f44336;
     --warning: #ff9800;
-    --code-bg: #1a1a2e;
-    --code-text: #8be9fd;
-    --line-number: #6272a4;
 }
 body.dark {
     --bg1: #1a0026;
@@ -25,9 +22,6 @@ body.dark {
     --card: rgba(120,80,180,0.12);
     --accent: #a56bff;
     --text: #f2eaff;
-    --code-bg: #0f0f1f;
-    --code-text: #bd93f9;
-    --line-number: #6272a4;
 }
 * {
     margin: 0;
@@ -374,7 +368,7 @@ canvas {
     box-shadow: 0 4px 12px rgba(108, 99, 255, 0.4);
 }
 
-/* APP CONTAINER - CENTRADO COMPLETO */
+/* APP CONTAINER */
 #app {
     opacity: 0;
     transform: translateY(20px) scale(0.95);
@@ -397,10 +391,10 @@ canvas {
     50% { transform: translateY(-10px) scale(1.01); }
 }
 
-/* CONTENT AREA */
+/* CONTENT AREA - LAYOUT FLEXIBLE */
 .content-area {
     display: grid;
-    grid-template-columns: 1fr 1fr 400px;
+    grid-template-columns: 1fr 1fr;
     gap: 30px;
     width: 100%;
     animation: fadeIn 1s ease-out 0.3s both;
@@ -410,7 +404,7 @@ canvas {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* PANELS */
+/* MAIN PANEL - CON LOGIN */
 .main-panel {
     background: var(--card);
     backdrop-filter: blur(20px);
@@ -426,7 +420,9 @@ canvas {
     from { opacity: 0; transform: translateX(-30px); }
     to { opacity: 1; transform: translateX(0); }
 }
-.side-panel {
+
+/* RIGHT PANEL - PARA SCRIPTS/DISCORD/MUSIC */
+.right-panel {
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -438,22 +434,36 @@ canvas {
     to { opacity: 1; transform: translateX(0); }
 }
 
-/* CODE PANEL - NUEVO PANEL DE CÓDIGO */
-.code-panel {
-    background: var(--code-bg);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
+/* SCRIPT BOXES */
+.script-box {
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(255,255,255,0.05));
+    border-radius: 16px;
     padding: 25px;
-    border: 1px solid rgba(108, 99, 255, 0.3);
-    animation: panelSlideInRight 0.8s ease-out 0.6s both;
-    width: 100%;
-    max-height: 700px;
+    border: 1px solid rgba(108, 99, 255, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
-.code-header {
+.script-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(108, 99, 255, 0.2);
+    border-color: var(--accent);
+}
+.script-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(108, 99, 255, 0.1), transparent);
+    transition: left 0.7s;
+}
+.script-box:hover::before {
+    left: 100%;
+}
+
+.script-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -461,180 +471,168 @@ canvas {
     padding-bottom: 15px;
     border-bottom: 1px solid rgba(108, 99, 255, 0.3);
 }
-.code-title {
-    font-size: 18px;
+.script-title {
+    font-size: 22px;
     font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     color: var(--accent);
 }
-.code-title i {
+.script-title i {
     animation: iconBounce 2s ease-in-out infinite;
 }
-.code-controls {
-    display: flex;
-    gap: 10px;
+@keyframes iconBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
-.code-btn {
-    background: rgba(108, 99, 255, 0.2);
+
+.script-badge {
+    background: linear-gradient(135deg, var(--accent), #9d4edd);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* SCRIPT CONTENT */
+.script-content {
+    margin-bottom: 20px;
+}
+.script-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0.9;
+    margin-bottom: 20px;
+}
+
+.script-features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+}
+.feature-item i {
+    color: var(--accent);
+    font-size: 16px;
+}
+
+/* BUTTONS */
+.script-actions {
+    display: flex;
+    gap: 12px;
+}
+.script-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
     border: none;
-    color: var(--text);
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     font-size: 14px;
+    position: relative;
+    overflow: hidden;
 }
-.code-btn:hover {
-    background: var(--accent);
-    transform: scale(1.1);
+.script-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.7s;
 }
-.code-wrapper {
-    background: #0a0a1a;
+.script-btn:hover::before {
+    left: 100%;
+}
+.script-btn.primary {
+    background: linear-gradient(135deg, var(--accent), #9d4edd);
+    color: white;
+}
+.script-btn.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
+}
+.script-btn.secondary {
+    background: rgba(108, 99, 255, 0.1);
+    color: var(--text);
+    border: 1px solid rgba(108, 99, 255, 0.3);
+}
+.script-btn.secondary:hover {
+    background: rgba(108, 99, 255, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(108, 99, 255, 0.2);
+}
+
+/* IMAGE SCRIPT MENU */
+.script-image-box {
+    background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(255,255,255,0.05));
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid rgba(108, 99, 255, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+.script-image-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(108, 99, 255, 0.2);
+    border-color: var(--accent);
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+.image-item {
+    background: rgba(0,0,0,0.2);
     border-radius: 12px;
     overflow: hidden;
-    flex: 1;
     border: 1px solid rgba(108, 99, 255, 0.2);
-}
-.code-tabs {
-    display: flex;
-    background: #151525;
-    border-bottom: 1px solid rgba(108, 99, 255, 0.2);
-}
-.code-tab {
-    padding: 12px 20px;
-    background: transparent;
-    border: none;
-    color: var(--text);
-    font-size: 13px;
-    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s;
-    border-right: 1px solid rgba(108, 99, 255, 0.1);
+    position: relative;
 }
-.code-tab.active {
-    background: rgba(108, 99, 255, 0.2);
+.image-item:hover {
+    transform: scale(1.05);
+    border-color: var(--accent);
+    box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+}
+.image-placeholder {
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(157,78,221,0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--accent);
-    border-bottom: 2px solid var(--accent);
+    font-size: 24px;
 }
-.code-content {
-    padding: 20px;
-    max-height: 500px;
-    overflow-y: auto;
-}
-.code-content::-webkit-scrollbar {
-    width: 8px;
-}
-.code-content::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.2);
-    border-radius: 4px;
-}
-.code-content::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 4px;
-}
-.code-editor {
-    font-family: 'Consolas', 'Monaco', monospace;
-    font-size: 13px;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    color: var(--code-text);
-}
-.line-number {
-    color: var(--line-number);
-    display: inline-block;
-    width: 40px;
-    text-align: right;
-    padding-right: 15px;
-    user-select: none;
-    opacity: 0.7;
-}
-.code-line {
-    margin-bottom: 2px;
-}
-.code-comment {
-    color: #6272a4;
-    font-style: italic;
-}
-.code-keyword {
-    color: #ff79c6;
-    font-weight: bold;
-}
-.code-string {
-    color: #f1fa8c;
-}
-.code-function {
-    color: #50fa7b;
-}
-.code-number {
-    color: #bd93f9;
-}
-.code-operator {
-    color: #ff79c6;
-}
-
-.code-footer {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 15px;
-    border-top: 1px solid rgba(108, 99, 255, 0.2);
-}
-.code-status {
-    font-size: 12px;
-    color: #6272a4;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.status-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--success);
-    animation: statusPulse 2s ease-in-out infinite;
-}
-@keyframes statusPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-.code-actions {
-    display: flex;
-    gap: 10px;
-}
-.code-action-btn {
-    background: rgba(108, 99, 255, 0.2);
-    border: none;
-    color: var(--text);
-    padding: 8px 16px;
-    border-radius: 8px;
+.image-label {
+    padding: 10px;
+    text-align: center;
     font-size: 12px;
     font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.code-action-btn:hover {
-    background: var(--accent);
-    transform: translateY(-2px);
-}
-.code-action-btn.run {
-    background: linear-gradient(135deg, #50fa7b, #2ecc71);
-    color: #000;
-}
-.code-action-btn.copy {
-    background: linear-gradient(135deg, #8be9fd, #3498db);
-    color: #000;
+    background: rgba(0,0,0,0.3);
 }
 
+/* PANELS PARA DISCORD Y MUSIC */
 .discord-panel, .music-panel {
     background: var(--card);
     backdrop-filter: blur(20px);
@@ -644,6 +642,7 @@ canvas {
     position: relative;
     animation: panelAppear 0.6s ease-out both;
     width: 100%;
+    display: none;
 }
 @keyframes panelAppear {
     from { opacity: 0; transform: scale(0.9); }
@@ -668,11 +667,6 @@ canvas {
 }
 .panel-title i { 
     color: var(--accent);
-    animation: iconBounce 2s ease-in-out infinite;
-}
-@keyframes iconBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
 }
 .close-panel {
     background: none;
@@ -969,7 +963,7 @@ canvas {
     opacity: 0.8;
 }
 
-/* MAIN LOGIN BOX - CORREGIDO PARA CENTRAR */
+/* MAIN LOGIN BOX */
 .login-container {
     width: 100%;
     text-align: center;
@@ -1318,22 +1312,10 @@ input.show {
 }
 
 /* RESPONSIVE DESIGN */
-@media (max-width: 1200px) {
-    .content-area {
-        grid-template-columns: 1fr 1fr;
-    }
-    .code-panel {
-        grid-column: span 2;
-        max-height: 400px;
-    }
-}
 @media (max-width: 1024px) {
     .content-area {
         grid-template-columns: 1fr;
         max-width: 800px;
-    }
-    .code-panel {
-        grid-column: span 1;
     }
     .topbar-tabs {
         flex-wrap: wrap;
@@ -1342,6 +1324,12 @@ input.show {
     #app {
         margin: 100px auto;
         width: 95%;
+    }
+    .right-panel {
+        order: 2;
+    }
+    .main-panel {
+        order: 1;
     }
 }
 @media (max-width: 768px) {
@@ -1370,7 +1358,7 @@ input.show {
         padding: 15px;
         gap: 20px;
     }
-    .main-panel, .discord-panel, .music-panel, .code-panel {
+    .main-panel, .discord-panel, .music-panel, .script-box, .script-image-box {
         padding: 25px;
     }
     .logo {
@@ -1386,6 +1374,12 @@ input.show {
     #app {
         margin: 120px auto 20px;
     }
+    .script-actions {
+        flex-direction: column;
+    }
+    .image-grid {
+        grid-template-columns: 1fr;
+    }
 }
 @media (max-width: 480px) {
     .logo {
@@ -1395,32 +1389,22 @@ input.show {
     .logo-img {
         width: 80px;
     }
-    .main-panel, .discord-panel, .music-panel, .code-panel {
+    .main-panel, .discord-panel, .music-panel, .script-box, .script-image-box {
         padding: 20px;
     }
-    .panel-title {
+    .panel-title, .script-title {
         font-size: 18px;
     }
     .info-value {
         font-size: 18px;
     }
-    .generate-button, .discord-button {
+    .generate-button, .discord-button, .script-btn {
         padding: 15px;
         font-size: 15px;
     }
     .notification {
         min-width: 280px;
         right: 10px;
-    }
-    .code-tabs {
-        flex-wrap: wrap;
-    }
-    .code-tab {
-        flex: 1;
-        min-width: 80px;
-        text-align: center;
-        padding: 10px 5px;
-        font-size: 12px;
     }
 }
 </style>
@@ -1449,7 +1433,6 @@ input.show {
         <button class="tab-btn active" data-tab="main"><i class="fas fa-home"></i> Main</button>
         <button class="tab-btn" data-tab="discord"><i class="fab fa-discord"></i> Discord</button>
         <button class="tab-btn" data-tab="music"><i class="fas fa-music"></i> Music</button>
-        <button class="tab-btn" data-tab="code"><i class="fas fa-code"></i> Scripts</button>
     </div>
 </div>
 
@@ -1472,7 +1455,7 @@ input.show {
 <!-- MAIN APP -->
 <div id="app">
     <div class="content-area">
-        <!-- MAIN PANEL -->
+        <!-- MAIN PANEL (LOGIN) -->
         <div class="main-panel" id="mainPanel">
             <div class="login-container">
                 <div style="width: 100%; max-width: 500px; margin: 0 auto; text-align: center;">
@@ -1503,10 +1486,106 @@ input.show {
             </div>
         </div>
 
-        <!-- SIDE PANEL -->
-        <div class="side-panel">
-            <!-- DISCORD PANEL -->
-            <div class="discord-panel" id="discordPanel" style="display: none;">
+        <!-- RIGHT PANEL - PARA SCRIPTS/DISCORD/MUSIC -->
+        <div class="right-panel">
+            <!-- SCRIPTS BOXES (VISIBLE EN MAIN) -->
+            <div class="scripts-container" id="scriptsContainer">
+                <!-- NYX SCRIPT BOX -->
+                <div class="script-box">
+                    <div class="script-header">
+                        <div class="script-title">
+                            <i class="fas fa-code"></i> NYX Script
+                        </div>
+                        <div class="script-badge">v2.1</div>
+                    </div>
+                    
+                    <div class="script-content">
+                        <div class="script-desc">
+                            Advanced script executor with auto-update feature. 
+                            Includes built-in GUI, script library, and premium features.
+                        </div>
+                        
+                        <div class="script-features">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Auto-execute on game join</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Built-in script library</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Anti-detection system</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Auto-update feature</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="script-actions">
+                        <button class="script-btn primary" id="executeNyx">
+                            <i class="fas fa-play"></i> Execute
+                        </button>
+                        <button class="script-btn secondary" id="copyNyx">
+                            <i class="fas fa-copy"></i> Copy Script
+                        </button>
+                    </div>
+                </div>
+
+                <!-- IMAGE SCRIPT MENU -->
+                <div class="script-image-box">
+                    <div class="script-header">
+                        <div class="script-title">
+                            <i class="fas fa-images"></i> Image Script Menu
+                        </div>
+                        <div class="script-badge">Visual</div>
+                    </div>
+                    
+                    <div class="script-desc">
+                        Visual script selector with image previews. 
+                        Click on any script image to execute it instantly.
+                    </div>
+                    
+                    <div class="image-grid">
+                        <div class="image-item" data-script="fly">
+                            <div class="image-placeholder">
+                                <i class="fas fa-feather-alt"></i>
+                            </div>
+                            <div class="image-label">Fly Script</div>
+                        </div>
+                        <div class="image-item" data-script="esp">
+                            <div class="image-placeholder">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="image-label">ESP Hack</div>
+                        </div>
+                        <div class="image-item" data-script="aimbot">
+                            <div class="image-placeholder">
+                                <i class="fas fa-crosshairs"></i>
+                            </div>
+                            <div class="image-label">Aimbot</div>
+                        </div>
+                        <div class="image-item" data-script="speed">
+                            <div class="image-placeholder">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="image-label">Speed Hack</div>
+                        </div>
+                    </div>
+                    
+                    <div class="script-actions" style="margin-top: 20px;">
+                        <button class="script-btn primary" id="openScriptMenu">
+                            <i class="fas fa-th-large"></i> Open Menu
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DISCORD PANEL (OCULTO POR DEFECTO) -->
+            <div class="discord-panel" id="discordPanel">
                 <div class="panel-header">
                     <div class="panel-title"><i class="fab fa-discord"></i> Discord Server Info</div>
                     <button class="close-panel" data-panel="discordPanel"><i class="fas fa-times"></i></button>
@@ -1553,8 +1632,8 @@ input.show {
                 </button>
             </div>
 
-            <!-- MUSIC PANEL -->
-            <div class="music-panel" id="musicPanel" style="display: none;">
+            <!-- MUSIC PANEL (OCULTO POR DEFECTO) -->
+            <div class="music-panel" id="musicPanel">
                 <div class="panel-header">
                     <div class="panel-title"><i class="fas fa-music"></i> Music Player</div>
                     <button class="close-panel" data-panel="musicPanel"><i class="fas fa-times"></i></button>
@@ -1584,76 +1663,6 @@ input.show {
                         <i class="fas fa-volume-up"></i>
                         <input type="range" min="0" max="100" value="50" class="volume-slider" id="volumeSlider">
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- CODE PANEL - NUEVO PANEL DE CÓDIGO/SCRIPTS -->
-        <div class="code-panel" id="codePanel" style="display: none;">
-            <div class="code-header">
-                <div class="code-title">
-                    <i class="fas fa-terminal"></i> Script Executor
-                </div>
-                <div class="code-controls">
-                    <button class="code-btn" title="Minimize"><i class="fas fa-minus"></i></button>
-                    <button class="code-btn" title="Maximize"><i class="fas fa-expand"></i></button>
-                    <button class="code-btn" title="Close" data-panel="codePanel"><i class="fas fa-times"></i></button>
-                </div>
-            </div>
-
-            <div class="code-wrapper">
-                <div class="code-tabs">
-                    <button class="code-tab active" data-code="infinite">Infinite Yield</button>
-                    <button class="code-tab" data-code="solar">Solaris</button>
-                    <button class="code-tab" data-code="nyx">NYX Script</button>
-                    <button class="code-tab" data-code="custom">Custom</button>
-                </div>
-                
-                <div class="code-content">
-                    <div class="code-editor" id="codeEditor">
-                        <div class="code-line"><span class="line-number">1</span> <span class="code-comment">-- Infinite Yield v6.1</span></div>
-                        <div class="code-line"><span class="line-number">2</span> <span class="code-keyword">if</span> <span class="code-function">getgenv</span>().TY_100KDD <span class="code-keyword">and</span> <span class="code-keyword">not</span> <span class="code-function">getgenv</span>().TY_RERK == <span class="code-keyword">true</span> <span class="code-keyword">then</span></div>
-                        <div class="code-line"><span class="line-number">3</span>     <span class="code-comment">-- error("Infinite Yield is already running!", 0)</span></div>
-                        <div class="code-line"><span class="line-number">4</span>     <span class="code-keyword">return</span></div>
-                        <div class="code-line"><span class="line-number">5</span> <span class="code-keyword">end</span></div>
-                        <div class="code-line"><span class="line-number">6</span></div>
-                        <div class="code-line"><span class="line-number">7</span> <span class="code-function">getgenv</span>().TY_100KDD = <span class="code-keyword">true</span></div>
-                        <div class="code-line"><span class="line-number">8</span> <span class="code-keyword">local</span> cllower = cllower <span class="code-keyword">or</span> <span class="code-keyword">function</span>(s) <span class="code-keyword">return</span> s <span class="code-keyword">end</span></div>
-                        <div class="code-line"><span class="line-number">9</span> <span class="code-keyword">local</span> CONSULT = cllower(<span class="code-function">game</span>:<span class="code-function">GetService</span>(<span class="code-string">"CoreGui"</span>))</div>
-                        <div class="code-line"><span class="line-number">10</span> <span class="code-keyword">local</span> Player = cllower(<span class="code-function">game</span>:<span class="code-function">GetService</span>(<span class="code-string">"Players"</span>).<span class="code-function">LocalPlayer</span>)</div>
-                        <div class="code-line"><span class="line-number">11</span> <span class="code-keyword">if</span> <span class="code-keyword">not</span> <span class="code-function">game</span>:<span class="code-function">IsLoaded</span>() <span class="code-keyword">then</span></div>
-                        <div class="code-line"><span class="line-number">12</span>     <span class="code-keyword">local</span> notLoaded = <span class="code-function">Instance.new</span>(<span class="code-string">"Message"</span>)</div>
-                        <div class="code-line"><span class="line-number">13</span>     notLoaded.Parent = CONSULT</div>
-                        <div class="code-line"><span class="line-number">14</span>     notLoaded.Text = <span class="code-string">"Infinite Yield is waiting for the game to load..."</span></div>
-                        <div class="code-line"><span class="line-number">15</span>     <span class="code-function">game</span>.Loaded:<span class="code-function">Wait</span>()</div>
-                        <div class="code-line"><span class="line-number">16</span>     notLoaded:<span class="code-function">Destroy</span>()</div>
-                        <div class="code-line"><span class="line-number">17</span> <span class="code-keyword">end</span></div>
-                        <div class="code-line"><span class="line-number">18</span></div>
-                        <div class="code-line"><span class="line-number">19</span> <span class="code-keyword">local</span> currentVersion = <span class="code-string">"6.1"</span></div>
-                        <div class="code-line"><span class="line-number">20</span></div>
-                        <div class="code-line"><span class="line-number">21</span> Holder = <span class="code-function">Instance.new</span>(<span class="code-string">"Frame"</span>)</div>
-                        <div class="code-line"><span class="line-number">22</span> Title = <span class="code-function">Instance.new</span>(<span class="code-string">"TextLabel"</span>)</div>
-                        <div class="code-line"><span class="line-number">23</span> Dark = <span class="code-function">Instance.new</span>(<span class="code-string">"Frame"</span>)</div>
-                        <div class="code-line"><span class="line-number">24</span> Cushor = <span class="code-function">Instance.new</span>(<span class="code-string">"TextBox"</span>)</div>
-                        <div class="code-line"><span class="line-number">25</span> CODE = <span class="code-function">Instance.new</span>(<span class="code-string">"ScrollingFrame"</span>)</div>
-                        <div class="code-line"><span class="line-number">26</span> <span class="code-keyword">local</span> allright = <span class="code-function">Instance.new</span>(<span class="code-string">"UIListLayout"</span>)</div>
-                        <div class="code-line"><span class="line-number">27</span> <span class="code-keyword">local</span> impedition = <span class="code-function">Instance.new</span>(<span class="code-string">"ImageLabel"</span>)</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="code-footer">
-                <div class="code-status">
-                    <div class="status-indicator"></div>
-                    <span>Script Ready - Lua 5.1</span>
-                </div>
-                <div class="code-actions">
-                    <button class="code-action-btn copy" id="copyCode">
-                        <i class="fas fa-copy"></i> Copy
-                    </button>
-                    <button class="code-action-btn run" id="runCode">
-                        <i class="fas fa-play"></i> Execute
-                    </button>
                 </div>
             </div>
         </div>
@@ -1728,7 +1737,7 @@ themeBtn.onclick = () => {
         document.body.classList.contains('dark') ? 'dark' : 'light');
 };
 
-// INITIAL LOADER - SUAVE Y CENTRADO
+// INITIAL LOADER
 let p = 0;
 const bar = document.getElementById('bar');
 const txt = document.getElementById('txt');
@@ -1736,16 +1745,14 @@ const loader = document.getElementById('loader');
 const app = document.getElementById('app');
 const circle = document.getElementById('circle');
 
-// Carga más suave y rápida (2-3 segundos)
 const load = setInterval(() => {
-    p += Math.random() * 4 + 3; // Incremento moderado
+    p += Math.random() * 4 + 3;
     
     if (p >= 100) {
         p = 100;
         clearInterval(load);
         circle.classList.add('done');
         
-        // Notificación de carga completa
         showNotification('System Ready', 'All components loaded successfully!', 'success', 3000);
         
         setTimeout(() => {
@@ -1755,11 +1762,9 @@ const load = setInterval(() => {
         }, 800);
     }
     
-    // Transición suave de la barra
     bar.style.width = p + '%';
     txt.textContent = `Loading ${Math.floor(p)}%`;
     
-    // Efecto de texto animado
     if (p < 100) {
         txt.style.opacity = 0.7 + (Math.sin(Date.now() / 200) * 0.3);
     }
@@ -1795,7 +1800,6 @@ document.getElementById('gen').onclick = () => {
             keyInput.value = `KEY-${g()}-${g()}-${g()}`;
             keyInput.classList.remove('show');
 
-            // Show success notification
             showNotification('Key Generated', 'Your license key has been generated successfully!', 'success', 4000);
             
             setTimeout(() => modal.classList.remove('show'), 1200);
@@ -1818,17 +1822,14 @@ document.getElementById('copy').onclick = () => {
     }
 };
 
-// DISCORD FUNCTIONS - SIN DUPLICADOS
+// DISCORD FUNCTIONS
 const discordLink = 'https://discord.gg/F3SDzkZa6U';
 const discordWidget = 'https://discord.com/api/guilds/1449237072048160831/widget.json';
 
-// Variable para controlar notificaciones duplicadas
 let discordNotificationId = null;
 
-// Load Discord widget data
 async function loadDiscordWidget() {
     try {
-        // Cancelar notificación anterior si existe
         if (discordNotificationId) {
             const oldNotif = document.getElementById(discordNotificationId);
             if (oldNotif) {
@@ -1843,7 +1844,6 @@ async function loadDiscordWidget() {
         document.getElementById('onlineCount').textContent = data.presence_count || '0';
         document.getElementById('offlineCount').textContent = data.members ? data.members.length - data.presence_count : '-';
         
-        // Actualizar notificación existente
         discordNotificationId = showNotification('Discord Loaded', 'Server information updated', 'success', 2000);
     } catch (error) {
         console.error('Error loading Discord widget:', error);
@@ -1874,7 +1874,6 @@ document.getElementById('copyLink').onclick = () => {
 let lastDiscordClick = 0;
 const discordClickHandler = () => {
     const now = Date.now();
-    // Prevenir múltiples clics en menos de 500ms
     if (now - lastDiscordClick < 500) return;
     lastDiscordClick = now;
     
@@ -1886,297 +1885,173 @@ const discordClickHandler = () => {
 document.getElementById('joinDiscord').onclick = discordClickHandler;
 document.getElementById('discordBtnMain').onclick = discordClickHandler;
 
-// TAB SWITCHING - ACTUALIZADO CON PANEL DE CÓDIGO
+// TAB SWITCHING - SISTEMA PRINCIPAL
 const tabBtns = document.querySelectorAll('.tab-btn');
-const panels = {
-    main: document.getElementById('mainPanel'),
-    discord: document.getElementById('discordPanel'),
-    music: document.getElementById('musicPanel'),
-    code: document.getElementById('codePanel')
-};
+const scriptsContainer = document.getElementById('scriptsContainer');
+const discordPanel = document.getElementById('discordPanel');
+const musicPanel = document.getElementById('musicPanel');
 
 tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         const tab = btn.dataset.tab;
         
-        // Update active button with animation
-        tabBtns.forEach(b => {
-            b.classList.remove('active');
-            b.style.transform = 'translateY(0)';
-        });
+        // Update active button
+        tabBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        btn.style.transform = 'translateY(-2px)';
         
-        // Show selected panel, hide others
-        Object.keys(panels).forEach(key => {
-            if (key === tab) {
-                panels[key].style.display = 'block';
-                // Add fade in animation
-                panels[key].style.animation = 'panelAppear 0.6s ease-out';
-            } else {
-                panels[key].style.display = 'none';
-            }
-        });
-        
-        // Load data for tab if needed
-        if (tab === 'discord') {
+        // Show/hide panels based on tab
+        if (tab === 'main') {
+            // Show scripts, hide discord and music
+            scriptsContainer.style.display = 'flex';
+            scriptsContainer.style.flexDirection = 'column';
+            scriptsContainer.style.gap = '25px';
+            discordPanel.style.display = 'none';
+            musicPanel.style.display = 'none';
+        } 
+        else if (tab === 'discord') {
+            // Hide scripts and music, show discord
+            scriptsContainer.style.display = 'none';
+            discordPanel.style.display = 'block';
+            musicPanel.style.display = 'none';
             loadDiscordWidget();
-        }
-        if (tab === 'music') {
+        } 
+        else if (tab === 'music') {
+            // Hide scripts and discord, show music
+            scriptsContainer.style.display = 'none';
+            discordPanel.style.display = 'none';
+            musicPanel.style.display = 'block';
             initMusicPlayer();
         }
-        if (tab === 'code') {
-            initCodePanel();
+        
+        // Add animation
+        const activePanel = tab === 'main' ? scriptsContainer : 
+                           tab === 'discord' ? discordPanel : musicPanel;
+        if (activePanel) {
+            activePanel.style.animation = 'panelAppear 0.6s ease-out';
         }
     });
 });
 
-// CLOSE PANEL BUTTONS - ACTUALIZADO
-document.querySelectorAll('.close-panel, .code-btn[data-panel]').forEach(btn => {
+// CLOSE PANEL BUTTONS
+document.querySelectorAll('.close-panel').forEach(btn => {
     btn.addEventListener('click', () => {
         const panelId = btn.dataset.panel;
         const panel = document.getElementById(panelId);
         
         if (!panel) return;
         
-        // Animation for closing
         panel.style.animation = 'panelAppear 0.6s ease-out reverse';
         setTimeout(() => {
             panel.style.display = 'none';
             panel.style.animation = '';
+            
+            // Switch back to main tab
+            tabBtns.forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-tab="main"]').classList.add('active');
+            scriptsContainer.style.display = 'flex';
+            scriptsContainer.style.flexDirection = 'column';
+            scriptsContainer.style.gap = '25px';
         }, 600);
-        
-        // Switch back to main tab
-        tabBtns.forEach(b => b.classList.remove('active'));
-        document.querySelector('[data-tab="main"]').classList.add('active');
-        panels.main.style.display = 'block';
     });
 });
 
-// CODE PANEL FUNCTIONALITY
-const codeTabs = document.querySelectorAll('.code-tab');
-const codeEditor = document.getElementById('codeEditor');
-
-// Code snippets for different tabs
-const codeSnippets = {
-    infinite: `-- Infinite Yield v6.1
-if getgenv().TY_100KDD and not getgenv().TY_RERK == true then
-    -- error("Infinite Yield is already running!", 0)
-    return
-end
-
-getgenv().TY_100KDD = true
-local cllower = cllower or function(s) return s end
-local CONSULT = cllower(game:GetService("CoreGui"))
-local Player = cllower(game:GetService("Players").LocalPlayer)
-if not game:IsLoaded() then
-    local notLoaded = Instance.new("Message")
-    notLoaded.Parent = CONSULT
-    notLoaded.Text = "Infinite Yield is waiting for the game to load..."
-    game.Loaded:Wait()
-    notLoaded:Destroy()
-end
-
-local currentVersion = "6.1"
-
-Holder = Instance.new("Frame")
-Title = Instance.new("TextLabel")
-Dark = Instance.new("Frame")
-Cushor = Instance.new("TextBox")
-CODE = Instance.new("ScrollingFrame")
-local allright = Instance.new("UIListLayout")
-local impedition = Instance.new("ImageLabel")
-local uniform = Instance.new("ImageLabel")
-local flip = Instance.new("TextLabel")
-Profile = Instance.new("TextLabel")
-Profisson = Instance.new("TextLabel")
-KeyDisk = Instance.new("TextLabel")
-Stoppon = Instance.new("TextLabel")
-Button = Instance.new("TextButton")
-On = Instance.new("TextButton")
-Position = Instance.new("TextLabel")`,
-
-    solar: `-- Solaris Script
-local SolarisLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Stebulous/solaris-ui/main/library.lua"))()
-
-local win = SolarisLib:New({
-    Name = "Solaris",
-    FolderToSave = "Solaris"
-})
-
-local tab = win:Tab("Main")
-local sec = tab:Section("Auto Farm")
-
-sec:Toggle("Auto Collect", false, function(t)
-    getgenv().autocollect = t
-    while autocollect do
-        wait(0.1)
-        -- Auto collect code here
-    end
-end)
-
-sec:Toggle("Auto Attack", false, function(t)
-    getgenv().autoattack = t
-    while autoattack do
-        wait(0.5)
-        -- Auto attack code here
-    end
-end)
-
-local sec2 = tab:Section("Player")
-sec2:Slider("WalkSpeed", 16, 100, 16, function(t)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = t
-end)
-
-sec2:Slider("JumpPower", 50, 200, 50, function(t)
-    game.Players.LocalPlayer.Character.Humanoid.JumpPower = t
-end)`,
-
-    nyx: `-- NYX Script v1.0
-local NYX = {}
-
-NYX.Version = "1.0.0"
-NYX.Author = "Nyx @Gohldon"
-
-function NYX:Notify(title, message, duration)
-    game.StarterGui:SetCore("SendNotification", {
-        Title = title,
-        Text = message,
-        Duration = duration or 5
-    })
-end
-
-function NYX:Teleport(position)
-    local char = game.Players.LocalPlayer.Character
-    if char and char:FindFirstChild("HumanoidRootPart") then
-        char.HumanoidRootPart.CFrame = position
-    end
-end
-
-function NYX:GetPlayer(name)
-    for _, player in pairs(game.Players:GetPlayers()) do
-        if player.Name:lower():find(name:lower()) then
-            return player
-        end
-    end
-    return nil
-end
-
-function NYX:ExecuteCommand(cmd)
-    if cmd == "heal" then
-        -- Healing logic
-        NYX:Notify("Healed", "Player has been healed!", 3)
-    elseif cmd == "godmode" then
-        -- Godmode logic
-        NYX:Notify("Godmode", "Godmode activated!", 3)
-    end
-end
-
--- Initialize NYX
-getgenv().NYX = NYX
-NYX:Notify("NYX Script", "Loaded successfully! Version " .. NYX.Version, 5)`
-};
-
-function initCodePanel() {
-    // Set up code tabs
-    codeTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            codeTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            const codeType = tab.dataset.code;
-            updateCodeDisplay(codeType);
-        });
-    });
+// SCRIPT PANEL FUNCTIONALITY
+document.getElementById('executeNyx').addEventListener('click', () => {
+    showNotification('NYX Script', 'Executing NYX Script...', 'info', 2000);
     
-    // Set up code actions
-    document.getElementById('copyCode').addEventListener('click', () => {
-        const codeText = codeEditor.textContent;
-        navigator.clipboard.writeText(codeText);
-        showNotification('Code Copied', 'Script code copied to clipboard!', 'success', 2000);
-    });
+    // Simulate execution
+    const btn = document.getElementById('executeNyx');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Executing...';
+    btn.disabled = true;
     
-    document.getElementById('runCode').addEventListener('click', () => {
-        showNotification('Script Executed', 'Script execution simulated (demo mode)', 'info', 2000);
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        showNotification('Execution Complete', 'NYX Script executed successfully!', 'success', 3000);
+    }, 1500);
+});
+
+document.getElementById('copyNyx').addEventListener('click', () => {
+    const nyxScript = `-- NYX Script v2.1
+-- Advanced executor script
+local NYX = loadstring(game:HttpGet("https://nyxscripts.com/api/v2/loader.lua"))()
+NYX:Initialize()
+NYX:Notify("NYX Script", "Loaded successfully!")`;
+    
+    navigator.clipboard.writeText(nyxScript);
+    showNotification('Script Copied', 'NYX Script copied to clipboard!', 'success', 2000);
+});
+
+// Image Script Menu functionality
+document.querySelectorAll('.image-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const script = item.dataset.script;
+        const scriptNames = {
+            'fly': 'Fly Script',
+            'esp': 'ESP Hack',
+            'aimbot': 'Aimbot Script',
+            'speed': 'Speed Hack'
+        };
         
-        // Simulate execution animation
-        const runBtn = document.getElementById('runCode');
-        const originalText = runBtn.innerHTML;
-        runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Executing...';
-        runBtn.disabled = true;
+        showNotification('Script Selected', `Loading ${scriptNames[script]}...`, 'info', 2000);
+        
+        // Add visual feedback
+        item.style.transform = 'scale(0.95)';
+        item.style.borderColor = 'var(--accent)';
         
         setTimeout(() => {
-            runBtn.innerHTML = originalText;
-            runBtn.disabled = false;
-            showNotification('Execution Complete', 'Script executed successfully!', 'success', 2000);
-        }, 1500);
+            item.style.transform = '';
+            showNotification('Script Ready', `${scriptNames[script]} is ready to execute!`, 'success', 2000);
+        }, 500);
     });
-    
-    // Initialize with first tab
-    updateCodeDisplay('infinite');
-}
+});
 
-function updateCodeDisplay(codeType) {
-    let codeHTML = '';
-    const code = codeSnippets[codeType];
-    const lines = code.split('\n');
+document.getElementById('openScriptMenu').addEventListener('click', () => {
+    showNotification('Script Menu', 'Opening visual script selector...', 'info', 2000);
     
-    lines.forEach((line, index) => {
-        const lineNumber = index + 1;
-        let formattedLine = line;
-        
-        // Syntax highlighting
-        formattedLine = formattedLine
-            .replace(/--.*$/g, '<span class="code-comment">$&</span>')
-            .replace(/(".*?")/g, '<span class="code-string">$1</span>')
-            .replace(/\b(function|local|if|then|else|end|return|and|or|not|while|do|for|in)\b/g, '<span class="code-keyword">$1</span>')
-            .replace(/\b(getgenv|Instance\.new|game\.|wait|loadstring|pairs)\b/g, '<span class="code-function">$1</span>')
-            .replace(/\b(true|false|nil)\b/g, '<span class="code-keyword">$1</span>')
-            .replace(/\b\d+\b/g, '<span class="code-number">$&</span>');
-        
-        codeHTML += `<div class="code-line"><span class="line-number">${lineNumber}</span> ${formattedLine}</div>`;
-    });
+    // Simulate menu opening
+    const btn = document.getElementById('openScriptMenu');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening...';
     
-    codeEditor.innerHTML = codeHTML;
-}
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        showNotification('Menu Loaded', 'Visual script menu is now open!', 'success', 2000);
+    }, 1000);
+});
 
-// MUSIC PLAYER CON AUDIO REAL (SIMULADO)
+// MUSIC PLAYER
 const musicTracks = [
     { 
         title: 'Night Drive', 
         artist: 'Synthwave Collective', 
-        duration: '3:45',
-        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-1.mp3'
+        duration: '3:45'
     },
     { 
         title: 'Digital Dreams', 
         artist: 'Cyberpunk OST', 
-        duration: '4:20',
-        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-2.mp3'
+        duration: '4:20'
     },
     { 
         title: 'Neon Lights', 
         artist: 'Retro Wave', 
-        duration: '3:15',
-        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-3.mp3'
+        duration: '3:15'
     },
     { 
         title: 'Midnight City', 
         artist: 'M83', 
-        duration: '4:04',
-        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-4.mp3'
+        duration: '4:04'
     },
     { 
         title: 'Blade Runner 2049', 
         artist: 'Hans Zimmer', 
-        duration: '5:12',
-        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-5.mp3'
+        duration: '5:12'
     },
     { 
         title: 'Blinding Lights Remix', 
         artist: 'The Weeknd', 
-        duration: '3:22',
-        audioUrl: 'https://assets.codepen.io/4358584/synthwave-sample-6.mp3'
+        duration: '3:22'
     }
 ];
 
@@ -2214,7 +2089,6 @@ function playTrack(index) {
     currentTrack = index;
     isPlaying = true;
     
-    // Actualizar UI
     document.querySelectorAll('.track-item').forEach((item, i) => {
         item.classList.toggle('active', i === index);
     });
@@ -2222,19 +2096,9 @@ function playTrack(index) {
     document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
     
     const track = musicTracks[currentTrack];
-    
-    // Mostrar notificación
     showNotification('Now Playing', `${track.title} - ${track.artist}`, 'info', 2000);
     
-    // Simular reproducción de audio
-    simulateAudioPlayback();
-    
-    // Iniciar barra de progreso
     startProgressBar();
-}
-
-function simulateAudioPlayback() {
-    console.log(`Playing: ${musicTracks[currentTrack].title}`);
 }
 
 function updatePlayerDisplay() {
@@ -2285,7 +2149,7 @@ function playPrev() {
     playTrack(currentTrack);
 }
 
-// Controles del reproductor de música
+// Music player controls
 document.getElementById('playBtn').addEventListener('click', () => {
     if (musicTracks.length === 0) return;
     
@@ -2297,13 +2161,11 @@ document.getElementById('playBtn').addEventListener('click', () => {
         if (!document.querySelector('.track-item.active')) {
             playTrack(0);
         } else {
-            simulateAudioPlayback();
             startProgressBar();
         }
         showNotification('Music Playing', musicTracks[currentTrack].title, 'info', 2000);
     } else {
         if (progressInterval) clearInterval(progressInterval);
-        if (!audioPlayer.paused) audioPlayer.pause();
         showNotification('Music Paused', 'Playback paused', 'info', 2000);
     }
 });
@@ -2311,14 +2173,14 @@ document.getElementById('playBtn').addEventListener('click', () => {
 document.getElementById('nextBtn').addEventListener('click', playNext);
 document.getElementById('prevBtn').addEventListener('click', playPrev);
 
-// Control de volumen
+// Volume control
 volumeSlider.addEventListener('input', (e) => {
     const volume = e.target.value / 100;
     audioPlayer.volume = volume;
     showNotification('Volume', `Volume set to ${e.target.value}%`, 'info', 1000);
 });
 
-// Barra de progreso click
+// Progress bar click
 document.getElementById('musicProgress').addEventListener('click', (e) => {
     if (!isPlaying) return;
     
@@ -2332,16 +2194,12 @@ document.getElementById('musicProgress').addEventListener('click', (e) => {
     const minutes = Math.floor(currentSeconds / 60);
     const seconds = currentSeconds % 60;
     document.getElementById('currentTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    
-    if (audioPlayer.duration) {
-        audioPlayer.currentTime = trackDuration * percent;
-    }
 });
 
-// Inicializar reproductor de música
+// Initialize music player
 initMusicPlayer();
 
-// ADAPTACIÓN A LA RESOLUCIÓN DE PANTALLA
+// RESPONSIVE LAYOUT
 function adjustLayout() {
     const width = window.innerWidth;
     const app = document.getElementById('app');
@@ -2386,7 +2244,7 @@ function newP() {
 function anim() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Dibujar conexiones
+    // Draw connections
     for (let i = 0; i < parts.length; i++) {
         for (let j = i + 1; j < parts.length; j++) {
             const dx = parts[i].x - parts[j].x;
@@ -2404,7 +2262,7 @@ function anim() {
         }
     }
     
-    // Dibujar partículas
+    // Draw particles
     parts.forEach(p => {
         p.x += p.dx;
         p.y += p.dy;
@@ -2428,9 +2286,6 @@ function anim() {
     requestAnimationFrame(anim);
 }
 anim();
-
-// Inicializar panel de código
-initCodePanel();
 </script>
 </body>
 </html>
