@@ -3,190 +3,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nyx Login - Key System</title>
+    <title>NYX Key Generator | Freemium</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="https://img.icons8.com/color/96/000000/hexagon.png">
 </head>
 <body>
-    <div class="container">
-        <div class="login-wrapper">
-            <div class="logo-section">
-                <div class="logo">
-                    <span class="logo-n">N</span>
-                    <span class="logo-y">Y</span>
-                    <span class="logo-x">X</span>
+    <!-- Pantalla de carga -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <span class="logo-n">N</span>
+                <span class="logo-y">Y</span>
+                <span class="logo-x">X</span>
+            </div>
+            <h2 class="loading-title">Cargando Generator Key NYX Freemium</h2>
+            <p class="loading-subtitle">Esto demorará unos segundos porfavor tenga paciencia.</p>
+            
+            <div class="loading-animation">
+                <div class="spinner">
+                    <div class="spinner-circle"></div>
+                    <div class="spinner-circle"></div>
+                    <div class="spinner-circle"></div>
+                    <div class="spinner-circle"></div>
                 </div>
-                <div class="tagline">Premium Executor System</div>
+                <div class="loading-progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <span class="progress-text" id="progressText">0%</span>
+                </div>
             </div>
             
-            <div class="login-container">
-                <div class="login-box">
-                    <div class="header">
-                        <h1 class="welcome-text">Welcome Back!</h1>
-                        <p class="subtitle">Enter your License Key</p>
-                    </div>
-                    
-                    <div class="key-status warning">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <div class="status-text">
-                            <span class="status-title">License Status:</span>
-                            <span class="status-value expired">EXPIRED</span>
-                            <span class="timer">Key expired in: <span id="countdown">0d, 0m, 0s</span></span>
-                        </div>
-                    </div>
-                    
-                    <form id="loginForm" class="login-form">
-                        <div class="form-group">
-                            <label for="username">
-                                <i class="fas fa-user"></i> Username
-                            </label>
-                            <input 
-                                type="text" 
-                                id="username" 
-                                name="username" 
-                                class="form-input" 
-                                placeholder="Enter your username" 
-                                autocomplete="username"
-                                required>
-                            <div class="input-hint">Your executor username</div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="key">
-                                <i class="fas fa-key"></i> License Key
-                            </label>
-                            <input 
-                                type="password" 
-                                id="key" 
-                                name="key" 
-                                class="form-input" 
-                                placeholder="Enter your license key" 
-                                autocomplete="current-password"
-                                required>
-                            <div class="input-hint">Format: NYX-XXXX-XXXX-XXXX</div>
-                            <div class="password-toggle">
-                                <i class="fas fa-eye" id="togglePassword"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="form-options">
-                            <div class="checkbox-container">
-                                <input type="checkbox" id="remember" name="remember">
-                                <label for="remember" class="checkbox-label">
-                                    <div class="custom-checkbox"></div>
-                                    <span>Remember this device</span>
-                                </label>
-                            </div>
-                            <a href="#" class="forgot-link">Lost your key?</a>
-                        </div>
-                        
-                        <button type="submit" class="login-button" id="loginButton">
-                            <i class="fas fa-sign-in-alt"></i> VERIFY & LOGIN
-                        </button>
-                        
-                        <div class="divider">
-                            <span>OR</span>
-                        </div>
-                        
-                        <button type="button" class="discord-button" id="discordButton">
-                            <i class="fab fa-discord"></i> GET KEY ON DISCORD
-                        </button>
-                        
-                        <div class="auth-methods">
-                            <button type="button" class="auth-btn" id="hwidBtn">
-                                <i class="fas fa-fingerprint"></i> HWID Login
-                            </button>
-                            <button type="button" class="auth-btn" id="fileBtn">
-                                <i class="fas fa-file-import"></i> Load Key File
-                            </button>
-                        </div>
-                    </form>
-                    
-                    <div class="footer">
-                        <div class="version-info">
-                            <i class="fas fa-code"></i> v3.7.2 | Nyx Executor | <span id="connectionStatus" class="connected">● ONLINE</span>
-                        </div>
-                        <div class="copyright">
-                            <i class="fas fa-copyright"></i> 2024 Nyx Systems @xShadow. All rights reserved.
-                            <br>
-                            <span class="build">Build: #NYX-<span id="buildNumber">3721</span> | Loader: <span id="loaderVersion">v2.4</span></span>
-                        </div>
-                        <div class="links">
-                            <a href="#"><i class="fas fa-question-circle"></i> Support</a>
-                            <a href="#"><i class="fas fa-file-contract"></i> Terms</a>
-                            <a href="#"><i class="fas fa-shield-alt"></i> Privacy</a>
-                            <a href="#" id="toggleTheme"><i class="fas fa-moon"></i> Dark Mode</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="status-panel">
-                    <h3><i class="fas fa-server"></i> System Status</h3>
-                    <div class="status-item">
-                        <span class="status-label">Executor:</span>
-                        <span class="status-indicator online">● OPERATIONAL</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Key Server:</span>
-                        <span class="status-indicator online">● ONLINE</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Script Hub:</span>
-                        <span class="status-indicator online">● SYNCED</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Updates:</span>
-                        <span class="status-indicator offline">● MAINTENANCE</span>
-                    </div>
-                    
-                    <div class="stats">
-                        <h4><i class="fas fa-chart-line"></i> Live Stats</h4>
-                        <div class="stat">
-                            <span>Users Online:</span>
-                            <strong id="usersOnline">1,247</strong>
-                        </div>
-                        <div class="stat">
-                            <span>Keys Today:</span>
-                            <strong id="keysToday">342</strong>
-                        </div>
-                        <div class="stat">
-                            <span>Uptime:</span>
-                            <strong id="uptime">99.7%</strong>
-                        </div>
-                    </div>
-                </div>
+            <div class="loading-tip">
+                <i class="fas fa-lightbulb"></i>
+                <span>Tip: Las keys generadas son válidas por 24 horas</span>
             </div>
         </div>
-        
-        <div class="toast-container" id="toastContainer"></div>
-        
-        <div class="modal" id="keyModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3><i class="fas fa-key"></i> License Key Information</h3>
-                    <button class="close-modal">&times;</button>
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="container" id="mainContent" style="display: none;">
+        <div class="main-wrapper">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="logo-container">
+                    <div class="main-logo">
+                        <span class="logo-n">N</span>
+                        <span class="logo-y">Y</span>
+                        <span class="logo-x">X</span>
+                    </div>
+                    <div class="logo-subtitle">KEY GENERATOR v3.7</div>
                 </div>
-                <div class="modal-body">
-                    <p>Your license key has expired. To renew:</p>
-                    <ol>
-                        <li>Join our Discord server using the button below</li>
-                        <li>Navigate to the #purchase channel</li>
-                        <li>Follow the instructions to renew your subscription</li>
-                        <li>Your new key will be automatically activated</li>
-                    </ol>
-                    <div class="key-format">
-                        <h4>Key Format:</h4>
-                        <code>NYX-XXXX-XXXX-XXXX</code>
-                        <p>Where X is alphanumeric (0-9, A-F)</p>
+                
+                <div class="header-info">
+                    <div class="status-badge online">
+                        <i class="fas fa-circle"></i> GENERATOR ONLINE
+                    </div>
+                    <div class="keys-today">
+                        <i class="fas fa-key"></i> Keys generadas hoy: <span id="keysGenerated">142</span>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="modal-btn secondary" id="closeModalBtn">Close</button>
-                    <button class="modal-btn primary" id="goToDiscordBtn">
-                        <i class="fab fa-discord"></i> Open Discord
-                    </button>
+            </header>
+            
+            <div class="content-grid">
+                <!-- Panel principal - Generador de Keys -->
+                <main class="generator-panel">
+                    <div class="panel-header">
+                        <h1><i class="fas fa-key"></i> Generador de Keys NYX</h1>
+                        <p class="panel-subtitle">Genera keys aleatorias para el executor NYX Freemium</p>
+                    </div>
+                    
+                    <div class="generator-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-bolt"></i> Configuración del Generador</h3>
+                        </div>
+                        
+                        <div class="generator-settings">
+                            <div class="setting-group">
+                                <label for="keyType">
+                                    <i class="fas fa-code"></i> Tipo de Key
+                                </label>
+                                <select id="keyType" class="form-select">
+                                    <option value="freemium">NYX Freemium (24h)</option>
+                                    <option value="premium">NYX Premium (7 días)</option>
+                                    <option value="ultimate">NYX Ultimate (30 días)</option>
+                                    <option value="lifetime">NYX Lifetime</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-group">
+                                <label for="keyQuantity">
+                                    <i class="fas fa-hashtag"></i> Cantidad de Keys
+                                </label>
+                                <input type="range" id="keyQuantity" min="1" max="10" value="1" class="range-slider">
+                                <div class="range-value">
+                                    <span id="quantityValue">1</span> key(s)
+                                </div>
+                            </div>
+                            
+                            <div class="setting-group">
+                                <label>
+                                    <i class="fas fa-sliders-h"></i> Formato de Key
+                                </label>
+                                <div class="format-options">
+                                    <label class="radio-option">
+                                        <input type="radio" name="format" value="standard" checked>
+                                        <span class="radio-custom"></span>
+                                        <span>NYX-XXXX-XXXX-XXXX</span>
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="format" value="compact">
+                                        <span class="radio-custom"></span>
+                                        <span>NYX-XXXXXXXXXXXX</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="generator-actions">
+                            <button class="generate-btn" id="generateBtn">
+                                <i class="fas fa-bolt"></i> GENERAR KEY(S)
+                            </button>
+                            <button class="reset-btn" id="resetBtn">
+                                <i class="fas fa-redo"></i> RESET
+                            </button>
+                        </div>
+                        
+                        <!-- Contador de generación -->
+                        <div class="countdown-container" id="countdownContainer" style="display: none;">
+                            <div class="countdown-header">
+                                <i class="fas fa-clock"></i> Generando en:
+                            </div>
+                            <div class="countdown-timer" id="countdownTimer">10</div>
+                            <div class="countdown-text">segundos</div>
+                            <div class="loading-indicator">
+                                <div class="loading-dots">
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                    <div class="dot"></div>
+                                </div>
+                                <span>Procesando solicitud...</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Resultados de la generación -->
+                        <div class="results-container" id="resultsContainer" style="display: none;">
+                            <div class="results-header success">
+                                <i class="fas fa-check-circle"></i> ¡Keys Generadas Exitosamente!
+                            </div>
+                            
+                            <div class="generated-keys" id="generatedKeys">
+                                <!-- Las keys generadas aparecerán aquí -->
+                            </div>
+                            
+                            <div class="results-info">
+                                <div class="info-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>Expira en: <strong id="expiryDate">24 horas</strong></span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-database"></i>
+                                    <span>Keys restantes hoy: <strong id="keysRemaining">58</strong></span>
+                                </div>
+                            </div>
+                            
+                            <div class="results-actions">
+                                <button class="copy-all-btn" id="copyAllBtn">
+                                    <i class="fas fa-copy"></i> COPIAR TODAS
+                                </button>
+                                <button class="save-btn" id="saveBtn">
+                                    <i class="fas fa-save"></i> GUARDAR COMO .TXT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Instrucciones -->
+                    <div class="instructions-card">
+                        <h3><i class="fas fa-info-circle"></i> Instrucciones de Uso</h3>
+                        <ol class="instructions-list">
+                            <li>Selecciona el tipo de key que necesitas</li>
+                            <li>Haz clic en "GENERAR KEY(S)" y espera 10 segundos</li>
+                            <li>Copia la key generada usando el botón correspondiente</li>
+                            <li>En el executor NYX, pega la key en el campo correspondiente</li>
+                            <li>Disfruta de acceso premium por el tiempo especificado</li>
+                        </ol>
+                        <div class="warning-note">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Las keys son de uso personal. Compartir keys puede resultar en baneo permanente.</p>
+                        </div>
+                    </div>
+                </main>
+                
+                <!-- Panel lateral - Información de Discord -->
+                <aside class="discord-panel">
+                    <div class="discord-card">
+                        <div class="discord-header">
+                            <div class="discord-icon">
+                                <i class="fab fa-discord"></i>
+                            </div>
+                            <div class="discord-title">
+                                <h3>NYX COMMUNITY</h3>
+                                <p class="discord-subtitle">Servidor Oficial de Soporte</p>
+                            </div>
+                        </div>
+                        
+                        <div class="discord-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon online">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-label">Usuarios Online</div>
+                                    <div class="stat-value" id="discordOnline">2,847</div>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon offline">
+                                    <i class="fas fa-user-slash"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-label">Usuarios Offline</div>
+                                    <div class="stat-value" id="discordOffline">1,253</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="discord-info">
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-crown"></i> Dueño:</span>
+                                <span class="info-value">@xShadow</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-shield-alt"></i> Admin:</span>
+                                <span class="info-value">@NyxMod, @System</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-user-friends"></i> Members:</span>
+                                <span class="info-value" id="discordMembers">4,100</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-calendar-alt"></i> Date Server:</span>
+                                <span class="info-value" id="serverDate">2023-01-15</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><i class="fas fa-hashtag"></i> Canales:</span>
+                                <span class="info-value">24 activos</span>
+                            </div>
+                        </div>
+                        
+                        <div class="discord-activity">
+                            <h4><i class="fas fa-fire"></i> Actividad Reciente</h4>
+                            <ul class="activity-list">
+                                <li>
+                                    <i class="fas fa-key activity-icon key-gen"></i>
+                                    <span><strong>@User123</strong> generó una key Premium</span>
+                                    <span class="activity-time">hace 2m</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-user-plus activity-icon join"></i>
+                                    <span><strong>@NewUser</strong> se unió al servidor</span>
+                                    <span class="activity-time">hace 5m</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-code activity-icon update"></i>
+                                    <span>Nueva actualización <strong>v3.7.1</strong></span>
+                                    <span class="activity-time">hace 1h</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <button class="discord-join-btn" id="discordJoinBtn">
+                            <i class="fab fa-discord"></i> UNIRSE AL SERVIDOR
+                        </button>
+                        
+                        <div class="discord-footer">
+                            <p><i class="fas fa-star"></i> Consigue roles exclusivos en el servidor</p>
+                            <p><i class="fas fa-question-circle"></i> Soporte 24/7 disponible</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Estadísticas del generador -->
+                    <div class="stats-card">
+                        <h4><i class="fas fa-chart-bar"></i> Estadísticas del Día</h4>
+                        <div class="stats-grid">
+                            <div class="mini-stat">
+                                <div class="mini-stat-icon">
+                                    <i class="fas fa-key"></i>
+                                </div>
+                                <div class="mini-stat-content">
+                                    <div class="mini-stat-value" id="totalKeys">1,248</div>
+                                    <div class="mini-stat-label">Total Keys</div>
+                                </div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="mini-stat-content">
+                                    <div class="mini-stat-value" id="activeUsers">893</div>
+                                    <div class="mini-stat-label">Usuarios Activos</div>
+                                </div>
+                            </div>
+                            <div class="mini-stat">
+                                <div class="mini-stat-icon">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <div class="mini-stat-content">
+                                    <div class="mini-stat-value" id="successRate">98.7%</div>
+                                    <div class="mini-stat-label">Tasa de Éxito</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-update">
+                            <i class="fas fa-sync-alt"></i> Actualizado hace <span id="lastUpdate">2</span> minutos
+                        </div>
+                    </div>
+                </aside>
+            </div>
+            
+            <!-- Footer -->
+            <footer class="main-footer">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <span class="logo-small">NYX</span>
+                        <span class="footer-version">v3.7 Freemium</span>
+                    </div>
+                    
+                    <div class="footer-links">
+                        <a href="#"><i class="fas fa-book"></i> Documentación</a>
+                        <a href="#"><i class="fas fa-question-circle"></i> FAQ</a>
+                        <a href="#"><i class="fas fa-shield-alt"></i> Términos</a>
+                        <a href="#" id="themeToggle"><i class="fas fa-moon"></i> Tema Oscuro</a>
+                    </div>
+                    
+                    <div class="footer-copyright">
+                        <p>© 2024 NYX Key Generator. Sistema desarrollado por @xShadow.</p>
+                        <p class="footer-note">Este es un servicio freemium. Para funciones premium, únete a nuestro Discord.</p>
+                    </div>
                 </div>
+            </footer>
+        </div>
+    </div>
+    
+    <!-- Notificaciones Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- Modal de confirmación -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-header success">
+                <i class="fas fa-check-circle"></i>
+                <h3>¡Keys Generadas con Éxito!</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Se han generado <strong id="modalKeyCount">1</strong> key(s) correctamente.</p>
+                <div class="modal-keys" id="modalKeys">
+                    <!-- Keys en modal -->
+                </div>
+                <p class="modal-note">
+                    <i class="fas fa-clock"></i> Estas keys expirarán en <strong id="modalExpiry">24 horas</strong>.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn secondary" id="modalCloseBtn">Cerrar</button>
+                <button class="modal-btn primary" id="modalCopyBtn">
+                    <i class="fas fa-copy"></i> Copiar al Portapapeles
+                </button>
             </div>
         </div>
     </div>
