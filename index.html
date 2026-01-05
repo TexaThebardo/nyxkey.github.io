@@ -21,8 +21,8 @@ body{
     align-items:center;
     overflow:hidden;
     background:
-        radial-gradient(circle at top, #1b1f3b, #0f1224),
-        linear-gradient(135deg, #1a1f3a, #0d1025);
+        radial-gradient(circle at top, #2a2f5a, #161a3a),
+        linear-gradient(135deg, #232860, #14183b);
     color:#e0e0e0;
 }
 
@@ -37,7 +37,7 @@ canvas{
 #loader{
     position:fixed;
     inset:0;
-    background:rgba(10,12,30,0.95);
+    background:rgba(12,15,40,0.95);
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -98,10 +98,21 @@ canvas{
     text-align:center;
 }
 
+/* LOGO WITH SCALE ANIMATION */
 .logo-img{
-    width:90px;
+    width:95px;
     margin-bottom:10px;
-    filter:drop-shadow(0 0 12px rgba(108,99,255,0.6));
+    filter:drop-shadow(0 0 14px rgba(108,99,255,0.7));
+    animation:logoScale 3.5s ease-in-out infinite;
+}
+
+@keyframes logoScale{
+    0%,100%{
+        transform:scale(1);
+    }
+    50%{
+        transform:scale(1.08);
+    }
 }
 
 .logo{
@@ -120,31 +131,31 @@ canvas{
 }
 
 .login-box{
-    background:rgba(255,255,255,0.06);
-    backdrop-filter:blur(14px);
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(16px);
     border-radius:14px;
     padding:30px;
-    border:1px solid rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,0.18);
     box-shadow:0 20px 40px rgba(0,0,0,0.4);
     text-align:left;
 }
 
 .subtitle{
-    color:#ccc;
+    color:#ddd;
     font-size:14px;
     margin-bottom:20px;
 }
 
 .announcement{
-    background:rgba(108,99,255,0.12);
-    border:1px solid rgba(108,99,255,0.4);
+    background:rgba(108,99,255,0.15);
+    border:1px solid rgba(108,99,255,0.45);
     border-radius:6px;
     padding:12px;
     margin-bottom:25px;
     display:flex;
     align-items:center;
     font-size:14px;
-    color:#d4d2ff;
+    color:#e0deff;
 }
 
 .announcement i{margin-right:10px;}
@@ -178,7 +189,7 @@ input.show{filter:none;}
 .key-actions button{
     background:none;
     border:none;
-    color:#8a84ff;
+    color:#9a94ff;
     cursor:pointer;
 }
 
@@ -196,16 +207,16 @@ input.show{filter:none;}
 }
 
 .generate-button:hover{
-    box-shadow:0 0 25px rgba(108,99,255,0.6);
+    box-shadow:0 0 25px rgba(108,99,255,0.7);
 }
 
 .discord-button{
     width:100%;
     padding:14px;
-    background:rgba(88,101,242,0.15);
+    background:rgba(88,101,242,0.18);
     border:1px solid rgba(88,101,242,0.5);
     border-radius:6px;
-    color:#cdd4ff;
+    color:#d6dbff;
     font-size:16px;
     font-weight:600;
     cursor:pointer;
@@ -220,7 +231,7 @@ input.show{filter:none;}
     margin-top:25px;
     text-align:center;
     font-size:13px;
-    color:#aaa;
+    color:#bbb;
 }
 </style>
 </head>
@@ -330,7 +341,7 @@ function newParticle(){
 
 function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='rgba(140,140,255,0.6)';
+    ctx.fillStyle='rgba(150,150,255,0.55)';
     particles.forEach(p=>{
         p.x+=p.dx;
         p.y+=p.dy;
