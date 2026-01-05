@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nyx Loader</title>
+<title>Nyx Launcher</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
@@ -15,45 +15,52 @@
 }
 
 body{
-    background:#0a0a0f;
-    color:#e0e0e0;
     min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     overflow:hidden;
+    background:
+        radial-gradient(circle at top, #1b1f3b, #0f1224),
+        linear-gradient(135deg, #1a1f3a, #0d1025);
+    color:#e0e0e0;
 }
 
-/* ================= LOADER ================= */
+/* PARTICLES */
+canvas{
+    position:fixed;
+    inset:0;
+    z-index:0;
+}
+
+/* LOADER */
 #loader{
     position:fixed;
     inset:0;
-    background:#0a0a0f;
+    background:rgba(10,12,30,0.95);
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    z-index:9999;
+    z-index:10;
 }
 
 .loader-icon{
     width:90px;
     height:90px;
-    border:6px solid rgba(108,99,255,0.2);
+    border:6px solid rgba(108,99,255,0.25);
     border-top:6px solid #6c63ff;
     border-radius:50%;
     animation:spin 1s linear infinite;
     margin-bottom:25px;
 }
 
-@keyframes spin{
-    to{transform:rotate(360deg);}
-}
+@keyframes spin{to{transform:rotate(360deg);}}
 
 .progress-container{
     width:260px;
     height:8px;
-    background:rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.15);
     border-radius:10px;
     overflow:hidden;
 }
@@ -62,20 +69,21 @@ body{
     height:100%;
     width:0%;
     background:linear-gradient(90deg,#6c63ff,#8a84ff);
-    transition:width 0.2s ease;
 }
 
 .progress-text{
     margin-top:12px;
     font-size:14px;
-    color:#aaa;
+    color:#ccc;
 }
 
-/* ================= MAIN ================= */
+/* APP */
 #app{
+    position:relative;
+    z-index:2;
     opacity:0;
     transform:translateY(30px);
-    transition:opacity 1s ease, transform 1s ease;
+    transition:1s ease;
 }
 
 #app.show{
@@ -93,7 +101,7 @@ body{
 .logo-img{
     width:90px;
     margin-bottom:10px;
-    filter:drop-shadow(0 0 12px rgba(108,99,255,.6));
+    filter:drop-shadow(0 0 12px rgba(108,99,255,0.6));
 }
 
 .logo{
@@ -101,55 +109,55 @@ body{
     font-weight:800;
     letter-spacing:6px;
     margin-bottom:25px;
-    animation:neonFade 3s ease-in-out infinite;
+    animation:neon 3s ease-in-out infinite;
 }
 
 .logo span{color:#6c63ff;}
 
-@keyframes neonFade{
-    0%,100%{opacity:.6;text-shadow:0 0 10px #6c63ff;}
+@keyframes neon{
+    0%,100%{opacity:.7;text-shadow:0 0 12px #6c63ff;}
     50%{opacity:1;text-shadow:0 0 30px #6c63ff;}
 }
 
 .login-box{
-    background:rgba(20,20,30,.85);
-    border-radius:12px;
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:blur(14px);
+    border-radius:14px;
     padding:30px;
-    border:1px solid rgba(80,80,120,.3);
-    box-shadow:0 10px 30px rgba(0,0,0,.5);
+    border:1px solid rgba(255,255,255,0.15);
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
     text-align:left;
 }
 
 .subtitle{
-    color:#aaa;
+    color:#ccc;
     font-size:14px;
     margin-bottom:20px;
 }
 
 .announcement{
-    background:rgba(50,120,180,.15);
-    border:1px solid rgba(90,160,220,.5);
+    background:rgba(108,99,255,0.12);
+    border:1px solid rgba(108,99,255,0.4);
     border-radius:6px;
     padding:12px;
     margin-bottom:25px;
     display:flex;
     align-items:center;
     font-size:14px;
-    color:#b6d9ff;
+    color:#d4d2ff;
 }
 
 .announcement i{margin-right:10px;}
 
-.form-group{margin-bottom:20px;}
-label{font-size:14px;color:#ccc;margin-bottom:6px;display:block;}
+label{font-size:14px;color:#ccc;}
 
-.key-wrapper{position:relative;}
+.key-wrapper{position:relative;margin-top:8px;}
 
 input{
     width:100%;
     padding:14px 90px 14px 14px;
-    background:rgba(30,30,40,.8);
-    border:1px solid rgba(80,80,120,.5);
+    background:rgba(0,0,0,0.35);
+    border:1px solid rgba(255,255,255,0.25);
     border-radius:6px;
     color:#fff;
     font-size:15px;
@@ -170,9 +178,8 @@ input.show{filter:none;}
 .key-actions button{
     background:none;
     border:none;
-    color:#6c63ff;
+    color:#8a84ff;
     cursor:pointer;
-    font-size:16px;
 }
 
 .generate-button{
@@ -185,20 +192,20 @@ input.show{filter:none;}
     font-size:16px;
     font-weight:600;
     cursor:pointer;
-    margin-bottom:15px;
+    margin:20px 0 15px;
 }
 
 .generate-button:hover{
-    box-shadow:0 0 20px rgba(108,99,255,.6);
+    box-shadow:0 0 25px rgba(108,99,255,0.6);
 }
 
 .discord-button{
     width:100%;
     padding:14px;
-    background:rgba(88,101,242,.1);
-    border:1px solid rgba(88,101,242,.5);
+    background:rgba(88,101,242,0.15);
+    border:1px solid rgba(88,101,242,0.5);
     border-radius:6px;
-    color:#8a9cff;
+    color:#cdd4ff;
     font-size:16px;
     font-weight:600;
     cursor:pointer;
@@ -213,20 +220,22 @@ input.show{filter:none;}
     margin-top:25px;
     text-align:center;
     font-size:13px;
-    color:#777;
+    color:#aaa;
 }
 </style>
 </head>
 
 <body>
 
+<canvas id="particles"></canvas>
+
 <!-- LOADER -->
 <div id="loader">
     <div class="loader-icon"></div>
     <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
+        <div class="progress-bar" id="bar"></div>
     </div>
-    <div class="progress-text" id="progressText">Loading 0%</div>
+    <div class="progress-text" id="txt">Loading 0%</div>
 </div>
 
 <!-- APP -->
@@ -243,22 +252,17 @@ input.show{filter:none;}
                 Announcement: New update coming soon.
             </div>
 
-            <div class="form-group">
-                <label>Generated Key</label>
-                <div class="key-wrapper">
-                    <input type="text" id="key" readonly placeholder="KEY-XXX-XXX-XXX">
-                    <div class="key-actions">
-                        <button id="toggleKey"><i class="fas fa-eye"></i></button>
-                        <button id="copyKey"><i class="fas fa-copy"></i></button>
-                    </div>
+            <label>Generated Key</label>
+            <div class="key-wrapper">
+                <input id="key" readonly placeholder="KEY-XXX-XXX-XXX">
+                <div class="key-actions">
+                    <button id="toggle"><i class="fas fa-eye"></i></button>
+                    <button id="copy"><i class="fas fa-copy"></i></button>
                 </div>
             </div>
 
-            <button class="generate-button" id="generateKey">Generate Key</button>
-
-            <button class="discord-button">
-                <i class="fab fa-discord"></i> Discord
-            </button>
+            <button class="generate-button" id="gen">Generate Key</button>
+            <button class="discord-button"><i class="fab fa-discord"></i> Discord</button>
 
             <div class="footer">v3.7 Nyx @xShadow</div>
         </div>
@@ -266,39 +270,79 @@ input.show{filter:none;}
 </div>
 
 <script>
-let progress = 0;
-const bar = document.getElementById('progressBar');
-const text = document.getElementById('progressText');
-const loader = document.getElementById('loader');
-const app = document.getElementById('app');
+/* LOADER */
+let p=0;
+const bar=document.getElementById('bar');
+const txt=document.getElementById('txt');
+const loader=document.getElementById('loader');
+const app=document.getElementById('app');
 
-const interval = setInterval(()=>{
-    progress += Math.floor(Math.random()*8)+3;
-    if(progress>=100){
-        progress=100;
-        clearInterval(interval);
+const load=setInterval(()=>{
+    p+=Math.random()*7+3;
+    if(p>=100){
+        p=100;
+        clearInterval(load);
         setTimeout(()=>{
             loader.style.opacity=0;
             setTimeout(()=>{
-                loader.style.display='none';
+                loader.remove();
                 app.classList.add('show');
             },600);
-        },500);
+        },400);
     }
-    bar.style.width = progress + '%';
-    text.textContent = `Loading ${progress}%`;
-},200);
+    bar.style.width=p+'%';
+    txt.textContent=`Loading ${Math.floor(p)}%`;
+},180);
 
-// Key system
-const keyInput=document.getElementById('key');
-document.getElementById('generateKey').onclick=()=>{
+/* KEYS */
+const key=document.getElementById('key');
+document.getElementById('gen').onclick=()=>{
     const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const b=()=>Array.from({length:3},()=>c[Math.floor(Math.random()*c.length)]).join('');
-    keyInput.value=`KEY-${b()}-${b()}-${b()}`;
-    keyInput.classList.remove('show');
+    key.value=`KEY-${b()}-${b()}-${b()}`;
+    key.classList.remove('show');
 };
-document.getElementById('toggleKey').onclick=()=>keyInput.classList.toggle('show');
-document.getElementById('copyKey').onclick=()=>keyInput.value && navigator.clipboard.writeText(keyInput.value);
+document.getElementById('toggle').onclick=()=>key.classList.toggle('show');
+document.getElementById('copy').onclick=()=>key.value && navigator.clipboard.writeText(key.value);
+
+/* PARTICLES */
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+resize();
+window.onresize=resize;
+
+let particles=Array.from({length:70},()=>newParticle());
+
+function resize(){
+    canvas.width=innerWidth;
+    canvas.height=innerHeight;
+}
+
+function newParticle(){
+    return{
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:Math.random()*2+1,
+        dx:(Math.random()-.5)*0.3,
+        dy:(Math.random()-.5)*0.3
+    };
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='rgba(140,140,255,0.6)';
+    particles.forEach(p=>{
+        p.x+=p.dx;
+        p.y+=p.dy;
+        if(p.x<0||p.x>canvas.width||p.y<0||p.y>canvas.height)
+            Object.assign(p,newParticle());
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+    });
+    requestAnimationFrame(animate);
+}
+animate();
 </script>
 
 </body>
