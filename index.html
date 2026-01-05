@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nyx Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(28, 58, 173, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(200, 50, 150, 0.1) 0%, transparent 20%);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 5px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(100, 100, 255, 0.5);
+        }
+
+        .logo span {
+            color: #6c63ff;
+        }
+
+        .login-box {
+            background-color: rgba(20, 20, 30, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(80, 80, 120, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .welcome-text {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .key-expired {
+            background-color: rgba(180, 50, 50, 0.2);
+            border: 1px solid rgba(220, 80, 80, 0.5);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #ff9999;
+            display: flex;
+            align-items: center;
+        }
+
+        .key-expired i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .key-expired strong {
+            color: #ff6666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            background-color: rgba(30, 30, 40, 0.8);
+            border: 1px solid rgba(80, 80, 120, 0.5);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6c63ff;
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .checkbox-container input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: #6c63ff;
+        }
+
+        .checkbox-container label {
+            color: #ccc;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #6c63ff, #8a84ff);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .login-button:hover {
+            background: linear-gradient(135deg, #5a52e0, #7871e6);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .discord-button {
+            width: 100%;
+            padding: 14px;
+            background-color: rgba(88, 101, 242, 0.1);
+            border: 1px solid rgba(88, 101, 242, 0.5);
+            border-radius: 6px;
+            color: #8a9cff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .discord-button:hover {
+            background-color: rgba(88, 101, 242, 0.2);
+            border-color: rgba(88, 101, 242, 0.8);
+        }
+
+        .discord-button i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .footer a {
+            color: #8a84ff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .version {
+            color: #6c63ff;
+            font-weight: 600;
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 20px;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">N<span>Y</span>X</div>
+        
+        <div class="login-box">
+            <h2 class="welcome-text">Welcome Back!</h2>
+            <p class="subtitle">Enter your Key</p>
+            
+            <div class="key-expired">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>Key expired in: <strong>0d, 0m, 0s</strong></span>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" class="form-input" placeholder="Enter your username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="key">Key:</label>
+                    <input type="password" id="key" class="form-input" placeholder="Enter your key">
+                </div>
+                
+                <div class="checkbox-container">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Remember me</label>
+                </div>
+                
+                <button type="submit" class="login-button">LOGIN</button>
+                
+                <button type="button" class="discord-button">
+                    <i class="fab fa-discord"></i> Discord
+                </button>
+            </form>
+            
+            <div class="footer">
+                <p>v3.7 Nyx @xShadow</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const key = document.getElementById('key').value;
+            
+            if (!username || !key) {
+                alert('Please enter both username and key');
+                return;
+            }
+            
+            // Simulación de login
+            const loginButton = document.querySelector('.login-button');
+            const originalText = loginButton.textContent;
+            
+            loginButton.textContent = 'Checking...';
+            loginButton.disabled = true;
+            
+            setTimeout(() => {
+                alert('Login attempt failed. Key has expired (0d, 0m, 0s)');
+                loginButton.textContent = originalText;
+                loginButton.disabled = false;
+            }, 1500);
+        });
+        
+        document.querySelector('.discord-button').addEventListener('click', function() {
+            alert('Redirecting to Discord...');
+        });
+    </script>
+</body>
+</html>
