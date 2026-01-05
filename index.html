@@ -30,20 +30,51 @@
             width: 100%;
             max-width: 400px;
             padding: 20px;
+            text-align: center;
         }
 
+        /* LOGO */
+        .logo-img {
+            width: 90px;
+            margin: 0 auto 10px;
+            display: block;
+            filter: drop-shadow(0 0 12px rgba(108,99,255,0.6));
+        }
+
+        /* TITLE WITH NEON ANIMATION */
         .logo {
-            text-align: center;
-            margin-bottom: 30px;
-            letter-spacing: 5px;
-            font-size: 28px;
-            font-weight: 700;
+            margin-bottom: 25px;
+            letter-spacing: 6px;
+            font-size: 30px;
+            font-weight: 800;
             color: #fff;
-            text-shadow: 0 0 10px rgba(100, 100, 255, 0.5);
+            animation: neonFade 3s ease-in-out infinite;
         }
 
         .logo span {
             color: #6c63ff;
+        }
+
+        @keyframes neonFade {
+            0% {
+                opacity: 0.6;
+                text-shadow: 
+                    0 0 5px #6c63ff,
+                    0 0 15px rgba(108,99,255,0.4);
+            }
+            50% {
+                opacity: 1;
+                text-shadow: 
+                    0 0 10px #6c63ff,
+                    0 0 25px rgba(108,99,255,0.8),
+                    0 0 40px rgba(108,99,255,0.6);
+            }
+            100% {
+                opacity: 0.6;
+                text-shadow: 
+                    0 0 5px #6c63ff,
+                    0 0 15px rgba(108,99,255,0.4);
+            }
         }
 
         .login-box {
@@ -52,10 +83,11 @@
             padding: 30px;
             border: 1px solid rgba(80, 80, 120, 0.3);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: left;
         }
 
         .welcome-text {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
             margin-bottom: 5px;
             color: #fff;
@@ -67,7 +99,7 @@
             font-size: 14px;
         }
 
-        /* Announcement */
+        /* ANNOUNCEMENT */
         .announcement {
             background-color: rgba(50, 120, 180, 0.15);
             border: 1px solid rgba(90, 160, 220, 0.5);
@@ -147,8 +179,7 @@
         }
 
         .generate-button:hover {
-            background: linear-gradient(135deg, #5a52e0, #7871e6);
-            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+            box-shadow: 0 0 20px rgba(108,99,255,0.6);
         }
 
         .discord-button {
@@ -172,7 +203,7 @@
 
         .footer {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 25px;
             font-size: 13px;
             color: #777;
         }
@@ -181,6 +212,12 @@
 
 <body>
     <div class="login-container">
+
+        <!-- LOGO -->
+        <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png" 
+             alt="Nyx Logo" class="logo-img">
+
+        <!-- TITLE -->
         <div class="logo">N<span>Y</span>X</div>
 
         <div class="login-box">
@@ -189,27 +226,23 @@
 
             <div class="announcement">
                 <i class="fas fa-bullhorn"></i>
-                <span>Announcement: New update coming soon. Stay tuned.</span>
+                <span>Announcement: New update coming soon.</span>
             </div>
 
             <div class="form-group">
-                <label for="key">Generated Key</label>
+                <label>Generated Key</label>
                 <div class="key-wrapper">
                     <input type="text" id="key" class="form-input" readonly placeholder="KEY-XXX-XXX-XXX">
                     <div class="key-actions">
-                        <button id="toggleKey" title="Show / Hide">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button id="copyKey" title="Copy">
-                            <i class="fas fa-copy"></i>
-                        </button>
+                        <button id="toggleKey"><i class="fas fa-eye"></i></button>
+                        <button id="copyKey"><i class="fas fa-copy"></i></button>
                     </div>
                 </div>
             </div>
 
             <button class="generate-button" id="generateKey">Generate Key</button>
 
-            <button type="button" class="discord-button">
+            <button class="discord-button">
                 <i class="fab fa-discord"></i> Discord
             </button>
 
@@ -243,11 +276,7 @@
         copyBtn.addEventListener('click', () => {
             if (!keyInput.value) return;
             navigator.clipboard.writeText(keyInput.value);
-            alert('Key copied to clipboard');
-        });
-
-        document.querySelector('.discord-button').addEventListener('click', () => {
-            alert('Redirecting to Discord...');
+            alert('Key copied');
         });
     </script>
 </body>
