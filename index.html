@@ -3,208 +3,731 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NYX</title>
+<title>NYX Launcher</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-:root{
-    --bg1:#2a2f5a;
-    --bg2:#161a3a;
-    --card:rgba(255,255,255,0.08);
-    --accent:#6c63ff;
-    --text:#e0e0e0;
+:root {
+    --bg1: #2a2f5a;
+    --bg2: #161a3a;
+    --card: rgba(255,255,255,0.08);
+    --accent: #6c63ff;
+    --text: #e0e0e0;
+    --success: #4CAF50;
+    --error: #f44336;
+    --warning: #ff9800;
 }
-body.dark{
-    --bg1:#1a0026;
-    --bg2:#09000f;
-    --card:rgba(120,80,180,0.12);
-    --accent:#a56bff;
-    --text:#f2eaff;
+body.dark {
+    --bg1: #1a0026;
+    --bg2: #09000f;
+    --card: rgba(120,80,180,0.12);
+    --accent: #a56bff;
+    --text: #f2eaff;
 }
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-body{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-    color:var(--text);
-    background:radial-gradient(circle at top,var(--bg1),var(--bg2));
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
 }
-canvas{position:fixed;inset:0;z-index:0}
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--text);
+    background: radial-gradient(circle at top, var(--bg1), var(--bg2));
+    transition: background 0.5s ease;
+}
+canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+}
+
+/* NOTIFICATIONS */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.notification {
+    background: var(--card);
+    backdrop-filter: blur(15px);
+    border-radius: 10px;
+    padding: 15px 20px;
+    min-width: 300px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-left: 4px solid var(--accent);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+.notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+.notification.success { border-left-color: var(--success); }
+.notification.info { border-left-color: var(--accent); }
+.notification.warning { border-left-color: var(--warning); }
+.notification-icon {
+    font-size: 22px;
+}
+.notification.success .notification-icon { color: var(--success); }
+.notification.info .notification-icon { color: var(--accent); }
+.notification.warning .notification-icon { color: var(--warning); }
+.notification-content {
+    flex: 1;
+}
+.notification-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.notification-message {
+    font-size: 14px;
+    opacity: 0.9;
+}
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--text);
+    opacity: 0.6;
+    cursor: pointer;
+    font-size: 16px;
+    transition: opacity 0.3s;
+}
+.notification-close:hover { opacity: 1; }
 
 /* THEME TAB */
-.theme-tab{
-    position:fixed;left:0;top:50%;
-    transform:translateY(-50%);
-    background:var(--card);
-    backdrop-filter:blur(12px);
-    border-radius:0 12px 12px 0;
-    padding:10px 12px;
-    cursor:pointer;z-index:5;
-    border:1px solid rgba(255,255,255,.2);
+.theme-tab {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    border-radius: 0 12px 12px 0;
+    padding: 10px 12px;
+    cursor: pointer;
+    z-index: 5;
+    border: 1px solid rgba(255,255,255,.2);
+    transition: all 0.3s ease;
 }
-.theme-tab i{color:var(--accent);font-size:18px}
+.theme-tab:hover { padding-left: 16px; }
+.theme-tab i { color: var(--accent); font-size: 18px; }
 
 /* LOADER */
-#loader{
-    position:fixed;inset:0;
-    background:rgba(10,10,30,.95);
-    display:flex;flex-direction:column;
-    justify-content:center;align-items:center;
-    z-index:10;
+#loader {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,30,.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
 }
-.loader-circle{
-    width:90px;height:90px;border-radius:50%;
-    border:6px solid rgba(255,255,255,.2);
-    border-top-color:var(--accent);
-    animation:spin 1s linear infinite;
-    display:flex;align-items:center;justify-content:center;
+.loader-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 6px solid rgba(255,255,255,.2);
+    border-top-color: var(--accent);
+    animation: spin 1s linear infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.loader-circle.done{animation:none;border-color:var(--accent)}
-.loader-circle i{
-    font-size:36px;color:var(--accent);
-    opacity:0;transform:scale(.5);
-    transition:.4s ease;
+.loader-circle.done {
+    animation: none;
+    border-color: var(--accent);
 }
-.loader-circle.done i{opacity:1;transform:scale(1)}
-@keyframes spin{to{transform:rotate(360deg)}}
+.loader-circle i {
+    font-size: 36px;
+    color: var(--accent);
+    opacity: 0;
+    transform: scale(.5);
+    transition: .4s ease;
+}
+.loader-circle.done i {
+    opacity: 1;
+    transform: scale(1);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.progress-container {
+    width: 260px;
+    height: 8px;
+    background: rgba(255,255,255,.15);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 25px;
+}
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #fff);
+    transition: width .6s cubic-bezier(.4,0,.2,1);
+}
+.progress-text {
+    margin-top: 12px;
+    font-size: 14px;
+}
 
-.progress-container{
-    width:260px;height:8px;
-    background:rgba(255,255,255,.15);
-    border-radius:10px;overflow:hidden;
-    margin-top:25px;
+/* TOPBAR */
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,.15);
+    padding: 12px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 50;
 }
-.progress-bar{
-    height:100%;width:0%;
-    background:linear-gradient(90deg,var(--accent),#fff);
-    transition:width .6s cubic-bezier(.4,0,.2,1);
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
-.progress-text{margin-top:12px;font-size:14px}
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #9d4edd);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+.user-name {
+    font-weight: 600;
+    font-size: 16px;
+}
+.user-role {
+    font-size: 12px;
+    opacity: 0.8;
+}
+.topbar-tabs {
+    display: flex;
+    gap: 10px;
+}
+.tab-btn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: var(--text);
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+.tab-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+.tab-btn.active {
+    background: var(--accent);
+    color: white;
+}
 
-/* APP */
-#app{
-    opacity:0;transform:translateY(30px);
-    transition:1s ease;z-index:2;
+/* APP CONTAINER */
+#app {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: 1s ease;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 80px;
 }
-#app.show{opacity:1;transform:none}
+#app.show {
+    opacity: 1;
+    transform: none;
+}
 
-/* UI */
-.login-container{width:400px;text-align:center}
-.logo-img{
-    width:95px;
-    filter:drop-shadow(0 0 15px var(--accent));
-    animation:logoScale 3.5s ease-in-out infinite;
+/* CONTENT AREA */
+.content-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 30px;
 }
-@keyframes logoScale{
-    0%,100%{transform:scale(1)}
-    50%{transform:scale(1.08)}
+.main-panel {
+    background: var(--card);
+    backdrop-filter: blur(18px);
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid rgba(255,255,255,.2);
 }
-.logo{
-    font-size:32px;letter-spacing:6px;
-    font-weight:800;margin:10px 0 25px;
-    animation:neon 3s ease-in-out infinite;
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
-.logo span{color:var(--accent)}
-@keyframes neon{
-    0%,100%{opacity:.7;text-shadow:0 0 12px var(--accent)}
-    50%{opacity:1;text-shadow:0 0 30px var(--accent)}
+
+/* DISCORD PANEL */
+.discord-panel, .music-panel {
+    background: var(--card);
+    backdrop-filter: blur(18px);
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid rgba(255,255,255,.2);
+    position: relative;
 }
-.login-box{
-    background:var(--card);
-    backdrop-filter:blur(18px);
-    border-radius:14px;padding:30px;
-    border:1px solid rgba(255,255,255,.2);
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,.1);
 }
-.announcement{
-    background:rgba(108,99,255,.15);
-    border:1px solid var(--accent);
-    padding:12px;border-radius:6px;
-    margin-bottom:20px;font-size:14px;
+.panel-title {
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-.key-wrapper{position:relative}
-input{
-    width:100%;padding:14px 90px 14px 14px;
-    background:rgba(0,0,0,.4);
-    border:1px solid rgba(255,255,255,.25);
-    border-radius:6px;color:#fff;
-    filter:blur(6px);
+.panel-title i { color: var(--accent); }
+.close-panel {
+    background: none;
+    border: none;
+    color: var(--text);
+    opacity: 0.7;
+    cursor: pointer;
+    font-size: 18px;
+    transition: opacity 0.3s;
 }
-input.show{filter:none}
-.key-actions{
-    position:absolute;right:10px;top:50%;
-    transform:translateY(-50%);
-    display:flex;gap:10px;
+.close-panel:hover { opacity: 1; }
+
+/* DISCORD INFO */
+.discord-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
 }
-.key-actions button{
-    background:none;border:none;
-    color:var(--accent);cursor:pointer;
+.info-item {
+    background: rgba(0,0,0,0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 3px solid var(--accent);
 }
-.generate-button{
-    width:100%;margin:20px 0 12px;
-    padding:14px;border:none;border-radius:6px;
-    background:linear-gradient(135deg,var(--accent),#fff);
-    color:#000;font-weight:700;cursor:pointer;
+.info-label {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-bottom: 5px;
 }
-.discord-button{
-    width:100%;padding:14px;border-radius:6px;
-    border:1px solid var(--accent);
-    background:transparent;color:var(--text);
-    font-weight:600;
+.info-value {
+    font-weight: 600;
+    font-size: 18px;
 }
-.footer{margin-top:18px;font-size:13px;opacity:.7}
+.discord-link {
+    background: rgba(0,0,0,0.3);
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    position: relative;
+}
+.blur-text {
+    filter: blur(5px);
+    transition: filter 0.3s;
+    user-select: none;
+}
+.blur-text.show {
+    filter: none;
+}
+.link-controls {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 10px;
+}
+.link-btn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: var(--text);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.link-btn:hover {
+    background: var(--accent);
+    transform: scale(1.1);
+}
+.discord-join {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #5865F2, #9d4edd);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.discord-join:hover {
+    transform: translateY(-3px);
+}
+
+/* MUSIC PLAYER */
+.music-player {
+    margin-top: 20px;
+}
+.track-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+.track-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.track-item:hover {
+    background: rgba(255,255,255,0.1);
+}
+.track-item.active {
+    background: rgba(108, 99, 255, 0.2);
+    border-left: 3px solid var(--accent);
+}
+.track-cover {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), #9d4edd);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+.track-info {
+    flex: 1;
+}
+.track-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.track-artist {
+    font-size: 12px;
+    opacity: 0.8;
+}
+.player-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+.control-btn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: var(--text);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+.control-btn:hover {
+    background: var(--accent);
+    transform: scale(1.1);
+}
+.play-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+}
+.progress-container {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+.progress-bar {
+    height: 100%;
+    width: 30%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.1s;
+}
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* MAIN LOGIN BOX */
+.login-container {
+    width: 100%;
+    text-align: center;
+}
+.logo-img {
+    width: 95px;
+    filter: drop-shadow(0 0 15px var(--accent));
+    animation: logoScale 3.5s ease-in-out infinite;
+}
+@keyframes logoScale {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+.logo {
+    font-size: 32px;
+    letter-spacing: 6px;
+    font-weight: 800;
+    margin: 10px 0 25px;
+    animation: neon 3s ease-in-out infinite;
+}
+.logo span { color: var(--accent); }
+@keyframes neon {
+    0%, 100% { opacity: .7; text-shadow: 0 0 12px var(--accent); }
+    50% { opacity: 1; text-shadow: 0 0 30px var(--accent); }
+}
+.announcement {
+    background: rgba(108,99,255,.15);
+    border: 1px solid var(--accent);
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+.key-wrapper {
+    position: relative;
+}
+input {
+    width: 100%;
+    padding: 14px 90px 14px 14px;
+    background: rgba(0,0,0,.4);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 6px;
+    color: #fff;
+    filter: blur(6px);
+}
+input.show { filter: none; }
+.key-actions {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 10px;
+}
+.key-actions button {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform 0.3s;
+}
+.key-actions button:hover {
+    transform: scale(1.2);
+}
+.generate-button {
+    width: 100%;
+    margin: 20px 0 12px;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent), #fff);
+    color: #000;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+.generate-button:hover {
+    transform: translateY(-3px);
+}
+.discord-button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 6px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--text);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.discord-button:hover {
+    background: rgba(108, 99, 255, 0.1);
+}
+.footer {
+    margin-top: 18px;
+    font-size: 13px;
+    opacity: .7;
+}
 
 /* GENERATOR MODAL */
-#genModal{
-    position:fixed;inset:0;
-    background:rgba(0,0,0,.65);
-    backdrop-filter:blur(8px);
-    display:flex;justify-content:center;align-items:center;
-    z-index:20;opacity:0;pointer-events:none;
-    transition:.4s ease;
+#genModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.65);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: .4s ease;
 }
-#genModal.show{opacity:1;pointer-events:auto}
-.gen-box{
-    width:320px;background:var(--card);
-    border-radius:14px;padding:25px;
-    text-align:center;border:1px solid rgba(255,255,255,.2);
+#genModal.show {
+    opacity: 1;
+    pointer-events: auto;
 }
-.gen-circle{
-    width:80px;height:80px;border-radius:50%;
-    border:5px solid rgba(255,255,255,.2);
-    border-top-color:var(--accent);
-    animation:spin 1s linear infinite;
-    margin:0 auto 20px;
-    display:flex;align-items:center;justify-content:center;
+.gen-box {
+    width: 320px;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 25px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,.2);
 }
-.gen-circle.done{
-    animation:none;border-color:var(--accent);
+.gen-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 5px solid rgba(255,255,255,.2);
+    border-top-color: var(--accent);
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.gen-circle i{
-    font-size:32px;color:var(--accent);
-    opacity:0;transform:scale(.5);
-    transition:.4s ease;
+.gen-circle.done {
+    animation: none;
+    border-color: var(--accent);
 }
-.gen-circle.done i{opacity:1;transform:scale(1)}
-.gen-bar{
-    height:6px;background:rgba(255,255,255,.2);
-    border-radius:6px;overflow:hidden;margin-top:15px;
+.gen-circle i {
+    font-size: 32px;
+    color: var(--accent);
+    opacity: 0;
+    transform: scale(.5);
+    transition: .4s ease;
 }
-.gen-bar div{
-    height:100%;width:0%;
-    background:linear-gradient(90deg,var(--accent),#fff);
-    transition:width .5s ease;
+.gen-circle.done i {
+    opacity: 1;
+    transform: scale(1);
 }
-.gen-text{margin-top:12px;font-size:14px}
+.gen-bar {
+    height: 6px;
+    background: rgba(255,255,255,.2);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+.gen-bar div {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #fff);
+    transition: width .5s ease;
+}
+.gen-text {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .content-area {
+        grid-template-columns: 1fr;
+    }
+    .topbar-tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+@media (max-width: 768px) {
+    .topbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+    .topbar-left {
+        flex-direction: column;
+        text-align: center;
+    }
+    .discord-info {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 </head>
-
 <body>
-
 <canvas id="particles"></canvas>
 
+<!-- NOTIFICATIONS -->
+<div class="notification-container" id="notificationContainer"></div>
+
+<!-- THEME TOGGLE -->
 <div class="theme-tab" id="themeBtn"><i class="fas fa-adjust"></i></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="topbar-left">
+        <div class="topbar-user">
+            <div class="user-avatar">N</div>
+            <div class="user-info">
+                <div class="user-name">Nyx @xSh4dow</div>
+                <div class="user-role">Owner • ID: 1449237072048160831</div>
+            </div>
+        </div>
+    </div>
+    <div class="topbar-tabs">
+        <button class="tab-btn active" data-tab="main"><i class="fas fa-home"></i> Main</button>
+        <button class="tab-btn" data-tab="discord"><i class="fab fa-discord"></i> Discord</button>
+        <button class="tab-btn" data-tab="music"><i class="fas fa-music"></i> Music</button>
+    </div>
+</div>
 
 <!-- INITIAL LOADER -->
 <div id="loader">
@@ -222,121 +745,499 @@ input.show{filter:none}
     </div>
 </div>
 
+<!-- MAIN APP -->
 <div id="app">
-    <div class="login-container">
-        <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png" class="logo-img">
-        <div class="logo">N<span>Y</span>X</div>
+    <div class="content-area">
+        <!-- MAIN PANEL -->
+        <div class="main-panel" id="mainPanel">
+            <div class="login-container">
+                <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png" class="logo-img">
+                <div class="logo">N<span>Y</span>X</div>
 
-        <div class="login-box">
-            <div class="announcement">Announcement: Maintenance soon.</div>
+                <div class="login-box">
+                    <div class="announcement">Announcement: Maintenance soon.</div>
 
-            <div class="key-wrapper">
-                <input id="key" readonly placeholder="KEY-XXX-XXX-XXX">
-                <div class="key-actions">
-                    <button id="eye"><i class="fas fa-eye"></i></button>
-                    <button id="copy"><i class="fas fa-copy"></i></button>
+                    <div class="key-wrapper">
+                        <input id="key" readonly placeholder="KEY-XXX-XXX-XXX">
+                        <div class="key-actions">
+                            <button id="eye"><i class="fas fa-eye"></i></button>
+                            <button id="copy"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+
+                    <button class="generate-button" id="gen">Generate Key</button>
+                    <button class="discord-button" id="discordBtn"><i class="fab fa-discord"></i> Discord</button>
+
+                    <div class="footer">NYX Launcher</div>
                 </div>
             </div>
+        </div>
 
-            <button class="generate-button" id="gen">Generate Key</button>
-            <button class="discord-button"><i class="fab fa-discord"></i> Discord</button>
+        <!-- SIDE PANEL -->
+        <div class="side-panel">
+            <!-- DISCORD PANEL -->
+            <div class="discord-panel" id="discordPanel" style="display: none;">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="fab fa-discord"></i> Discord Server Info</div>
+                    <button class="close-panel" data-panel="discordPanel"><i class="fas fa-times"></i></button>
+                </div>
+                
+                <div class="discord-info">
+                    <div class="info-item">
+                        <div class="info-label">Online Users</div>
+                        <div class="info-value" id="onlineCount">Loading...</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Offline Users</div>
+                        <div class="info-value" id="offlineCount">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Owner</div>
+                        <div class="info-value">Nyx @xSh4dow</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Admin</div>
+                        <div class="info-value">System</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Date Creation</div>
+                        <div class="info-value">2023-11-15</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Server ID</div>
+                        <div class="info-value">1449237072048160831</div>
+                    </div>
+                </div>
 
-            <div class="footer">NYX Launcher</div>
+                <div class="discord-link">
+                    <div class="info-label">Invite Link</div>
+                    <div class="info-value blur-text" id="discordLink">https://discord.gg/F3SDzkZa6U</div>
+                    <div class="link-controls">
+                        <button class="link-btn" id="showLink"><i class="fas fa-eye"></i></button>
+                        <button class="link-btn" id="copyLink"><i class="fas fa-copy"></i></button>
+                    </div>
+                </div>
+
+                <button class="discord-join" id="joinDiscord">
+                    <i class="fab fa-discord"></i> Join Discord Server
+                </button>
+            </div>
+
+            <!-- MUSIC PANEL -->
+            <div class="music-panel" id="musicPanel" style="display: none;">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="fas fa-music"></i> Music Player</div>
+                    <button class="close-panel" data-panel="musicPanel"><i class="fas fa-times"></i></button>
+                </div>
+
+                <div class="track-list" id="trackList">
+                    <!-- Tracks will be added by JavaScript -->
+                </div>
+
+                <div class="music-player">
+                    <div class="player-controls">
+                        <button class="control-btn" id="prevBtn"><i class="fas fa-step-backward"></i></button>
+                        <button class="control-btn play-btn" id="playBtn"><i class="fas fa-play"></i></button>
+                        <button class="control-btn" id="nextBtn"><i class="fas fa-step-forward"></i></button>
+                    </div>
+                    
+                    <div class="progress-container" id="musicProgress">
+                        <div class="progress-bar" id="musicProgressBar"></div>
+                    </div>
+                    
+                    <div class="time-display">
+                        <span id="currentTime">0:00</span>
+                        <span id="duration">0:00</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-/* THEME */
-const themeBtn=document.getElementById('themeBtn');
-if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');
-themeBtn.onclick=()=>{
+// NOTIFICATION SYSTEM
+function showNotification(title, message, type = 'info', duration = 5000) {
+    const container = document.getElementById('notificationContainer');
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <div class="notification-icon">
+            ${type === 'success' ? '<i class="fas fa-check-circle"></i>' : 
+              type === 'warning' ? '<i class="fas fa-exclamation-triangle"></i>' : 
+              '<i class="fas fa-info-circle"></i>'}
+        </div>
+        <div class="notification-content">
+            <div class="notification-title">${title}</div>
+            <div class="notification-message">${message}</div>
+        </div>
+        <button class="notification-close"><i class="fas fa-times"></i></button>
+    `;
+    
+    container.appendChild(notification);
+    
+    // Show notification
+    setTimeout(() => notification.classList.add('show'), 10);
+    
+    // Auto remove
+    const autoRemove = setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 400);
+    }, duration);
+    
+    // Close button
+    notification.querySelector('.notification-close').onclick = () => {
+        clearTimeout(autoRemove);
+        notification.classList.remove('show');
+        setTimeout(() => notification.remove(), 400);
+    };
+}
+
+// Show loading notification
+setTimeout(() => {
+    showNotification('Launcher Loaded', 'NYX Launcher has been successfully loaded!', 'success', 3000);
+}, 100);
+
+// THEME TOGGLE
+const themeBtn = document.getElementById('themeBtn');
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+themeBtn.onclick = () => {
     document.body.classList.toggle('dark');
-    localStorage.setItem('theme',
-        document.body.classList.contains('dark')?'dark':'light');
+    localStorage.setItem('theme', 
+        document.body.classList.contains('dark') ? 'dark' : 'light');
 };
 
-/* INITIAL LOADER */
-let p=0;
-const bar=document.getElementById('bar');
-const txt=document.getElementById('txt');
-const loader=document.getElementById('loader');
-const app=document.getElementById('app');
-const circle=document.getElementById('circle');
+// INITIAL LOADER
+let p = 0;
+const bar = document.getElementById('bar');
+const txt = document.getElementById('txt');
+const loader = document.getElementById('loader');
+const app = document.getElementById('app');
+const circle = document.getElementById('circle');
 
-const load=setInterval(()=>{
-    p+=Math.random()*6+4;
-    if(p>=100){
-        p=100;clearInterval(load);
+const load = setInterval(() => {
+    p += Math.random() * 6 + 4;
+    if (p >= 100) {
+        p = 100;
+        clearInterval(load);
         circle.classList.add('done');
-        setTimeout(()=>{
-            loader.style.opacity=0;
-            setTimeout(()=>{loader.remove();app.classList.add('show')},600);
-        },700);
+        setTimeout(() => {
+            loader.style.opacity = 0;
+            setTimeout(() => {
+                loader.remove();
+                app.classList.add('show');
+            }, 600);
+        }, 700);
     }
-    bar.style.width=p+'%';
-    txt.textContent=`Loading ${Math.floor(p)}%`;
-},180);
+    bar.style.width = p + '%';
+    txt.textContent = `Loading ${Math.floor(p)}%`;
+}, 180);
 
-/* GENERATE KEY MODAL */
-const modal=document.getElementById('genModal');
-const genBar=document.getElementById('genBar');
-const genText=document.getElementById('genText');
-const genCircle=document.getElementById('genCircle');
-const keyInput=document.getElementById('key');
+// GENERATE KEY MODAL
+const modal = document.getElementById('genModal');
+const genBar = document.getElementById('genBar');
+const genText = document.getElementById('genText');
+const genCircle = document.getElementById('genCircle');
+const keyInput = document.getElementById('key');
 
-document.getElementById('gen').onclick=()=>{
+document.getElementById('gen').onclick = () => {
     modal.classList.add('show');
     genCircle.classList.remove('done');
-    let t=30;
-    let progress=0;
-    genBar.style.width='0%';
-    genText.textContent=`Generating key… ${t}s`;
+    let t = 30;
+    let progress = 0;
+    genBar.style.width = '0%';
+    genText.textContent = `Generating key… ${t}s`;
 
-    const interval=setInterval(()=>{
+    const interval = setInterval(() => {
         t--;
-        progress+=100/30;
-        genBar.style.width=progress+'%';
-        genText.textContent=`Generating key… ${t}s`;
+        progress += 100 / 30;
+        genBar.style.width = progress + '%';
+        genText.textContent = `Generating key… ${t}s`;
 
-        if(t<=0){
+        if (t <= 0) {
             clearInterval(interval);
             genCircle.classList.add('done');
 
-            const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            const g=()=>Array.from({length:3},()=>c[Math.random()*c.length|0]).join('');
-            keyInput.value=`KEY-${g()}-${g()}-${g()}`;
+            const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const g = () => Array.from({length: 3}, () => c[Math.random() * c.length | 0]).join('');
+            keyInput.value = `KEY-${g()}-${g()}-${g()}`;
             keyInput.classList.remove('show');
 
-            setTimeout(()=>modal.classList.remove('show'),900);
+            // Show success notification
+            showNotification('Key Generated', 'Your license key has been generated successfully!', 'success', 4000);
+            
+            setTimeout(() => modal.classList.remove('show'), 900);
         }
-    },1000);
+    }, 1000);
 };
 
-document.getElementById('eye').onclick=()=>keyInput.classList.toggle('show');
-document.getElementById('copy').onclick=()=>keyInput.value && navigator.clipboard.writeText(keyInput.value);
+// KEY ACTIONS
+document.getElementById('eye').onclick = () => keyInput.classList.toggle('show');
+document.getElementById('copy').onclick = () => {
+    if (keyInput.value) {
+        navigator.clipboard.writeText(keyInput.value);
+        showNotification('Copied!', 'Key copied to clipboard.', 'success', 2000);
+    }
+};
 
-/* PARTICLES */
-const canvas=document.getElementById('particles');
-const ctx=canvas.getContext('2d');
-resize();window.onresize=resize;
-let parts=Array.from({length:70},()=>newP());
-function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
-function newP(){
-    return{x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3};
+// DISCORD FUNCTIONS
+const discordLink = 'https://discord.gg/F3SDzkZa6U';
+const discordWidget = 'https://discord.com/api/guilds/1449237072048160831/widget.json';
+
+// Load Discord widget data
+async function loadDiscordWidget() {
+    try {
+        const response = await fetch(discordWidget);
+        const data = await response.json();
+        document.getElementById('onlineCount').textContent = data.presence_count || '0';
+        document.getElementById('offlineCount').textContent = data.members ? data.members.length - data.presence_count : '-';
+    } catch (error) {
+        console.error('Error loading Discord widget:', error);
+        document.getElementById('onlineCount').textContent = 'Error';
+    }
 }
-function anim(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='rgba(160,160,255,.55)';
-    parts.forEach(p=>{
-        p.x+=p.dx;p.y+=p.dy;
-        if(p.x<0||p.x>canvas.width||p.y<0||p.y>canvas.height)Object.assign(p,newP());
-        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+
+// Discord link actions
+document.getElementById('showLink').onclick = () => {
+    const linkElement = document.getElementById('discordLink');
+    linkElement.classList.toggle('show');
+};
+
+document.getElementById('copyLink').onclick = () => {
+    navigator.clipboard.writeText(discordLink);
+    showNotification('Link Copied', 'Discord invite link copied to clipboard.', 'success', 2000);
+};
+
+document.getElementById('joinDiscord').onclick = () => {
+    window.open(discordLink, '_blank');
+    showNotification('Redirecting...', 'Opening Discord server in new tab.', 'info', 2000);
+};
+
+document.getElementById('discordBtn').onclick = () => {
+    window.open(discordLink, '_blank');
+    showNotification('Redirecting...', 'Opening Discord server in new tab.', 'info', 2000);
+};
+
+// Load Discord data when Discord panel is shown
+document.querySelector('[data-tab="discord"]').addEventListener('click', loadDiscordWidget);
+
+// TAB SWITCHING
+const tabBtns = document.querySelectorAll('.tab-btn');
+const panels = {
+    main: document.getElementById('mainPanel'),
+    discord: document.getElementById('discordPanel'),
+    music: document.getElementById('musicPanel')
+};
+
+tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        
+        // Update active button
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Show selected panel, hide others
+        Object.keys(panels).forEach(key => {
+            if (key === tab) {
+                panels[key].style.display = 'block';
+            } else {
+                panels[key].style.display = 'none';
+            }
+        });
+        
+        // Load data for tab if needed
+        if (tab === 'discord') {
+            loadDiscordWidget();
+        }
+        if (tab === 'music') {
+            initMusicPlayer();
+        }
+    });
+});
+
+// CLOSE PANEL BUTTONS
+document.querySelectorAll('.close-panel').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const panelId = btn.dataset.panel;
+        document.getElementById(panelId).style.display = 'none';
+        // Switch back to main tab
+        tabBtns.forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-tab="main"]').classList.add('active');
+        panels.main.style.display = 'block';
+    });
+});
+
+// MUSIC PLAYER
+const musicTracks = [
+    { title: 'Night Drive', artist: 'Synthwave Collective', duration: '3:45' },
+    { title: 'Digital Dreams', artist: 'Cyberpunk OST', duration: '4:20' },
+    { title: 'Neon Lights', artist: 'Retro Wave', duration: '3:15' },
+    { title: 'Midnight City', artist: 'M83', duration: '4:04' },
+    { title: 'Blade Runner 2049', artist: 'Hans Zimmer', duration: '5:12' },
+    { title: 'The Weeknd - Blinding Lights', artist: 'Synthwave Remix', duration: '3:22' }
+];
+
+let currentTrack = 0;
+let isPlaying = false;
+let audioContext;
+let audioElement;
+
+function initMusicPlayer() {
+    const trackList = document.getElementById('trackList');
+    trackList.innerHTML = '';
+    
+    musicTracks.forEach((track, index) => {
+        const trackItem = document.createElement('div');
+        trackItem.className = `track-item ${index === currentTrack ? 'active' : ''}`;
+        trackItem.innerHTML = `
+            <div class="track-cover">
+                <i class="fas fa-music"></i>
+            </div>
+            <div class="track-info">
+                <div class="track-title">${track.title}</div>
+                <div class="track-artist">${track.artist} • ${track.duration}</div>
+            </div>
+        `;
+        trackItem.addEventListener('click', () => playTrack(index));
+        trackList.appendChild(trackItem);
+    });
+    
+    updatePlayerDisplay();
+}
+
+function playTrack(index) {
+    currentTrack = index;
+    isPlaying = true;
+    
+    // Update UI
+    document.querySelectorAll('.track-item').forEach((item, i) => {
+        item.classList.toggle('active', i === index);
+    });
+    
+    document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+    showNotification('Now Playing', musicTracks[index].title, 'info', 2000);
+    
+    // Update progress bar (simulated)
+    updateProgressBar();
+}
+
+function updatePlayerDisplay() {
+    const track = musicTracks[currentTrack];
+    document.getElementById('currentTime').textContent = '0:00';
+    document.getElementById('duration').textContent = track.duration;
+}
+
+function updateProgressBar() {
+    if (!isPlaying) return;
+    
+    const progressBar = document.getElementById('musicProgressBar');
+    let progress = parseInt(progressBar.style.width) || 0;
+    
+    if (progress < 100) {
+        progress += 0.5;
+        progressBar.style.width = progress + '%';
+        
+        // Update time display (simulated)
+        const totalSeconds = 60 + 45; // Example: 1:45
+        const currentSeconds = Math.floor(totalSeconds * (progress / 100));
+        const minutes = Math.floor(currentSeconds / 60);
+        const seconds = currentSeconds % 60;
+        document.getElementById('currentTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        setTimeout(updateProgressBar, 500);
+    } else {
+        // Song ended, play next
+        playNext();
+    }
+}
+
+function playNext() {
+    currentTrack = (currentTrack + 1) % musicTracks.length;
+    playTrack(currentTrack);
+}
+
+function playPrev() {
+    currentTrack = (currentTrack - 1 + musicTracks.length) % musicTracks.length;
+    playTrack(currentTrack);
+}
+
+// Music player controls
+document.getElementById('playBtn').addEventListener('click', () => {
+    if (musicTracks.length === 0) return;
+    
+    isPlaying = !isPlaying;
+    document.getElementById('playBtn').innerHTML = isPlaying ? 
+        '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+    
+    if (isPlaying) {
+        if (!document.querySelector('.track-item.active')) {
+            playTrack(0);
+        } else {
+            updateProgressBar();
+        }
+    }
+    
+    showNotification(isPlaying ? 'Music Playing' : 'Music Paused', 
+        isPlaying ? musicTracks[currentTrack].title : 'Playback paused', 
+        'info', 2000);
+});
+
+document.getElementById('nextBtn').addEventListener('click', playNext);
+document.getElementById('prevBtn').addEventListener('click', playPrev);
+
+// Initialize music player
+initMusicPlayer();
+
+// Progress bar click
+document.getElementById('musicProgress').addEventListener('click', (e) => {
+    if (!isPlaying) return;
+    
+    const progressBar = document.getElementById('musicProgressBar');
+    const rect = e.target.getBoundingClientRect();
+    const percent = (e.clientX - rect.left) / rect.width;
+    progressBar.style.width = (percent * 100) + '%';
+});
+
+// PARTICLES BACKGROUND
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+resize();
+window.onresize = resize;
+
+let parts = Array.from({length: 70}, () => newP());
+
+function resize() {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+}
+
+function newP() {
+    return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - .5) * .3,
+        dy: (Math.random() - .5) * .3
+    };
+}
+
+function anim() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(160,160,255,.55)';
+    parts.forEach(p => {
+        p.x += p.dx;
+        p.y += p.dy;
+        if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
+            Object.assign(p, newP());
+        }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
     });
     requestAnimationFrame(anim);
 }
 anim();
 </script>
-
 </body>
 </html>
