@@ -2,331 +2,383 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NYX Launcher</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-:root{
-    --bg1:#e6e9ff;
-    --bg2:#cfd6ff;
-    --card:rgba(255,255,255,0.65);
-    --accent:#6c63ff;
-    --text:#1c1c1c;
-}
-body.dark{
-    --bg1:#14001f;
-    --bg2:#08000f;
-    --card:rgba(120,80,180,0.15);
-    --accent:#a56bff;
-    --text:#f2eaff;
+:root {
+    --bg: #f2f4f8;
+    --card: #ffffffcc;
+    --text: #1a1a1a;
+    --accent: #6c63ff;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-
-body{
-    min-height:100vh;
-    background:radial-gradient(circle at top,var(--bg1),var(--bg2));
-    color:var(--text);
-    overflow:hidden;
+[data-theme="dark"] {
+    --bg: linear-gradient(135deg, #0a0a15, #1a0033);
+    --card: rgba(20,20,40,0.9);
+    --text: #eaeaea;
+    --accent: #9b6bff;
 }
 
-canvas{position:fixed;inset:0;z-index:0}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+}
+
+/* PARTICLES */
+canvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+}
+
+/* LOADING */
+#loader {
+    position: fixed;
+    inset: 0;
+    background: #0a0a15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 999;
+}
+
+.circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 8px solid #333;
+    border-top-color: var(--accent);
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.progress {
+    width: 200px;
+    height: 6px;
+    background: #333;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.progress span {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width .3s;
+}
+
+.check {
+    display: none;
+    font-size: 48px;
+    color: #2ecc71;
+    margin-top: 20px;
+}
+
+/* SIDEBAR */
+.sidebar {
+    position: fixed;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--card);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--text);
+}
 
 /* TOPBAR */
-.topbar{
-    position:fixed;
-    top:15px;
-    right:20px;
-    z-index:5;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    background:var(--card);
-    backdrop-filter:blur(12px);
-    padding:10px 14px;
-    border-radius:12px;
-    font-weight:600;
+.topbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border-bottom-left-radius: 16px;
 }
-.topbar i{color:var(--accent)}
 
-/* SIDE TABS */
-.side-tab{
-    position:fixed;
-    top:50%;
-    transform:translateY(-50%);
-    background:var(--card);
-    backdrop-filter:blur(12px);
-    padding:10px 12px;
-    border-radius:12px;
-    cursor:pointer;
-    z-index:6;
-}
-.left{left:0;border-radius:0 12px 12px 0}
-.right{right:0;border-radius:12px 0 0 12px}
-.side-tab i{color:var(--accent)}
-
-/* SLIDE PANELS */
-.panel{
-    position:fixed;
-    top:0;
-    bottom:0;
-    width:300px;
-    background:var(--card);
-    backdrop-filter:blur(18px);
-    z-index:7;
-    padding:20px;
-    transition:.5s ease;
-}
-.panel.right{right:-320px}
-.panel.right.show{right:0}
-
-/* NOTIFICATIONS */
-.toast-container{
-    position:fixed;
-    bottom:25px;
-    right:25px;
-    z-index:20;
-}
-.toast{
-    background:var(--card);
-    backdrop-filter:blur(10px);
-    border-left:4px solid var(--accent);
-    padding:12px 16px;
-    margin-top:10px;
-    border-radius:8px;
-    animation:slideIn .4s ease;
-}
-@keyframes slideIn{
-    from{opacity:0;transform:translateX(20px)}
-    to{opacity:1;transform:none}
+.topbar img {
+    width: 32px;
+    border-radius: 50%;
 }
 
 /* MAIN */
-#app{
-    position:relative;
-    z-index:2;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-}
-.login-container{width:400px;text-align:center}
-.logo-img{width:90px;animation:pulse 3s infinite}
-@keyframes pulse{50%{transform:scale(1.08)}}
-
-.logo{
-    font-size:32px;
-    letter-spacing:6px;
-    font-weight:800;
-    animation:neon 3s infinite;
-}
-.logo span{color:var(--accent)}
-@keyframes neon{
-    50%{text-shadow:0 0 25px var(--accent)}
+.container {
+    display: none;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1s ease forwards;
 }
 
-.login-box{
-    margin-top:25px;
-    background:var(--card);
-    padding:30px;
-    border-radius:14px;
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(.95); }
+    to { opacity: 1; }
 }
 
-.announcement{
-    border:1px solid var(--accent);
-    padding:12px;
-    border-radius:6px;
-    margin-bottom:20px;
+.box {
+    background: var(--card);
+    padding: 30px;
+    border-radius: 18px;
+    width: 380px;
+    text-align: center;
+    backdrop-filter: blur(12px);
 }
 
-.key-wrapper{position:relative}
-input{
-    width:100%;
-    padding:14px 90px 14px 14px;
-    border-radius:6px;
-    border:1px solid rgba(0,0,0,.2);
-    filter:blur(6px);
-}
-input.show{filter:none}
-
-.key-actions{
-    position:absolute;
-    right:10px;
-    top:50%;
-    transform:translateY(-50%);
-    display:flex;
-    gap:10px;
-}
-.key-actions button{
-    background:none;border:none;cursor:pointer;color:var(--accent)
+/* LOGO */
+.logo img {
+    width: 90px;
+    animation: scalePulse 2.5s infinite;
 }
 
-button.main{
-    width:100%;
-    margin-top:18px;
-    padding:14px;
-    border:none;
-    border-radius:6px;
-    background:linear-gradient(135deg,var(--accent),#fff);
-    font-weight:700;
-    cursor:pointer;
+@keyframes scalePulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
 }
 
-.footer{margin-top:14px;font-size:13px;opacity:.7}
-
-/* PANELS CONTENT */
-.panel h3{margin-bottom:10px}
-.blur{
-    filter:blur(6px);
+.title {
+    font-size: 36px;
+    letter-spacing: 6px;
+    color: var(--accent);
+    text-shadow: 0 0 12px var(--accent);
+    animation: neon 2s infinite alternate;
 }
-.panel-actions button{
-    background:none;border:none;color:var(--accent);cursor:pointer;margin-right:8px;
+
+@keyframes neon {
+    from { opacity: .6; }
+    to { opacity: 1; }
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: #00000010;
+    color: var(--text);
+    margin: 15px 0;
+}
+
+.key-box {
+    display: flex;
+    gap: 10px;
+}
+
+.key-box input {
+    flex: 1;
+    filter: blur(5px);
+}
+
+.key-box button {
+    padding: 0 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+/* BUTTONS */
+.btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, var(--accent), #b08cff);
+    color: #fff;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.discord {
+    background: #5865f2;
+}
+
+/* MODALS */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: #000000aa;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box {
+    background: var(--card);
+    padding: 25px;
+    border-radius: 16px;
+    width: 320px;
+    text-align: center;
+}
+
+/* NOTIFY */
+.notify {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--accent);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 12px;
+    display: none;
 }
 </style>
 </head>
-
-<body>
+<body data-theme="light">
 
 <canvas id="particles"></canvas>
 
+<!-- LOADING -->
+<div id="loader">
+    <div class="circle"></div>
+    <div class="progress"><span></span></div>
+    <div class="check"><i class="fas fa-check-circle"></i></div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <button onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+    <button onclick="openDiscordInfo()"><i class="fab fa-discord"></i></button>
+    <button onclick="openMusic()"><i class="fas fa-music"></i></button>
+</div>
+
+<!-- TOPBAR -->
 <div class="topbar">
-    <i class="fas fa-user-shield"></i>
-    Nyx @xSh4dow — Owner
+    <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png">
+    <span>Nyx @xSh4dow <b>Owner</b></span>
 </div>
 
-<div class="side-tab left" id="themeBtn">
-    <i class="fas fa-adjust"></i>
-</div>
-
-<div class="side-tab right" style="top:45%" id="infoBtn">
-    <i class="fab fa-discord"></i>
-</div>
-
-<div class="side-tab right" style="top:55%" id="musicBtn">
-    <i class="fas fa-music"></i>
-</div>
-
-<!-- DISCORD INFO PANEL -->
-<div class="panel right" id="infoPanel">
-    <h3>Discord Info</h3>
-    <p><strong>Title:</strong> NYX Community</p>
-    <p>Online Users: 123</p>
-    <p>Offline Users: 45</p>
-    <br>
-    <p><strong>Owner:</strong> Nyx</p>
-    <p><strong>Admin:</strong> xSh4dow</p>
-    <p><strong>Date Creation:</strong> 2024</p>
-    <br>
-    <p>Invite:</p>
-    <p class="blur" id="invite">https://discord.gg/F3SDzkZa6U</p>
-    <div class="panel-actions">
-        <button onclick="toggleInvite()"><i class="fas fa-eye"></i></button>
-        <button onclick="copyInvite()"><i class="fas fa-copy"></i></button>
-    </div>
-</div>
-
-<!-- MUSIC PANEL -->
-<div class="panel right" id="musicPanel">
-    <h3>Music Player</h3>
-    <audio id="audio" controls style="width:100%">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
-    </audio>
-</div>
-
-<div class="toast-container" id="toasts"></div>
-
-<div id="app">
-    <div class="login-container">
-        <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png" class="logo-img">
-        <div class="logo">N<span>Y</span>X</div>
-
-        <div class="login-box">
-            <div class="announcement">Announcement: Welcome to NYX Launcher</div>
-
-            <div class="key-wrapper">
-                <input id="key" readonly placeholder="KEY-XXX-XXX-XXX">
-                <div class="key-actions">
-                    <button onclick="toggleKey()"><i class="fas fa-eye"></i></button>
-                    <button onclick="copyKey()"><i class="fas fa-copy"></i></button>
-                </div>
-            </div>
-
-            <button class="main" onclick="generateKey()">Generate Key</button>
-            <button class="main" onclick="joinDiscord()">Join Discord</button>
-
-            <div class="footer">NYX Launcher</div>
+<!-- MAIN -->
+<div class="container">
+    <div class="box">
+        <div class="logo">
+            <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png">
         </div>
+        <div class="title">NYX</div>
+
+        <div class="key-box">
+            <input id="key" readonly>
+            <button onclick="toggleKey()"><i class="fas fa-eye"></i></button>
+            <button onclick="copyKey()"><i class="fas fa-copy"></i></button>
+        </div>
+
+        <button class="btn" onclick="generateKey()">Generate Key</button>
+        <button class="btn discord" onclick="joinDiscord()">Join Discord</button>
     </div>
 </div>
+
+<!-- MODALS -->
+<div class="modal" id="genModal">
+    <div class="modal-box">
+        <p>Generating Key...</p>
+        <div class="progress"><span id="genProg"></span></div>
+        <p id="time">30s</p>
+        <div class="check"><i class="fas fa-check-circle"></i></div>
+    </div>
+</div>
+
+<div class="notify" id="notify"></div>
 
 <script>
-/* TOAST */
-function toast(msg){
-    const t=document.createElement('div');
-    t.className='toast';
-    t.textContent=msg;
-    document.getElementById('toasts').appendChild(t);
-    setTimeout(()=>t.remove(),4000);
-}
+/* LOADING */
+let p=0;
+let bar=document.querySelector('.progress span');
+let loader=document.getElementById('loader');
+let check=document.querySelector('.check');
 
-/* THEME */
-if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark');
-document.getElementById('themeBtn').onclick=()=>{
-    document.body.classList.toggle('dark');
-    localStorage.setItem('theme',document.body.classList.contains('dark')?'dark':'light');
-};
-
-/* PANELS */
-infoBtn.onclick=()=>infoPanel.classList.toggle('show');
-musicBtn.onclick=()=>musicPanel.classList.toggle('show');
+let load=setInterval(()=>{
+    p+=2;
+    bar.style.width=p+"%";
+    if(p>=100){
+        clearInterval(load);
+        check.style.display="block";
+        setTimeout(()=>{
+            loader.style.display="none";
+            document.querySelector('.container').style.display="flex";
+            notify("Launcher loaded");
+        },800);
+    }
+},60);
 
 /* KEY */
 function generateKey(){
-    const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const g=()=>Array.from({length:3},()=>c[Math.random()*c.length|0]).join('');
-    key.value=`KEY-${g()}-${g()}-${g()}`;
-    key.classList.remove('show');
-    toast('Key generated successfully');
+    document.getElementById('genModal').style.display="flex";
+    let t=30, prog=0;
+    let bar=document.getElementById('genProg');
+    let timer=setInterval(()=>{
+        t--;
+        prog+=100/30;
+        bar.style.width=prog+"%";
+        document.getElementById('time').innerText=t+"s";
+        if(t<=0){
+            clearInterval(timer);
+            document.querySelector('#genModal .check').style.display="block";
+            let k="KEY-"+Math.random().toString(36).substring(2,6).toUpperCase()+"-"+Math.random().toString(36).substring(2,6).toUpperCase();
+            document.getElementById('key').value=k;
+            notify("Key generated successfully");
+            setTimeout(()=>document.getElementById('genModal').style.display="none",1200);
+        }
+    },1000);
 }
-function toggleKey(){key.classList.toggle('show')}
+
+function toggleKey(){
+    let k=document.getElementById('key');
+    k.style.filter = k.style.filter ? "" : "blur(5px)";
+}
+
 function copyKey(){
-    navigator.clipboard.writeText(key.value);
-    toast('Key copied to clipboard');
+    navigator.clipboard.writeText(document.getElementById('key').value);
+    notify("Key copied");
 }
 
 /* DISCORD */
 function joinDiscord(){
-    toast('Redirecting to Discord...');
-    setTimeout(()=>window.open('https://discord.gg/F3SDzkZa6U','_blank'),1200);
-}
-function toggleInvite(){invite.classList.toggle('blur')}
-function copyInvite(){
-    navigator.clipboard.writeText(invite.textContent);
-    toast('Discord invite copied');
+    notify("Redirecting to Discord");
+    setTimeout(()=>window.open("https://discord.gg/F3SDzkZa6U","_blank"),800);
 }
 
-/* PARTICLES */
-const canvas=document.getElementById('particles');
-const ctx=canvas.getContext('2d');
-resize();window.onresize=resize;
-let p=Array.from({length:60},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:2,dx:Math.random()-.5,dy:Math.random()-.5}));
-function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
-(function anim(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='rgba(120,120,255,.6)';
-    p.forEach(o=>{
-        o.x+=o.dx;o.y+=o.dy;
-        if(o.x<0||o.x>canvas.width||o.y<0||o.y>canvas.height){
-            o.x=Math.random()*canvas.width;o.y=Math.random()*canvas.height;
-        }
-        ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fill();
-    });
-    requestAnimationFrame(anim);
-})();
+/* THEME */
+function toggleTheme(){
+    document.body.dataset.theme = document.body.dataset.theme==="dark"?"light":"dark";
+}
 
-toast('Launcher loaded successfully');
+/* NOTIFY */
+function notify(t){
+    let n=document.getElementById('notify');
+    n.innerText=t;
+    n.style.display="block";
+    setTimeout(()=>n.style.display="none",2500);
+}
 </script>
-
 </body>
 </html>
