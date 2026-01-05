@@ -3,15 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nyx Launcher</title>
+<title>NYX</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
+:root{
+    --bg1:#2a2f5a;
+    --bg2:#161a3a;
+    --card:rgba(255,255,255,0.08);
+    --accent:#6c63ff;
+    --text:#e0e0e0;
+}
+
+/* DARK WHITE (Purple + Black) */
+body.dark{
+    --bg1:#1a0026;
+    --bg2:#09000f;
+    --card:rgba(120,80,180,0.12);
+    --accent:#a56bff;
+    --text:#f2eaff;
+}
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    font-family:'Segoe UI',sans-serif;
 }
 
 body{
@@ -20,24 +37,48 @@ body{
     justify-content:center;
     align-items:center;
     overflow:hidden;
+    color:var(--text);
     background:
-        radial-gradient(circle at top, #2a2f5a, #161a3a),
-        linear-gradient(135deg, #232860, #14183b);
-    color:#e0e0e0;
+        radial-gradient(circle at top,var(--bg1),var(--bg2));
+    transition:.6s ease;
 }
 
-/* PARTICLES */
 canvas{
     position:fixed;
     inset:0;
     z-index:0;
 }
 
+/* THEME TAB */
+.theme-tab{
+    position:fixed;
+    left:0;
+    top:50%;
+    transform:translateY(-50%);
+    background:var(--card);
+    backdrop-filter:blur(12px);
+    border-radius:0 12px 12px 0;
+    padding:10px 12px;
+    cursor:pointer;
+    z-index:5;
+    border:1px solid rgba(255,255,255,0.2);
+    transition:.4s ease;
+}
+
+.theme-tab:hover{
+    padding-left:18px;
+}
+
+.theme-tab i{
+    color:var(--accent);
+    font-size:18px;
+}
+
 /* LOADER */
 #loader{
     position:fixed;
     inset:0;
-    background:rgba(12,15,40,0.95);
+    background:rgba(10,10,30,.95);
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -48,8 +89,8 @@ canvas{
 .loader-icon{
     width:90px;
     height:90px;
-    border:6px solid rgba(108,99,255,0.25);
-    border-top:6px solid #6c63ff;
+    border:6px solid rgba(255,255,255,.2);
+    border-top:6px solid var(--accent);
     border-radius:50%;
     animation:spin 1s linear infinite;
     margin-bottom:25px;
@@ -60,7 +101,7 @@ canvas{
 .progress-container{
     width:260px;
     height:8px;
-    background:rgba(255,255,255,0.15);
+    background:rgba(255,255,255,.15);
     border-radius:10px;
     overflow:hidden;
 }
@@ -68,110 +109,83 @@ canvas{
 .progress-bar{
     height:100%;
     width:0%;
-    background:linear-gradient(90deg,#6c63ff,#8a84ff);
+    background:linear-gradient(90deg,var(--accent),#fff);
 }
 
-.progress-text{
-    margin-top:12px;
-    font-size:14px;
-    color:#ccc;
-}
+.progress-text{margin-top:12px;font-size:14px;}
 
 /* APP */
 #app{
-    position:relative;
-    z-index:2;
     opacity:0;
     transform:translateY(30px);
     transition:1s ease;
+    position:relative;
+    z-index:2;
 }
 
 #app.show{
     opacity:1;
-    transform:translateY(0);
+    transform:none;
 }
 
 .login-container{
-    width:100%;
-    max-width:400px;
-    padding:20px;
+    width:400px;
     text-align:center;
 }
 
-/* LOGO WITH SCALE ANIMATION */
+/* LOGO */
 .logo-img{
     width:95px;
-    margin-bottom:10px;
-    filter:drop-shadow(0 0 14px rgba(108,99,255,0.7));
+    filter:drop-shadow(0 0 15px var(--accent));
     animation:logoScale 3.5s ease-in-out infinite;
 }
 
 @keyframes logoScale{
-    0%,100%{
-        transform:scale(1);
-    }
-    50%{
-        transform:scale(1.08);
-    }
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.08);}
 }
 
 .logo{
-    font-size:30px;
-    font-weight:800;
+    font-size:32px;
     letter-spacing:6px;
-    margin-bottom:25px;
+    font-weight:800;
+    margin:10px 0 25px;
     animation:neon 3s ease-in-out infinite;
 }
 
-.logo span{color:#6c63ff;}
+.logo span{color:var(--accent);}
 
 @keyframes neon{
-    0%,100%{opacity:.7;text-shadow:0 0 12px #6c63ff;}
-    50%{opacity:1;text-shadow:0 0 30px #6c63ff;}
+    0%,100%{opacity:.7;text-shadow:0 0 12px var(--accent);}
+    50%{opacity:1;text-shadow:0 0 30px var(--accent);}
 }
 
 .login-box{
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(16px);
+    background:var(--card);
+    backdrop-filter:blur(18px);
     border-radius:14px;
     padding:30px;
-    border:1px solid rgba(255,255,255,0.18);
-    box-shadow:0 20px 40px rgba(0,0,0,0.4);
-    text-align:left;
-}
-
-.subtitle{
-    color:#ddd;
-    font-size:14px;
-    margin-bottom:20px;
+    border:1px solid rgba(255,255,255,.2);
 }
 
 .announcement{
-    background:rgba(108,99,255,0.15);
-    border:1px solid rgba(108,99,255,0.45);
-    border-radius:6px;
+    background:rgba(108,99,255,.15);
+    border:1px solid var(--accent);
     padding:12px;
-    margin-bottom:25px;
-    display:flex;
-    align-items:center;
+    border-radius:6px;
+    margin-bottom:20px;
     font-size:14px;
-    color:#e0deff;
 }
 
-.announcement i{margin-right:10px;}
-
-label{font-size:14px;color:#ccc;}
-
-.key-wrapper{position:relative;margin-top:8px;}
+.key-wrapper{position:relative;}
 
 input{
     width:100%;
     padding:14px 90px 14px 14px;
-    background:rgba(0,0,0,0.35);
-    border:1px solid rgba(255,255,255,0.25);
+    background:rgba(0,0,0,.4);
+    border:1px solid rgba(255,255,255,.25);
     border-radius:6px;
     color:#fff;
-    font-size:15px;
     filter:blur(6px);
 }
 
@@ -189,50 +203,33 @@ input.show{filter:none;}
 .key-actions button{
     background:none;
     border:none;
-    color:#9a94ff;
+    color:var(--accent);
     cursor:pointer;
 }
 
 .generate-button{
     width:100%;
+    margin:20px 0 12px;
     padding:14px;
     border:none;
     border-radius:6px;
-    background:linear-gradient(135deg,#6c63ff,#8a84ff);
-    color:#fff;
-    font-size:16px;
-    font-weight:600;
+    background:linear-gradient(135deg,var(--accent),#fff);
+    color:#000;
+    font-weight:700;
     cursor:pointer;
-    margin:20px 0 15px;
-}
-
-.generate-button:hover{
-    box-shadow:0 0 25px rgba(108,99,255,0.7);
 }
 
 .discord-button{
     width:100%;
     padding:14px;
-    background:rgba(88,101,242,0.18);
-    border:1px solid rgba(88,101,242,0.5);
     border-radius:6px;
-    color:#d6dbff;
-    font-size:16px;
+    border:1px solid var(--accent);
+    background:transparent;
+    color:var(--text);
     font-weight:600;
-    cursor:pointer;
-    display:flex;
-    justify-content:center;
-    align-items:center;
 }
 
-.discord-button i{margin-right:10px;}
-
-.footer{
-    margin-top:25px;
-    text-align:center;
-    font-size:13px;
-    color:#bbb;
-}
+.footer{margin-top:18px;font-size:13px;opacity:.7;}
 </style>
 </head>
 
@@ -240,7 +237,10 @@ input.show{filter:none;}
 
 <canvas id="particles"></canvas>
 
-<!-- LOADER -->
+<div class="theme-tab" id="themeBtn">
+    <i class="fas fa-adjust"></i>
+</div>
+
 <div id="loader">
     <div class="loader-icon"></div>
     <div class="progress-container">
@@ -249,25 +249,18 @@ input.show{filter:none;}
     <div class="progress-text" id="txt">Loading 0%</div>
 </div>
 
-<!-- APP -->
 <div id="app">
     <div class="login-container">
         <img src="https://i.ibb.co/Q7HcNz2x/IMG-0599-removebg-preview-1.png" class="logo-img">
         <div class="logo">N<span>Y</span>X</div>
 
         <div class="login-box">
-            <p class="subtitle">Generate your private access key</p>
+            <div class="announcement">Announcement: Maintenance soon.</div>
 
-            <div class="announcement">
-                <i class="fas fa-bullhorn"></i>
-                Announcement: New update coming soon.
-            </div>
-
-            <label>Generated Key</label>
             <div class="key-wrapper">
                 <input id="key" readonly placeholder="KEY-XXX-XXX-XXX">
                 <div class="key-actions">
-                    <button id="toggle"><i class="fas fa-eye"></i></button>
+                    <button id="eye"><i class="fas fa-eye"></i></button>
                     <button id="copy"><i class="fas fa-copy"></i></button>
                 </div>
             </div>
@@ -275,12 +268,24 @@ input.show{filter:none;}
             <button class="generate-button" id="gen">Generate Key</button>
             <button class="discord-button"><i class="fab fa-discord"></i> Discord</button>
 
-            <div class="footer">v3.7 Nyx @xShadow</div>
+            <div class="footer">NYX Launcher</div>
         </div>
     </div>
 </div>
 
 <script>
+/* THEME */
+const btn=document.getElementById('themeBtn');
+const saved=localStorage.getItem('theme');
+if(saved==='dark') document.body.classList.add('dark');
+
+btn.onclick=()=>{
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme',
+        document.body.classList.contains('dark')?'dark':'light'
+    );
+};
+
 /* LOADER */
 let p=0;
 const bar=document.getElementById('bar');
@@ -289,10 +294,9 @@ const loader=document.getElementById('loader');
 const app=document.getElementById('app');
 
 const load=setInterval(()=>{
-    p+=Math.random()*7+3;
+    p+=Math.random()*8+4;
     if(p>=100){
-        p=100;
-        clearInterval(load);
+        p=100;clearInterval(load);
         setTimeout(()=>{
             loader.style.opacity=0;
             setTimeout(()=>{
@@ -309,51 +313,34 @@ const load=setInterval(()=>{
 const key=document.getElementById('key');
 document.getElementById('gen').onclick=()=>{
     const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const b=()=>Array.from({length:3},()=>c[Math.floor(Math.random()*c.length)]).join('');
-    key.value=`KEY-${b()}-${b()}-${b()}`;
+    const g=()=>Array.from({length:3},()=>c[Math.random()*c.length|0]).join('');
+    key.value=`KEY-${g()}-${g()}-${g()}`;
     key.classList.remove('show');
 };
-document.getElementById('toggle').onclick=()=>key.classList.toggle('show');
+document.getElementById('eye').onclick=()=>key.classList.toggle('show');
 document.getElementById('copy').onclick=()=>key.value && navigator.clipboard.writeText(key.value);
 
 /* PARTICLES */
 const canvas=document.getElementById('particles');
 const ctx=canvas.getContext('2d');
-resize();
-window.onresize=resize;
+resize();window.onresize=resize;
+let parts=Array.from({length:70},()=>newP());
 
-let particles=Array.from({length:70},()=>newParticle());
-
-function resize(){
-    canvas.width=innerWidth;
-    canvas.height=innerHeight;
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+function newP(){
+    return{x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+1,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3};
 }
-
-function newParticle(){
-    return{
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        r:Math.random()*2+1,
-        dx:(Math.random()-.5)*0.3,
-        dy:(Math.random()-.5)*0.3
-    };
-}
-
-function animate(){
+function anim(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='rgba(150,150,255,0.55)';
-    particles.forEach(p=>{
-        p.x+=p.dx;
-        p.y+=p.dy;
-        if(p.x<0||p.x>canvas.width||p.y<0||p.y>canvas.height)
-            Object.assign(p,newParticle());
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fill();
+    ctx.fillStyle='rgba(160,160,255,.55)';
+    parts.forEach(p=>{
+        p.x+=p.dx;p.y+=p.dy;
+        if(p.x<0||p.x>canvas.width||p.y<0||p.y>canvas.height) Object.assign(p,newP());
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
     });
-    requestAnimationFrame(animate);
+    requestAnimationFrame(anim);
 }
-animate();
+anim();
 </script>
 
 </body>
