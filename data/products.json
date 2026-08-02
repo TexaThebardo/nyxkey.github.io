@@ -3,7 +3,7 @@
     {
       "id": "card_001",
       "name": "Visa Gold Premium",
-      "description": "Tarjeta Visa Gold con límite alto, perfecta para compras internacionales y viajes",
+      "description": "Tarjeta Visa Gold con límite alto, perfecta para compras internacionales",
       "price": 149.99,
       "card_type": "Visa",
       "card_number": "4532 1234 5678 9012",
@@ -11,7 +11,7 @@
       "card_cvv": "***",
       "card_holder": "Premium User",
       "stock": 5,
-      "image": "images/cards/visa-gold.jpg",
+      "image": "",
       "category": "premium",
       "features": ["Límite $10,000", "Compras internacionales", "Seguro de viaje"],
       "status": "active",
@@ -28,7 +28,7 @@
       "card_cvv": "***",
       "card_holder": "Elite Member",
       "stock": 3,
-      "image": "images/cards/mastercard-black.jpg",
+      "image": "",
       "category": "elite",
       "features": ["Límite $25,000", "Acceso a lounges", "Cashback 5%"],
       "status": "active",
@@ -45,16 +45,49 @@
       "card_cvv": "***",
       "card_holder": "Travel Pro",
       "stock": 2,
-      "image": "images/cards/amex-platinum.jpg",
+      "image": "",
       "category": "premium",
       "features": ["Límite $50,000", "Seguro de viaje premium", "Acceso a lounges VIP"],
       "status": "active",
       "rating": 4.7
+    },
+    {
+      "id": "card_004",
+      "name": "Visa Infinite Black",
+      "description": "Visa Infinite Black con beneficios de élite y acceso global",
+      "price": 299.99,
+      "card_type": "Visa",
+      "card_number": "4024 5678 9012 3456",
+      "card_expiry": "03/29",
+      "card_cvv": "***",
+      "card_holder": "Elite User",
+      "stock": 4,
+      "image": "",
+      "category": "elite",
+      "features": ["Límite $30,000", "Acceso a lounges VIP", "Cashback 3%", "Seguro de viaje premium"],
+      "status": "active",
+      "rating": 4.6
+    },
+    {
+      "id": "card_005",
+      "name": "Mastercard Titanium",
+      "description": "Mastercard Titanium con beneficios exclusivos para viajeros frecuentes",
+      "price": 189.99,
+      "card_type": "Mastercard",
+      "card_number": "5532 1234 5678 9012",
+      "card_expiry": "09/28",
+      "card_cvv": "***",
+      "card_holder": "Traveler Pro",
+      "stock": 6,
+      "image": "",
+      "category": "premium",
+      "features": ["Límite $15,000", "Millas aéreas", "Seguro de viaje", "Acceso a lounges"],
+      "status": "active",
+      "rating": 4.4
     }
   ],
   "settings": {
     "store_name": "CardNMR Store",
-    "currency": "USD",
-    "payment_methods": ["stripe", "crypto", "paypal"]
+    "currency": "USD"
   }
 }
