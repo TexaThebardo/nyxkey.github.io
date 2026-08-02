@@ -1,28 +1,90 @@
-// 🔐 AUTENTICACIÓN CON SUPABASE
-const SUPABASE_URL = 'https://dxjojpuiphjbsyyxmgto.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_HPIVOX8ZqrQ4P1Wdw85pWw_DkUG3c0K';
+// 🔐 AUTENTICACIÓN CON SUPABASE - CONFIGURACIÓN COMPLETA
 
-class AuthManager {
+// === TUS CREDENCIALES DE SUPABASE ===
+const SUPABASE_URL = 'https://dxjojpuiphjbsyyxmgto.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4am9qcHVpcGhqYnN5eXhtZ3RvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU2MTM2MTAsImV4cCI6MjEwMTE4OTYxMH0.H-uCrmQXcrfCol8wxBn4zM51OtwvzkroBOsmdiEP-_M';
+// === FIN CREDENCIALES ===
+
+class SupabaseAuthManager {
     constructor() {
         this.currentUser = null;
         this.session = null;
         this.init();
     }
 
-    // Inicializar
-    init() {
-        // Verificar si hay sesión guardada
-        const savedUser = localStorage.getItem('currentUser');
-        if (savedUser) {
-            this.currentUser = JSON.parse(savedUser);
+    async init() {
+        // Verificar sesión guardada
+        const savedSession = localStorage.getItem('supabase_session');
+        if (savedSession) {
+            try {
+                this.session = JSON.parse(savedSession);
+                this.currentUser = this.session?.user || null;
+                // Verificar si el token sigue siendo válido
+                await this.refreshSession();
+            } catch (e) {
+                console.log('Sesión expirada o inválida');
+                this.clearSession();
+            }
         }
         this.updateUI();
+        this.setupAuthListener();
     }
 
-    // Registrar usuario
+    // Configurar listener de autenticación
+    setupAuthListener() {
+        // Escuchar cambios en la autenticación
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'supabase_session') {
+                this.init();
+            }
+        });
+    }
+
+    // Refrescar sesión
+    async refreshSession() {
+        try {
+            const token = localStorage.getItem('supabase_token');
+            if (!token) return;
+
+            const response = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const user = await response.json();
+                this.currentUser = user;
+                this.session = { user };
+                localStorage.setItem('supabase_session', JSON.stringify(this.session));
+            } else {
+                this.clearSession();
+            }
+        } catch (error) {
+            console.error('Error refreshing session:', error);
+            this.clearSession();
+        }
+    }
+
+    // Registrar usuario con Supabase
     async register(email, password, username, fullName) {
         try {
-            // Simulación con Supabase (usa tu configuración real)
+            // Validar datos
+            if (!email || !password || !username) {
+                return { 
+                    success: false, 
+                    error: 'Todos los campos son obligatorios' 
+                };
+            }
+
+            if (password.length < 6) {
+                return { 
+                    success: false, 
+                    error: 'La contraseña debe tener al menos 6 caracteres' 
+                };
+            }
+
             const response = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
                 method: 'POST',
                 headers: {
@@ -30,38 +92,66 @@ class AuthManager {
                     'apikey': SUPABASE_ANON_KEY
                 },
                 body: JSON.stringify({
-                    email,
-                    password,
-                    data: { username, full_name: fullName }
+                    email: email,
+                    password: password,
+                    data: { 
+                        username: username,
+                        full_name: fullName || username,
+                        role: 'user'
+                    }
                 })
             });
 
             const data = await response.json();
-            
+
             if (data.error) {
-                throw new Error(data.error.message);
+                return { 
+                    success: false, 
+                    error: data.error.message || 'Error al registrar usuario'
+                };
             }
 
-            this.currentUser = {
-                id: data.user.id,
-                email: data.user.email,
-                username: username,
-                full_name: fullName,
-                role: 'user'
-            };
+            if (!data.user) {
+                return { 
+                    success: false, 
+                    error: 'No se pudo crear el usuario' 
+                };
+            }
 
-            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+            // Guardar sesión
+            if (data.session) {
+                localStorage.setItem('supabase_token', data.session.access_token);
+                this.session = data.session;
+                this.currentUser = data.user;
+                localStorage.setItem('supabase_session', JSON.stringify(this.session));
+            }
+
             this.updateUI();
-            return { success: true, user: this.currentUser };
+
+            return { 
+                success: true, 
+                user: this.currentUser,
+                message: '¡Registro exitoso!'
+            };
         } catch (error) {
-            return { success: false, error: error.message };
+            console.error('Error en registro:', error);
+            return { 
+                success: false, 
+                error: error.message || 'Error al registrar usuario'
+            };
         }
     }
 
-    // Iniciar sesión
+    // Iniciar sesión con Supabase
     async login(email, password) {
         try {
-            // Simulación con Supabase
+            if (!email || !password) {
+                return { 
+                    success: false, 
+                    error: 'Email y contraseña son obligatorios' 
+                };
+            }
+
             const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
                 method: 'POST',
                 headers: {
@@ -69,56 +159,81 @@ class AuthManager {
                     'apikey': SUPABASE_ANON_KEY
                 },
                 body: JSON.stringify({
-                    email,
-                    password
+                    email: email,
+                    password: password
                 })
             });
 
             const data = await response.json();
-            
+
             if (data.error) {
-                throw new Error(data.error.message);
+                return { 
+                    success: false, 
+                    error: data.error.message || 'Email o contraseña incorrectos'
+                };
             }
 
-            // Verificar si es admin (hardcodeado para demo)
+            if (!data.user) {
+                return { 
+                    success: false, 
+                    error: 'Usuario no encontrado' 
+                };
+            }
+
+            // Guardar sesión
+            localStorage.setItem('supabase_token', data.access_token);
+            this.session = data;
+            this.currentUser = data.user;
+            localStorage.setItem('supabase_session', JSON.stringify(this.session));
+
+            // Verificar si es admin (puedes cambiar esto)
             const isAdmin = email === 'admin@cardnmr.com' || email === 'admin@cardnmr.store';
 
-            this.currentUser = {
-                id: data.user.id,
-                email: data.user.email,
-                username: data.user.user_metadata?.username || email.split('@')[0],
-                full_name: data.user.user_metadata?.full_name || '',
-                role: isAdmin ? 'admin' : 'user'
-            };
-
-            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
             this.updateUI();
-            return { success: true, user: this.currentUser };
+
+            return { 
+                success: true, 
+                user: this.currentUser,
+                role: isAdmin ? 'admin' : 'user',
+                message: '¡Bienvenido!'
+            };
         } catch (error) {
-            return { success: false, error: error.message };
+            console.error('Error en login:', error);
+            return { 
+                success: false, 
+                error: error.message || 'Error al iniciar sesión'
+            };
         }
     }
 
     // Cerrar sesión
     async logout() {
         try {
-            // Logout en Supabase
-            await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
-                method: 'POST',
-                headers: {
-                    'apikey': SUPABASE_ANON_KEY,
-                    'Authorization': `Bearer ${localStorage.getItem('supabase_token')}`
-                }
-            });
+            const token = localStorage.getItem('supabase_token');
+            if (token) {
+                await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+            }
         } catch (error) {
             console.error('Logout error:', error);
         }
 
-        this.currentUser = null;
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('supabase_token');
+        this.clearSession();
         this.updateUI();
         window.location.href = 'index.html';
+    }
+
+    // Limpiar sesión
+    clearSession() {
+        this.currentUser = null;
+        this.session = null;
+        localStorage.removeItem('supabase_token');
+        localStorage.removeItem('supabase_session');
     }
 
     // Obtener usuario actual
@@ -133,26 +248,62 @@ class AuthManager {
 
     // Verificar si es admin
     isAdmin() {
-        return this.currentUser?.role === 'admin';
+        const email = this.currentUser?.email;
+        return email === 'admin@cardnmr.com' || email === 'admin@cardnmr.store';
     }
 
-    // Actualizar UI según autenticación
+    // Obtener perfil del usuario
+    async getProfile() {
+        if (!this.currentUser) return null;
+        
+        try {
+            const token = localStorage.getItem('supabase_token');
+            const response = await fetch(
+                `${SUPABASE_URL}/rest/v1/profiles?id=eq.${this.currentUser.id}`,
+                {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+            
+            if (response.ok) {
+                const profiles = await response.json();
+                return profiles[0] || null;
+            }
+        } catch (error) {
+            console.error('Error getting profile:', error);
+        }
+        return null;
+    }
+
+    // Actualizar UI
     updateUI() {
         const authButtons = document.getElementById('authButtons');
         const userMenu = document.getElementById('userMenu');
         const userName = document.getElementById('userName');
 
+        // Remover admin link existente
+        const existingAdminLink = document.querySelector('.admin-link');
+        if (existingAdminLink) existingAdminLink.remove();
+
         if (this.currentUser) {
             if (authButtons) authButtons.style.display = 'none';
             if (userMenu) {
                 userMenu.style.display = 'flex';
-                if (userName) userName.textContent = this.currentUser.full_name || this.currentUser.username;
+                if (userName) {
+                    const name = this.currentUser.user_metadata?.full_name || 
+                                this.currentUser.user_metadata?.username || 
+                                this.currentUser.email?.split('@')[0] || 'Usuario';
+                    userName.textContent = name;
+                }
             }
             
             // Agregar link de admin si es admin
             if (this.isAdmin()) {
                 const navLinks = document.querySelector('.nav-links');
-                if (navLinks && !document.querySelector('.admin-link')) {
+                if (navLinks) {
                     const adminLink = document.createElement('a');
                     adminLink.href = 'admin.html';
                     adminLink.className = 'admin-link';
@@ -168,7 +319,7 @@ class AuthManager {
 }
 
 // Instancia global
-const authManager = new AuthManager();
+const authManager = new SupabaseAuthManager();
 
 // Event listeners para formularios
 document.addEventListener('DOMContentLoaded', () => {
@@ -177,15 +328,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            
+            if (!email || !password) {
+                showNotification('❌ Completa todos los campos', 'error');
+                return;
+            }
             
             const result = await authManager.login(email, password);
             if (result.success) {
-                showNotification('✅ ¡Bienvenido!', 'success');
-                window.location.href = 'index.html';
+                showNotification('✅ ' + result.message, 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
             } else {
-                showNotification(`❌ ${result.error}`, 'error');
+                showNotification('❌ ' + result.error, 'error');
             }
         });
     }
@@ -195,17 +353,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const username = document.getElementById('registerUsername').value;
-            const fullName = document.getElementById('registerFullName').value;
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value.trim();
+            const username = document.getElementById('registerUsername').value.trim();
+            const fullName = document.getElementById('registerFullName').value.trim();
+            
+            if (!email || !password || !username) {
+                showNotification('❌ Completa todos los campos', 'error');
+                return;
+            }
             
             const result = await authManager.register(email, password, username, fullName);
             if (result.success) {
-                showNotification('✅ ¡Registro exitoso!', 'success');
-                window.location.href = 'login.html';
+                showNotification('✅ ' + result.message, 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
             } else {
-                showNotification(`❌ ${result.error}`, 'error');
+                showNotification('❌ ' + result.error, 'error');
             }
         });
     }
