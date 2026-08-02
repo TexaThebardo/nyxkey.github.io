@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda - CardNMR Store</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <i class="fas fa-credit-card"></i>
+                    CardNMR Store
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="shop.html" class="active">Tienda</a>
+                <a href="#" id="cartBtn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount">0</span>
+                </a>
+                <div id="authButtons">
+                    <a href="login.html" class="btn-login">Iniciar Sesión</a>
+                    <a href="register.html" class="btn-register">Registrarse</a>
+                </div>
+                <div id="userMenu" style="display:none;">
+                    <span id="userName"></span>
+                    <a href="profile.html"><i class="fas fa-user"></i></a>
+                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tienda -->
+    <section class="shop-page">
+        <div class="container">
+            <div class="shop-header">
+                <h1>🛒 Nuestra Tienda</h1>
+                <p>Encuentra las mejores tarjetas premium</p>
+            </div>
+
+            <!-- Filtros y búsqueda -->
+            <div class="shop-controls">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar tarjetas...">
+                </div>
+                <div class="filters">
+                    <button class="filter-btn active" data-category="all">Todos</button>
+                    <button class="filter-btn" data-category="premium">Premium</button>
+                    <button class="filter-btn" data-category="elite">Elite</button>
+                    <button class="filter-btn" data-category="standard">Standard</button>
+                </div>
+            </div>
+
+            <!-- Grid de productos -->
+            <div class="products-grid" id="productsContainer">
+                <!-- Los productos se cargan desde JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CardNMR Store</h3>
+                    <p>Tienda de tarjetas premium desde 2024</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <a href="shop.html">Tienda</a>
+                    <a href="#">Política de Privacidad</a>
+                    <a href="#">Términos</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-envelope"></i> info@cardnmr.com</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CardNMR Store - Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
