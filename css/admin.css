@@ -149,4 +149,140 @@
 
 .admin-actions {
     display: flex;
-   
+    gap: 10px;
+}
+
+.btn-export,
+.btn-copy {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.btn-export {
+    background: #4f46e5;
+    color: white;
+}
+
+.btn-export:hover {
+    background: #6366f1;
+    transform: translateY(-2px);
+}
+
+.btn-copy {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.btn-copy:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Producto en admin */
+.admin-product-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s;
+}
+
+.admin-product-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-info h3 {
+    margin-bottom: 5px;
+    color: white;
+}
+
+.product-info p {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.product-info .price {
+    color: #4f46e5;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.product-info .stock {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin-left: 15px;
+}
+
+.product-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit,
+.btn-delete {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-edit {
+    background: #4f46e5;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #6366f1;
+}
+
+.btn-delete {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #ef4444;
+}
+
+/* Responsive Admin */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-products-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .admin-actions {
+        flex-wrap: wrap;
+    }
+    
+    .admin-product-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .product-actions {
+        justify-content: flex-end;
+    }
+}
