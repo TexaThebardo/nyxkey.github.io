@@ -1,6 +1,6 @@
 // 🔐 AUTENTICACIÓN CON SUPABASE
-const SUPABASE_URL = 'https://tu-proyecto.supabase.co';
-const SUPABASE_ANON_KEY = 'tu-anon-key-aqui';
+const SUPABASE_URL = 'https://dxjojpuiphjbsyyxmgto.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_HPIVOX8ZqrQ4P1Wdw85pWw_DkUG3c0K';
 
 class AuthManager {
     constructor() {
