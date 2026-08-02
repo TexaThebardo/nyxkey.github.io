@@ -1,4 +1,5 @@
-// 🛒 GESTIÓN DEL CARRITO - VERSIÓN COMPLETA
+// 🛒 GESTIÓN DEL CARRITO
+
 class CartManager {
     constructor() {
         this.items = [];
@@ -41,7 +42,7 @@ class CartManager {
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                image: product.image || 'images/cards/default.jpg',
+                image: product.image || '',
                 card_type: product.card_type || 'Visa',
                 card_number: product.card_number || '****',
                 quantity: quantity,
@@ -93,79 +94,8 @@ class CartManager {
         if (cartCount) {
             const total = this.getTotalItems();
             cartCount.textContent = total;
-            cartCount.style.display = total > 0 ? 'inline-flex' : 'none';
+            cartCount.style.display = total > 0 ? 'inline' : 'none';
         }
-        
-        if (document.getElementById('cartItems')) {
-            this.renderCart();
-        }
-    }
-
-    renderCart() {
-        const container = document.getElementById('cartItems');
-        if (!container) return;
-
-        if (this.items.length === 0) {
-            container.innerHTML = `
-                <div class="empty-cart">
-                    <i class="fas fa-shopping-cart fa-3x"></i>
-                    <h3>Tu carrito está vacío</h3>
-                    <p>¡Agrega algunos productos!</p>
-                    <a href="shop.html" class="btn-primary">Ir a la tienda</a>
-                </div>
-            `;
-            this.updateSummary();
-            return;
-        }
-
-        container.innerHTML = this.items.map(item => `
-            <div class="cart-item" data-id="${item.id}">
-                <div class="cart-item-image">
-                    <img src="${item.image || 'images/cards/default.jpg'}" alt="${item.name}" onerror="this.src='images/cards/default.jpg'">
-                </div>
-                <div class="cart-item-details">
-                    <h4>${item.name}</h4>
-                    <p class="cart-item-type">${item.card_type || 'Visa'} - ${item.card_number || '****'}</p>
-                    <p class="cart-item-price">$${item.price.toFixed(2)}</p>
-                </div>
-                <div class="cart-item-actions">
-                    <div class="quantity-control">
-                        <button onclick="window.decrementQuantity('${item.id}')" class="qty-btn">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <span class="qty-display">${item.quantity}</span>
-                        <button onclick="window.incrementQuantity('${item.id}')" class="qty-btn">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                    <button onclick="window.removeFromCart('${item.id}')" class="btn-remove">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-                <div class="cart-item-subtotal">
-                    $${(item.price * item.quantity).toFixed(2)}
-                </div>
-            </div>
-        `).join('');
-
-        this.updateSummary();
-    }
-
-    updateSummary() {
-        const subtotal = this.total;
-        const shipping = subtotal > 50 ? 0 : 5.99;
-        const tax = subtotal * 0.10;
-        const total = subtotal + shipping + tax;
-
-        const subtotalEl = document.getElementById('cartSubtotal');
-        const shippingEl = document.getElementById('cartShipping');
-        const taxEl = document.getElementById('cartTax');
-        const totalEl = document.getElementById('cartTotal');
-
-        if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-        if (shippingEl) shippingEl.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`;
-        if (taxEl) taxEl.textContent = `$${tax.toFixed(2)}`;
-        if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
     }
 
     getCheckoutData() {
@@ -187,6 +117,8 @@ class CartManager {
 const cartManager = new CartManager();
 
 // Funciones globales
+window.cartManager = cartManager;
+
 window.incrementQuantity = function(productId) {
     const item = cartManager.items.find(i => i.id === productId);
     if (item) {
@@ -208,59 +140,12 @@ window.removeFromCart = function(productId) {
     }
 };
 
-window.addToCart = function(productId) {
-    if (typeof productManager === 'undefined') {
-        showNotification('❌ Error: Sistema no disponible', 'error');
-        return;
-    }
-    
-    const product = productManager.getProductById(productId);
-    if (product) {
-        if (product.stock <= 0) {
-            showNotification('❌ Producto agotado', 'error');
-            return;
-        }
-        cartManager.addItem(product);
-        showNotification(`✅ ${product.name} agregado al carrito`, 'success');
-        cartManager.updateUI();
-    } else {
-        showNotification('❌ Producto no encontrado', 'error');
-    }
-};
-
-window.goToCheckout = function() {
-    if (cartManager.getTotalItems() > 0) {
-        const user = localStorage.getItem('currentUser');
-        if (!user) {
-            showNotification('⚠️ Inicia sesión para continuar', 'info');
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 1500);
-            return;
-        }
-        window.location.href = 'checkout.html';
-    } else {
-        showNotification('❌ El carrito está vacío', 'error');
-    }
-};
-
 window.clearCart = function() {
     if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
         cartManager.clearCart();
-        cartManager.renderCart();
-        showNotification('🗑️ Carrito vaciado', 'info');
+        cartManager.updateUI();
+        if (typeof showNotification === 'function') {
+            showNotification('🗑️ Carrito vaciado', 'info');
+        }
     }
 };
-
-// Inicializar
-document.addEventListener('DOMContentLoaded', () => {
-    cartManager.loadCart();
-    cartManager.updateUI();
-    
-    // Si estamos en cart.html, renderizar
-    if (document.getElementById('cartItems')) {
-        cartManager.renderCart();
-    }
-});
-
-window.cartManager = cartManager;
