@@ -1,4 +1,4 @@
-// 🛒 GESTIÓN DEL CARRITO - CON DESCUENTO DE STOCK
+// 🛒 GESTIÓN DEL CARRITO - VERSIÓN COMPLETA CON DESCUENTO DE STOCK
 
 class CartManager {
     constructor() {
@@ -7,6 +7,9 @@ class CartManager {
         this.loadCart();
     }
 
+    // =============================================
+    // CARGAR CARRITO DESDE LOCALSTORAGE
+    // =============================================
     loadCart() {
         try {
             const saved = localStorage.getItem('cart');
@@ -17,6 +20,7 @@ class CartManager {
             } else {
                 this.items = [];
                 this.total = 0;
+                console.log('🛒 Carrito vacío');
             }
         } catch (error) {
             console.error('Error loading cart:', error);
@@ -26,33 +30,48 @@ class CartManager {
         return this.items;
     }
 
+    // =============================================
+    // GUARDAR CARRITO EN LOCALSTORAGE
+    // =============================================
     saveCart() {
         try {
             localStorage.setItem('cart', JSON.stringify(this.items));
             this.calculateTotal();
             this.updateUI();
+            console.log('💾 Carrito guardado:', this.items.length, 'items');
         } catch (error) {
             console.error('Error saving cart:', error);
         }
     }
 
+    // =============================================
+    // AGREGAR PRODUCTO AL CARRITO (CON STOCK)
+    // =============================================
     addItem(product, quantity = 1) {
-        if (!product || !product.id) return false;
-        
-        // Verificar stock disponible
-        if (product.stock < quantity) {
-            showNotification(`❌ Solo quedan ${product.stock} unidades disponibles`, 'error');
+        if (!product || !product.id) {
+            console.error('❌ Producto inválido');
             return false;
         }
-        
+
+        // Verificar stock disponible
+        if (product.stock < quantity) {
+            if (typeof showNotification === 'function') {
+                showNotification(`❌ Solo quedan ${product.stock} unidades disponibles`, 'error');
+            }
+            return false;
+        }
+
         const existing = this.items.find(item => item.id === product.id);
         if (existing) {
             // Verificar stock total
             if (product.stock < existing.quantity + quantity) {
-                showNotification(`❌ Solo quedan ${product.stock} unidades disponibles`, 'error');
+                if (typeof showNotification === 'function') {
+                    showNotification(`❌ Solo quedan ${product.stock} unidades disponibles`, 'error');
+                }
                 return false;
             }
             existing.quantity += quantity;
+            console.log(`🔄 Producto actualizado: ${product.name} x${existing.quantity}`);
         } else {
             this.items.push({
                 id: product.id,
@@ -64,8 +83,9 @@ class CartManager {
                 quantity: quantity,
                 stock: product.stock || 0
             });
+            console.log(`➕ Producto agregado: ${product.name}`);
         }
-        
+
         // Descontar stock del producto
         this.updateProductStock(product.id, -quantity);
         this.saveCart();
@@ -73,11 +93,15 @@ class CartManager {
         return true;
     }
 
+    // =============================================
+    // ELIMINAR PRODUCTO DEL CARRITO
+    // =============================================
     removeItem(productId) {
         const item = this.items.find(i => i.id === productId);
         if (item) {
             // Devolver stock
             this.updateProductStock(productId, item.quantity);
+            console.log(`🗑️ Producto eliminado: ${item.name}`);
         }
         this.items = this.items.filter(item => item.id !== productId);
         this.saveCart();
@@ -85,22 +109,28 @@ class CartManager {
         return this.items;
     }
 
+    // =============================================
+    // ACTUALIZAR CANTIDAD DE UN PRODUCTO
+    // =============================================
     updateQuantity(productId, quantity) {
         const item = this.items.find(item => item.id === productId);
         if (item) {
             const diff = quantity - item.quantity;
+
             if (diff > 0) {
                 // Verificar stock disponible
-                const product = productManager.getProductById(productId);
+                const product = this.getProductFromStorage(productId);
                 if (product && product.stock < diff) {
-                    showNotification(`❌ Solo quedan ${product.stock} unidades disponibles`, 'error');
+                    if (typeof showNotification === 'function') {
+                        showNotification(`❌ Solo quedan ${product.stock} unidades disponibles`, 'error');
+                    }
                     return;
                 }
                 this.updateProductStock(productId, -diff);
             } else if (diff < 0) {
                 this.updateProductStock(productId, -diff);
             }
-            
+
             if (quantity <= 0) {
                 this.removeItem(productId);
             } else {
@@ -112,33 +142,48 @@ class CartManager {
         return this.items;
     }
 
-    // Actualizar stock de un producto
+    // =============================================
+    // OBTENER PRODUCTO DEL STORAGE
+    // =============================================
+    getProductFromStorage(productId) {
+        const products = JSON.parse(localStorage.getItem('products_backup') || '[]');
+        return products.find(p => p.id === productId);
+    }
+
+    // =============================================
+    // ACTUALIZAR STOCK DE UN PRODUCTO
+    // =============================================
     updateProductStock(productId, change) {
+        // Actualizar en localStorage
         const products = JSON.parse(localStorage.getItem('products_backup') || '[]');
         const productIndex = products.findIndex(p => p.id === productId);
+
         if (productIndex !== -1) {
             products[productIndex].stock += change;
             if (products[productIndex].stock < 0) products[productIndex].stock = 0;
             localStorage.setItem('products_backup', JSON.stringify(products));
-            
+
             // Actualizar también en productManager
-            if (productManager && productManager.products) {
-                const pIndex = productManager.products.findIndex(p => p.id === productId);
+            if (window.productManager && window.productManager.products) {
+                const pIndex = window.productManager.products.findIndex(p => p.id === productId);
                 if (pIndex !== -1) {
-                    productManager.products[pIndex].stock = products[productIndex].stock;
+                    window.productManager.products[pIndex].stock = products[productIndex].stock;
                 }
             }
-            
+
             // Re-renderizar productos si estamos en la tienda
-            if (document.getElementById('productsContainer')) {
-                productManager.renderProducts(productManager.getAllProducts());
+            if (document.getElementById('productsContainer') && window.productManager) {
+                window.productManager.renderProducts(window.productManager.getAllProducts());
             }
-            if (document.getElementById('featuredProducts')) {
-                productManager.renderProducts(productManager.getFeaturedProducts(6), 'featuredProducts');
+            if (document.getElementById('featuredProducts') && window.productManager) {
+                window.productManager.renderProducts(window.productManager.getFeaturedProducts(6), 'featuredProducts');
             }
         }
     }
 
+    // =============================================
+    // CALCULAR TOTAL
+    // =============================================
     calculateTotal() {
         this.total = this.items.reduce((sum, item) => {
             return sum + (item.price * item.quantity);
@@ -146,10 +191,16 @@ class CartManager {
         return this.total;
     }
 
+    // =============================================
+    // OBTENER TOTAL DE ITEMS
+    // =============================================
     getTotalItems() {
         return this.items.reduce((sum, item) => sum + item.quantity, 0);
     }
 
+    // =============================================
+    // VACIAR CARRITO
+    // =============================================
     clearCart() {
         // Devolver todo el stock
         this.items.forEach(item => {
@@ -159,33 +210,49 @@ class CartManager {
         this.total = 0;
         this.saveCart();
         this.renderCart();
+        console.log('🗑️ Carrito vaciado');
     }
 
+    // =============================================
+    // ACTUALIZAR UI (contador y carrito)
+    // =============================================
     updateUI() {
+        // Actualizar contador en navbar
         const cartCount = document.getElementById('cartCount');
         if (cartCount) {
             const total = this.getTotalItems();
             cartCount.textContent = total;
             cartCount.style.display = total > 0 ? 'inline-flex' : 'none';
         }
-        
+
+        // Actualizar en cart.html
         if (document.getElementById('cartItems')) {
             this.renderCart();
         }
+
+        // Actualizar totales
         this.updateTotals();
     }
 
+    // =============================================
+    // RENDERIZAR CARRITO EN cart.html
+    // =============================================
     renderCart() {
         const container = document.getElementById('cartItems');
-        if (!container) return;
+        if (!container) {
+            console.warn('⚠️ Contenedor cartItems no encontrado');
+            return;
+        }
 
         if (this.items.length === 0) {
             container.innerHTML = `
                 <div class="empty-cart">
-                    <i class="fas fa-shopping-cart fa-3x"></i>
+                    <i class="fas fa-shopping-cart"></i>
                     <h3>Tu carrito está vacío</h3>
                     <p>¡Agrega algunos productos!</p>
-                    <a href="shop.html" class="btn-primary">Ir a la tienda</a>
+                    <a href="shop.html" class="btn-primary btn-block" style="max-width: 200px; margin: 0 auto;">
+                        <i class="fas fa-store"></i> Ir a la tienda
+                    </a>
                 </div>
             `;
             this.updateTotals();
@@ -195,9 +262,9 @@ class CartManager {
         container.innerHTML = this.items.map(item => `
             <div class="cart-item" data-id="${item.id}">
                 <div class="cart-item-image">
-                    <img src="${item.image || 'https://via.placeholder.com/70x70/1a1a3e/818cf8?text=Card'}" 
+                    <img src="${item.image || 'https://via.placeholder.com/60x60/1a1a3e/818cf8?text=Card'}" 
                          alt="${item.name}"
-                         onerror="this.src='https://via.placeholder.com/70x70/1a1a3e/818cf8?text=Card'">
+                         onerror="this.src='https://via.placeholder.com/60x60/1a1a3e/818cf8?text=Card'">
                 </div>
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
@@ -225,8 +292,12 @@ class CartManager {
         `).join('');
 
         this.updateTotals();
+        console.log('🛒 Carrito renderizado:', this.items.length, 'items');
     }
 
+    // =============================================
+    // ACTUALIZAR TOTALES EN EL RESUMEN
+    // =============================================
     updateTotals() {
         const subtotal = this.total;
         const shipping = subtotal > 50 ? 0 : 5.99;
@@ -244,6 +315,9 @@ class CartManager {
         if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
     }
 
+    // =============================================
+    // OBTENER DATOS PARA CHECKOUT
+    // =============================================
     getCheckoutData() {
         const subtotal = this.total;
         const shipping = subtotal > 50 ? 0 : 5.99;
@@ -259,9 +333,17 @@ class CartManager {
     }
 }
 
+// =============================================
+// INSTANCIA GLOBAL
+// =============================================
 const cartManager = new CartManager();
 window.cartManager = cartManager;
 
+// =============================================
+// FUNCIONES GLOBALES
+// =============================================
+
+// Incrementar cantidad
 window.incrementQuantity = function(productId) {
     const item = cartManager.items.find(i => i.id === productId);
     if (item) {
@@ -269,6 +351,7 @@ window.incrementQuantity = function(productId) {
     }
 };
 
+// Decrementar cantidad
 window.decrementQuantity = function(productId) {
     const item = cartManager.items.find(i => i.id === productId);
     if (item) {
@@ -276,6 +359,7 @@ window.decrementQuantity = function(productId) {
     }
 };
 
+// Eliminar del carrito
 window.removeFromCart = function(productId) {
     cartManager.removeItem(productId);
     if (typeof showNotification === 'function') {
@@ -283,15 +367,16 @@ window.removeFromCart = function(productId) {
     }
 };
 
+// Agregar al carrito (desde productos)
 window.addToCart = function(productId) {
-    if (typeof productManager === 'undefined') {
+    if (typeof window.productManager === 'undefined') {
         if (typeof showNotification === 'function') {
             showNotification('❌ Error: Sistema no disponible', 'error');
         }
         return;
     }
-    
-    const product = productManager.getProductById(productId);
+
+    const product = window.productManager.getProductById(productId);
     if (product) {
         if (product.stock <= 0) {
             if (typeof showNotification === 'function') {
@@ -299,8 +384,8 @@ window.addToCart = function(productId) {
             }
             return;
         }
-        cartManager.addItem(product);
-        if (typeof showNotification === 'function') {
+        const result = cartManager.addItem(product);
+        if (result && typeof showNotification === 'function') {
             showNotification(`✅ ${product.name} agregado al carrito`, 'success');
         }
         cartManager.updateUI();
@@ -311,6 +396,7 @@ window.addToCart = function(productId) {
     }
 };
 
+// Vaciar carrito
 window.clearCart = function() {
     if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
         cartManager.clearCart();
@@ -320,6 +406,7 @@ window.clearCart = function() {
     }
 };
 
+// Ir al checkout
 window.goToCheckout = function() {
     if (cartManager.getTotalItems() > 0) {
         const user = localStorage.getItem('currentUser');
@@ -340,11 +427,28 @@ window.goToCheckout = function() {
     }
 };
 
+// =============================================
+// INICIALIZACIÓN
+// =============================================
 document.addEventListener('DOMContentLoaded', function() {
     cartManager.loadCart();
     cartManager.updateUI();
-    
+
+    // Si estamos en cart.html, renderizar
     if (document.getElementById('cartItems')) {
         cartManager.renderCart();
     }
+
+    // Escuchar cambios en el carrito desde otras pestañas
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'cart') {
+            cartManager.loadCart();
+            cartManager.updateUI();
+            if (document.getElementById('cartItems')) {
+                cartManager.renderCart();
+            }
+        }
+    });
 });
+
+console.log('🛒 CartManager cargado correctamente');
