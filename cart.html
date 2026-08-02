@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito - CardNMR Store</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/cart.css">
-    <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
@@ -22,7 +20,7 @@
             <div class="nav-links">
                 <a href="index.html">Inicio</a>
                 <a href="shop.html">Tienda</a>
-                <a href="cart.html" class="active" id="cartBtn">
+                <a href="cart.html" class="active">
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cartCount">0</span>
                 </a>
@@ -39,7 +37,6 @@
         </div>
     </nav>
 
-    <!-- Cart Page -->
     <section class="cart-page">
         <div class="container">
             <h1>🛒 Mi Carrito</h1>
@@ -47,10 +44,16 @@
                 <div class="cart-items-container">
                     <div id="cartItems">
                         <!-- Renderizado por JavaScript -->
+                        <div class="empty-cart">
+                            <i class="fas fa-shopping-cart fa-3x"></i>
+                            <h3>Tu carrito está vacío</h3>
+                            <p>¡Agrega algunos productos!</p>
+                            <a href="shop.html" class="btn-primary">Ir a la tienda</a>
+                        </div>
                     </div>
                 </div>
                 <div class="cart-summary-container">
-                    <div class="cart-summary" id="cartSummary">
+                    <div class="cart-summary">
                         <h3>Resumen del Pedido</h3>
                         <div class="summary-row">
                             <span>Subtotal</span>
@@ -68,13 +71,13 @@
                             <span><strong>Total</strong></span>
                             <span><strong id="cartTotal">$0.00</strong></span>
                         </div>
-                        <button onclick="window.location.href='checkout.html'" class="btn-primary btn-block">
+                        <button onclick="window.goToCheckout()" class="btn-primary btn-block">
                             <i class="fas fa-credit-card"></i> Proceder al Pago
                         </button>
-                        <button onclick="cartManager.clearCart(); cartManager.renderCart();" class="btn-secondary btn-block">
+                        <button onclick="window.clearCart()" class="btn-secondary btn-block">
                             <i class="fas fa-trash"></i> Vaciar Carrito
                         </button>
-                        <a href="shop.html" class="btn-continue">
+                        <a href="shop.html" class="btn-continue" style="display: block; text-align: center; color: #a0aec0; margin-top: 15px; text-decoration: none;">
                             <i class="fas fa-arrow-left"></i> Seguir Comprando
                         </a>
                     </div>
@@ -83,7 +86,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
