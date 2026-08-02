@@ -1,4 +1,4 @@
-// 🛒 GESTIÓN DEL CARRITO - VERSIÓN COMPLETA
+// 🛒 GESTIÓN DEL CARRITO - CON DESCUENTO DE STOCK
 
 class CartManager {
     constructor() {
@@ -17,7 +17,6 @@ class CartManager {
             } else {
                 this.items = [];
                 this.total = 0;
-                console.log('🛒 Carrito vacío');
             }
         } catch (error) {
             console.error('Error loading cart:', error);
@@ -32,22 +31,28 @@ class CartManager {
             localStorage.setItem('cart', JSON.stringify(this.items));
             this.calculateTotal();
             this.updateUI();
-            console.log('💾 Carrito guardado:', this.items.length, 'items');
         } catch (error) {
             console.error('Error saving cart:', error);
         }
     }
 
     addItem(product, quantity = 1) {
-        if (!product || !product.id) {
-            console.error('❌ Producto inválido');
+        if (!product || !product.id) return false;
+        
+        // Verificar stock disponible
+        if (product.stock < quantity) {
+            showNotification(`❌ Solo quedan ${product.stock} unidades disponibles`, 'error');
             return false;
         }
         
         const existing = this.items.find(item => item.id === product.id);
         if (existing) {
+            // Verificar stock total
+            if (product.stock < existing.quantity + quantity) {
+                showNotification(`❌ Solo quedan ${product.stock} unidades disponibles`, 'error');
+                return false;
+            }
             existing.quantity += quantity;
-            console.log(`🔄 Producto actualizado: ${product.name} x${existing.quantity}`);
         } else {
             this.items.push({
                 id: product.id,
@@ -59,14 +64,21 @@ class CartManager {
                 quantity: quantity,
                 stock: product.stock || 0
             });
-            console.log(`➕ Producto agregado: ${product.name}`);
         }
+        
+        // Descontar stock del producto
+        this.updateProductStock(product.id, -quantity);
         this.saveCart();
         this.renderCart();
         return true;
     }
 
     removeItem(productId) {
+        const item = this.items.find(i => i.id === productId);
+        if (item) {
+            // Devolver stock
+            this.updateProductStock(productId, item.quantity);
+        }
         this.items = this.items.filter(item => item.id !== productId);
         this.saveCart();
         this.renderCart();
@@ -76,6 +88,19 @@ class CartManager {
     updateQuantity(productId, quantity) {
         const item = this.items.find(item => item.id === productId);
         if (item) {
+            const diff = quantity - item.quantity;
+            if (diff > 0) {
+                // Verificar stock disponible
+                const product = productManager.getProductById(productId);
+                if (product && product.stock < diff) {
+                    showNotification(`❌ Solo quedan ${product.stock} unidades disponibles`, 'error');
+                    return;
+                }
+                this.updateProductStock(productId, -diff);
+            } else if (diff < 0) {
+                this.updateProductStock(productId, -diff);
+            }
+            
             if (quantity <= 0) {
                 this.removeItem(productId);
             } else {
@@ -85,6 +110,33 @@ class CartManager {
             }
         }
         return this.items;
+    }
+
+    // Actualizar stock de un producto
+    updateProductStock(productId, change) {
+        const products = JSON.parse(localStorage.getItem('products_backup') || '[]');
+        const productIndex = products.findIndex(p => p.id === productId);
+        if (productIndex !== -1) {
+            products[productIndex].stock += change;
+            if (products[productIndex].stock < 0) products[productIndex].stock = 0;
+            localStorage.setItem('products_backup', JSON.stringify(products));
+            
+            // Actualizar también en productManager
+            if (productManager && productManager.products) {
+                const pIndex = productManager.products.findIndex(p => p.id === productId);
+                if (pIndex !== -1) {
+                    productManager.products[pIndex].stock = products[productIndex].stock;
+                }
+            }
+            
+            // Re-renderizar productos si estamos en la tienda
+            if (document.getElementById('productsContainer')) {
+                productManager.renderProducts(productManager.getAllProducts());
+            }
+            if (document.getElementById('featuredProducts')) {
+                productManager.renderProducts(productManager.getFeaturedProducts(6), 'featuredProducts');
+            }
+        }
     }
 
     calculateTotal() {
@@ -99,15 +151,17 @@ class CartManager {
     }
 
     clearCart() {
+        // Devolver todo el stock
+        this.items.forEach(item => {
+            this.updateProductStock(item.id, item.quantity);
+        });
         this.items = [];
         this.total = 0;
         this.saveCart();
         this.renderCart();
-        console.log('🗑️ Carrito vaciado');
     }
 
     updateUI() {
-        // Actualizar contador en navbar
         const cartCount = document.getElementById('cartCount');
         if (cartCount) {
             const total = this.getTotalItems();
@@ -115,22 +169,15 @@ class CartManager {
             cartCount.style.display = total > 0 ? 'inline-flex' : 'none';
         }
         
-        // Actualizar en cart.html
         if (document.getElementById('cartItems')) {
             this.renderCart();
         }
-        
-        // Actualizar totales
         this.updateTotals();
     }
 
-    // Renderizar carrito en cart.html
     renderCart() {
         const container = document.getElementById('cartItems');
-        if (!container) {
-            console.warn('⚠️ Contenedor cartItems no encontrado');
-            return;
-        }
+        if (!container) return;
 
         if (this.items.length === 0) {
             container.innerHTML = `
@@ -178,10 +225,8 @@ class CartManager {
         `).join('');
 
         this.updateTotals();
-        console.log('🛒 Carrito renderizado:', this.items.length, 'items');
     }
 
-    // Actualizar totales en el resumen
     updateTotals() {
         const subtotal = this.total;
         const shipping = subtotal > 50 ? 0 : 5.99;
@@ -199,7 +244,6 @@ class CartManager {
         if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
     }
 
-    // Obtener datos para checkout
     getCheckoutData() {
         const subtotal = this.total;
         const shipping = subtotal > 50 ? 0 : 5.99;
@@ -215,11 +259,9 @@ class CartManager {
     }
 }
 
-// Crear instancia global
 const cartManager = new CartManager();
 window.cartManager = cartManager;
 
-// Funciones globales
 window.incrementQuantity = function(productId) {
     const item = cartManager.items.find(i => i.id === productId);
     if (item) {
@@ -298,12 +340,10 @@ window.goToCheckout = function() {
     }
 };
 
-// Inicializar carrito
 document.addEventListener('DOMContentLoaded', function() {
     cartManager.loadCart();
     cartManager.updateUI();
     
-    // Si estamos en cart.html, renderizar
     if (document.getElementById('cartItems')) {
         cartManager.renderCart();
     }
