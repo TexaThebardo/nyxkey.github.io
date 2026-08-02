@@ -1,4 +1,4 @@
-// 💳 SISTEMA DE PAGOS - STRIPE + BITCOIN/CRIPTO
+// 💳 SISTEMA DE PAGOS - CON QR Y ENLACES REALES
 
 class PaymentManager {
     constructor() {
@@ -19,7 +19,7 @@ class PaymentManager {
             },
             { 
                 id: 'usdt', 
-                name: 'USDT', 
+                name: 'USDT (TRC20)', 
                 icon: 'fa-coins', 
                 color: '#26A17B',
                 description: 'Pago con Tether (USDT)'
@@ -30,15 +30,26 @@ class PaymentManager {
                 icon: 'fa-ethereum', 
                 color: '#627EEA',
                 description: 'Pago con Ethereum (ETH)'
+            },
+            { 
+                id: 'paypal', 
+                name: 'PayPal', 
+                icon: 'fa-paypal', 
+                color: '#0070BA',
+                description: 'Pago con PayPal'
             }
         ];
         
-        // Precios en crypto (simulados)
+        // Tasas de cambio (simuladas)
         this.cryptoRates = {
             BTC: 65000,
             USDT: 1,
             ETH: 3500
         };
+    }
+
+    getPaymentMethods() {
+        return this.paymentMethods;
     }
 
     // Procesar pago principal
@@ -53,6 +64,8 @@ class PaymentManager {
                     return await this.usdtPayment(amount, orderData);
                 case 'ethereum':
                     return await this.ethereumPayment(amount, orderData);
+                case 'paypal':
+                    return await this.paypalPayment(amount, orderData);
                 default:
                     throw new Error('Método de pago no soportado');
             }
@@ -62,39 +75,43 @@ class PaymentManager {
         }
     }
 
-    // 💳 PAGO CON STRIPE
+    // =============================================
+    // STRIPE - PAGO CON TARJETA
+    // =============================================
     async stripePayment(amount, orderData) {
-        // Simular pago con Stripe
         return new Promise((resolve) => {
-            // Mostrar loading
-            this.showLoading('Procesando pago con Stripe...');
-            
+            // Simular procesamiento
             setTimeout(() => {
-                // Generar ID de transacción
-                const transactionId = `stripe_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
-                
                 resolve({
                     success: true,
-                    transactionId: transactionId,
+                    transactionId: `stripe_${Date.now()}`,
                     method: 'stripe',
                     amount: amount,
                     currency: 'USD',
                     status: 'completed',
                     message: 'Pago procesado exitosamente con Stripe',
-                    receipt_url: `https://dashboard.stripe.com/payments/${transactionId}`
+                    // Enlace real a Stripe (simulado)
+                    paymentLink: `https://buy.stripe.com/test_${Date.now()}`,
+                    receiptUrl: `https://dashboard.stripe.com/payments/${Date.now()}`
                 });
-            }, 2000);
+            }, 1500);
         });
     }
 
-    // ₿ PAGO CON BITCOIN
+    // =============================================
+    // BITCOIN - PAGO CON QR Y ENLACE REAL
+    // =============================================
     async bitcoinPayment(amount, orderData) {
         const btcAmount = (amount / this.cryptoRates.BTC).toFixed(8);
         const address = this.generateCryptoAddress('BTC');
         
+        // Generar enlace real para Bitcoin
+        const bitcoinLink = `bitcoin:${address}?amount=${btcAmount}&label=CardNMR%20Store`;
+        const blockExplorerLink = `https://www.blockchain.com/explorer/addresses/btc/${address}`;
+        
         return {
             success: true,
-            transactionId: `btc_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            transactionId: `btc_${Date.now()}`,
             method: 'bitcoin',
             amount: amount,
             currency: 'USD',
@@ -103,21 +120,28 @@ class PaymentManager {
             address: address,
             status: 'pending',
             requiresConfirmation: true,
-            confirmations: 0,
-            minConfirmations: 3,
-            instructions: this.getBitcoinInstructions(address, btcAmount),
-            qrCode: this.generateQRCode(address, btcAmount, 'BTC')
+            // QR y enlaces
+            qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(bitcoinLink)}`,
+            paymentLink: bitcoinLink,
+            blockExplorerLink: blockExplorerLink,
+            instructions: this.getBitcoinInstructions(address, btcAmount, bitcoinLink)
         };
     }
 
-    // 🪙 PAGO CON USDT
+    // =============================================
+    // USDT (TRC20) - PAGO CON QR Y ENLACE REAL
+    // =============================================
     async usdtPayment(amount, orderData) {
         const usdtAmount = (amount / this.cryptoRates.USDT).toFixed(2);
         const address = this.generateCryptoAddress('USDT');
         
+        // Enlace real para USDT (TRC20)
+        const tronLink = `https://tronscan.org/#/address/${address}`;
+        const usdtLink = `https://tronscan.org/#/transfer?to=${address}&amount=${usdtAmount}&token=TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t`;
+        
         return {
             success: true,
-            transactionId: `usdt_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            transactionId: `usdt_${Date.now()}`,
             method: 'usdt',
             amount: amount,
             currency: 'USD',
@@ -127,21 +151,28 @@ class PaymentManager {
             address: address,
             status: 'pending',
             requiresConfirmation: true,
-            confirmations: 0,
-            minConfirmations: 1,
-            instructions: this.getUSDTInstructions(address, usdtAmount),
-            qrCode: this.generateQRCode(address, usdtAmount, 'USDT')
+            // QR y enlaces
+            qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(usdtLink)}`,
+            paymentLink: usdtLink,
+            blockExplorerLink: tronLink,
+            instructions: this.getUSDTInstructions(address, usdtAmount, usdtLink)
         };
     }
 
-    // ⚡ PAGO CON ETHEREUM
+    // =============================================
+    // ETHEREUM - PAGO CON QR Y ENLACE REAL
+    // =============================================
     async ethereumPayment(amount, orderData) {
         const ethAmount = (amount / this.cryptoRates.ETH).toFixed(6);
         const address = this.generateCryptoAddress('ETH');
         
+        // Enlace real para Ethereum
+        const ethLink = `ethereum:${address}?amount=${ethAmount}`;
+        const etherscanLink = `https://etherscan.io/address/${address}`;
+        
         return {
             success: true,
-            transactionId: `eth_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            transactionId: `eth_${Date.now()}`,
             method: 'ethereum',
             amount: amount,
             currency: 'USD',
@@ -150,24 +181,44 @@ class PaymentManager {
             address: address,
             status: 'pending',
             requiresConfirmation: true,
-            confirmations: 0,
-            minConfirmations: 12,
-            instructions: this.getEthereumInstructions(address, ethAmount),
-            qrCode: this.generateQRCode(address, ethAmount, 'ETH')
+            // QR y enlaces
+            qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(ethLink)}`,
+            paymentLink: ethLink,
+            blockExplorerLink: etherscanLink,
+            instructions: this.getEthereumInstructions(address, ethAmount, ethLink)
         };
     }
 
-    // Generar dirección crypto (simulada)
+    // =============================================
+    // PAYPAL - PAGO CON PAYPAL
+    // =============================================
+    async paypalPayment(amount, orderData) {
+        return new Promise((resolve) => {
+            // Generar enlace de PayPal (simulado)
+            const paypalLink = `https://www.paypal.com/paypalme/cardnmrstore/${amount}`;
+            
+            setTimeout(() => {
+                resolve({
+                    success: true,
+                    transactionId: `paypal_${Date.now()}`,
+                    method: 'paypal',
+                    amount: amount,
+                    currency: 'USD',
+                    status: 'pending',
+                    paymentLink: paypalLink,
+                    instructions: this.getPayPalInstructions(amount, paypalLink)
+                });
+            }, 1000);
+        });
+    }
+
+    // =============================================
+    // GENERAR DIRECCIÓN CRYPTO
+    // =============================================
     generateCryptoAddress(currency) {
-        const prefixes = {
-            BTC: '1',
-            USDT: '0x',
-            ETH: '0x'
-        };
-        
+        const prefixes = { BTC: '1', USDT: '0x', ETH: '0x' };
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
         let address = prefixes[currency] || '';
-        
         const length = currency === 'BTC' ? 34 : 42;
         for (let i = 0; i < length - address.length; i++) {
             address += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -175,151 +226,287 @@ class PaymentManager {
         return address;
     }
 
-    // Generar QR Code (simulado)
-    generateQRCode(address, amount, currency) {
-        // En producción usarías una librería como qrcode.js
-        // Esto es un placeholder
-        return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${currency}:${address}?amount=${amount}`;
-    }
-
-    // Obtener instrucciones para Bitcoin
-    getBitcoinInstructions(address, amount) {
+    // =============================================
+    // INSTRUCCIONES BITCOIN
+    // =============================================
+    getBitcoinInstructions(address, amount, link) {
         return `
             <div class="crypto-payment">
                 <div class="crypto-header">
-                    <i class="fab fa-bitcoin" style="color: #F7931A; font-size: 2rem;"></i>
-                    <h3>Pago con Bitcoin</h3>
+                    <i class="fab fa-bitcoin" style="color: #F7931A; font-size: 2.5rem;"></i>
+                    <div>
+                        <h3 style="color: white; margin: 0;">Pago con Bitcoin</h3>
+                        <p style="color: #a0aec0; margin: 0;">Envía la cantidad exacta a la dirección</p>
+                    </div>
                 </div>
-                <div class="crypto-amount">
-                    <p>Monto a pagar:</p>
-                    <h2>${amount} BTC</h2>
-                    <small>≈ $${(amount * this.cryptoRates.BTC).toFixed(2)} USD</small>
+
+                <div class="crypto-amount-box">
+                    <div class="crypto-amount">
+                        <span class="crypto-amount-label">Monto a pagar</span>
+                        <span class="crypto-amount-value">${amount} BTC</span>
+                        <span class="crypto-amount-usd">≈ $${(amount * this.cryptoRates.BTC).toFixed(2)} USD</span>
+                    </div>
                 </div>
-                <div class="crypto-address-container">
-                    <p>Envía exactamente a esta dirección:</p>
+
+                <div class="crypto-address-box">
+                    <p class="crypto-address-label">📤 Dirección de destino</p>
                     <div class="crypto-address">
                         <code>${address}</code>
-                        <button onclick="copyAddress()" class="btn-copy-address">
+                        <button onclick="window.copyAddress('${address}')" class="btn-copy-address" title="Copiar dirección">
                             <i class="fas fa-copy"></i>
                         </button>
                     </div>
+                </div>
+
+                <div class="crypto-qr-box">
+                    <p class="crypto-qr-label">📱 Escanea el código QR</p>
                     <div class="qr-code-container">
-                        <img src="${this.generateQRCode(address, amount, 'BTC')}" alt="QR Code" class="qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(link)}" 
+                             alt="QR Code Bitcoin" 
+                             class="qr-code"
+                             id="qrCodeImg">
+                        <a href="${link}" target="_blank" class="btn-qr-link">
+                            <i class="fas fa-external-link-alt"></i> Abrir en wallet
+                        </a>
                     </div>
                 </div>
+
+                <div class="crypto-actions">
+                    <a href="${link}" target="_blank" class="btn-pay-crypto">
+                        <i class="fab fa-bitcoin"></i> Pagar con Bitcoin
+                    </a>
+                    <a href="https://www.blockchain.com/explorer/addresses/btc/${address}" target="_blank" class="btn-block-explorer">
+                        <i class="fas fa-search"></i> Ver en Blockchain
+                    </a>
+                </div>
+
+                <div class="crypto-status-box" id="cryptoStatus">
+                    <div class="status-item">
+                        <span>⏳ Estado</span>
+                        <span class="status-pending">Esperando pago...</span>
+                    </div>
+                    <div class="status-item">
+                        <span>🔗 Confirmaciones</span>
+                        <span id="confirmationsCount">0/3</span>
+                    </div>
+                    <div class="status-progress">
+                        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+
                 <div class="crypto-warning">
                     <i class="fas fa-clock"></i>
                     <div>
                         <strong>⚠️ Importante:</strong>
-                        <p>La transacción requiere 3 confirmaciones en la red Bitcoin (≈ 30-60 minutos)</p>
-                        <p>No cierres esta página hasta que se complete la confirmación</p>
-                    </div>
-                </div>
-                <div class="crypto-status" id="cryptoStatus">
-                    <div class="status-item">
-                        <span>Estado:</span>
-                        <span class="status-pending">⏳ Esperando pago...</span>
-                    </div>
-                    <div class="status-item">
-                        <span>Confirmaciones:</span>
-                        <span id="confirmationsCount">0/3</span>
+                        <p>Envía la cantidad EXACTA mostrada arriba</p>
+                        <p>La transacción requiere 3 confirmaciones (≈ 30-60 minutos)</p>
+                        <p>No cierres esta página hasta que se complete</p>
                     </div>
                 </div>
             </div>
         `;
     }
 
-    // Obtener instrucciones para USDT
-    getUSDTInstructions(address, amount) {
+    // =============================================
+    // INSTRUCCIONES USDT
+    // =============================================
+    getUSDTInstructions(address, amount, link) {
         return `
             <div class="crypto-payment">
                 <div class="crypto-header">
-                    <i class="fas fa-coins" style="color: #26A17B; font-size: 2rem;"></i>
-                    <h3>Pago con USDT (TRC20)</h3>
+                    <i class="fas fa-coins" style="color: #26A17B; font-size: 2.5rem;"></i>
+                    <div>
+                        <h3 style="color: white; margin: 0;">Pago con USDT (TRC20)</h3>
+                        <p style="color: #a0aec0; margin: 0;">Pago rápido y con comisiones bajas</p>
+                    </div>
                 </div>
-                <div class="crypto-amount">
-                    <p>Monto a pagar:</p>
-                    <h2>${amount} USDT</h2>
-                    <small>≈ $${(amount * this.cryptoRates.USDT).toFixed(2)} USD</small>
+
+                <div class="crypto-amount-box">
+                    <div class="crypto-amount">
+                        <span class="crypto-amount-label">Monto a pagar</span>
+                        <span class="crypto-amount-value">${amount} USDT</span>
+                        <span class="crypto-amount-usd">≈ $${(amount * this.cryptoRates.USDT).toFixed(2)} USD</span>
+                    </div>
                 </div>
-                <div class="crypto-address-container">
-                    <p>Envía exactamente a esta dirección (Red TRC20):</p>
+
+                <div class="crypto-address-box">
+                    <p class="crypto-address-label">📤 Dirección de destino (TRC20)</p>
                     <div class="crypto-address">
                         <code>${address}</code>
-                        <button onclick="copyAddress()" class="btn-copy-address">
+                        <button onclick="window.copyAddress('${address}')" class="btn-copy-address" title="Copiar dirección">
                             <i class="fas fa-copy"></i>
                         </button>
                     </div>
+                </div>
+
+                <div class="crypto-qr-box">
+                    <p class="crypto-qr-label">📱 Escanea el código QR</p>
                     <div class="qr-code-container">
-                        <img src="${this.generateQRCode(address, amount, 'USDT')}" alt="QR Code" class="qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(link)}" 
+                             alt="QR Code USDT" 
+                             class="qr-code">
+                        <a href="${link}" target="_blank" class="btn-qr-link">
+                            <i class="fas fa-external-link-alt"></i> Abrir en TronScan
+                        </a>
                     </div>
                 </div>
-                <div class="crypto-warning">
+
+                <div class="crypto-actions">
+                    <a href="${link}" target="_blank" class="btn-pay-crypto" style="background: #26A17B;">
+                        <i class="fas fa-coins"></i> Pagar con USDT
+                    </a>
+                    <a href="https://tronscan.org/#/address/${address}" target="_blank" class="btn-block-explorer">
+                        <i class="fas fa-search"></i> Ver en TronScan
+                    </a>
+                </div>
+
+                <div class="crypto-status-box" id="cryptoStatus">
+                    <div class="status-item">
+                        <span>⏳ Estado</span>
+                        <span class="status-pending">Esperando pago...</span>
+                    </div>
+                    <div class="status-item">
+                        <span>✅ Confirmación</span>
+                        <span id="confirmationsCount">0/1</span>
+                    </div>
+                    <div class="status-progress">
+                        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="crypto-warning" style="border-left-color: #26A17B;">
                     <i class="fas fa-check-circle" style="color: #26A17B;"></i>
                     <div>
                         <strong>✅ Rápido y seguro:</strong>
-                        <p>Usa la red TRC20 (Tron) para comisiones bajas</p>
-                        <p>Confirmación rápida (≈ 1-5 minutos)</p>
-                    </div>
-                </div>
-                <div class="crypto-status" id="cryptoStatus">
-                    <div class="status-item">
-                        <span>Estado:</span>
-                        <span class="status-pending">⏳ Esperando pago...</span>
+                        <p>Usa la red TRC20 para comisiones bajas</p>
+                        <p>Confirmación en 1-5 minutos</p>
                     </div>
                 </div>
             </div>
         `;
     }
 
-    // Obtener instrucciones para Ethereum
-    getEthereumInstructions(address, amount) {
+    // =============================================
+    // INSTRUCCIONES ETHEREUM
+    // =============================================
+    getEthereumInstructions(address, amount, link) {
         return `
             <div class="crypto-payment">
                 <div class="crypto-header">
-                    <i class="fab fa-ethereum" style="color: #627EEA; font-size: 2rem;"></i>
-                    <h3>Pago con Ethereum</h3>
+                    <i class="fab fa-ethereum" style="color: #627EEA; font-size: 2.5rem;"></i>
+                    <div>
+                        <h3 style="color: white; margin: 0;">Pago con Ethereum</h3>
+                        <p style="color: #a0aec0; margin: 0;">Pago seguro en la red ERC-20</p>
+                    </div>
                 </div>
-                <div class="crypto-amount">
-                    <p>Monto a pagar:</p>
-                    <h2>${amount} ETH</h2>
-                    <small>≈ $${(amount * this.cryptoRates.ETH).toFixed(2)} USD</small>
+
+                <div class="crypto-amount-box">
+                    <div class="crypto-amount">
+                        <span class="crypto-amount-label">Monto a pagar</span>
+                        <span class="crypto-amount-value">${amount} ETH</span>
+                        <span class="crypto-amount-usd">≈ $${(amount * this.cryptoRates.ETH).toFixed(2)} USD</span>
+                    </div>
                 </div>
-                <div class="crypto-address-container">
-                    <p>Envía exactamente a esta dirección (ERC-20):</p>
+
+                <div class="crypto-address-box">
+                    <p class="crypto-address-label">📤 Dirección de destino (ERC-20)</p>
                     <div class="crypto-address">
                         <code>${address}</code>
-                        <button onclick="copyAddress()" class="btn-copy-address">
+                        <button onclick="window.copyAddress('${address}')" class="btn-copy-address" title="Copiar dirección">
                             <i class="fas fa-copy"></i>
                         </button>
                     </div>
+                </div>
+
+                <div class="crypto-qr-box">
+                    <p class="crypto-qr-label">📱 Escanea el código QR</p>
                     <div class="qr-code-container">
-                        <img src="${this.generateQRCode(address, amount, 'ETH')}" alt="QR Code" class="qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(link)}" 
+                             alt="QR Code Ethereum" 
+                             class="qr-code">
+                        <a href="${link}" target="_blank" class="btn-qr-link">
+                            <i class="fas fa-external-link-alt"></i> Abrir en wallet
+                        </a>
                     </div>
                 </div>
-                <div class="crypto-warning">
-                    <i class="fas fa-clock"></i>
+
+                <div class="crypto-actions">
+                    <a href="${link}" target="_blank" class="btn-pay-crypto" style="background: #627EEA;">
+                        <i class="fab fa-ethereum"></i> Pagar con Ethereum
+                    </a>
+                    <a href="https://etherscan.io/address/${address}" target="_blank" class="btn-block-explorer">
+                        <i class="fas fa-search"></i> Ver en Etherscan
+                    </a>
+                </div>
+
+                <div class="crypto-status-box" id="cryptoStatus">
+                    <div class="status-item">
+                        <span>⏳ Estado</span>
+                        <span class="status-pending">Esperando pago...</span>
+                    </div>
+                    <div class="status-item">
+                        <span>🔗 Confirmaciones</span>
+                        <span id="confirmationsCount">0/12</span>
+                    </div>
+                    <div class="status-progress">
+                        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="crypto-warning" style="border-left-color: #627EEA;">
+                    <i class="fas fa-clock" style="color: #627EEA;"></i>
                     <div>
                         <strong>⚠️ Importante:</strong>
                         <p>Requiere 12 confirmaciones en la red Ethereum (≈ 3-5 minutos)</p>
                         <p>Asegúrate de usar la red ERC-20</p>
                     </div>
                 </div>
-                <div class="crypto-status" id="cryptoStatus">
-                    <div class="status-item">
-                        <span>Estado:</span>
-                        <span class="status-pending">⏳ Esperando pago...</span>
+            </div>
+        `;
+    }
+
+    // =============================================
+    // INSTRUCCIONES PAYPAL
+    // =============================================
+    getPayPalInstructions(amount, link) {
+        return `
+            <div class="paypal-payment">
+                <div class="crypto-header">
+                    <i class="fab fa-paypal" style="color: #0070BA; font-size: 2.5rem;"></i>
+                    <div>
+                        <h3 style="color: white; margin: 0;">Pago con PayPal</h3>
+                        <p style="color: #a0aec0; margin: 0;">Pago rápido y seguro</p>
                     </div>
-                    <div class="status-item">
-                        <span>Confirmaciones:</span>
-                        <span id="confirmationsCount">0/12</span>
+                </div>
+
+                <div class="crypto-amount-box">
+                    <div class="crypto-amount">
+                        <span class="crypto-amount-label">Monto a pagar</span>
+                        <span class="crypto-amount-value">$${amount.toFixed(2)} USD</span>
+                    </div>
+                </div>
+
+                <div class="paypal-actions">
+                    <a href="${link}" target="_blank" class="btn-pay-crypto" style="background: #0070BA;">
+                        <i class="fab fa-paypal"></i> Pagar con PayPal
+                    </a>
+                </div>
+
+                <div class="crypto-warning" style="border-left-color: #0070BA;">
+                    <i class="fas fa-info-circle" style="color: #0070BA;"></i>
+                    <div>
+                        <strong>ℹ️ Instrucciones:</strong>
+                        <p>Serás redirigido a PayPal para completar el pago</p>
+                        <p>No necesitas cuenta PayPal para pagar con tarjeta</p>
                     </div>
                 </div>
             </div>
         `;
     }
 
-    // Simular confirmación de pago crypto
+    // =============================================
+    // SIMULAR CONFIRMACIÓN DE PAGO CRYPTO
+    // =============================================
     async simulateCryptoConfirmation(transactionId, method) {
         const confirmationsNeeded = method === 'bitcoin' ? 3 : method === 'ethereum' ? 12 : 1;
         let currentConfirmations = 0;
@@ -327,8 +514,12 @@ class PaymentManager {
         return new Promise((resolve) => {
             const interval = setInterval(() => {
                 currentConfirmations++;
+                const progress = (currentConfirmations / confirmationsNeeded) * 100;
+                
+                // Actualizar UI
                 const statusEl = document.getElementById('cryptoStatus');
                 const confirmEl = document.getElementById('confirmationsCount');
+                const progressBar = document.getElementById('progressBar');
                 
                 if (statusEl) {
                     const statusSpan = statusEl.querySelector('.status-pending');
@@ -341,6 +532,13 @@ class PaymentManager {
                     confirmEl.textContent = `${currentConfirmations}/${confirmationsNeeded}`;
                 }
                 
+                if (progressBar) {
+                    progressBar.style.width = `${progress}%`;
+                    if (progress > 30) progressBar.style.background = '#f59e0b';
+                    if (progress > 60) progressBar.style.background = '#4f46e5';
+                    if (progress > 90) progressBar.style.background = '#10b981';
+                }
+                
                 if (currentConfirmations >= confirmationsNeeded) {
                     clearInterval(interval);
                     if (statusEl) {
@@ -350,105 +548,96 @@ class PaymentManager {
                             statusSpan.className = 'status-confirmed';
                         }
                     }
+                    if (progressBar) {
+                        progressBar.style.width = '100%';
+                        progressBar.style.background = '#10b981';
+                    }
                     resolve({
                         success: true,
                         confirmed: true,
                         confirmations: currentConfirmations
                     });
                 }
-            }, 3000); // Cada 3 segundos simula una confirmación
+            }, 3000);
         });
-    }
-
-    // Mostrar loading
-    showLoading(message) {
-        const container = document.getElementById('paymentDetails');
-        if (container) {
-            container.innerHTML = `
-                <div class="payment-loading">
-                    <div class="spinner"></div>
-                    <p>${message}</p>
-                </div>
-            `;
-        }
-    }
-
-    // Obtener métodos de pago disponibles
-    getPaymentMethods() {
-        return this.paymentMethods;
-    }
-
-    // Validar pago
-    validatePayment(data) {
-        if (!data.method) return { valid: false, error: 'Método de pago requerido' };
-        if (!data.amount || data.amount <= 0) return { valid: false, error: 'Monto inválido' };
-        return { valid: true };
-    }
-
-    // Formatear monto en crypto
-    formatCryptoAmount(amount, currency) {
-        const rates = {
-            BTC: 65000,
-            USDT: 1,
-            ETH: 3500
-        };
-        
-        if (!rates[currency]) return amount;
-        return (amount / rates[currency]).toFixed(currency === 'BTC' ? 8 : 6);
     }
 }
 
-// Instancia global
+// =============================================
+// INSTANCIA GLOBAL
+// =============================================
 const paymentManager = new PaymentManager();
 
-// Función para copiar dirección
-window.copyAddress = function() {
-    const addressEl = document.querySelector('.crypto-address code');
-    if (addressEl) {
-        navigator.clipboard.writeText(addressEl.textContent).then(() => {
+// =============================================
+// FUNCIÓN PARA COPIAR DIRECCIÓN
+// =============================================
+window.copyAddress = function(address) {
+    if (address) {
+        navigator.clipboard.writeText(address).then(() => {
             showNotification('✅ Dirección copiada al portapapeles', 'success');
         }).catch(() => {
             // Fallback
-            const range = document.createRange();
-            range.selectNode(addressEl);
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
+            const textarea = document.createElement('textarea');
+            textarea.value = address;
+            document.body.appendChild(textarea);
+            textarea.select();
             document.execCommand('copy');
+            document.body.removeChild(textarea);
             showNotification('✅ Dirección copiada al portapapeles', 'success');
         });
     }
 };
 
-// Inicializar checkout
+// =============================================
+// INICIALIZAR CHECKOUT
+// =============================================
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('checkoutContainer')) {
         initCheckout();
     }
 });
 
-// Inicializar checkout
+// =============================================
+// FUNCIÓN INICIALIZAR CHECKOUT
+// =============================================
 function initCheckout() {
-    const cartData = cartManager.getCheckoutData();
+    if (typeof cartManager === 'undefined') {
+        console.error('Cart manager not found');
+        return;
+    }
+
+    const cartData = cartManager.getCheckoutData ? cartManager.getCheckoutData() : cartManager;
     
-    if (cartData.items.length === 0) {
-        document.getElementById('checkoutContainer').innerHTML = `
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart fa-3x"></i>
-                <h3>No hay productos en el carrito</h3>
-                <a href="shop.html" class="btn-primary">Ir a la tienda</a>
-            </div>
-        `;
+    if (!cartData.items || cartData.items.length === 0) {
+        const container = document.getElementById('checkoutContainer');
+        if (container) {
+            container.innerHTML = `
+                <div class="empty-cart" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                    <i class="fas fa-shopping-cart fa-3x" style="color: #4f46e5;"></i>
+                    <h3 style="color: white;">No hay productos en el carrito</h3>
+                    <p style="color: #a0aec0;">Agrega productos antes de continuar</p>
+                    <a href="shop.html" class="btn-primary" style="display: inline-block; margin-top: 20px;">Ir a la tienda</a>
+                </div>
+            `;
+        }
         return;
     }
 
     renderCheckoutSummary(cartData);
-    renderPaymentMethods(cartData.total);
+    renderPaymentMethods(cartData.total || cartData.subtotal || 0);
 }
 
-// Renderizar resumen del checkout
+// =============================================
+// RENDERIZAR RESUMEN DEL CHECKOUT
+// =============================================
 function renderCheckoutSummary(cartData) {
     const summaryContainer = document.getElementById('orderSummary');
     if (!summaryContainer) return;
+
+    const subtotal = cartData.subtotal || cartData.total || 0;
+    const shipping = cartData.shipping || (subtotal > 50 ? 0 : 5.99);
+    const tax = cartData.tax || (subtotal * 0.10);
+    const total = subtotal + shipping + tax;
 
     summaryContainer.innerHTML = `
         <h3>📦 Resumen del Pedido</h3>
@@ -466,32 +655,34 @@ function renderCheckoutSummary(cartData) {
         <div class="order-total">
             <div class="subtotal">
                 <span>Subtotal</span>
-                <span>$${cartData.subtotal.toFixed(2)}</span>
+                <span>$${subtotal.toFixed(2)}</span>
             </div>
             <div class="shipping">
                 <span>Envío</span>
-                <span>${cartData.shipping === 0 ? 'Gratis' : '$' + cartData.shipping.toFixed(2)}</span>
+                <span>${shipping === 0 ? 'Gratis' : '$' + shipping.toFixed(2)}</span>
             </div>
             <div class="tax">
                 <span>Impuesto (10%)</span>
-                <span>$${cartData.tax.toFixed(2)}</span>
+                <span>$${tax.toFixed(2)}</span>
             </div>
             <div class="total">
                 <span><strong>Total</strong></span>
-                <span><strong>$${cartData.total.toFixed(2)}</strong></span>
+                <span><strong>$${total.toFixed(2)}</strong></span>
             </div>
         </div>
     `;
 }
 
-// Renderizar métodos de pago
+// =============================================
+// RENDERIZAR MÉTODOS DE PAGO
+// =============================================
 function renderPaymentMethods(total) {
     const container = document.getElementById('paymentMethods');
     if (!container) return;
 
     const methods = paymentManager.getPaymentMethods();
-    
-    container.innerHTML = `
+
+    let methodsHTML = `
         <h3>💳 Selecciona método de pago</h3>
         <div class="payment-methods-grid">
             ${methods.map(method => `
@@ -505,19 +696,27 @@ function renderPaymentMethods(total) {
             `).join('')}
         </div>
         <div id="paymentDetails"></div>
-        <button id="processPaymentBtn" class="btn-pay" onclick="window.processCheckout()">
-            Pagar $${total.toFixed(2)}
-        </button>
     `;
+
+    if (total > 0) {
+        methodsHTML += `
+            <button id="processPaymentBtn" class="btn-pay" onclick="window.processCheckout()" disabled>
+                Pagar $${total.toFixed(2)}
+            </button>
+        `;
+    }
+
+    container.innerHTML = methodsHTML;
 }
 
-// Seleccionar método de pago
+// =============================================
+// SELECCIONAR MÉTODO DE PAGO
+// =============================================
 let selectedPaymentMethod = null;
 
 window.selectPaymentMethod = function(methodId) {
     selectedPaymentMethod = methodId;
     
-    // Actualizar UI
     document.querySelectorAll('.payment-method').forEach(el => {
         el.classList.remove('selected');
         if (el.dataset.method === methodId) {
@@ -525,31 +724,38 @@ window.selectPaymentMethod = function(methodId) {
         }
     });
     
-    // Mostrar detalles del método
+    const btn = document.getElementById('processPaymentBtn');
+    if (btn) {
+        btn.disabled = false;
+    }
+    
     const detailsContainer = document.getElementById('paymentDetails');
-    if (detailsContainer && methodId === 'stripe') {
+    if (!detailsContainer) return;
+
+    // Si es Stripe, mostrar formulario
+    if (methodId === 'stripe') {
         detailsContainer.innerHTML = `
             <div class="stripe-form">
                 <div class="form-group">
                     <label>Número de tarjeta</label>
                     <div class="card-input">
                         <i class="fas fa-credit-card"></i>
-                        <input type="text" placeholder="4242 4242 4242 4242" class="card-number-input">
+                        <input type="text" placeholder="4242 4242 4242 4242" class="card-number-input" id="cardNumber">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Fecha expiración</label>
-                        <input type="text" placeholder="MM/YY" class="card-expiry-input">
+                        <input type="text" placeholder="MM/YY" class="card-expiry-input" id="cardExpiry">
                     </div>
                     <div class="form-group">
                         <label>CVC</label>
-                        <input type="text" placeholder="123" class="card-cvc-input">
+                        <input type="text" placeholder="123" class="card-cvc-input" id="cardCvc">
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Nombre del titular</label>
-                    <input type="text" placeholder="Juan Pérez" class="card-name-input">
+                    <input type="text" placeholder="Juan Pérez" class="card-name-input" id="cardName">
                 </div>
                 <div class="stripe-badge">
                     <i class="fas fa-lock"></i>
@@ -557,93 +763,112 @@ window.selectPaymentMethod = function(methodId) {
                 </div>
             </div>
         `;
-    } else if (detailsContainer && methodId !== 'stripe') {
-        // Para crypto, mostrar detalles después de procesar
+    } else {
+        // Limpiar detalles para otros métodos
         detailsContainer.innerHTML = `
-            <div class="crypto-info">
-                <p>Preparando pago con ${paymentManager.paymentMethods.find(m => m.id === methodId)?.name}...</p>
-                <div class="spinner"></div>
+            <div class="crypto-info" style="text-align: center; padding: 20px;">
+                <p style="color: #a0aec0;">Selecciona "Pagar" para continuar...</p>
             </div>
         `;
     }
 };
 
-// Procesar checkout
+// =============================================
+// PROCESAR CHECKOUT
+// =============================================
 window.processCheckout = async function() {
     if (!selectedPaymentMethod) {
         showNotification('❌ Selecciona un método de pago', 'error');
         return;
     }
 
-    const cartData = cartManager.getCheckoutData();
-    const user = authManager.getCurrentUser();
-
-    if (!user) {
-        showNotification('❌ Inicia sesión para continuar', 'error');
-        window.location.href = 'login.html';
+    if (typeof cartManager === 'undefined') {
+        showNotification('❌ Error: Carrito no disponible', 'error');
         return;
     }
 
-    // Deshabilitar botón
+    const cartData = cartManager.getCheckoutData ? cartManager.getCheckoutData() : cartManager;
+    const total = cartData.total || cartData.subtotal || 0;
+
+    if (total <= 0) {
+        showNotification('❌ El carrito está vacío', 'error');
+        return;
+    }
+
+    const user = authManager.getCurrentUser();
+    if (!user) {
+        showNotification('❌ Inicia sesión para continuar', 'error');
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1500);
+        return;
+    }
+
     const btn = document.getElementById('processPaymentBtn');
-    btn.disabled = true;
-    btn.textContent = '⏳ Procesando...';
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Procesando...';
+    }
 
     try {
-        // Si es crypto, mostrar instrucciones primero
-        if (selectedPaymentMethod !== 'stripe') {
-            const cryptoResult = await paymentManager.processPayment(
-                selectedPaymentMethod,
-                cartData.total,
-                { user, items: cartData.items }
-            );
-            
-            if (cryptoResult.success) {
-                // Mostrar instrucciones de pago crypto
+        const result = await paymentManager.processPayment(
+            selectedPaymentMethod,
+            total,
+            { user, items: cartData.items }
+        );
+
+        if (result.success) {
+            // Si es crypto, mostrar instrucciones con QR
+            if (result.instructions) {
                 const detailsContainer = document.getElementById('paymentDetails');
                 if (detailsContainer) {
-                    detailsContainer.innerHTML = cryptoResult.instructions;
+                    detailsContainer.innerHTML = result.instructions;
+                }
+                if (btn) {
+                    btn.textContent = '⏳ Esperando confirmación...';
+                    btn.disabled = true;
                 }
                 
                 // Iniciar simulación de confirmación
                 paymentManager.simulateCryptoConfirmation(
-                    cryptoResult.transactionId,
+                    result.transactionId,
                     selectedPaymentMethod
                 ).then((confirmation) => {
                     if (confirmation.success) {
-                        // Guardar orden
-                        saveOrder(cryptoResult, cartData);
+                        saveOrder(result, cartData);
                         cartManager.clearCart();
-                        showPaymentSuccess(cryptoResult);
+                        setTimeout(() => {
+                            showPaymentSuccess(result);
+                        }, 500);
                     }
                 });
                 
-                btn.textContent = '⏳ Esperando confirmación...';
-                btn.disabled = true;
                 return;
             }
-        } else {
-            // Pago con Stripe
-            const result = await paymentManager.processPayment(
-                'stripe',
-                cartData.total,
-                { user, items: cartData.items }
-            );
             
-            if (result.success) {
-                saveOrder(result, cartData);
-                cartManager.clearCart();
-                showPaymentSuccess(result);
+            // Pago exitoso (Stripe o PayPal)
+            saveOrder(result, cartData);
+            cartManager.clearCart();
+            showPaymentSuccess(result);
+        } else {
+            showNotification(`❌ Error: ${result.error}`, 'error');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = `Pagar $${total.toFixed(2)}`;
             }
         }
     } catch (error) {
         showNotification(`❌ Error: ${error.message}`, 'error');
-        btn.disabled = false;
-        btn.textContent = `Pagar $${cartData.total.toFixed(2)}`;
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = `Pagar $${total.toFixed(2)}`;
+        }
     }
 };
 
-// Guardar orden
+// =============================================
+// GUARDAR ORDEN
+// =============================================
 function saveOrder(paymentResult, cartData) {
     const orders = JSON.parse(localStorage.getItem('orders') || '[]');
     
@@ -651,11 +876,9 @@ function saveOrder(paymentResult, cartData) {
         id: paymentResult.transactionId || `ORD_${Date.now()}`,
         date: new Date().toISOString(),
         user: authManager.getCurrentUser(),
-        items: cartData.items,
-        subtotal: cartData.subtotal,
-        shipping: cartData.shipping,
-        tax: cartData.tax,
-        total: cartData.total,
+        items: cartData.items || [],
+        subtotal: cartData.subtotal || cartData.total || 0,
+        total: paymentResult.amount || cartData.total || 0,
         payment: {
             method: paymentResult.method,
             amount: paymentResult.amount,
@@ -670,25 +893,27 @@ function saveOrder(paymentResult, cartData) {
     localStorage.setItem('orders', JSON.stringify(orders));
 }
 
-// Mostrar éxito del pago
+// =============================================
+// MOSTRAR ÉXITO DEL PAGO
+// =============================================
 function showPaymentSuccess(result) {
     const container = document.getElementById('checkoutContainer');
     if (!container) return;
 
     container.innerHTML = `
-        <div class="payment-success">
+        <div class="payment-success" style="grid-column: 1 / -1;">
             <div class="success-icon">
                 <i class="fas fa-check-circle"></i>
             </div>
-            <h2>¡Pago Exitoso!</h2>
-            <p>Tu orden ha sido procesada correctamente</p>
-            <div class="order-details">
-                <p><strong>ID de Transacción:</strong> ${result.transactionId}</p>
-                <p><strong>Método:</strong> ${result.method}</p>
-                <p><strong>Monto:</strong> $${result.amount.toFixed(2)}</p>
-                <p><strong>Estado:</strong> ${result.status === 'completed' ? '✅ Completado' : '⏳ Pendiente'}</p>
+            <h2 style="color: white;">¡Pago Exitoso!</h2>
+            <p style="color: #a0aec0;">Tu orden ha sido procesada correctamente</p>
+            <div class="order-details" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin: 20px auto; max-width: 400px; text-align: left;">
+                <p style="color: #a0aec0; padding: 5px 0;"><strong style="color: white;">ID:</strong> ${result.transactionId}</p>
+                <p style="color: #a0aec0; padding: 5px 0;"><strong style="color: white;">Método:</strong> ${result.method}</p>
+                <p style="color: #a0aec0; padding: 5px 0;"><strong style="color: white;">Monto:</strong> $${(result.amount || 0).toFixed(2)}</p>
+                ${result.paymentLink ? `<p style="color: #a0aec0; padding: 5px 0;"><strong style="color: white;">Comprobante:</strong> <a href="${result.paymentLink}" target="_blank" style="color: #4f46e5;">Ver pago</a></p>` : ''}
             </div>
-            <a href="index.html" class="btn-primary">Volver al Inicio</a>
+            <a href="index.html" class="btn-primary" style="display: inline-block; margin-top: 20px;">Volver al Inicio</a>
         </div>
     `;
 }
