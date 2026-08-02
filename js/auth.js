@@ -1,4 +1,4 @@
-// 🔐 AUTENTICACIÓN SIMPLE
+// 🔐 AUTENTICACIÓN SIMPLE (sin nombre completo)
 
 class SimpleAuthManager {
     constructor() {
@@ -18,10 +18,9 @@ class SimpleAuthManager {
         this.updateUI();
     }
 
-    // Registrar usuario
-    register(email, password, username, fullName) {
+    // Registrar usuario (sin nombre completo)
+    register(email, password, username) {
         try {
-            // Validar datos
             if (!email || !password || !username) {
                 return { 
                     success: false, 
@@ -36,7 +35,6 @@ class SimpleAuthManager {
                 };
             }
 
-            // Obtener usuarios existentes
             let users = [];
             try {
                 const stored = localStorage.getItem('users');
@@ -47,7 +45,6 @@ class SimpleAuthManager {
                 users = [];
             }
 
-            // Verificar si el email ya existe
             if (users.find(u => u.email === email)) {
                 return { 
                     success: false, 
@@ -55,7 +52,6 @@ class SimpleAuthManager {
                 };
             }
 
-            // Verificar si el usuario ya existe
             if (users.find(u => u.username === username)) {
                 return { 
                     success: false, 
@@ -63,27 +59,22 @@ class SimpleAuthManager {
                 };
             }
 
-            // Crear nuevo usuario
             const newUser = {
                 id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
                 email: email,
                 password: password,
                 username: username,
-                full_name: fullName || username,
                 role: email === 'admin@cardnmr.com' ? 'admin' : 'user',
                 created_at: new Date().toISOString()
             };
 
-            // Guardar usuario
             users.push(newUser);
             localStorage.setItem('users', JSON.stringify(users));
 
-            // Iniciar sesión automáticamente
             this.currentUser = {
                 id: newUser.id,
                 email: newUser.email,
                 username: newUser.username,
-                full_name: newUser.full_name,
                 role: newUser.role
             };
 
@@ -130,7 +121,6 @@ class SimpleAuthManager {
                 id: user.id,
                 email: user.email,
                 username: user.username,
-                full_name: user.full_name,
                 role: user.role || 'user'
             };
 
@@ -164,23 +154,19 @@ class SimpleAuthManager {
         return this.currentUser;
     }
 
-    // Verificar si está autenticado
     isAuthenticated() {
         return this.currentUser !== null;
     }
 
-    // Verificar si es admin
     isAdmin() {
         return this.currentUser?.role === 'admin';
     }
 
-    // Actualizar UI
     updateUI() {
         const authButtons = document.getElementById('authButtons');
         const userMenu = document.getElementById('userMenu');
         const userName = document.getElementById('userName');
 
-        // Remover admin link existente
         const existingAdminLink = document.querySelector('.admin-link');
         if (existingAdminLink) existingAdminLink.remove();
 
@@ -191,11 +177,10 @@ class SimpleAuthManager {
             if (userMenu) {
                 userMenu.style.display = 'flex';
                 if (userName) {
-                    userName.textContent = this.currentUser.full_name || this.currentUser.username;
+                    userName.textContent = this.currentUser.username;
                 }
             }
             
-            // Agregar link de admin si es admin
             if (this.isAdmin()) {
                 const navLinks = document.querySelector('.nav-links');
                 if (navLinks) {
@@ -217,12 +202,9 @@ class SimpleAuthManager {
     }
 }
 
-// Crear instancia global
 const authManager = new SimpleAuthManager();
 
-// Event listeners para formularios
 document.addEventListener('DOMContentLoaded', () => {
-    // Login form
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
@@ -231,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('loginPassword').value.trim();
             
             if (!email || !password) {
-                // Usar showNotification si existe, si no alert
                 if (typeof showNotification === 'function') {
                     showNotification('❌ Completa todos los campos', 'error');
                 } else {
@@ -260,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Register form
     const registerForm = document.getElementById('registerForm');
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
@@ -269,9 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('registerEmail').value.trim();
             const password = document.getElementById('registerPassword').value.trim();
             const username = document.getElementById('registerUsername').value.trim();
-            const fullName = document.getElementById('registerFullName').value.trim();
-            
-            console.log('📝 Intentando registrar:', { email, username, fullName });
             
             if (!email || !password || !username) {
                 if (typeof showNotification === 'function') {
@@ -291,8 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            const result = authManager.register(email, password, username, fullName);
-            console.log('📝 Resultado registro:', result);
+            const result = authManager.register(email, password, username);
             
             if (result.success) {
                 if (typeof showNotification === 'function') {
@@ -314,7 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Exportar para uso global
 window.authManager = authManager;
 window.logout = function() {
     authManager.logout();
