@@ -1,61 +1,11 @@
 // ⚡ APLICACIÓN PRINCIPAL
-document.addEventListener('DOMContentLoaded', async () => {
-    // Inicializar carrito
-    if (typeof cartManager !== 'undefined') {
-        cartManager.loadCart();
-        cartManager.updateUI();
-    }
 
-    // Cargar productos
-    if (typeof productManager !== 'undefined') {
-        await productManager.loadProducts();
-        
-        // Renderizar productos destacados en home
-        if (document.getElementById('featuredProducts')) {
-            const featured = productManager.getFeaturedProducts(6);
-            productManager.renderProducts(featured);
-        }
-        
-        // Renderizar productos en shop
-        if (document.getElementById('productsContainer')) {
-            productManager.renderProducts(productManager.getAllProducts());
-        }
-    }
-
-    // Verificar autenticación
-    if (typeof authManager !== 'undefined') {
-        authManager.updateUI();
-    }
-
-    // Setup event listeners
-    setupEventListeners();
-});
-
-// Configurar event listeners
-function setupEventListeners() {
-    // Logout
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (typeof authManager !== 'undefined') {
-                authManager.logout();
-            }
-        });
-    }
-
-    // Click en carrito para ir a cart.html
-    const cartBtn = document.getElementById('cartBtn');
-    if (cartBtn && !cartBtn.href) {
-        cartBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.location.href = 'cart.html';
-        });
-    }
-}
-
-// Toast notifications
+// Función para mostrar notificaciones
 function showNotification(message, type = 'success') {
+    // Verificar si ya existe un toast
+    const existingToasts = document.querySelectorAll('.toast');
+    existingToasts.forEach(toast => toast.remove());
+    
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     
@@ -72,23 +22,44 @@ function showNotification(message, type = 'success') {
     
     document.body.appendChild(toast);
     
+    // Mostrar con animación
+    setTimeout(() => {
+        toast.style.opacity = '1';
+    }, 10);
+    
+    // Ocultar después de 3 segundos
     setTimeout(() => {
         toast.classList.add('fade-out');
-        setTimeout(() => toast.remove(), 500);
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 500);
     }, 3000);
 }
 
-// Función de búsqueda global
-window.searchProducts = function(query) {
-    if (typeof productManager !== 'undefined') {
-        const results = productManager.searchProducts(query);
-        productManager.renderProducts(results);
+// Función para renderizar estrellas
+function renderStars(rating) {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5;
+    let stars = '';
+    
+    for (let i = 0; i < fullStars; i++) {
+        stars += '<i class="fas fa-star"></i>';
     }
-};
+    if (halfStar) {
+        stars += '<i class="fas fa-star-half-alt"></i>';
+    }
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+    for (let i = 0; i < emptyStars; i++) {
+        stars += '<i class="far fa-star"></i>';
+    }
+    return stars;
+}
 
-// Función para agregar al carrito desde cualquier lugar
+// Función para agregar al carrito (global)
 window.addToCart = function(productId) {
-    if (typeof productManager === 'undefined' || typeof cartManager === 'undefined') {
+    if (typeof productManager === 'undefined') {
         showNotification('❌ Error: Sistema no disponible', 'error');
         return;
     }
@@ -99,9 +70,8 @@ window.addToCart = function(productId) {
             showNotification('❌ Producto agotado', 'error');
             return;
         }
-        
-        const result = cartManager.addItem(product);
-        if (result) {
+        if (typeof cartManager !== 'undefined') {
+            cartManager.addItem(product);
             showNotification(`✅ ${product.name} agregado al carrito`, 'success');
             cartManager.updateUI();
         }
@@ -118,11 +88,45 @@ window.goToCart = function() {
 // Función para ir al checkout
 window.goToCheckout = function() {
     if (typeof cartManager !== 'undefined' && cartManager.getTotalItems() > 0) {
+        const user = localStorage.getItem('currentUser');
+        if (!user) {
+            showNotification('⚠️ Inicia sesión para continuar', 'info');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+            return;
+        }
         window.location.href = 'checkout.html';
     } else {
         showNotification('❌ El carrito está vacío', 'error');
     }
 };
 
+// Inicializar
+document.addEventListener('DOMContentLoaded', function() {
+    // Actualizar carrito
+    if (typeof cartManager !== 'undefined') {
+        cartManager.loadCart();
+        cartManager.updateUI();
+    }
+    
+    // Actualizar autenticación
+    if (typeof authManager !== 'undefined') {
+        authManager.updateUI();
+    }
+    
+    // Configurar logout
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (typeof authManager !== 'undefined') {
+                authManager.logout();
+            }
+        });
+    }
+});
+
 // Exportar funciones globales
 window.showNotification = showNotification;
+window.renderStars = renderStars;
