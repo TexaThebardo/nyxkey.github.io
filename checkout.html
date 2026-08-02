@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - CardNMR Store</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <i class="fas fa-credit-card"></i>
+                    CardNMR Store
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="shop.html">Tienda</a>
+                <a href="#" id="cartBtn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount">0</span>
+                </a>
+                <div id="authButtons">
+                    <a href="login.html" class="btn-login">Iniciar Sesión</a>
+                    <a href="register.html" class="btn-register">Registrarse</a>
+                </div>
+                <div id="userMenu" style="display:none;">
+                    <span id="userName"></span>
+                    <a href="profile.html"><i class="fas fa-user"></i></a>
+                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="checkout-page">
+        <div class="container">
+            <h1>💳 Checkout</h1>
+            <div class="checkout-container" id="checkoutContainer">
+                <!-- Se carga desde JS -->
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CardNMR Store</h3>
+                    <p>Tienda de tarjetas premium desde 2024</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <a href="shop.html">Tienda</a>
+                    <a href="#">Política de Privacidad</a>
+                    <a href="#">Términos</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-envelope"></i> info@cardnmr.com</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CardNMR Store - Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/payments.js"></script>
+</body>
+</html>
