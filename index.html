@@ -3,98 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CardNMR Store - Tienda de Tarjetas Premium</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Card Manager Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Iconos (FontAwesome para los íconos de la barra lateral) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">
-                <a href="index.html">
-                    <i class="fas fa-credit-card"></i>
-                    CardNMR Store
-                </a>
+
+    <!-- BARRA LATERAL IZQUIERDA (Sidebar) -->
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-credit-card"></i> CardStore
+        </div>
+        <ul class="menu">
+            <li class="active"><a href="#"><i class="fa-solid fa-store"></i> Tienda</a></li>
+            <li><a href="#"><i class="fa-solid fa-coins"></i> Agregar Saldo</a></li>
+            <li><a href="#"><i class="fa-solid fa-arrow-right-arrow-left"></i> Transacciones</a></li>
+            <li><a href="#"><i class="fa-solid fa-cart-shopping"></i> Carrito</a></li>
+            <li><a href="#"><i class="fa-solid fa-star"></i> Destacados</a></li>
+        </ul>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div class="main-content">
+        
+        <!-- TOPBAR (Saldo y Perfil) -->
+        <header class="topbar">
+            <div class="search-area">
+                <input type="text" placeholder="Buscar tarjetas...">
             </div>
-            <div class="nav-links">
-                <a href="index.html" class="active"><i class="fas fa-home"></i> Inicio</a>
-                <a href="shop.html"><i class="fas fa-store"></i> Tienda</a>
-                <a href="cart.html" id="cartBtn">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cartCount">0</span>
-                </a>
-                <div id="authButtons">
-                    <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
-                    <a href="register.html" class="btn-register"><i class="fas fa-user-plus"></i> Registrarse</a>
+            <div class="user-area">
+                <div class="balance-box">
+                    <span>Saldo disponible</span>
+                    <strong id="topbar-balance">$0.00</strong>
                 </div>
-                <div id="userMenu" style="display:none;">
-                    <span id="userName"></span>
-                    <a href="profile.html"><i class="fas fa-user"></i></a>
-                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></a>
+                <div class="profile-box">
+                    <i class="fa-solid fa-user-circle"></i>
+                    <span>Mi Perfil</span>
                 </div>
+            </div>
+        </header>
+
+        <!-- CONTENIDO DINÁMICO -->
+        <div class="content-body">
+            
+            <!-- CONTADOR DE PRODUCTOS -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3>Total Productos</h3>
+                    <p id="total-products-count">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Productos Destacados</h3>
+                    <p id="featured-products-count">0</p>
+                </div>
+            </div>
+
+            <!-- FILTROS DE CATEGORÍA -->
+            <div class="category-filters">
+                <button class="cat-btn active" data-cat="all">Todos</button>
+                <button class="cat-btn" data-cat="Visa">Visa</button>
+                <button class="cat-btn" data-cat="Mastercard">Mastercard</button>
+                <button class="cat-btn" data-cat="Amex">Amex</button>
+            </div>
+
+            <!-- TABLA DE TARJETAS (Estilo Imagen) -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Network</th>
+                            <th>BIN</th>
+                            <th>Database</th>
+                            <th>Class</th>
+                            <th>Level</th>
+                            <th>Bank</th>
+                            <th>Country</th>
+                            <th>Type</th>
+                            <th>Uso / Servicio</th>
+                            <th>Non VBV</th>
+                            <th>Non MSC</th>
+                            <th>Extra</th>
+                            <th>Precio</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table-body">
+                        <!-- Las tarjetas se cargarán aquí con JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Las Mejores Tarjetas <span>Premium</span></h1>
-                <p>Adquiere tarjetas de crédito de alta calidad con los mejores beneficios</p>
-                <a href="shop.html" class="btn-primary">
-                    <i class="fas fa-arrow-right"></i> Ver Tarjetas
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="featured-products">
-        <div class="container">
-            <h2>🔥 Tarjetas Destacadas</h2>
-            <div class="products-grid" id="featuredProducts">
-                <div style="text-align: center; padding: 40px; color: #a0aec0; grid-column: 1 / -1;">
-                    <i class="fas fa-spinner fa-spin fa-2x" style="color: #4f46e5;"></i>
-                    <p style="margin-top: 15px;">Cargando productos...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>CardNMR Store</h3>
-                    <p>Tienda de tarjetas premium desde 2024</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Enlaces</h4>
-                    <a href="shop.html">Tienda</a>
-                    <a href="#">Política de Privacidad</a>
-                    <a href="#">Términos y Condiciones</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Contacto</h4>
-                    <p><i class="fas fa-envelope"></i> info@cardnmr.com</p>
-                    <p><i class="fas fa-phone"></i> +1 234 567 890</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 CardNMR Store - Todos los derechos reservados</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="js/app.js"></script>
-    <script src="js/products.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
