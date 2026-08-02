@@ -1,8 +1,8 @@
 // ⚡ APLICACIÓN PRINCIPAL
 
-// Función para mostrar notificaciones
+// Función para mostrar notificaciones (DEBE ESTAR PRIMERO)
 function showNotification(message, type = 'success') {
-    // Verificar si ya existe un toast
+    // Eliminar toasts existentes
     const existingToasts = document.querySelectorAll('.toast');
     existingToasts.forEach(toast => toast.remove());
     
@@ -12,7 +12,8 @@ function showNotification(message, type = 'success') {
     const icons = {
         success: 'fa-check-circle',
         error: 'fa-exclamation-circle',
-        info: 'fa-info-circle'
+        info: 'fa-info-circle',
+        warning: 'fa-exclamation-triangle'
     };
     
     toast.innerHTML = `
@@ -90,7 +91,7 @@ window.goToCheckout = function() {
     if (typeof cartManager !== 'undefined' && cartManager.getTotalItems() > 0) {
         const user = localStorage.getItem('currentUser');
         if (!user) {
-            showNotification('⚠️ Inicia sesión para continuar', 'info');
+            showNotification('⚠️ Inicia sesión para continuar', 'warning');
             setTimeout(() => {
                 window.location.href = 'login.html';
             }, 1500);
@@ -99,6 +100,17 @@ window.goToCheckout = function() {
         window.location.href = 'checkout.html';
     } else {
         showNotification('❌ El carrito está vacío', 'error');
+    }
+};
+
+// Función para vaciar carrito
+window.clearCart = function() {
+    if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+        if (typeof cartManager !== 'undefined') {
+            cartManager.clearCart();
+            cartManager.updateUI();
+            showNotification('🗑️ Carrito vaciado', 'info');
+        }
     }
 };
 
