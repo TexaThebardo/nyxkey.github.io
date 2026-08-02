@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse - CardNMR Store</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <i class="fas fa-credit-card"></i>
+                    CardNMR Store
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Inicio</a>
+                <a href="shop.html">Tienda</a>
+                <a href="#" id="cartBtn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="auth-page">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <i class="fas fa-user-plus fa-3x"></i>
+                        <h2>Crear Cuenta</h2>
+                        <p>Únete a CardNMR Store</p>
+                    </div>
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="registerFullName">Nombre Completo</label>
+                            <input type="text" id="registerFullName" placeholder="Juan Pérez" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerUsername">Nombre de Usuario</label>
+                            <input type="text" id="registerUsername" placeholder="juanperez" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Email</label>
+                            <input type="email" id="registerEmail" placeholder="tu@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Contraseña</label>
+                            <input type="password" id="registerPassword" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-primary btn-block">Registrarse</button>
+                        <div class="auth-footer">
+                            <p>¿Ya tienes cuenta? <a href="login.html">Inicia Sesión</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
