@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
@@ -20,7 +21,7 @@
             <div class="nav-links">
                 <a href="index.html">Inicio</a>
                 <a href="shop.html">Tienda</a>
-                <a href="#" id="cartBtn">
+                <a href="cart.html">
                     <i class="fas fa-shopping-cart"></i>
                     <span id="cartCount">0</span>
                 </a>
@@ -37,15 +38,27 @@
         </div>
     </nav>
 
+    <!-- Checkout -->
     <section class="checkout-page">
         <div class="container">
             <h1>💳 Checkout</h1>
             <div class="checkout-container" id="checkoutContainer">
-                <!-- Se carga desde JS -->
+                <div class="checkout-items">
+                    <h3>📦 Productos</h3>
+                    <div id="orderSummary">
+                        <!-- Se carga desde JS -->
+                    </div>
+                </div>
+                <div class="checkout-summary">
+                    <div id="paymentMethods">
+                        <!-- Se carga desde JS -->
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
