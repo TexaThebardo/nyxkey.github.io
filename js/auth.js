@@ -1,4 +1,4 @@
-// 🔐 AUTENTICACIÓN SIMPLE - VERSIÓN FUNCIONAL
+// 🔐 AUTENTICACIÓN SIMPLE
 
 class SimpleAuthManager {
     constructor() {
@@ -231,18 +231,31 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('loginPassword').value.trim();
             
             if (!email || !password) {
-                showNotification('❌ Completa todos los campos', 'error');
+                // Usar showNotification si existe, si no alert
+                if (typeof showNotification === 'function') {
+                    showNotification('❌ Completa todos los campos', 'error');
+                } else {
+                    alert('❌ Completa todos los campos');
+                }
                 return;
             }
             
             const result = authManager.login(email, password);
             if (result.success) {
-                showNotification('✅ ' + result.message, 'success');
+                if (typeof showNotification === 'function') {
+                    showNotification('✅ ' + result.message, 'success');
+                } else {
+                    alert('✅ ' + result.message);
+                }
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 1000);
             } else {
-                showNotification('❌ ' + result.error, 'error');
+                if (typeof showNotification === 'function') {
+                    showNotification('❌ ' + result.error, 'error');
+                } else {
+                    alert('❌ ' + result.error);
+                }
             }
         });
     }
@@ -252,29 +265,50 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            
             const email = document.getElementById('registerEmail').value.trim();
             const password = document.getElementById('registerPassword').value.trim();
             const username = document.getElementById('registerUsername').value.trim();
             const fullName = document.getElementById('registerFullName').value.trim();
             
+            console.log('📝 Intentando registrar:', { email, username, fullName });
+            
             if (!email || !password || !username) {
-                showNotification('❌ Completa todos los campos', 'error');
+                if (typeof showNotification === 'function') {
+                    showNotification('❌ Completa todos los campos', 'error');
+                } else {
+                    alert('❌ Completa todos los campos');
+                }
                 return;
             }
             
             if (password.length < 6) {
-                showNotification('❌ La contraseña debe tener al menos 6 caracteres', 'error');
+                if (typeof showNotification === 'function') {
+                    showNotification('❌ La contraseña debe tener al menos 6 caracteres', 'error');
+                } else {
+                    alert('❌ La contraseña debe tener al menos 6 caracteres');
+                }
                 return;
             }
             
             const result = authManager.register(email, password, username, fullName);
+            console.log('📝 Resultado registro:', result);
+            
             if (result.success) {
-                showNotification('✅ ' + result.message, 'success');
+                if (typeof showNotification === 'function') {
+                    showNotification('✅ ' + result.message, 'success');
+                } else {
+                    alert('✅ ' + result.message);
+                }
                 setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 1000);
+                    window.location.href = 'index.html';
+                }, 1500);
             } else {
-                showNotification('❌ ' + result.error, 'error');
+                if (typeof showNotification === 'function') {
+                    showNotification('❌ ' + result.error, 'error');
+                } else {
+                    alert('❌ ' + result.error);
+                }
             }
         });
     }
