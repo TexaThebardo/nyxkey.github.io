@@ -1,4 +1,4 @@
-// 📦 GESTIÓN DE PRODUCTOS
+// 📦 GESTIÓN DE PRODUCTOS - VERSIÓN COMPLETA
 
 class ProductsManager {
     constructor() {
@@ -9,24 +9,37 @@ class ProductsManager {
     async loadProducts() {
         try {
             this.loading = true;
+            console.log('🔄 Cargando productos...');
+            
             const response = await fetch('data/products.json');
-            if (!response.ok) throw new Error('No se pudo cargar products.json');
+            if (!response.ok) {
+                throw new Error('No se pudo cargar products.json');
+            }
             const data = await response.json();
             this.products = data.products || [];
+            
+            // Guardar backup
             localStorage.setItem('products_backup', JSON.stringify(this.products));
+            console.log('✅ Productos cargados:', this.products.length);
             return this.products;
         } catch (error) {
-            console.error('Error cargando productos:', error);
+            console.error('❌ Error cargando productos:', error);
+            
+            // Intentar cargar desde localStorage
             const localData = localStorage.getItem('products_backup');
             if (localData) {
                 try {
                     this.products = JSON.parse(localData);
+                    console.log('✅ Productos cargados desde backup:', this.products.length);
                     return this.products;
                 } catch (e) {
                     console.error('Error parsing local data:', e);
                 }
             }
+            
+            // Productos por defecto
             this.products = this.getDefaultProducts();
+            console.log('✅ Productos por defecto cargados:', this.products.length);
             return this.products;
         } finally {
             this.loading = false;
@@ -110,17 +123,20 @@ class ProductsManager {
         );
     }
 
-    // Renderizar productos
-    renderProducts(products) {
-        const container = document.getElementById('productsContainer');
-        if (!container) return;
+    // Renderizar productos en grid
+    renderProducts(products, containerId = 'productsContainer') {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.warn('⚠️ Contenedor no encontrado:', containerId);
+            return;
+        }
 
         if (!products || products.length === 0) {
             container.innerHTML = `
                 <div class="no-results" style="text-align: center; padding: 60px 20px; grid-column: 1 / -1;">
-                    <i class="fas fa-search fa-3x" style="color: #4f46e5;"></i>
-                    <h3 style="color: white; margin: 15px 0;">No se encontraron productos</h3>
-                    <p style="color: #a0aec0;">Intenta con otros términos de búsqueda</p>
+                    <i class="fas fa-box-open fa-3x" style="color: #4f46e5;"></i>
+                    <h3 style="color: white; margin: 15px 0;">No hay productos disponibles</h3>
+                    <p style="color: #a0aec0;">Vuelve más tarde</p>
                 </div>
             `;
             return;
@@ -130,7 +146,8 @@ class ProductsManager {
             <div class="product-card" data-id="${product.id}">
                 <div class="product-image">
                     <img src="${product.image || 'https://via.placeholder.com/300x200/1a1a3e/818cf8?text=Card'}" 
-                         alt="${product.name}">
+                         alt="${product.name}"
+                         onerror="this.src='https://via.placeholder.com/300x200/1a1a3e/818cf8?text=Card'">
                     ${product.stock <= 0 ? '<div class="out-of-stock-badge">Agotado</div>' : ''}
                 </div>
                 <div class="card-details">
@@ -163,6 +180,8 @@ class ProductsManager {
                 </div>
             </div>
         `).join('');
+
+        console.log('✅ Productos renderizados:', products.length);
     }
 
     renderStars(rating) {
@@ -207,67 +226,25 @@ class ProductsManager {
     }
 }
 
+// Crear instancia global
 const productManager = new ProductsManager();
 window.productManager = productManager;
 
-document.addEventListener('DOMContentLoaded', async () => {
+// Inicializar
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('🚀 Inicializando productos...');
     await productManager.loadProducts();
     
+    // Renderizar en tienda
     if (document.getElementById('productsContainer')) {
-        productManager.renderProducts(productManager.getAllProducts());
+        const products = productManager.getAllProducts();
+        productManager.renderProducts(products);
         productManager.setupEventListeners();
     }
     
+    // Renderizar destacados en home
     if (document.getElementById('featuredProducts')) {
         const featured = productManager.getFeaturedProducts(6);
-        const container = document.getElementById('featuredProducts');
-        if (container) {
-            container.innerHTML = featured.map(product => `
-                <div class="product-card" data-id="${product.id}">
-                    <div class="product-image">
-                        <img src="${product.image || 'https://via.placeholder.com/300x200/1a1a3e/818cf8?text=Card'}" 
-                             alt="${product.name}">
-                        ${product.stock <= 0 ? '<div class="out-of-stock-badge">Agotado</div>' : ''}
-                    </div>
-                    <div class="card-details">
-                        <div class="card-header">
-                            <span class="card-badge ${product.card_type?.toLowerCase() || 'visa'}">${product.card_type || 'Visa'}</span>
-                            <span class="product-category">${product.category || 'Premium'}</span>
-                        </div>
-                        <h3>${product.name}</h3>
-                        <div class="card-number">${product.card_number ? '•••• •••• •••• ' + product.card_number.slice(-4) : '•••• •••• •••• 4242'}</div>
-                        <div class="card-expiry">Expira: ${product.card_expiry || '12/26'}</div>
-                        <div class="product-features">
-                            ${product.features ? product.features.slice(0, 2).map(f => 
-                                `<span class="feature-tag">✓ ${f}</span>`
-                            ).join('') : ''}
-                        </div>
-                        <div class="product-price">$${product.price.toFixed(2)}</div>
-                        <div class="product-rating">
-                            ${productManager.renderStars(product.rating || 4.5)}
-                            <span>(${product.rating || 4.5})</span>
-                        </div>
-                        <div class="product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
-                            ${product.stock > 0 ? `✅ ${product.stock} disponibles` : '❌ Agotado'}
-                        </div>
-                        <button onclick="window.addToCart('${product.id}')" 
-                                class="btn-add-cart ${product.stock === 0 ? 'disabled' : ''}"
-                                ${product.stock === 0 ? 'disabled' : ''}>
-                            <i class="fas fa-shopping-cart"></i> 
-                            ${product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-    }
-
-    if (typeof cartManager !== 'undefined') {
-        cartManager.loadCart();
-        cartManager.updateUI();
-    }
-
-    if (typeof authManager !== 'undefined') {
-        authManager.updateUI();
+        productManager.renderProducts(featured, 'featuredProducts');
     }
 });
