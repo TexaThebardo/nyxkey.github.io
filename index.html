@@ -3,217 +3,437 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Tienda de Tarjetas</title>
-    <!-- Agrega esto para los iconos de las tarjetas y el menú -->
+    <title>CardNMR Store - Tienda de Tarjetas Premium</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* Estilos adicionales específicos del index */
+        .hero {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #0f0f1f 0%, #1a1a3e 50%, #0f0f1f 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(79, 70, 229, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #a0aec0;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-content .btn-primary {
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 50px;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat .number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #4f46e5;
+            display: block;
+        }
+
+        .hero-stat .label {
+            color: #a0aec0;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        /* Productos destacados */
+        .featured-products {
+            padding: 60px 0;
+        }
+
+        .featured-products h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .featured-products h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        .featured-products .subtitle {
+            text-align: center;
+            color: #a0aec0;
+            margin-bottom: 30px;
+        }
+
+        /* Sección de características */
+        .features-section {
+            padding: 60px 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(79, 70, 229, 0.3);
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.1);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            color: #4f46e5;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 0;
+            }
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+            .hero-stats {
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+            .hero-stat .number {
+                font-size: 1.6rem;
+            }
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- 1. BARRA LATERAL IZQUIERDA (NUEVO) -->
-    <div class="sidebar">
-        <div class="logo"><i class="fa-solid fa-credit-card"></i> CardStore</div>
-        <ul class="menu">
-            <li class="active"><a href="#"><i class="fa-solid fa-store"></i> Tienda</a></li>
-            <li><a href="#"><i class="fa-solid fa-coins"></i> Agregar Saldo</a></li>
-            <li><a href="#"><i class="fa-solid fa-arrow-right-arrow-left"></i> Transacciones</a></li>
-            <li><a href="checkout.html"><i class="fa-solid fa-cart-shopping"></i> Carrito</a></li>
-            <li><a href="#"><i class="fa-solid fa-star"></i> Destacados</a></li>
-        </ul>
-    </div>
-
-    <!-- 2. CONTENEDOR PRINCIPAL -->
-    <div class="main-content">
-        
-        <!-- TOPBAR (NUEVO) -->
-        <header class="topbar">
-            <div class="search-area">
-                <input type="text" id="search-input" placeholder="Buscar tarjetas...">
+    <!-- ============================================= -->
+    <!-- NAVBAR -->
+    <!-- ============================================= -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html">
+                    <i class="fas fa-credit-card"></i>
+                    CardNMR Store
+                </a>
             </div>
-            <div class="user-area">
-                <div class="balance-box">
-                    <span>Saldo disponible</span>
-                    <!-- El saldo se actualizará con tu JS -->
-                    <strong id="topbar-balance">$0.00</strong>
+            <div class="nav-links">
+                <a href="index.html" class="active"><i class="fas fa-home"></i> Inicio</a>
+                <a href="shop.html"><i class="fas fa-store"></i> Tienda</a>
+                <a href="cart.html" id="cartBtn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount">0</span>
+                </a>
+                <div id="authButtons">
+                    <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
+                    <a href="register.html" class="btn-register"><i class="fas fa-user-plus"></i> Registrarse</a>
                 </div>
-                <div class="profile-box">
-                    <i class="fa-solid fa-user-circle"></i>
-                    <span>Mi Perfil</span>
+                <div id="userMenu" style="display:none;">
+                    <span id="userName"></span>
+                    <a href="profile.html"><i class="fas fa-user"></i></a>
+                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></a>
                 </div>
-            </div>
-        </header>
-
-        <!-- 3. CONTENIDO DE LA TIENDA -->
-        <div class="content-body">
-            
-            <!-- ESTADÍSTICAS -->
-            <div class="stats-container">
-                <div class="stat-card">
-                    <h3>Total Productos</h3>
-                    <p id="total-products-count">0</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Productos Destacados</h3>
-                    <p id="featured-products-count">0</p>
-                </div>
-            </div>
-
-            <!-- FILTROS DE CATEGORÍA -->
-            <div class="category-filters">
-                <button class="cat-btn active" data-cat="all">Todos</button>
-                <button class="cat-btn" data-cat="Visa">Visa</button>
-                <button class="cat-btn" data-cat="Mastercard">Mastercard</button>
-                <button class="cat-btn" data-cat="Amex">Amex</button>
-            </div>
-
-            <!-- 4. LA TABLA DE TARJETAS (Reemplaza tu lista de productos anterior) -->
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Network</th>
-                            <th>BIN</th>
-                            <th>Database</th>
-                            <th>Class</th>
-                            <th>Level</th>
-                            <th>Bank</th>
-                            <th>Country</th>
-                            <th>Type</th>
-                            <th>Non VBV</th>
-                            <th>Non MSC</th>
-                            <th>Precio</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="products-table-body">
-                        <!-- Tu JS cargará las filas aquí -->
-                    </tbody>
-                </table>
             </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- 5. EL SCRIPT DE TU TIENDA -->
+    <!-- ============================================= -->
+    <!-- HERO -->
+    <!-- ============================================= -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Las Mejores Tarjetas <span>Premium</span></h1>
+                <p>Adquiere tarjetas de crédito de alta calidad con los mejores beneficios del mercado</p>
+                <a href="shop.html" class="btn-primary">
+                    <i class="fas fa-arrow-right"></i> Ver Tarjetas
+                </a>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="number">50+</span>
+                        <span class="label">Tarjetas disponibles</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="number">100%</span>
+                        <span class="label">Seguro y confiable</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="number">24/7</span>
+                        <span class="label">Soporte al cliente</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- CARACTERÍSTICAS -->
+    <!-- ============================================= -->
+    <section class="features-section">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Seguro y Confiable</h3>
+                    <p>Protegemos tus datos con la mejor seguridad</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Entrega Instantánea</h3>
+                    <p>Recibe tus tarjetas al instante después del pago</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-headset"></i>
+                    <h3>Soporte 24/7</h3>
+                    <p>Asistencia en cualquier momento que lo necesites</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-gem"></i>
+                    <h3>Calidad Premium</h3>
+                    <p>Tarjetas de la más alta calidad y confianza</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- PRODUCTOS DESTACADOS -->
+    <!-- ============================================= -->
+    <section class="featured-products">
+        <div class="container">
+            <h2>🔥 Tarjetas Destacadas</h2>
+            <p class="subtitle">Las mejores opciones seleccionadas para ti</p>
+            <div class="products-grid" id="featuredProducts">
+                <div style="text-align: center; padding: 40px; color: #a0aec0; grid-column: 1 / -1;">
+                    <i class="fas fa-spinner fa-spin fa-2x" style="color: #4f46e5;"></i>
+                    <p style="margin-top: 15px;">Cargando productos...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- FOOTER -->
+    <!-- ============================================= -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CardNMR Store</h3>
+                    <p>Tienda de tarjetas premium desde 2024</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <a href="shop.html">Tienda</a>
+                    <a href="#">Política de Privacidad</a>
+                    <a href="#">Términos y Condiciones</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-envelope"></i> info@cardnmr.com</p>
+                    <p><i class="fas fa-phone"></i> +1 234 567 890</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CardNMR Store - Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================= -->
+    <!-- SCRIPTS -->
+    <!-- ============================================= -->
+    <script src="js/app.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/loading.js"></script>
+
+    <!-- Script para cargar productos destacados -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // Cargar los productos desde el JSON
-            fetch('product.json')
-                .then(response => response.json())
-                .then(products => {
-                    renderProducts(products); // Renderizar la tabla
-                    setupFilters(products);    // Configurar los botones de filtro
-                    setupSearch(products);     // Configurar la barra de búsqueda
-                })
-                .catch(error => console.error('Error cargando productos:', error));
-
-
-            // FUNCIÓN PARA RENDERIZAR LA TABLA
-            function renderProducts(data) {
-                const tbody = document.getElementById('products-table-body');
-                tbody.innerHTML = '';
-
-                // Actualizar contadores
-                document.getElementById('total-products-count').innerText = data.length;
-                document.getElementById('featured-products-count').innerText = data.filter(p => p.featured === true).length;
-                
-                // Actualizar saldo (puedes cambiarlo por el saldo real de tu usuario)
-                const totalSaldo = data.reduce((acc, p) => acc + p.price, 0);
-                document.getElementById('topbar-balance').innerText = `$${totalSaldo.toFixed(2)}`;
-
-                if(data.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:40px; color:#8b949e;">No hay tarjetas en esta categoría.</td></tr>`;
-                    return;
-                }
-
-                // Crear fila por cada tarjeta
-                data.forEach(product => {
-                    // Clases para el logo de la tarjeta
-                    let networkClass = 'badge-network ';
-                    if(product.network.toLowerCase() === 'visa') networkClass += 'badge-visa';
-                    else if(product.network.toLowerCase() === 'mastercard') networkClass += 'badge-mastercard';
-                    else if(product.network.toLowerCase() === 'amex') networkClass += 'badge-amex';
-
-                    // Bandera del país
-                    const flags = {
-                        'UNITED STATES': '🇺🇸', 'DOMINICAN REPUBLIC': '🇩🇴', 'MEXICO': '🇲🇽',
-                        'AUSTRALIA': '🇦🇺', 'CANADA': '🇨🇦'
-                    };
-                    const flag = flags[product.country] || '🌍';
-
-                    const row = `
-                        <tr>
-                            <td><span class="${networkClass}"><i class="fa-brands fa-cc-${product.network.toLowerCase()}"></i> ${product.network}</span></td>
-                            <td><strong>${product.bin}</strong></td>
-                            <td><span class="badge-type">${product.database}</span></td>
-                            <td>${product.class}</td>
-                            <td>${product.level}</td>
-                            <td>${product.bank}</td>
-                            <td><span class="badge-country">${flag} ${product.country}</span></td>
-                            <td><span class="badge-type">${product.type}</span></td>
-                            <td>${product.nonVbv ? '<span class="badge-nonvbv">Non VBV</span>' : '-'}</td>
-                            <td>${product.nonMsc ? '<span class="badge-nonvbv">Non MSC</span>' : '-'}</td>
-                            <td><span class="price-text">$${product.price.toFixed(2)}</span></td>
-                            <td><button class="btn-add-cart" onclick="addToCart(${product.id})"><i class="fa-solid fa-cart-plus"></i></button></td>
-                        </tr>
-                    `;
-                    tbody.innerHTML += row;
-                });
-            }
-
-            // LÓGICA DE FILTROS
-            function setupFilters(products) {
-                const filterBtns = document.querySelectorAll('.cat-btn');
-                filterBtns.forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        filterBtns.forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-
-                        const category = this.getAttribute('data-cat');
-                        if(category === 'all') renderProducts(products);
-                        else renderProducts(products.filter(p => p.network.toLowerCase() === category.toLowerCase()));
-                    });
-                });
-            }
-
-            // LÓGICA DE BÚSQUEDA
-            function setupSearch(products) {
-                const searchInput = document.getElementById('search-input');
-                searchInput.addEventListener('input', function() {
-                    const term = this.value.toLowerCase();
-                    if(term === '') {
-                        const activeCat = document.querySelector('.cat-btn.active').getAttribute('data-cat');
-                        if(activeCat === 'all') renderProducts(products);
-                        else renderProducts(products.filter(p => p.network.toLowerCase() === activeCat.toLowerCase()));
-                    } else {
-                        const searched = products.filter(p => 
-                            p.bank.toLowerCase().includes(term) || 
-                            p.bin.includes(term) ||
-                            p.country.toLowerCase().includes(term)
-                        );
-                        renderProducts(searched);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Renderizar productos destacados
+            const container = document.getElementById('featuredProducts');
+            if (container && typeof productManager !== 'undefined') {
+                // Esperar a que los productos estén cargados
+                const checkProducts = setInterval(function() {
+                    if (!productManager.loading) {
+                        clearInterval(checkProducts);
+                        const products = productManager.getFeaturedProducts(6);
+                        if (products && products.length > 0) {
+                            container.innerHTML = products.map(product => `
+                                <div class="product-card" data-id="${product.id}">
+                                    <div class="product-image">
+                                        <img src="${product.image || 'https://via.placeholder.com/300x200/1a1a3e/818cf8?text=Card'}" 
+                                             alt="${product.name}"
+                                             onerror="this.src='https://via.placeholder.com/300x200/1a1a3e/818cf8?text=Card'">
+                                        ${product.stock <= 0 ? '<div class="out-of-stock-badge">Agotado</div>' : ''}
+                                    </div>
+                                    <div class="card-details">
+                                        <div class="card-header">
+                                            <span class="card-badge ${product.card_type?.toLowerCase() || 'visa'}">${product.card_type || 'Visa'}</span>
+                                            <span class="product-category">${product.category || 'Premium'}</span>
+                                        </div>
+                                        <h3>${product.name}</h3>
+                                        <div class="card-number">${product.card_number ? '•••• •••• •••• ' + product.card_number.slice(-4) : '•••• •••• •••• 4242'}</div>
+                                        <div class="card-expiry">Expira: ${product.card_expiry || '12/26'}</div>
+                                        <div class="product-features">
+                                            ${product.features ? product.features.slice(0, 2).map(f => 
+                                                `<span class="feature-tag">✓ ${f}</span>`
+                                            ).join('') : ''}
+                                        </div>
+                                        <div class="product-price">$${product.price.toFixed(2)}</div>
+                                        <div class="product-rating">
+                                            ${productManager.renderStars(product.rating || 4.5)}
+                                            <span>(${product.rating || 4.5})</span>
+                                        </div>
+                                        <div class="product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+                                            ${product.stock > 0 ? `✅ ${product.stock} disponibles` : '❌ Agotado'}
+                                        </div>
+                                        <button onclick="window.addToCart('${product.id}')" 
+                                                class="btn-add-cart ${product.stock === 0 ? 'disabled' : ''}"
+                                                ${product.stock === 0 ? 'disabled' : ''}>
+                                            <i class="fas fa-shopping-cart"></i> 
+                                            ${product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('');
+                        } else {
+                            container.innerHTML = `
+                                <div style="text-align: center; padding: 40px; color: #a0aec0; grid-column: 1 / -1;">
+                                    <i class="fas fa-box-open fa-2x" style="color: #4f46e5;"></i>
+                                    <p style="margin-top: 15px;">No hay productos disponibles</p>
+                                    <a href="shop.html" class="btn-primary" style="display: inline-block; margin-top: 15px;">Ver Tienda</a>
+                                </div>
+                            `;
+                        }
                     }
-                });
+                }, 100);
             }
-
-            // AGREGAR AL CARRITO (Usando tu sistema de localStorage)
-            window.addToCart = function(id) {
-                fetch('product.json')
-                .then(res => res.json())
-                .then(products => {
-                    const product = products.find(p => p.id === id);
-                    let cart = JSON.parse(localStorage.getItem('myCart')) || [];
-                    
-                    if(cart.find(item => item.id === id)) {
-                        alert('¡Esta tarjeta ya está en el carrito!');
-                        return;
-                    }
-                    cart.push(product);
-                    localStorage.setItem('myCart', JSON.stringify(cart));
-                    alert(`✅ ${product.network} agregada al carrito!`);
-                });
-            };
         });
     </script>
+
 </body>
 </html>
