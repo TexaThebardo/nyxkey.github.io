@@ -109,8 +109,165 @@ class ProductsManager {
             p.card_type.toLowerCase().includes(searchTerm)
         );
     }
+
+    // Renderizar productos
+    renderProducts(products) {
+        const container = document.getElementById('productsContainer');
+        if (!container) return;
+
+        if (!products || products.length === 0) {
+            container.innerHTML = `
+                <div class="no-results" style="text-align: center; padding: 60px 20px; grid-column: 1 / -1;">
+                    <i class="fas fa-search fa-3x" style="color: #4f46e5;"></i>
+                    <h3 style="color: white; margin: 15px 0;">No se encontraron productos</h3>
+                    <p style="color: #a0aec0;">Intenta con otros términos de búsqueda</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = products.map(product => `
+            <div class="product-card" data-id="${product.id}">
+                <div class="product-image">
+                    <img src="${product.image || 'https://via.placeholder.com/300x200/1a1a3e/818cf8?text=Card'}" 
+                         alt="${product.name}">
+                    ${product.stock <= 0 ? '<div class="out-of-stock-badge">Agotado</div>' : ''}
+                </div>
+                <div class="card-details">
+                    <div class="card-header">
+                        <span class="card-badge ${product.card_type?.toLowerCase() || 'visa'}">${product.card_type || 'Visa'}</span>
+                        <span class="product-category">${product.category || 'Premium'}</span>
+                    </div>
+                    <h3>${product.name}</h3>
+                    <div class="card-number">${product.card_number ? '•••• •••• •••• ' + product.card_number.slice(-4) : '•••• •••• •••• 4242'}</div>
+                    <div class="card-expiry">Expira: ${product.card_expiry || '12/26'}</div>
+                    <div class="product-features">
+                        ${product.features ? product.features.slice(0, 2).map(f => 
+                            `<span class="feature-tag">✓ ${f}</span>`
+                        ).join('') : ''}
+                    </div>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <div class="product-rating">
+                        ${this.renderStars(product.rating || 4.5)}
+                        <span>(${product.rating || 4.5})</span>
+                    </div>
+                    <div class="product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+                        ${product.stock > 0 ? `✅ ${product.stock} disponibles` : '❌ Agotado'}
+                    </div>
+                    <button onclick="window.addToCart('${product.id}')" 
+                            class="btn-add-cart ${product.stock === 0 ? 'disabled' : ''}"
+                            ${product.stock === 0 ? 'disabled' : ''}>
+                        <i class="fas fa-shopping-cart"></i> 
+                        ${product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    renderStars(rating) {
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5;
+        let stars = '';
+        
+        for (let i = 0; i < fullStars; i++) {
+            stars += '<i class="fas fa-star"></i>';
+        }
+        if (halfStar) {
+            stars += '<i class="fas fa-star-half-alt"></i>';
+        }
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+        for (let i = 0; i < emptyStars; i++) {
+            stars += '<i class="far fa-star"></i>';
+        }
+        return stars;
+    }
+
+    // Configurar event listeners
+    setupEventListeners() {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value;
+                const filtered = this.searchProducts(query);
+                this.renderProducts(filtered);
+            });
+        }
+
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const category = btn.dataset.category || 'all';
+                const filtered = this.getProductsByCategory(category);
+                this.renderProducts(filtered);
+            });
+        });
+    }
 }
 
-// Crear instancia global
 const productManager = new ProductsManager();
 window.productManager = productManager;
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await productManager.loadProducts();
+    
+    if (document.getElementById('productsContainer')) {
+        productManager.renderProducts(productManager.getAllProducts());
+        productManager.setupEventListeners();
+    }
+    
+    if (document.getElementById('featuredProducts')) {
+        const featured = productManager.getFeaturedProducts(6);
+        const container = document.getElementById('featuredProducts');
+        if (container) {
+            container.innerHTML = featured.map(product => `
+                <div class="product-card" data-id="${product.id}">
+                    <div class="product-image">
+                        <img src="${product.image || 'https://via.placeholder.com/300x200/1a1a3e/818cf8?text=Card'}" 
+                             alt="${product.name}">
+                        ${product.stock <= 0 ? '<div class="out-of-stock-badge">Agotado</div>' : ''}
+                    </div>
+                    <div class="card-details">
+                        <div class="card-header">
+                            <span class="card-badge ${product.card_type?.toLowerCase() || 'visa'}">${product.card_type || 'Visa'}</span>
+                            <span class="product-category">${product.category || 'Premium'}</span>
+                        </div>
+                        <h3>${product.name}</h3>
+                        <div class="card-number">${product.card_number ? '•••• •••• •••• ' + product.card_number.slice(-4) : '•••• •••• •••• 4242'}</div>
+                        <div class="card-expiry">Expira: ${product.card_expiry || '12/26'}</div>
+                        <div class="product-features">
+                            ${product.features ? product.features.slice(0, 2).map(f => 
+                                `<span class="feature-tag">✓ ${f}</span>`
+                            ).join('') : ''}
+                        </div>
+                        <div class="product-price">$${product.price.toFixed(2)}</div>
+                        <div class="product-rating">
+                            ${productManager.renderStars(product.rating || 4.5)}
+                            <span>(${product.rating || 4.5})</span>
+                        </div>
+                        <div class="product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+                            ${product.stock > 0 ? `✅ ${product.stock} disponibles` : '❌ Agotado'}
+                        </div>
+                        <button onclick="window.addToCart('${product.id}')" 
+                                class="btn-add-cart ${product.stock === 0 ? 'disabled' : ''}"
+                                ${product.stock === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-shopping-cart"></i> 
+                            ${product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    if (typeof cartManager !== 'undefined') {
+        cartManager.loadCart();
+        cartManager.updateUI();
+    }
+
+    if (typeof authManager !== 'undefined') {
+        authManager.updateUI();
+    }
+});
