@@ -6,26 +6,20 @@ class CartManager {
         this.loadCart();
     }
 
-    // Cargar carrito desde localStorage
     loadCart() {
         try {
             const saved = localStorage.getItem('cart');
             if (saved) {
                 this.items = JSON.parse(saved);
                 this.calculateTotal();
-            } else {
-                this.items = [];
-                this.total = 0;
             }
         } catch (error) {
             console.error('Error loading cart:', error);
             this.items = [];
-            this.total = 0;
         }
         return this.items;
     }
 
-    // Guardar carrito en localStorage
     saveCart() {
         try {
             localStorage.setItem('cart', JSON.stringify(this.items));
@@ -36,13 +30,9 @@ class CartManager {
         }
     }
 
-    // Agregar item al carrito
     addItem(product, quantity = 1) {
-        if (!product || !product.id) {
-            console.error('Producto inválido');
-            return false;
-        }
-
+        if (!product || !product.id) return false;
+        
         const existing = this.items.find(item => item.id === product.id);
         if (existing) {
             existing.quantity += quantity;
@@ -62,14 +52,12 @@ class CartManager {
         return true;
     }
 
-    // Remover item del carrito
     removeItem(productId) {
         this.items = this.items.filter(item => item.id !== productId);
         this.saveCart();
         return this.items;
     }
 
-    // Actualizar cantidad de un item
     updateQuantity(productId, quantity) {
         const item = this.items.find(item => item.id === productId);
         if (item) {
@@ -83,7 +71,6 @@ class CartManager {
         return this.items;
     }
 
-    // Calcular total
     calculateTotal() {
         this.total = this.items.reduce((sum, item) => {
             return sum + (item.price * item.quantity);
@@ -91,47 +78,29 @@ class CartManager {
         return this.total;
     }
 
-    // Obtener total de items
     getTotalItems() {
         return this.items.reduce((sum, item) => sum + item.quantity, 0);
     }
 
-    // Vaciar carrito
     clearCart() {
         this.items = [];
         this.total = 0;
         this.saveCart();
     }
 
-    // Actualizar UI del carrito
     updateUI() {
-        // Actualizar contador en navbar
         const cartCount = document.getElementById('cartCount');
         if (cartCount) {
             const total = this.getTotalItems();
             cartCount.textContent = total;
             cartCount.style.display = total > 0 ? 'inline-flex' : 'none';
         }
-
-        // Actualizar vista del carrito en checkout
+        
         if (document.getElementById('cartItems')) {
             this.renderCart();
         }
-
-        // Actualizar total en checkout
-        const cartTotal = document.getElementById('cartTotal');
-        if (cartTotal) {
-            cartTotal.textContent = `$${this.total.toFixed(2)}`;
-        }
-
-        // Actualizar total en el mini carrito
-        const miniCartTotal = document.getElementById('miniCartTotal');
-        if (miniCartTotal) {
-            miniCartTotal.textContent = `$${this.total.toFixed(2)}`;
-        }
     }
 
-    // Renderizar carrito en checkout
     renderCart() {
         const container = document.getElementById('cartItems');
         if (!container) return;
@@ -145,8 +114,7 @@ class CartManager {
                     <a href="shop.html" class="btn-primary">Ir a la tienda</a>
                 </div>
             `;
-            const totalContainer = document.getElementById('cartTotal');
-            if (totalContainer) totalContainer.textContent = '$0.00';
+            this.updateSummary();
             return;
         }
 
@@ -157,23 +125,20 @@ class CartManager {
                 </div>
                 <div class="cart-item-details">
                     <h4>${item.name}</h4>
-                    <p class="cart-item-type">
-                        <span class="card-type-badge ${item.card_type.toLowerCase()}">${item.card_type}</span>
-                        ${item.card_number}
-                    </p>
+                    <p class="cart-item-type">${item.card_type || 'Visa'} - ${item.card_number || '****'}</p>
                     <p class="cart-item-price">$${item.price.toFixed(2)}</p>
                 </div>
                 <div class="cart-item-actions">
                     <div class="quantity-control">
-                        <button onclick="window.decrementQuantity('${item.id}')" class="qty-btn" aria-label="Disminuir cantidad">
+                        <button onclick="window.decrementQuantity('${item.id}')" class="qty-btn">
                             <i class="fas fa-minus"></i>
                         </button>
                         <span class="qty-display">${item.quantity}</span>
-                        <button onclick="window.incrementQuantity('${item.id}')" class="qty-btn" aria-label="Aumentar cantidad">
+                        <button onclick="window.incrementQuantity('${item.id}')" class="qty-btn">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
-                    <button onclick="window.removeFromCart('${item.id}')" class="btn-remove" aria-label="Eliminar producto">
+                    <button onclick="window.removeFromCart('${item.id}')" class="btn-remove">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -183,69 +148,37 @@ class CartManager {
             </div>
         `).join('');
 
-        // Actualizar total
-        const totalContainer = document.getElementById('cartTotal');
-        if (totalContainer) {
-            totalContainer.textContent = `$${this.total.toFixed(2)}`;
-        }
-
-        // Actualizar resumen
         this.updateSummary();
     }
 
-    // Actualizar resumen del carrito
     updateSummary() {
-        const summaryContainer = document.getElementById('cartSummary');
-        if (!summaryContainer) return;
-
         const subtotal = this.total;
         const shipping = subtotal > 50 ? 0 : 5.99;
-        const tax = subtotal * 0.10; // 10% de impuesto
+        const tax = subtotal * 0.10;
         const total = subtotal + shipping + tax;
 
-        summaryContainer.innerHTML = `
-            <div class="summary-row">
-                <span>Subtotal</span>
-                <span>$${subtotal.toFixed(2)}</span>
-            </div>
-            <div class="summary-row">
-                <span>Envío</span>
-                <span>${shipping === 0 ? 'Gratis' : '$' + shipping.toFixed(2)}</span>
-            </div>
-            <div class="summary-row">
-                <span>Impuesto (10%)</span>
-                <span>$${tax.toFixed(2)}</span>
-            </div>
-            <div class="summary-row total">
-                <span><strong>Total</strong></span>
-                <span><strong>$${total.toFixed(2)}</strong></span>
-            </div>
-        `;
+        const subtotalEl = document.getElementById('cartSubtotal');
+        const shippingEl = document.getElementById('cartShipping');
+        const taxEl = document.getElementById('cartTax');
+        const totalEl = document.getElementById('cartTotal');
+
+        if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+        if (shippingEl) shippingEl.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toFixed(2)}`;
+        if (taxEl) taxEl.textContent = `$${tax.toFixed(2)}`;
+        if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
     }
 
-    // Obtener datos para checkout
     getCheckoutData() {
+        const subtotal = this.total;
+        const shipping = subtotal > 50 ? 0 : 5.99;
+        const tax = subtotal * 0.10;
         return {
             items: this.items,
-            subtotal: this.total,
-            shipping: this.total > 50 ? 0 : 5.99,
-            tax: this.total * 0.10,
-            total: this.total + (this.total > 50 ? 0 : 5.99) + (this.total * 0.10),
+            subtotal: subtotal,
+            shipping: shipping,
+            tax: tax,
+            total: subtotal + shipping + tax,
             itemCount: this.getTotalItems()
-        };
-    }
-
-    // Obtener resumen para mostrar
-    getSummary() {
-        const data = this.getCheckoutData();
-        return {
-            ...data,
-            itemsList: this.items.map(item => ({
-                name: item.name,
-                quantity: item.quantity,
-                price: item.price,
-                subtotal: item.price * item.quantity
-            }))
         };
     }
 }
@@ -253,7 +186,7 @@ class CartManager {
 // Crear instancia global
 const cartManager = new CartManager();
 
-// Funciones globales para el carrito
+// Funciones globales
 window.incrementQuantity = function(productId) {
     const item = cartManager.items.find(i => i.id === productId);
     if (item) {
@@ -276,25 +209,58 @@ window.removeFromCart = function(productId) {
 };
 
 window.addToCart = function(productId) {
-    const product = window.productManager?.getProductById(productId);
+    if (typeof productManager === 'undefined') {
+        showNotification('❌ Error: Sistema no disponible', 'error');
+        return;
+    }
+    
+    const product = productManager.getProductById(productId);
     if (product) {
+        if (product.stock <= 0) {
+            showNotification('❌ Producto agotado', 'error');
+            return;
+        }
         cartManager.addItem(product);
-        if (typeof showNotification === 'function') {
-            showNotification(`✅ ${product.name} agregado al carrito`);
-        }
-        // Actualizar contador
-        const cartCount = document.getElementById('cartCount');
-        if (cartCount) {
-            cartCount.textContent = cartManager.getTotalItems();
-        }
+        showNotification(`✅ ${product.name} agregado al carrito`, 'success');
+        cartManager.updateUI();
+    } else {
+        showNotification('❌ Producto no encontrado', 'error');
     }
 };
 
-// Cargar carrito al iniciar
+window.goToCheckout = function() {
+    if (cartManager.getTotalItems() > 0) {
+        const user = localStorage.getItem('currentUser');
+        if (!user) {
+            showNotification('⚠️ Inicia sesión para continuar', 'info');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+            return;
+        }
+        window.location.href = 'checkout.html';
+    } else {
+        showNotification('❌ El carrito está vacío', 'error');
+    }
+};
+
+window.clearCart = function() {
+    if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+        cartManager.clearCart();
+        cartManager.renderCart();
+        showNotification('🗑️ Carrito vaciado', 'info');
+    }
+};
+
+// Inicializar
 document.addEventListener('DOMContentLoaded', () => {
     cartManager.loadCart();
     cartManager.updateUI();
+    
+    // Si estamos en cart.html, renderizar
+    if (document.getElementById('cartItems')) {
+        cartManager.renderCart();
+    }
 });
 
-// Exportar para uso global
 window.cartManager = cartManager;
