@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda - CardNMR Store</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
@@ -38,7 +37,6 @@
         </div>
     </nav>
 
-    <!-- Tienda -->
     <section class="shop-page">
         <div class="container">
             <div class="shop-header">
@@ -46,7 +44,6 @@
                 <p>Encuentra las mejores tarjetas premium</p>
             </div>
 
-            <!-- Filtros y búsqueda -->
             <div class="shop-controls">
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
@@ -56,18 +53,19 @@
                     <button class="filter-btn active" data-category="all">Todos</button>
                     <button class="filter-btn" data-category="premium">Premium</button>
                     <button class="filter-btn" data-category="elite">Elite</button>
-                    <button class="filter-btn" data-category="standard">Standard</button>
                 </div>
             </div>
 
-            <!-- Grid de productos -->
             <div class="products-grid" id="productsContainer">
                 <!-- Los productos se cargan desde JS -->
+                <div style="text-align: center; padding: 40px; color: #a0aec0; grid-column: 1 / -1;">
+                    <i class="fas fa-spinner fa-spin fa-2x" style="color: #4f46e5;"></i>
+                    <p style="margin-top: 15px;">Cargando productos...</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
