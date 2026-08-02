@@ -1,21 +1,237 @@
 {
-  "id": "card_011",
-  "name": "Nombre de la Tarjeta",
-  "description": "Descripción detallada de la tarjeta",
-  "price": 199.99,
-  "card_type": "Visa",
-  "card_number": "4532 1234 5678 9012",
-  "card_expiry": "12/26",
-  "card_cvv": "***",
-  "card_holder": "Nombre del titular",
-  "stock": 10,
-  "image": "",
-  "category": "premium",
-  "features": [
-    "Beneficio 1",
-    "Beneficio 2",
-    "Beneficio 3"
+  "products": [
+    {
+      "id": "card_001",
+      "name": "Visa Gold Premium",
+      "description": "Tarjeta Visa Gold con límite alto, perfecta para compras internacionales y viajes de negocios",
+      "price": 149.99,
+      "card_type": "Visa",
+      "card_number": "4532 1234 5678 9012",
+      "card_expiry": "12/26",
+      "card_cvv": "***",
+      "card_holder": "Premium User",
+      "stock": 5,
+      "image": "",
+      "category": "premium",
+      "features": [
+        "Límite $10,000",
+        "Compras internacionales",
+        "Seguro de viaje",
+        "Cashback 2%"
+      ],
+      "status": "active",
+      "rating": 4.8
+    },
+    {
+      "id": "card_002",
+      "name": "Mastercard Black Elite",
+      "description": "Mastercard Black edición limitada con beneficios exclusivos para clientes VIP y viajeros frecuentes",
+      "price": 249.99,
+      "card_type": "Mastercard",
+      "card_number": "5532 8765 4321 0987",
+      "card_expiry": "08/27",
+      "card_cvv": "***",
+      "card_holder": "Elite Member",
+      "stock": 3,
+      "image": "",
+      "category": "elite",
+      "features": [
+        "Límite $25,000",
+        "Acceso a lounges",
+        "Cashback 5%",
+        "Seguro de viaje premium"
+      ],
+      "status": "active",
+      "rating": 4.9
+    },
+    {
+      "id": "card_003",
+      "name": "American Express Platinum",
+      "description": "American Express Platinum con beneficios de viaje premium, acceso VIP y asistencia global",
+      "price": 399.99,
+      "card_type": "Amex",
+      "card_number": "3782 123456 78901",
+      "card_expiry": "06/28",
+      "card_cvv": "***",
+      "card_holder": "Travel Pro",
+      "stock": 2,
+      "image": "",
+      "category": "premium",
+      "features": [
+        "Límite $50,000",
+        "Seguro de viaje premium",
+        "Acceso a lounges VIP",
+        "Asistencia global 24/7"
+      ],
+      "status": "active",
+      "rating": 4.7
+    },
+    {
+      "id": "card_004",
+      "name": "Visa Infinite Black",
+      "description": "Visa Infinite Black con beneficios de élite, acceso global y servicios de conserjería",
+      "price": 299.99,
+      "card_type": "Visa",
+      "card_number": "4024 5678 9012 3456",
+      "card_expiry": "03/29",
+      "card_cvv": "***",
+      "card_holder": "Elite User",
+      "stock": 4,
+      "image": "",
+      "category": "elite",
+      "features": [
+        "Límite $30,000",
+        "Acceso a lounges VIP",
+        "Cashback 3%",
+        "Seguro de viaje premium",
+        "Concierge 24/7"
+      ],
+      "status": "active",
+      "rating": 4.6
+    },
+    {
+      "id": "card_005",
+      "name": "Mastercard Titanium",
+      "description": "Mastercard Titanium con beneficios exclusivos para viajeros frecuentes y compras internacionales",
+      "price": 189.99,
+      "card_type": "Mastercard",
+      "card_number": "5532 1234 5678 9012",
+      "card_expiry": "09/28",
+      "card_cvv": "***",
+      "card_holder": "Traveler Pro",
+      "stock": 6,
+      "image": "",
+      "category": "premium",
+      "features": [
+        "Límite $15,000",
+        "Millas aéreas",
+        "Seguro de viaje",
+        "Acceso a lounges",
+        "Cashback 2%"
+      ],
+      "status": "active",
+      "rating": 4.4
+    },
+    {
+      "id": "card_006",
+      "name": "Visa Signature Rewards",
+      "description": "Visa Signature con programa de recompensas y beneficios para compradores frecuentes",
+      "price": 129.99,
+      "card_type": "Visa",
+      "card_number": "4024 9876 5432 1098",
+      "card_expiry": "11/27",
+      "card_cvv": "***",
+      "card_holder": "Rewards Member",
+      "stock": 8,
+      "image": "",
+      "category": "standard",
+      "features": [
+        "Límite $8,000",
+        "Puntos de recompensa",
+        "Compras internacionales",
+        "Seguro de compras"
+      ],
+      "status": "active",
+      "rating": 4.2
+    },
+    {
+      "id": "card_007",
+      "name": "Mastercard World Elite",
+      "description": "Mastercard World Elite con beneficios de lujo para viajeros de clase mundial",
+      "price": 349.99,
+      "card_type": "Mastercard",
+      "card_number": "5532 4567 8901 2345",
+      "card_expiry": "02/30",
+      "card_cvv": "***",
+      "card_holder": "World Traveler",
+      "stock": 2,
+      "image": "",
+      "category": "elite",
+      "features": [
+        "Límite $40,000",
+        "Acceso a lounges premium",
+        "Cashback 6%",
+        "Seguro de viaje ilimitado",
+        "Concierge personal"
+      ],
+      "status": "active",
+      "rating": 4.9
+    },
+    {
+      "id": "card_008",
+      "name": "Amex Gold Business",
+      "description": "American Express Gold diseñada para negocios con beneficios corporativos",
+      "price": 279.99,
+      "card_type": "Amex",
+      "card_number": "3782 987654 32109",
+      "card_expiry": "07/29",
+      "card_cvv": "***",
+      "card_holder": "Business Owner",
+      "stock": 4,
+      "image": "",
+      "category": "premium",
+      "features": [
+        "Límite $35,000",
+        "Gastos corporativos",
+        "Seguro de negocio",
+        "Cashback 4%",
+        "Soporte empresarial"
+      ],
+      "status": "active",
+      "rating": 4.5
+    },
+    {
+      "id": "card_009",
+      "name": "Visa Platinum Travel",
+      "description": "Visa Platinum especializada en viajes con beneficios únicos para aventureros",
+      "price": 169.99,
+      "card_type": "Visa",
+      "card_number": "4532 5678 9012 3456",
+      "card_expiry": "04/28",
+      "card_cvv": "***",
+      "card_holder": "Adventure Seeker",
+      "stock": 7,
+      "image": "",
+      "category": "standard",
+      "features": [
+        "Límite $12,000",
+        "Millas aéreas",
+        "Seguro de viaje",
+        "Descuentos en hoteles",
+        "Cashback 2%"
+      ],
+      "status": "active",
+      "rating": 4.3
+    },
+    {
+      "id": "card_010",
+      "name": "Mastercard Diamond",
+      "description": "Mastercard Diamond con beneficios exclusivos y tratamiento VIP en todo el mundo",
+      "price": 449.99,
+      "card_type": "Mastercard",
+      "card_number": "5532 7890 1234 5678",
+      "card_expiry": "10/30",
+      "card_cvv": "***",
+      "card_holder": "Diamond Member",
+      "stock": 1,
+      "image": "",
+      "category": "elite",
+      "features": [
+        "Límite $60,000",
+        "Acceso VIP global",
+        "Cashback 7%",
+        "Seguro de viaje premium",
+        "Concierge personal 24/7",
+        "Acceso a eventos exclusivos"
+      ],
+      "status": "active",
+      "rating": 5.0
+    }
   ],
-  "status": "active",
-  "rating": 4.5
+  "settings": {
+    "store_name": "CardNMR Store",
+    "currency": "USD",
+    "tax_rate": 0.10,
+    "free_shipping_threshold": 50
+  }
 }
