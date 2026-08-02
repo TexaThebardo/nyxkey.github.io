@@ -7,6 +7,111 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos para vista de lista */
+        .view-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .view-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .view-list .product-card {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+            padding: 15px;
+        }
+        
+        .view-list .product-image {
+            width: 150px;
+            height: 150px;
+            flex-shrink: 0;
+        }
+        
+        .view-list .card-details {
+            flex: 1;
+            padding: 10px 0;
+        }
+        
+        .view-list .btn-add-cart {
+            width: auto;
+            padding: 10px 25px;
+        }
+        
+        .view-list .product-features {
+            margin: 5px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .view-list .product-card {
+                flex-direction: column;
+            }
+            .view-list .product-image {
+                width: 100%;
+                height: 200px;
+            }
+        }
+        
+        /* Botón de cambio de vista */
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .view-toggle button {
+            padding: 8px 14px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #a0aec0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .view-toggle button.active {
+            background: #4f46e5;
+            color: white;
+        }
+        
+        .view-toggle button:hover:not(.active) {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .shop-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .shop-controls-left {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .shop-controls-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -45,20 +150,31 @@
             </div>
 
             <div class="shop-controls">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Buscar tarjetas...">
+                <div class="shop-controls-left">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar tarjetas...">
+                    </div>
+                    <div class="filters">
+                        <button class="filter-btn active" data-category="all">Todos</button>
+                        <button class="filter-btn" data-category="premium">Premium</button>
+                        <button class="filter-btn" data-category="elite">Elite</button>
+                        <button class="filter-btn" data-category="standard">Standard</button>
+                    </div>
                 </div>
-                <div class="filters">
-                    <button class="filter-btn active" data-category="all">Todos</button>
-                    <button class="filter-btn" data-category="premium">Premium</button>
-                    <button class="filter-btn" data-category="elite">Elite</button>
-                    <button class="filter-btn" data-category="standard">Standard</button>
+                <div class="shop-controls-right">
+                    <div class="view-toggle">
+                        <button class="active" id="viewGrid" title="Vista en Grid">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button id="viewList" title="Vista en Lista">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="products-grid" id="productsContainer">
-                <!-- Los productos se cargan desde JS -->
+            <div class="products-grid view-grid" id="productsContainer">
                 <div style="text-align: center; padding: 40px; color: #a0aec0; grid-column: 1 / -1;">
                     <i class="fas fa-spinner fa-spin fa-2x" style="color: #4f46e5;"></i>
                     <p style="margin-top: 15px;">Cargando productos...</p>
@@ -100,5 +216,34 @@
     <script src="js/products.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/auth.js"></script>
+    
+    <script>
+        // Cambio de vista
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewGrid = document.getElementById('viewGrid');
+            const viewList = document.getElementById('viewList');
+            const container = document.getElementById('productsContainer');
+            
+            viewGrid.addEventListener('click', function() {
+                this.classList.add('active');
+                viewList.classList.remove('active');
+                container.className = 'products-grid view-grid';
+                localStorage.setItem('productView', 'grid');
+            });
+            
+            viewList.addEventListener('click', function() {
+                this.classList.add('active');
+                viewGrid.classList.remove('active');
+                container.className = 'products-grid view-list';
+                localStorage.setItem('productView', 'list');
+            });
+            
+            // Restaurar vista guardada
+            const savedView = localStorage.getItem('productView');
+            if (savedView === 'list') {
+                viewList.click();
+            }
+        });
+    </script>
 </body>
 </html>
