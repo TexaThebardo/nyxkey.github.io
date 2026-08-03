@@ -27,7 +27,7 @@
                 <div class="menu-label">Menú Principal</div>
                 <a href="index.html"><i class="fas fa-home"></i> Home</a>
                 <a href="shop.html"><i class="fas fa-store"></i> Tienda</a>
-                <a href="#"><i class="fas fa-exchange-alt"></i> Transacciones <span class="badge">12</span></a>
+                <a href="transactions.html"><i class="fas fa-exchange-alt"></i> Transacciones <span class="badge">0</span></a>
                 <a href="#" onclick="openBuyBalance()"><i class="fas fa-wallet"></i> Comprar Saldo</a>
             </nav>
             <div class="sidebar-footer">
@@ -108,9 +108,9 @@
         </main>
     </div>
 
-    <!-- MODAL COMPRAR SALDO (igual que shop.html) -->
+    <!-- MODAL COMPRAR SALDO -->
     <div id="buyBalanceModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center;">
-        <div style="background:#1a1a2e; border-radius:20px; padding:40px; max-width:500px; width:90%; border:1px solid rgba(255,255,255,0.1);">
+        <div style="background:#1a1a2e; border-radius:20px; padding:40px; max-width:500px; width:90%; border:1px solid rgba(255,255,255,0.1); max-height:90vh; overflow-y:auto;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h2 style="color:white;">💰 Comprar Saldo</h2>
                 <button onclick="closeBuyBalance()" style="background:none; border:none; color:#a0aec0; font-size:1.5rem; cursor:pointer;">✕</button>
@@ -127,7 +127,7 @@
                 </button>
             </div>
             <div style="margin-bottom:20px;">
-                <label style="color:#a0aec0; display:block; margin-bottom:5px;">Monto a recargar</label>
+                <label style="color:#a0aec0; display:block; margin-bottom:5px;">Monto a recargar (USD)</label>
                 <input type="number" id="rechargeAmount" value="10" min="1" step="1" style="width:100%; padding:12px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; font-size:1rem;">
             </div>
             <div id="paymentDetails" style="margin-bottom:20px; display:none; background:rgba(0,0,0,0.2); padding:20px; border-radius:12px; text-align:center;"></div>
@@ -352,42 +352,42 @@
     // =============================================
     let selectedPaymentMethod = null;
 
-    window.openBuyBalance = function() {
+    function openBuyBalance() {
         document.getElementById('buyBalanceModal').style.display = 'flex';
         document.getElementById('paymentDetails').style.display = 'none';
         selectedPaymentMethod = null;
         document.querySelectorAll('.payment-method-btn').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.1)');
-    };
+    }
 
-    window.closeBuyBalance = function() {
+    function closeBuyBalance() {
         document.getElementById('buyBalanceModal').style.display = 'none';
-    };
+    }
 
-    window.selectPaymentMethod = function(method) {
+    function selectPaymentMethod(method) {
         selectedPaymentMethod = method;
-        document.querySelectorAll('.payment-method-btn').forEach(b => {
-            b.style.borderColor = b.querySelector('i').style.color || 'rgba(255,255,255,0.1)';
-        });
-        document.querySelectorAll('.payment-method-btn').forEach(b => {
-            if (b.querySelector('i').classList.contains('fa-stripe') && method === 'stripe') {
-                b.style.borderColor = '#635BFF';
-            } else if (b.querySelector('i').classList.contains('fa-bitcoin') && method === 'bitcoin') {
-                b.style.borderColor = '#F7931A';
-            }
-        });
+        document.querySelectorAll('.payment-method-btn').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.1)');
+
+        if (method === 'stripe') {
+            document.querySelector('.payment-method-btn:first-child').style.borderColor = '#635BFF';
+        } else if (method === 'bitcoin') {
+            document.querySelector('.payment-method-btn:last-child').style.borderColor = '#F7931A';
+        }
 
         const details = document.getElementById('paymentDetails');
         details.style.display = 'block';
+        const amount = document.getElementById('rechargeAmount').value || 10;
 
         if (method === 'stripe') {
             details.innerHTML = `
                 <i class="fab fa-stripe" style="font-size:3rem; color:#635BFF;"></i>
                 <p style="color:white; margin-top:10px;">Pago con Stripe</p>
                 <p style="color:#a0aec0; font-size:0.9rem;">Serás redirigido a Stripe para completar el pago</p>
+                <div style="margin-top:15px; padding:15px; background:rgba(0,0,0,0.2); border-radius:8px;">
+                    <p style="color:#a0aec0; font-size:0.8rem;">💰 Monto: $${amount}</p>
+                </div>
             `;
         } else if (method === 'bitcoin') {
-            const amount = parseFloat(document.getElementById('rechargeAmount').value || 10);
-            const btcAmount = (amount / 65000).toFixed(8);
+            const btcAmount = (parseFloat(amount) / 65000).toFixed(8);
             const address = '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa';
             details.innerHTML = `
                 <i class="fab fa-bitcoin" style="font-size:3rem; color:#F7931A;"></i>
@@ -402,9 +402,13 @@
                 </div>
             `;
         }
-    };
 
-    window.processRecharge = function() {
+        document.getElementById('rechargeAmount').addEventListener('input', function() {
+            selectPaymentMethod(method);
+        });
+    }
+
+    function processRecharge() {
         if (!selectedPaymentMethod) {
             showNotification('❌ Selecciona un método de pago', 'error');
             return;
@@ -440,10 +444,15 @@
 
                 updateBalanceDisplay();
                 closeBuyBalance();
-                showNotification(`✅ Saldo recargado. Nuevo saldo: $${userData.balance.toFixed(2)}`, 'success');
+                showNotification(`✅ Saldo recargado exitosamente. Nuevo saldo: $${userData.balance.toFixed(2)}`, 'success');
             }
         }, 2000);
-    };
+    }
+
+    window.openBuyBalance = openBuyBalance;
+    window.closeBuyBalance = closeBuyBalance;
+    window.selectPaymentMethod = selectPaymentMethod;
+    window.processRecharge = processRecharge;
     </script>
 
 </body>
