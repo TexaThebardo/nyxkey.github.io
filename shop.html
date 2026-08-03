@@ -27,7 +27,7 @@
                 <div class="menu-label">Menú Principal</div>
                 <a href="index.html"><i class="fas fa-home"></i> Home</a>
                 <a href="shop.html" class="active"><i class="fas fa-store"></i> Tienda</a>
-                <a href="#"><i class="fas fa-exchange-alt"></i> Transacciones <span class="badge">12</span></a>
+                <a href="transactions.html"><i class="fas fa-exchange-alt"></i> Transacciones <span class="badge">0</span></a>
                 <a href="#" onclick="openBuyBalance()"><i class="fas fa-wallet"></i> Comprar Saldo</a>
                 <div class="menu-label" style="margin-top:20px;">Categorías</div>
                 <a href="#" data-filter="all" class="active"><i class="fas fa-tag"></i> Todas</a>
@@ -120,17 +120,14 @@
         </main>
     </div>
 
-    <!-- ============================================= -->
-    <!-- MODAL COMPRAR SALDO -->
-    <!-- ============================================= -->
-    <div id="buyBalanceModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:9999; display:none; align-items:center; justify-content:center;">
-        <div style="background:#1a1a2e; border-radius:20px; padding:40px; max-width:500px; width:90%; border:1px solid rgba(255,255,255,0.1);">
+    <!-- MODAL COMPRAR SALDO (igual que index.html) -->
+    <div id="buyBalanceModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#1a1a2e; border-radius:20px; padding:40px; max-width:500px; width:90%; border:1px solid rgba(255,255,255,0.1); max-height:90vh; overflow-y:auto;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h2 style="color:white;">💰 Comprar Saldo</h2>
                 <button onclick="closeBuyBalance()" style="background:none; border:none; color:#a0aec0; font-size:1.5rem; cursor:pointer;">✕</button>
             </div>
             <p style="color:#a0aec0; margin-bottom:20px;">Selecciona el método de pago para recargar tu saldo</p>
-
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
                 <button onclick="selectPaymentMethod('stripe')" class="payment-method-btn" style="padding:15px; background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1); border-radius:12px; color:white; cursor:pointer; transition:all 0.3s;">
                     <i class="fab fa-stripe" style="font-size:2rem; color:#635BFF;"></i>
@@ -141,16 +138,11 @@
                     <div style="margin-top:5px; font-weight:600;">Bitcoin</div>
                 </button>
             </div>
-
             <div style="margin-bottom:20px;">
-                <label style="color:#a0aec0; display:block; margin-bottom:5px;">Monto a recargar</label>
+                <label style="color:#a0aec0; display:block; margin-bottom:5px;">Monto a recargar (USD)</label>
                 <input type="number" id="rechargeAmount" value="10" min="1" step="1" style="width:100%; padding:12px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; font-size:1rem;">
             </div>
-
-            <div id="paymentDetails" style="margin-bottom:20px; display:none; background:rgba(0,0,0,0.2); padding:20px; border-radius:12px; text-align:center;">
-                <!-- Se llena desde JS -->
-            </div>
-
+            <div id="paymentDetails" style="margin-bottom:20px; display:none; background:rgba(0,0,0,0.2); padding:20px; border-radius:12px; text-align:center;"></div>
             <button onclick="processRecharge()" class="btn-primary btn-block" style="width:100%; padding:14px; font-size:1rem;">
                 <i class="fas fa-wallet"></i> Recargar Saldo
             </button>
@@ -165,7 +157,6 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Toggle sidebar
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
@@ -178,12 +169,11 @@
         menuToggle.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
 
-        // Renderizar tabla
         function renderCardsTable(products) {
             const tbody = document.getElementById('cardsTableBody');
             const count = document.getElementById('catalogCount');
-
             if (!tbody) return;
+
             if (!products || products.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:40px;color:#a0aec0;"><i class="fas fa-box-open fa-2x"></i><p>No hay tarjetas disponibles</p></td></tr>`;
                 if (count) count.textContent = 'Mostrando 0 de 0 items';
@@ -214,7 +204,6 @@
             if (count) count.textContent = `Mostrando ${products.length} de ${products.length} items`;
         }
 
-        // Comprar con saldo
         window.buyWithBalance = function(productId) {
             const user = localStorage.getItem('currentUser');
             if (!user) {
@@ -269,7 +258,6 @@
             }
         }
 
-        // Filtros
         document.querySelectorAll('.filter-chip').forEach(chip => {
             chip.addEventListener('click', function() {
                 document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
@@ -286,7 +274,6 @@
             });
         });
 
-        // Filtros sidebar
         document.querySelectorAll('.sidebar-menu a[data-filter]').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -305,7 +292,6 @@
             });
         });
 
-        // Inicializar
         async function init() {
             if (window.productManager) {
                 await window.productManager.loadProducts();
@@ -339,7 +325,7 @@
     });
 
     // =============================================
-    // COMPRAR SALDO
+    // COMPRAR SALDO (misma función que index.html)
     // =============================================
     let selectedPaymentMethod = null;
 
@@ -356,19 +342,17 @@
 
     function selectPaymentMethod(method) {
         selectedPaymentMethod = method;
-        document.querySelectorAll('.payment-method-btn').forEach(b => {
-            b.style.borderColor = b.querySelector('i').style.color || 'rgba(255,255,255,0.1)';
-        });
-        document.querySelectorAll('.payment-method-btn').forEach(b => {
-            if (b.querySelector('i').classList.contains('fa-stripe') && method === 'stripe') {
-                b.style.borderColor = '#635BFF';
-            } else if (b.querySelector('i').classList.contains('fa-bitcoin') && method === 'bitcoin') {
-                b.style.borderColor = '#F7931A';
-            }
-        });
+        document.querySelectorAll('.payment-method-btn').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.1)');
+
+        if (method === 'stripe') {
+            document.querySelector('.payment-method-btn:first-child').style.borderColor = '#635BFF';
+        } else if (method === 'bitcoin') {
+            document.querySelector('.payment-method-btn:last-child').style.borderColor = '#F7931A';
+        }
 
         const details = document.getElementById('paymentDetails');
         details.style.display = 'block';
+        const amount = document.getElementById('rechargeAmount').value || 10;
 
         if (method === 'stripe') {
             details.innerHTML = `
@@ -376,17 +360,17 @@
                 <p style="color:white; margin-top:10px;">Pago con Stripe</p>
                 <p style="color:#a0aec0; font-size:0.9rem;">Serás redirigido a Stripe para completar el pago</p>
                 <div style="margin-top:15px; padding:15px; background:rgba(0,0,0,0.2); border-radius:8px;">
-                    <p style="color:#a0aec0; font-size:0.8rem;">💰 Monto: $<span id="rechargeDisplay">10</span></p>
+                    <p style="color:#a0aec0; font-size:0.8rem;">💰 Monto: $${amount}</p>
                 </div>
             `;
         } else if (method === 'bitcoin') {
-            const btcAmount = (parseFloat(document.getElementById('rechargeAmount').value || 10) / 65000).toFixed(8);
+            const btcAmount = (parseFloat(amount) / 65000).toFixed(8);
             const address = '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa';
             details.innerHTML = `
                 <i class="fab fa-bitcoin" style="font-size:3rem; color:#F7931A;"></i>
                 <p style="color:white; margin-top:10px;">Pago con Bitcoin</p>
                 <div style="margin-top:15px; padding:15px; background:rgba(0,0,0,0.2); border-radius:8px;">
-                    <p style="color:#a0aec0; font-size:0.8rem;">💰 Monto: $<span id="rechargeDisplay2">10</span> USD</p>
+                    <p style="color:#a0aec0; font-size:0.8rem;">💰 Monto: $${amount} USD</p>
                     <p style="color:#a0aec0; font-size:0.8rem;">₿ Cantidad: ${btcAmount} BTC</p>
                     <div style="margin-top:10px; background:rgba(0,0,0,0.3); padding:10px; border-radius:6px;">
                         <code style="color:#F7931A; word-break:break-all;">${address}</code>
@@ -396,13 +380,8 @@
             `;
         }
 
-        // Actualizar monto en tiempo real
         document.getElementById('rechargeAmount').addEventListener('input', function() {
-            const val = this.value || 0;
-            const display = document.getElementById('rechargeDisplay');
-            const display2 = document.getElementById('rechargeDisplay2');
-            if (display) display.textContent = val;
-            if (display2) display2.textContent = val;
+            selectPaymentMethod(method);
         });
     }
 
@@ -425,7 +404,6 @@
             return;
         }
 
-        // Simular pago exitoso
         showNotification(`⏳ Procesando pago de $${amount}...`, 'info');
 
         setTimeout(() => {
@@ -437,12 +415,13 @@
                 userData.balance = (userData.balance || 0) + amount;
                 localStorage.setItem('users', JSON.stringify(users));
 
-                // Actualizar usuario actual
                 const updatedUser = JSON.parse(localStorage.getItem('currentUser'));
                 updatedUser.balance = userData.balance;
                 localStorage.setItem('currentUser', JSON.stringify(updatedUser));
 
-                updateBalanceDisplay();
+                const balanceEl = document.getElementById('balanceAmount');
+                if (balanceEl) balanceEl.textContent = `$${userData.balance.toFixed(2)}`;
+
                 closeBuyBalance();
                 showNotification(`✅ Saldo recargado exitosamente. Nuevo saldo: $${userData.balance.toFixed(2)}`, 'success');
             }
@@ -453,19 +432,6 @@
     window.closeBuyBalance = closeBuyBalance;
     window.selectPaymentMethod = selectPaymentMethod;
     window.processRecharge = processRecharge;
-
-    function updateBalanceDisplay() {
-        const user = localStorage.getItem('currentUser');
-        const balanceEl = document.getElementById('balanceAmount');
-        if (user) {
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const currentUser = JSON.parse(user);
-            const userData = users.find(u => u.id === currentUser.id);
-            balanceEl.textContent = `$${(userData?.balance || 0).toFixed(2)}`;
-        } else {
-            balanceEl.textContent = '$0.00';
-        }
-    }
     </script>
 
 </body>
