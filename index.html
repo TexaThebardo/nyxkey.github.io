@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CardNMR Store - Tienda de Tarjetas Premium</title>
+    <title>CardNMR Store - Tienda de Tarjetas</title>
     
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
@@ -16,350 +16,155 @@
     
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <style>
-        /* Estilos adicionales específicos del index */
-        .hero {
-            padding: 100px 0;
-            background: linear-gradient(135deg, #0f0f1f 0%, #1a1a3e 50%, #0f0f1f 100%);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, rgba(79, 70, 229, 0.1) 0%, transparent 70%);
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-content h1 {
-            font-size: 3.8rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            color: #a0aec0;
-            margin-bottom: 30px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
-        }
-
-        .hero-content .btn-primary {
-            animation: fadeInUp 0.8s ease-out 0.4s both;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero-stats {
-            display: flex;
-            justify-content: center;
-            gap: 60px;
-            margin-top: 50px;
-            animation: fadeInUp 0.8s ease-out 0.6s both;
-        }
-
-        .hero-stat {
-            text-align: center;
-        }
-
-        .hero-stat .number {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #4f46e5;
-            display: block;
-        }
-
-        .hero-stat .label {
-            color: #a0aec0;
-            font-size: 0.85rem;
-            margin-top: 5px;
-        }
-
-        /* Productos destacados */
-        .featured-products {
-            padding: 60px 0;
-        }
-
-        .featured-products h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .featured-products h2::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, #4f46e5, #7c3aed);
-            margin: 10px auto 0;
-            border-radius: 2px;
-        }
-
-        .featured-products .subtitle {
-            text-align: center;
-            color: #a0aec0;
-            margin-bottom: 30px;
-        }
-
-        /* Sección de características */
-        .features-section {
-            padding: 60px 0;
-            background: rgba(255, 255, 255, 0.02);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 30px 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(79, 70, 229, 0.3);
-            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.1);
-        }
-
-        .feature-card i {
-            font-size: 2.5rem;
-            color: #4f46e5;
-            margin-bottom: 15px;
-        }
-
-        .feature-card h3 {
-            color: white;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-
-        .feature-card p {
-            color: #a0aec0;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero {
-                padding: 60px 0;
-            }
-            .hero-content h1 {
-                font-size: 2.2rem;
-            }
-            .hero-content p {
-                font-size: 1rem;
-            }
-            .hero-stats {
-                gap: 30px;
-                flex-wrap: wrap;
-            }
-            .hero-stat .number {
-                font-size: 1.6rem;
-            }
-            .features-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-content h1 {
-                font-size: 1.8rem;
-            }
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            .hero-stats {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-    </style>
 </head>
 <body>
 
     <!-- ============================================= -->
-    <!-- NAVBAR -->
+    <!-- OVERLAY PARA MÓVIL -->
     <!-- ============================================= -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-layout">
+
+        <!-- ============================================= -->
+        <!-- SIDEBAR - MENÚ LATERAL -->
+        <!-- ============================================= -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
                 <a href="index.html">
                     <i class="fas fa-credit-card"></i>
-                    CardNMR Store
+                    CardNMR
                 </a>
             </div>
-            <div class="nav-links">
-                <a href="index.html" class="active"><i class="fas fa-home"></i> Inicio</a>
-                <a href="shop.html"><i class="fas fa-store"></i> Tienda</a>
-                <a href="cart.html" id="cartBtn">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cartCount">0</span>
+
+            <nav class="sidebar-menu">
+                <div class="menu-label">Menú Principal</div>
+                <a href="index.html" class="active">
+                    <i class="fas fa-home"></i> Home
                 </a>
-                <div id="authButtons">
-                    <a href="login.html" class="btn-login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
-                    <a href="register.html" class="btn-register"><i class="fas fa-user-plus"></i> Registrarse</a>
-                </div>
-                <div id="userMenu" style="display:none;">
-                    <span id="userName"></span>
-                    <a href="profile.html"><i class="fas fa-user"></i></a>
-                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- ============================================= -->
-    <!-- HERO -->
-    <!-- ============================================= -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Las Mejores Tarjetas <span>Premium</span></h1>
-                <p>Adquiere tarjetas de crédito de alta calidad con los mejores beneficios del mercado</p>
-                <a href="shop.html" class="btn-primary">
-                    <i class="fas fa-arrow-right"></i> Ver Tarjetas
+                <a href="shop.html">
+                    <i class="fas fa-store"></i> Tienda
                 </a>
-                <div class="hero-stats">
-                    <div class="hero-stat">
-                        <span class="number">50+</span>
-                        <span class="label">Tarjetas disponibles</span>
-                    </div>
-                    <div class="hero-stat">
-                        <span class="number">100%</span>
-                        <span class="label">Seguro y confiable</span>
-                    </div>
-                    <div class="hero-stat">
-                        <span class="number">24/7</span>
-                        <span class="label">Soporte al cliente</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                <a href="#">
+                    <i class="fas fa-exchange-alt"></i> Transacciones
+                    <span class="badge">12</span>
+                </a>
+                <a href="#">
+                    <i class="fas fa-wallet"></i> Comprar Saldo
+                </a>
 
-    <!-- ============================================= -->
-    <!-- CARACTERÍSTICAS -->
-    <!-- ============================================= -->
-    <section class="features-section">
-        <div class="container">
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Seguro y Confiable</h3>
-                    <p>Protegemos tus datos con la mejor seguridad</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-bolt"></i>
-                    <h3>Entrega Instantánea</h3>
-                    <p>Recibe tus tarjetas al instante después del pago</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-headset"></i>
-                    <h3>Soporte 24/7</h3>
-                    <p>Asistencia en cualquier momento que lo necesites</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-gem"></i>
-                    <h3>Calidad Premium</h3>
-                    <p>Tarjetas de la más alta calidad y confianza</p>
-                </div>
-            </div>
-        </div>
-    </section>
+                <div class="menu-label" style="margin-top: 20px;">Categorías</div>
+                <a href="#" data-filter="all" class="active"><i class="fas fa-tag"></i> Todas</a>
+                <a href="#" data-filter="premium"><i class="fas fa-crown"></i> Premium</a>
+                <a href="#" data-filter="elite"><i class="fas fa-star"></i> Elite</a>
+                <a href="#" data-filter="standard"><i class="fas fa-gem"></i> Standard</a>
+                <a href="#" data-filter="vbv"><i class="fas fa-shield-alt"></i> VBV</a>
+                <a href="#" data-filter="non-vbv"><i class="fas fa-shield-alt"></i> Non-VBV</a>
+            </nav>
 
-    <!-- ============================================= -->
-    <!-- PRODUCTOS DESTACADOS -->
-    <!-- ============================================= -->
-    <section class="featured-products">
-        <div class="container">
-            <h2>🔥 Tarjetas Destacadas</h2>
-            <p class="subtitle">Las mejores opciones seleccionadas para ti</p>
-            <div class="products-grid" id="featuredProducts">
-                <div style="text-align: center; padding: 40px; color: #a0aec0; grid-column: 1 / -1;">
-                    <i class="fas fa-spinner fa-spin fa-2x" style="color: #4f46e5;"></i>
-                    <p style="margin-top: 15px;">Cargando productos...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================================= -->
-    <!-- FOOTER -->
-    <!-- ============================================= -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>CardNMR Store</h3>
-                    <p>Tienda de tarjetas premium desde 2024</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="sidebarAvatar">U</div>
+                    <div>
+                        <div class="user-name" id="sidebarUserName">Invitado</div>
+                        <div class="user-email" id="sidebarUserEmail">Inicia sesión</div>
                     </div>
                 </div>
-                <div class="footer-section">
-                    <h4>Enlaces</h4>
-                    <a href="shop.html">Tienda</a>
-                    <a href="#">Política de Privacidad</a>
-                    <a href="#">Términos y Condiciones</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Contacto</h4>
-                    <p><i class="fas fa-envelope"></i> info@cardnmr.com</p>
-                    <p><i class="fas fa-phone"></i> +1 234 567 890</p>
-                </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 CardNMR Store - Todos los derechos reservados</p>
+        </aside>
+
+        <!-- ============================================= -->
+        <!-- CONTENIDO PRINCIPAL -->
+        <!-- ============================================= -->
+        <main class="main-content">
+
+            <!-- ============================================= -->
+            <!-- TOPBAR -->
+            <!-- ============================================= -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <span class="page-title" id="pageTitle">📊 Catálogo Disponible</span>
+                </div>
+
+                <div class="topbar-right">
+                    <!-- Balance -->
+                    <div class="balance-display">
+                        <i class="fas fa-wallet"></i>
+                        <div>
+                            <div class="balance-amount" id="balanceAmount">$0.00</div>
+                            <div class="balance-label">Saldo disponible</div>
+                        </div>
+                    </div>
+
+                    <div class="topbar-actions">
+                        <button title="Notificaciones">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-dot"></span>
+                        </button>
+                        <button class="user-btn" id="userMenuBtn">
+                            <div class="avatar" id="topbarAvatar">U</div>
+                            <span id="topbarUserName">Invitado</span>
+                        </button>
+                        <button id="logoutBtn" style="display:none;" title="Cerrar sesión">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ============================================= -->
+            <!-- PAGE CONTENT -->
+            <!-- ============================================= -->
+            <div class="page-content">
+
+                <!-- Catálogo Header -->
+                <div class="catalog-header">
+                    <h2>📋 Catálogo Disponible</h2>
+                    <span class="catalog-count" id="catalogCount">Mostrando 0 de 0 items</span>
+                </div>
+
+                <!-- Filtros -->
+                <div class="catalog-filters">
+                    <button class="filter-chip active" data-filter="all">Todos</button>
+                    <button class="filter-chip" data-filter="premium">Premium</button>
+                    <button class="filter-chip" data-filter="elite">Elite</button>
+                    <button class="filter-chip" data-filter="standard">Standard</button>
+                    <button class="filter-chip" data-filter="vbv">VBV</button>
+                    <button class="filter-chip" data-filter="non-vbv">Non-VBV</button>
+                </div>
+
+                <!-- Tabla de Tarjetas -->
+                <div class="cards-table-wrapper">
+                    <table class="cards-table" id="cardsTable">
+                        <thead>
+                            <tr>
+                                <th>NETWORK</th>
+                                <th>BIN</th>
+                                <th>DATABASE</th>
+                                <th>CLASS</th>
+                                <th>LEVEL</th>
+                                <th>BANK</th>
+                                <th>COUNTRY</th>
+                                <th>TYPE</th>
+                                <th>USO/SERVICIO</th>
+                                <th>EXTRA</th>
+                                <th>PRICE</th>
+                                <th>ACCIÓN</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cardsTableBody">
+                            <!-- Los productos se cargan desde JS -->
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
-        </div>
-    </footer>
+
+        </main>
+    </div>
 
     <!-- ============================================= -->
     <!-- SCRIPTS -->
@@ -370,68 +175,277 @@
     <script src="js/auth.js"></script>
     <script src="js/loading.js"></script>
 
-    <!-- Script para cargar productos destacados -->
     <script>
+        // =============================================
+        // TOGGLE SIDEBAR EN MÓVIL
+        // =============================================
         document.addEventListener('DOMContentLoaded', function() {
-            // Renderizar productos destacados
-            const container = document.getElementById('featuredProducts');
-            if (container && typeof productManager !== 'undefined') {
-                // Esperar a que los productos estén cargados
-                const checkProducts = setInterval(function() {
-                    if (!productManager.loading) {
-                        clearInterval(checkProducts);
-                        const products = productManager.getFeaturedProducts(6);
-                        if (products && products.length > 0) {
-                            container.innerHTML = products.map(product => `
-                                <div class="product-card" data-id="${product.id}">
-                                    <div class="product-image">
-                                        <img src="${product.image || 'https://via.placeholder.com/300x200/1a1a3e/818cf8?text=Card'}" 
-                                             alt="${product.name}"
-                                             onerror="this.src='https://via.placeholder.com/300x200/1a1a3e/818cf8?text=Card'">
-                                        ${product.stock <= 0 ? '<div class="out-of-stock-badge">Agotado</div>' : ''}
-                                    </div>
-                                    <div class="card-details">
-                                        <div class="card-header">
-                                            <span class="card-badge ${product.card_type?.toLowerCase() || 'visa'}">${product.card_type || 'Visa'}</span>
-                                            <span class="product-category">${product.category || 'Premium'}</span>
-                                        </div>
-                                        <h3>${product.name}</h3>
-                                        <div class="card-number">${product.card_number ? '•••• •••• •••• ' + product.card_number.slice(-4) : '•••• •••• •••• 4242'}</div>
-                                        <div class="card-expiry">Expira: ${product.card_expiry || '12/26'}</div>
-                                        <div class="product-features">
-                                            ${product.features ? product.features.slice(0, 2).map(f => 
-                                                `<span class="feature-tag">✓ ${f}</span>`
-                                            ).join('') : ''}
-                                        </div>
-                                        <div class="product-price">$${product.price.toFixed(2)}</div>
-                                        <div class="product-rating">
-                                            ${productManager.renderStars(product.rating || 4.5)}
-                                            <span>(${product.rating || 4.5})</span>
-                                        </div>
-                                        <div class="product-stock ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
-                                            ${product.stock > 0 ? `✅ ${product.stock} disponibles` : '❌ Agotado'}
-                                        </div>
-                                        <button onclick="window.addToCart('${product.id}')" 
-                                                class="btn-add-cart ${product.stock === 0 ? 'disabled' : ''}"
-                                                ${product.stock === 0 ? 'disabled' : ''}>
-                                            <i class="fas fa-shopping-cart"></i> 
-                                            ${product.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}
-                                        </button>
-                                    </div>
-                                </div>
-                            `).join('');
-                        } else {
-                            container.innerHTML = `
-                                <div style="text-align: center; padding: 40px; color: #a0aec0; grid-column: 1 / -1;">
-                                    <i class="fas fa-box-open fa-2x" style="color: #4f46e5;"></i>
-                                    <p style="margin-top: 15px;">No hay productos disponibles</p>
-                                    <a href="shop.html" class="btn-primary" style="display: inline-block; margin-top: 15px;">Ver Tienda</a>
-                                </div>
-                            `;
-                        }
-                    }
-                }, 100);
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('show');
             }
+
+            menuToggle.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', toggleSidebar);
+
+            // Cerrar sidebar al hacer clic en un enlace (móvil)
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 992) {
+                        sidebar.classList.remove('open');
+                        overlay.classList.remove('show');
+                    }
+                });
+            });
+
+            // =============================================
+            // RENDERIZAR TARJETAS EN TABLA
+            // =============================================
+            function renderCardsTable(products) {
+                const tbody = document.getElementById('cardsTableBody');
+                const count = document.getElementById('catalogCount');
+
+                if (!tbody) return;
+
+                if (!products || products.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="12" style="text-align: center; padding: 40px; color: #a0aec0;">
+                                <i class="fas fa-box-open fa-2x" style="display: block; margin-bottom: 10px; color: #4f46e5;"></i>
+                                No hay tarjetas disponibles
+                            </td>
+                        </tr>
+                    `;
+                    if (count) count.textContent = 'Mostrando 0 de 0 items';
+                    return;
+                }
+
+                tbody.innerHTML = products.map(product => `
+                    <tr>
+                        <td>
+                            <span class="badge-status ${product.card_type?.toLowerCase() || 'non'}">
+                                ${product.card_type || 'N/A'}
+                            </span>
+                        </td>
+                        <td class="bin-cell">${product.bin || product.card_number?.slice(0, 6) || 'N/A'}</td>
+                        <td>${product.database || 'DB_July_2026'}</td>
+                        <td>${product.class || 'CREDIT'}</td>
+                        <td>${product.level || product.card_type || 'N/A'}</td>
+                        <td>${product.bank || 'N/A'}</td>
+                        <td>${product.country || 'UNITED STATES'}</td>
+                        <td>
+                            <span class="badge-status ${product.type?.toLowerCase() === 'cc full' ? 'msc' : 'non'}">
+                                ${product.type || 'CC Full'}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge-status ${product.service === 'Multifuncional' ? 'msc' : 'non'}">
+                                ${product.service || 'Multifuncional'}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge-status ${product.extra?.toLowerCase() === 'vbv' ? 'vbv' : product.extra?.toLowerCase() === 'non-vbv' ? 'non-vbv' : 'non'}">
+                                ${product.extra || 'NON'}
+                            </span>
+                        </td>
+                        <td class="price-cell">$${product.price.toFixed(2)}</td>
+                        <td>
+                            <button class="btn-add-card" 
+                                    onclick="window.buyWithBalance('${product.id}')"
+                                    ${product.stock <= 0 ? 'disabled' : ''}>
+                                <i class="fas fa-shopping-cart"></i>
+                                ${product.stock > 0 ? 'Agregar' : 'Agotado'}
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                if (count) {
+                    count.textContent = `Mostrando ${products.length} de ${products.length} items`;
+                }
+            }
+
+            // =============================================
+            // COMPRAR CON SALDO
+            // =============================================
+            window.buyWithBalance = function(productId) {
+                const user = localStorage.getItem('currentUser');
+                if (!user) {
+                    showNotification('⚠️ Inicia sesión para comprar', 'warning');
+                    setTimeout(() => window.location.href = 'login.html', 1500);
+                    return;
+                }
+
+                const product = window.productManager?.getProductById(productId);
+                if (!product) {
+                    showNotification('❌ Producto no encontrado', 'error');
+                    return;
+                }
+
+                if (product.stock <= 0) {
+                    showNotification('❌ Producto agotado', 'error');
+                    return;
+                }
+
+                // Obtener saldo del usuario
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const currentUser = JSON.parse(user);
+                const userData = users.find(u => u.id === currentUser.id);
+
+                if (!userData) {
+                    showNotification('❌ Usuario no encontrado', 'error');
+                    return;
+                }
+
+                const balance = userData.balance || 0;
+
+                if (balance < product.price) {
+                    showNotification(`❌ Saldo insuficiente. Necesitas $${product.price.toFixed(2)}`, 'error');
+                    return;
+                }
+
+                if (!confirm(`¿Comprar "${product.name}" por $${product.price.toFixed(2)}?`)) {
+                    return;
+                }
+
+                // Descontar saldo
+                userData.balance = balance - product.price;
+                localStorage.setItem('users', JSON.stringify(users));
+
+                // Descontar stock
+                const products = JSON.parse(localStorage.getItem('products_backup') || '[]');
+                const pIndex = products.findIndex(p => p.id === productId);
+                if (pIndex !== -1) {
+                    products[pIndex].stock -= 1;
+                    localStorage.setItem('products_backup', JSON.stringify(products));
+                }
+
+                if (window.productManager) {
+                    const pIdx = window.productManager.products.findIndex(p => p.id === productId);
+                    if (pIdx !== -1) {
+                        window.productManager.products[pIdx].stock -= 1;
+                    }
+                }
+
+                updateBalanceDisplay();
+                renderCardsTable(window.productManager?.getAllProducts() || []);
+
+                showNotification(`✅ ${product.name} comprada exitosamente`, 'success');
+            };
+
+            // =============================================
+            // ACTUALIZAR BALANCE
+            // =============================================
+            function updateBalanceDisplay() {
+                const user = localStorage.getItem('currentUser');
+                const balanceEl = document.getElementById('balanceAmount');
+
+                if (user) {
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const currentUser = JSON.parse(user);
+                    const userData = users.find(u => u.id === currentUser.id);
+                    const balance = userData?.balance || 1000;
+                    if (balanceEl) balanceEl.textContent = `$${balance.toFixed(2)}`;
+                } else {
+                    if (balanceEl) balanceEl.textContent = '$0.00';
+                }
+            }
+
+            // =============================================
+            // FILTROS
+            // =============================================
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.dataset.filter;
+                    let products = window.productManager?.getAllProducts() || [];
+
+                    if (filter === 'vbv') {
+                        products = products.filter(p => p.extra === 'VBV');
+                    } else if (filter === 'non-vbv') {
+                        products = products.filter(p => p.extra === 'Non-VBV');
+                    } else if (filter !== 'all') {
+                        products = products.filter(p => p.category === filter);
+                    }
+
+                    renderCardsTable(products);
+                });
+            });
+
+            // =============================================
+            // FILTROS DEL SIDEBAR
+            // =============================================
+            document.querySelectorAll('.sidebar-menu a[data-filter]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    document.querySelectorAll('.sidebar-menu a[data-filter]').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const filter = this.dataset.filter;
+                    let products = window.productManager?.getAllProducts() || [];
+
+                    if (filter === 'vbv') {
+                        products = products.filter(p => p.extra === 'VBV');
+                    } else if (filter === 'non-vbv') {
+                        products = products.filter(p => p.extra === 'Non-VBV');
+                    } else if (filter !== 'all') {
+                        products = products.filter(p => p.category === filter);
+                    }
+
+                    // Actualizar filtros chips también
+                    document.querySelectorAll('.filter-chip').forEach(c => {
+                        c.classList.toggle('active', c.dataset.filter === filter);
+                    });
+
+                    renderCardsTable(products);
+                });
+            });
+
+            // =============================================
+            // INICIALIZACIÓN
+            // =============================================
+            async function init() {
+                if (window.productManager) {
+                    await window.productManager.loadProducts();
+                    const products = window.productManager.getAllProducts();
+                    renderCardsTable(products);
+                }
+
+                updateBalanceDisplay();
+
+                const user = localStorage.getItem('currentUser');
+                if (user) {
+                    const currentUser = JSON.parse(user);
+                    document.getElementById('sidebarUserName').textContent = currentUser.username || 'Usuario';
+                    document.getElementById('sidebarUserEmail').textContent = currentUser.email || '';
+                    document.getElementById('sidebarAvatar').textContent = (currentUser.username || 'U')[0].toUpperCase();
+                    document.getElementById('topbarUserName').textContent = currentUser.username || 'Usuario';
+                    document.getElementById('topbarAvatar').textContent = (currentUser.username || 'U')[0].toUpperCase();
+                    document.getElementById('logoutBtn').style.display = 'flex';
+                } else {
+                    document.getElementById('sidebarUserName').textContent = 'Invitado';
+                    document.getElementById('sidebarUserEmail').textContent = 'Inicia sesión';
+                    document.getElementById('sidebarAvatar').textContent = 'I';
+                    document.getElementById('topbarUserName').textContent = 'Invitado';
+                    document.getElementById('topbarAvatar').textContent = 'I';
+                    document.getElementById('logoutBtn').style.display = 'none';
+                }
+            }
+
+            init();
+
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'users' || e.key === 'currentUser') {
+                    updateBalanceDisplay();
+                }
+            });
         });
     </script>
 
