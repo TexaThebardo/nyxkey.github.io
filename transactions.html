@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transacciones - CardNMR Store</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <a href="index.html">
+                    <i class="fas fa-credit-card"></i>
+                    CardNMR
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <div class="menu-label">Menú Principal</div>
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="shop.html"><i class="fas fa-store"></i> Tienda</a>
+                <a href="transactions.html" class="active"><i class="fas fa-exchange-alt"></i> Transacciones <span class="badge" id="transBadge">0</span></a>
+                <a href="#" onclick="openBuyBalance()"><i class="fas fa-wallet"></i> Comprar Saldo</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="sidebarAvatar">U</div>
+                    <div>
+                        <div class="user-name" id="sidebarUserName">Invitado</div>
+                        <div class="user-email" id="sidebarUserEmail">Inicia sesión</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                    <span class="page-title">📊 Transacciones</span>
+                </div>
+                <div class="topbar-right">
+                    <div class="balance-display">
+                        <i class="fas fa-wallet"></i>
+                        <div>
+                            <div class="balance-amount" id="balanceAmount">$0.00</div>
+                            <div class="balance-label">Saldo disponible</div>
+                        </div>
+                    </div>
+                    <div class="topbar-actions">
+                        <button class="user-btn" id="userMenuBtn">
+                            <div class="avatar" id="topbarAvatar">U</div>
+                            <span id="topbarUserName">Invitado</span>
+                        </button>
+                        <button id="logoutBtn" style="display:none;" title="Cerrar sesión"><i class="fas fa-sign-out-alt"></i></button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <div class="page-content">
+
+                <div class="catalog-header">
+                    <h2>📊 Historial de Transacciones</h2>
+                    <span class="catalog-count" id="transCount">0 transacciones</span>
+                </div>
+
+                <div class="cards-table-wrapper">
+                    <table class="cards-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Producto</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsBody">
+                            <tr><td colspan="5" style="text-align:center;padding:40px;color:#a0aec0;"><i class="fas fa-box-open fa-2x"></i><p>No hay transacciones aún</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL COMPRAR SALDO -->
+    <div id="buyBalanceModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#1a1a2e; border-radius:20px; padding:40px; max-width:500px; width:90%; border:1px solid rgba(255,255,255,0.1); max-height:90vh; overflow-y:auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="color:white;">💰 Comprar Saldo</h2>
+                <button onclick="closeBuyBalance()" style="background:none; border:none; color:#a0aec0; font-size:1.5rem; cursor:pointer;">✕</button>
+            </div>
+            <p style="color:#a0aec0; margin-bottom:20px;">Selecciona el método de pago para recargar tu saldo</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
+                <button onclick="selectPaymentMethod('stripe')" class="payment-method-btn" style="padding:15px; background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1); border-radius:12px; color:white; cursor:pointer; transition:all 0.3s;">
+                    <i class="fab fa-stripe" style="font-size:2rem; color:#635BFF;"></i>
+                    <div style="margin-top:5px; font-weight:600;">Stripe</div>
+                </button>
+                <button onclick="selectPaymentMethod('bitcoin')" class="payment-method-btn" style="padding:15px; background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1); border-radius:12px; color:white; cursor:pointer; transition:all 0.3s;">
+                    <i class="fab fa-bitcoin" style="font-size:2rem; color:#F7931A;"></i>
+                    <div style="margin-top:5px; font-weight:600;">Bitcoin</div>
+                </button>
+            </div>
+            <div style="margin-bottom:20px;">
+                <label style="color:#a0aec0; display:block; margin-bottom:5px;">Monto a recargar (USD)</label>
+                <input type="number" id="rechargeAmount" value="10" min="1" step="1" style="width:100%; padding:12px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; font-size:1rem;">
+            </div>
+            <div id="paymentDetails" style="margin-bottom:20px; display:none; background:rgba(0,0,0,0.2); padding:20px; border-radius:12px; text-align:center;"></div>
+            <button onclick="processRecharge()" class="btn-primary btn-block" style="width:100%; padding:14px; font-size:1rem;">
+                <i class="fas fa-wallet"></i> Recargar Saldo
+            </button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/loading.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        function renderTransactions() {
+            const tbody = document.getElementById('transactionsBody');
+            const count = document.getElementById('transCount');
+            const badge = document.getElementById('transBadge');
+
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const user = localStorage.getItem('currentUser');
+
+            let userOrders = [];
+            if (user) {
+                const currentUser = JSON.parse(user);
+                userOrders = orders.filter(o => o.user?.id === currentUser.id);
+            }
+
+            if (userOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:#a0aec0;"><i class="fas fa-box-open fa-2x"></i><p>No hay transacciones aún</p></td></tr>`;
+                if (count) count.textContent = '0 transacciones';
+                if (badge) badge.textContent = '0';
+                return;
+            }
+
+            tbody.innerHTML = userOrders.map(order => `
+                <tr>
+                    <td style="font-weight:600;color:#818cf8;">${order.id}</td>
+                    <td>${new Date(order.date).toLocaleDateString()} ${new Date(order.date).toLocaleTimeString()}</td>
+                    <td>${order.items.map(i => i.name).join(', ')}</td>
+                    <td class="price-cell">$${order.total.toFixed(2)}</td>
+                    <td><span class="badge-status completed">✅ Completado</span></td>
+                </tr>
+            `).join('');
+
+            if (count) count.textContent = `${userOrders.length} transacciones`;
+            if (badge) badge.textContent = userOrders.length;
+        }
+
+        function updateBalanceDisplay() {
+            const user = localStorage.getItem('currentUser');
+            const balanceEl = document.getElementById('balanceAmount');
+            if (user) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const currentUser = JSON.parse(user);
+                const userData = users.find(u => u.id === currentUser.id);
+                balanceEl.textContent = `$${(userData?.balance || 0).toFixed(2)}`;
+            } else {
+                balanceEl.textContent = '$0.00';
+            }
+        }
+
+        function updateUserInfo() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                const currentUser = JSON.parse(user);
+                document.getElementById('sidebarUserName').textContent = currentUser.username || 'Usuario';
+                document.getElementById('sidebarUserEmail').textContent = currentUser.email || '';
+                document.getElementById('sidebarAvatar').textContent = (currentUser.username || 'U')[0].toUpperCase();
+                document.getElementById('topbarUserName').textContent = currentUser.username || 'Usuario';
+                document.getElementById('topbarAvatar').textContent = (currentUser.username || 'U')[0].toUpperCase();
+                document.getElementById('logoutBtn').style.display = 'flex';
+            } else {
+                document.getElementById('sidebarUserName').textContent = 'Invitado';
+                document.getElementById('sidebarUserEmail').textContent = 'Inicia sesión';
+                document.getElementById('sidebarAvatar').textContent = 'I';
+                document.getElementById('topbarUserName').textContent = 'Invitado';
+                document.getElementById('topbarAvatar').textContent = 'I';
+                document.getElementById('logoutBtn').style.display = 'none';
+            }
+        }
+
+        function init() {
+            renderTransactions();
+            updateBalanceDisplay();
+            updateUserInfo();
+        }
+
+        init();
+
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'orders' || e.key === 'users' || e.key === 'currentUser') {
+                renderTransactions();
+                updateBalanceDisplay();
+            }
+        });
+    });
+
+    // =============================================
+    // COMPRAR SALDO (misma función)
+    // =============================================
+    let selectedPaymentMethod = null;
+
+    function openBuyBalance() {
+        document.getElementById('buyBalanceModal').style.display = 'flex';
+        document.getElementById('paymentDetails').style.display = 'none';
+        selectedPaymentMethod = null;
+        document.querySelectorAll('.payment-method-btn').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.1)');
+    }
+
+    function closeBuyBalance() {
+        document.getElementById('buyBalanceModal').style.display = 'none';
+    }
+
+    function selectPaymentMethod(method) {
+        selectedPaymentMethod = method;
+        document.querySelectorAll('.payment-method-btn').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.1)');
+
+        if (method === 'stripe') {
+            document.querySelector('.payment-method-btn:first-child').style.borderColor = '#635BFF';
+        } else if (method === 'bitcoin') {
+            document.querySelector('.payment-method-btn:last-child').style.borderColor = '#F7931A';
+        }
+
+        const details = document.getElementById('paymentDetails');
+        details.style.display = 'block';
+        const amount = document.getElementById('rechargeAmount').value || 10;
+
+        if (method === 'stripe') {
+            details.innerHTML = `
+                <i class="fab fa-stripe" style="font-size:3rem; color:#635BFF;"></i>
+                <p style="color:white; margin-top:10px;">Pago con Stripe</p>
+                <p style="color:#a0aec0; font-size:0.9rem;">Serás redirigido a Stripe para completar el pago</p>
+                <div style="margin-top:15px; padding:15px; background:rgba(0,0,0,0.2); border-radius:8px;">
+                    <p style="color:#a0aec0; font-size:0.8rem;">💰 Monto: $${amount}</p>
+                </div>
+            `;
+        } else if (method === 'bitcoin') {
+            const btcAmount = (parseFloat(amount) / 65000).toFixed(8);
+            const address = '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa';
+            details.innerHTML = `
+                <i class="fab fa-bitcoin" style="font-size:3rem; color:#F7931A;"></i>
+                <p style="color:white; margin-top:10px;">Pago con Bitcoin</p>
+                <div style="margin-top:15px; padding:15px; background:rgba(0,0,0,0.2); border-radius:8px;">
+                    <p style="color:#a0aec0; font-size:0.8rem;">💰 Monto: $${amount} USD</p>
+                    <p style="color:#a0aec0; font-size:0.8rem;">₿ Cantidad: ${btcAmount} BTC</p>
+                    <div style="margin-top:10px; background:rgba(0,0,0,0.3); padding:10px; border-radius:6px;">
+                        <code style="color:#F7931A; word-break:break-all;">${address}</code>
+                    </div>
+                    <p style="color:#a0aec0; font-size:0.7rem; margin-top:5px;">Escanea el QR o copia la dirección</p>
+                </div>
+            `;
+        }
+
+        document.getElementById('rechargeAmount').addEventListener('input', function() {
+            selectPaymentMethod(method);
+        });
+    }
+
+    function processRecharge() {
+        if (!selectedPaymentMethod) {
+            showNotification('❌ Selecciona un método de pago', 'error');
+            return;
+        }
+
+        const amount = parseFloat(document.getElementById('rechargeAmount').value || 10);
+        if (amount <= 0) {
+            showNotification('❌ Ingresa un monto válido', 'error');
+            return;
+        }
+
+        const user = localStorage.getItem('currentUser');
+        if (!user) {
+            showNotification('⚠️ Inicia sesión para recargar', 'warning');
+            setTimeout(() => window.location.href = 'login.html', 1500);
+            return;
+        }
+
+        showNotification(`⏳ Procesando pago de $${amount}...`, 'info');
+
+        setTimeout(() => {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const currentUser = JSON.parse(user);
+            const userData = users.find(u => u.id === currentUser.id);
+
+            if (userData) {
+                userData.balance = (userData.balance || 0) + amount;
+                localStorage.setItem('users', JSON.stringify(users));
+
+                const updatedUser = JSON.parse(localStorage.getItem('currentUser'));
+                updatedUser.balance = userData.balance;
+                localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+                const balanceEl = document.getElementById('balanceAmount');
+                if (balanceEl) balanceEl.textContent = `$${userData.balance.toFixed(2)}`;
+
+                closeBuyBalance();
+                showNotification(`✅ Saldo recargado exitosamente. Nuevo saldo: $${userData.balance.toFixed(2)}`, 'success');
+            }
+        }, 2000);
+    }
+
+    window.openBuyBalance = openBuyBalance;
+    window.closeBuyBalance = closeBuyBalance;
+    window.selectPaymentMethod = selectPaymentMethod;
+    window.processRecharge = processRecharge;
+    </script>
+
+</body>
+</html>
