@@ -34,6 +34,8 @@
                 <a href="#" data-filter="premium"><i class="fas fa-crown"></i> Premium</a>
                 <a href="#" data-filter="elite"><i class="fas fa-star"></i> Elite</a>
                 <a href="#" data-filter="standard"><i class="fas fa-gem"></i> Standard</a>
+                <div class="menu-label" style="margin-top:20px;">Cuenta</div>
+                <a href="profile.html"><i class="fas fa-user"></i> Mi Perfil</a>
             </nav>
             <div class="sidebar-footer">
                 <div class="user-info">
@@ -128,7 +130,6 @@
                 <button onclick="closeBuyBalance()" style="background:none; border:none; color:#a0aec0; font-size:1.5rem; cursor:pointer;">✕</button>
             </div>
             <p style="color:#a0aec0; margin-bottom:20px;">Selecciona el método de pago para recargar tu saldo</p>
-
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
                 <button onclick="selectPaymentMethod('stripe')" class="payment-method-btn" style="padding:15px; background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1); border-radius:12px; color:white; cursor:pointer; transition:all 0.3s;">
                     <i class="fab fa-stripe" style="font-size:2rem; color:#635BFF;"></i>
@@ -139,14 +140,11 @@
                     <div style="margin-top:5px; font-weight:600;">Bitcoin</div>
                 </button>
             </div>
-
             <div style="margin-bottom:20px;">
                 <label style="color:#a0aec0; display:block; margin-bottom:5px;">Monto a recargar (USD)</label>
                 <input type="number" id="rechargeAmount" value="10" min="1" step="1" style="width:100%; padding:12px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; font-size:1rem;">
             </div>
-
             <div id="paymentDetails" style="margin-bottom:20px; display:none; background:rgba(0,0,0,0.2); padding:20px; border-radius:12px; text-align:center;"></div>
-
             <button onclick="processRecharge()" class="btn-primary btn-block" style="width:100%; padding:14px; font-size:1rem;">
                 <i class="fas fa-wallet"></i> Recargar Saldo
             </button>
@@ -161,6 +159,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Toggle sidebar
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
@@ -173,6 +172,7 @@
         menuToggle.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
 
+        // Función para renderizar tabla
         function renderCardsTable(products) {
             const tbody = document.getElementById('cardsTableBody');
             const count = document.getElementById('catalogCount');
@@ -208,6 +208,7 @@
             if (count) count.textContent = `Mostrando ${products.length} de ${products.length} items`;
         }
 
+        // Comprar con saldo
         window.buyWithBalance = function(productId) {
             const user = localStorage.getItem('currentUser');
             if (!user) {
@@ -236,6 +237,12 @@
             userData.balance = balance - product.price;
             localStorage.setItem('users', JSON.stringify(users));
 
+            // Actualizar currentUser
+            const updatedUser = JSON.parse(localStorage.getItem('currentUser'));
+            updatedUser.balance = userData.balance;
+            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+            // Descontar stock
             const products = JSON.parse(localStorage.getItem('products_backup') || '[]');
             const pIndex = products.findIndex(p => p.id === productId);
             if (pIndex !== -1) { products[pIndex].stock -= 1; localStorage.setItem('products_backup', JSON.stringify(products)); }
@@ -244,24 +251,15 @@
                 if (pIdx !== -1) window.productManager.products[pIdx].stock -= 1;
             }
 
-            updateBalanceDisplay();
+            // Actualizar UI de balance
+            const balanceEl = document.getElementById('balanceAmount');
+            if (balanceEl) balanceEl.textContent = `$${userData.balance.toFixed(2)}`;
+
             renderCardsTable(window.productManager?.getAllProducts() || []);
             showNotification(`✅ ${product.name} comprada exitosamente`, 'success');
         };
 
-        function updateBalanceDisplay() {
-            const user = localStorage.getItem('currentUser');
-            const balanceEl = document.getElementById('balanceAmount');
-            if (user) {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const currentUser = JSON.parse(user);
-                const userData = users.find(u => u.id === currentUser.id);
-                balanceEl.textContent = `$${(userData?.balance || 0).toFixed(2)}`;
-            } else {
-                balanceEl.textContent = '$0.00';
-            }
-        }
-
+        // Filtros
         document.querySelectorAll('.filter-chip').forEach(chip => {
             chip.addEventListener('click', function() {
                 document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
@@ -296,13 +294,21 @@
             });
         });
 
+        // Inicializar
         async function init() {
             if (window.productManager) {
                 await window.productManager.loadProducts();
                 renderCardsTable(window.productManager.getAllProducts());
             }
-            updateBalanceDisplay();
 
+            // Actualizar UI de autenticación
+            if (window.authManager) {
+                authManager.updateUI();
+                authManager.updateSidebarUI();
+                authManager.updateBalanceDisplay();
+            }
+
+            // Si hay usuario, actualizar el sidebar
             const user = localStorage.getItem('currentUser');
             if (user) {
                 const currentUser = JSON.parse(user);
@@ -323,8 +329,15 @@
         }
 
         init();
+
+        // Escuchar cambios en localStorage
         window.addEventListener('storage', function(e) {
-            if (e.key === 'users' || e.key === 'currentUser') updateBalanceDisplay();
+            if (e.key === 'users' || e.key === 'currentUser') {
+                if (window.authManager) {
+                    authManager.updateBalanceDisplay();
+                    authManager.updateSidebarUI();
+                }
+            }
         });
     });
 
@@ -385,7 +398,6 @@
         }
 
         document.getElementById('rechargeAmount').addEventListener('input', function() {
-            const val = this.value || 0;
             selectPaymentMethod(method);
         });
     }
@@ -417,18 +429,20 @@
             const userData = users.find(u => u.id === currentUser.id);
 
             if (userData) {
-                userData.balance = (userData.balance || 0) + amount;
+                const newBalance = (userData.balance || 0) + amount;
+                userData.balance = newBalance;
                 localStorage.setItem('users', JSON.stringify(users));
 
                 const updatedUser = JSON.parse(localStorage.getItem('currentUser'));
-                updatedUser.balance = userData.balance;
+                updatedUser.balance = newBalance;
                 localStorage.setItem('currentUser', JSON.stringify(updatedUser));
 
+                // Actualizar balance en topbar
                 const balanceEl = document.getElementById('balanceAmount');
-                if (balanceEl) balanceEl.textContent = `$${userData.balance.toFixed(2)}`;
+                if (balanceEl) balanceEl.textContent = `$${newBalance.toFixed(2)}`;
 
                 closeBuyBalance();
-                showNotification(`✅ Saldo recargado exitosamente. Nuevo saldo: $${userData.balance.toFixed(2)}`, 'success');
+                showNotification(`✅ Saldo recargado exitosamente. Nuevo saldo: $${newBalance.toFixed(2)}`, 'success');
             }
         }, 2000);
     }
