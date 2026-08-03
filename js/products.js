@@ -33,7 +33,45 @@ class ProductsManager {
                     console.error('Error parsing local data:', e);
                 }
             }
-            this.products = [];
+            // Productos por defecto
+            this.products = [
+                {
+                    id: 'card_001',
+                    name: 'Visa Gold Premium',
+                    bin: '414728',
+                    database: 'DB_July_2026',
+                    class: 'CREDIT',
+                    level: 'PLATINUM',
+                    bank: 'JPMORGAN CHASE',
+                    country: 'UNITED STATES',
+                    type: 'CC Full',
+                    service: 'Multifuncional',
+                    extra: 'NON',
+                    price: 28.58,
+                    stock: 5,
+                    card_type: 'Visa',
+                    category: 'premium',
+                    rating: 4.8
+                },
+                {
+                    id: 'card_002',
+                    name: 'Mastercard Black Elite',
+                    bin: '521894',
+                    database: 'DB_July_2026',
+                    class: 'CREDIT',
+                    level: 'TITANIUM',
+                    bank: 'CAPITAL ONE BANK',
+                    country: 'UNITED STATES',
+                    type: 'Non',
+                    service: 'VBV',
+                    extra: 'Non-VBV',
+                    price: 48.58,
+                    stock: 3,
+                    card_type: 'Mastercard',
+                    category: 'elite',
+                    rating: 4.9
+                }
+            ];
             return this.products;
         } finally {
             this.loading = false;
