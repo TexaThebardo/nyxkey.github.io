@@ -1,4 +1,4 @@
-// 🔐 AUTENTICACIÓN SIMPLE (sin nombre completo)
+// 🔐 AUTENTICACIÓN
 
 class SimpleAuthManager {
     constructor() {
@@ -18,45 +18,26 @@ class SimpleAuthManager {
         this.updateUI();
     }
 
-    // Registrar usuario (sin nombre completo)
     register(email, password, username) {
         try {
             if (!email || !password || !username) {
-                return { 
-                    success: false, 
-                    error: 'Todos los campos son obligatorios' 
-                };
+                return { success: false, error: 'Todos los campos son obligatorios' };
             }
-
             if (password.length < 6) {
-                return { 
-                    success: false, 
-                    error: 'La contraseña debe tener al menos 6 caracteres' 
-                };
+                return { success: false, error: 'La contraseña debe tener al menos 6 caracteres' };
             }
 
             let users = [];
             try {
                 const stored = localStorage.getItem('users');
-                if (stored) {
-                    users = JSON.parse(stored);
-                }
-            } catch (e) {
-                users = [];
-            }
+                if (stored) users = JSON.parse(stored);
+            } catch (e) { users = []; }
 
             if (users.find(u => u.email === email)) {
-                return { 
-                    success: false, 
-                    error: 'El email ya está registrado' 
-                };
+                return { success: false, error: 'El email ya está registrado' };
             }
-
             if (users.find(u => u.username === username)) {
-                return { 
-                    success: false, 
-                    error: 'El nombre de usuario ya está en uso' 
-                };
+                return { success: false, error: 'El nombre de usuario ya está en uso' };
             }
 
             const newUser = {
@@ -64,6 +45,7 @@ class SimpleAuthManager {
                 email: email,
                 password: password,
                 username: username,
+                balance: 1000, // Saldo inicial de $1000 para pruebas
                 role: email === 'admin@cardnmr.com' ? 'admin' : 'user',
                 created_at: new Date().toISOString()
             };
@@ -75,73 +57,51 @@ class SimpleAuthManager {
                 id: newUser.id,
                 email: newUser.email,
                 username: newUser.username,
+                balance: newUser.balance,
                 role: newUser.role
             };
 
             localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
             this.updateUI();
 
-            return { 
-                success: true, 
-                user: this.currentUser,
-                message: '¡Registro exitoso!'
-            };
+            return { success: true, user: this.currentUser, message: '¡Registro exitoso!' };
         } catch (error) {
             console.error('Error en registro:', error);
-            return { 
-                success: false, 
-                error: error.message || 'Error al registrar usuario'
-            };
+            return { success: false, error: error.message || 'Error al registrar usuario' };
         }
     }
 
-    // Iniciar sesión
     login(email, password) {
         try {
             let users = [];
             try {
                 const stored = localStorage.getItem('users');
-                if (stored) {
-                    users = JSON.parse(stored);
-                }
-            } catch (e) {
-                users = [];
-            }
+                if (stored) users = JSON.parse(stored);
+            } catch (e) { users = []; }
 
             const user = users.find(u => u.email === email && u.password === password);
-
             if (!user) {
-                return { 
-                    success: false, 
-                    error: 'Email o contraseña incorrectos' 
-                };
+                return { success: false, error: 'Email o contraseña incorrectos' };
             }
 
             this.currentUser = {
                 id: user.id,
                 email: user.email,
                 username: user.username,
+                balance: user.balance || 0,
                 role: user.role || 'user'
             };
 
             localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
             this.updateUI();
 
-            return { 
-                success: true, 
-                user: this.currentUser,
-                message: '¡Bienvenido!'
-            };
+            return { success: true, user: this.currentUser, message: '¡Bienvenido!' };
         } catch (error) {
             console.error('Error en login:', error);
-            return { 
-                success: false, 
-                error: error.message || 'Error al iniciar sesión'
-            };
+            return { success: false, error: error.message || 'Error al iniciar sesión' };
         }
     }
 
-    // Cerrar sesión
     logout() {
         this.currentUser = null;
         localStorage.removeItem('currentUser');
@@ -149,7 +109,6 @@ class SimpleAuthManager {
         window.location.href = 'index.html';
     }
 
-    // Obtener usuario actual
     getCurrentUser() {
         return this.currentUser;
     }
@@ -171,16 +130,11 @@ class SimpleAuthManager {
         if (existingAdminLink) existingAdminLink.remove();
 
         if (this.currentUser) {
-            if (authButtons) {
-                authButtons.style.display = 'none';
-            }
+            if (authButtons) authButtons.style.display = 'none';
             if (userMenu) {
                 userMenu.style.display = 'flex';
-                if (userName) {
-                    userName.textContent = this.currentUser.username;
-                }
+                if (userName) userName.textContent = this.currentUser.username;
             }
-            
             if (this.isAdmin()) {
                 const navLinks = document.querySelector('.nav-links');
                 if (navLinks) {
@@ -192,17 +146,14 @@ class SimpleAuthManager {
                 }
             }
         } else {
-            if (authButtons) {
-                authButtons.style.display = 'flex';
-            }
-            if (userMenu) {
-                userMenu.style.display = 'none';
-            }
+            if (authButtons) authButtons.style.display = 'flex';
+            if (userMenu) userMenu.style.display = 'none';
         }
     }
 }
 
 const authManager = new SimpleAuthManager();
+window.authManager = authManager;
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
@@ -211,31 +162,21 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-            
             if (!email || !password) {
                 if (typeof showNotification === 'function') {
                     showNotification('❌ Completa todos los campos', 'error');
-                } else {
-                    alert('❌ Completa todos los campos');
                 }
                 return;
             }
-            
             const result = authManager.login(email, password);
             if (result.success) {
                 if (typeof showNotification === 'function') {
                     showNotification('✅ ' + result.message, 'success');
-                } else {
-                    alert('✅ ' + result.message);
                 }
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1000);
+                setTimeout(() => window.location.href = 'index.html', 1000);
             } else {
                 if (typeof showNotification === 'function') {
                     showNotification('❌ ' + result.error, 'error');
-                } else {
-                    alert('❌ ' + result.error);
                 }
             }
         });
@@ -245,52 +186,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
             const email = document.getElementById('registerEmail').value.trim();
             const password = document.getElementById('registerPassword').value.trim();
             const username = document.getElementById('registerUsername').value.trim();
-            
             if (!email || !password || !username) {
                 if (typeof showNotification === 'function') {
                     showNotification('❌ Completa todos los campos', 'error');
-                } else {
-                    alert('❌ Completa todos los campos');
                 }
                 return;
             }
-            
-            if (password.length < 6) {
-                if (typeof showNotification === 'function') {
-                    showNotification('❌ La contraseña debe tener al menos 6 caracteres', 'error');
-                } else {
-                    alert('❌ La contraseña debe tener al menos 6 caracteres');
-                }
-                return;
-            }
-            
             const result = authManager.register(email, password, username);
-            
             if (result.success) {
                 if (typeof showNotification === 'function') {
                     showNotification('✅ ' + result.message, 'success');
-                } else {
-                    alert('✅ ' + result.message);
                 }
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
+                setTimeout(() => window.location.href = 'index.html', 1500);
             } else {
                 if (typeof showNotification === 'function') {
                     showNotification('❌ ' + result.error, 'error');
-                } else {
-                    alert('❌ ' + result.error);
                 }
             }
         });
     }
 });
 
-window.authManager = authManager;
 window.logout = function() {
     authManager.logout();
 };
