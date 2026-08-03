@@ -3,25 +3,18 @@
 function showNotification(message, type = 'success') {
     const existingToasts = document.querySelectorAll('.toast-modern');
     existingToasts.forEach(toast => toast.remove());
-    
+
     const toast = document.createElement('div');
     toast.className = `toast-modern toast-${type}`;
-    
-    const icons = {
-        success: 'check_circle',
-        error: 'error',
-        info: 'info',
-        warning: 'warning'
-    };
-    
+
+    const icons = { success: 'check_circle', error: 'error', info: 'info', warning: 'warning' };
+
     toast.innerHTML = `
         <span class="toast-icon material-icons">${icons[type] || icons.info}</span>
         <span class="toast-message">${message}</span>
-        <button class="toast-close" onclick="this.parentElement.remove()">
-            <span class="material-icons">close</span>
-        </button>
+        <button class="toast-close" onclick="this.parentElement.remove()"><span class="material-icons">close</span></button>
     `;
-    
+
     document.body.appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 10);
     setTimeout(() => {
@@ -44,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cartManager.loadCart();
         cartManager.updateUI();
     }
-    
+
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
