@@ -4,31 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CardNMR Store - Tienda de Tarjetas</title>
-    
-    <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 
-    <!-- ============================================= -->
-    <!-- OVERLAY PARA MÓVIL -->
-    <!-- ============================================= -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="app-layout">
 
-        <!-- ============================================= -->
-        <!-- SIDEBAR - MENÚ LATERAL -->
-        <!-- ============================================= -->
+        <!-- SIDEBAR -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <a href="index.html">
@@ -36,32 +23,18 @@
                     CardNMR
                 </a>
             </div>
-
             <nav class="sidebar-menu">
                 <div class="menu-label">Menú Principal</div>
-                <a href="index.html" class="active">
-                    <i class="fas fa-home"></i> Home
-                </a>
-                <a href="shop.html">
-                    <i class="fas fa-store"></i> Tienda
-                </a>
-                <a href="#">
-                    <i class="fas fa-exchange-alt"></i> Transacciones
-                    <span class="badge">12</span>
-                </a>
-                <a href="#">
-                    <i class="fas fa-wallet"></i> Comprar Saldo
-                </a>
-
-                <div class="menu-label" style="margin-top: 20px;">Categorías</div>
+                <a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
+                <a href="shop.html"><i class="fas fa-store"></i> Tienda</a>
+                <a href="#"><i class="fas fa-exchange-alt"></i> Transacciones <span class="badge">12</span></a>
+                <a href="#"><i class="fas fa-wallet"></i> Comprar Saldo</a>
+                <div class="menu-label" style="margin-top:20px;">Categorías</div>
                 <a href="#" data-filter="all" class="active"><i class="fas fa-tag"></i> Todas</a>
                 <a href="#" data-filter="premium"><i class="fas fa-crown"></i> Premium</a>
                 <a href="#" data-filter="elite"><i class="fas fa-star"></i> Elite</a>
                 <a href="#" data-filter="standard"><i class="fas fa-gem"></i> Standard</a>
-                <a href="#" data-filter="vbv"><i class="fas fa-shield-alt"></i> VBV</a>
-                <a href="#" data-filter="non-vbv"><i class="fas fa-shield-alt"></i> Non-VBV</a>
             </nav>
-
             <div class="sidebar-footer">
                 <div class="user-info">
                     <div class="user-avatar" id="sidebarAvatar">U</div>
@@ -73,24 +46,16 @@
             </div>
         </aside>
 
-        <!-- ============================================= -->
-        <!-- CONTENIDO PRINCIPAL -->
-        <!-- ============================================= -->
+        <!-- MAIN CONTENT -->
         <main class="main-content">
 
-            <!-- ============================================= -->
             <!-- TOPBAR -->
-            <!-- ============================================= -->
             <header class="topbar">
                 <div class="topbar-left">
-                    <button class="menu-toggle" id="menuToggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <span class="page-title" id="pageTitle">📊 Catálogo Disponible</span>
+                    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                    <span class="page-title">📊 Catálogo Disponible</span>
                 </div>
-
                 <div class="topbar-right">
-                    <!-- Balance -->
                     <div class="balance-display">
                         <i class="fas fa-wallet"></i>
                         <div>
@@ -98,35 +63,25 @@
                             <div class="balance-label">Saldo disponible</div>
                         </div>
                     </div>
-
                     <div class="topbar-actions">
-                        <button title="Notificaciones">
-                            <i class="fas fa-bell"></i>
-                            <span class="notification-dot"></span>
-                        </button>
+                        <button title="Notificaciones"><i class="fas fa-bell"></i><span class="notification-dot"></span></button>
                         <button class="user-btn" id="userMenuBtn">
                             <div class="avatar" id="topbarAvatar">U</div>
                             <span id="topbarUserName">Invitado</span>
                         </button>
-                        <button id="logoutBtn" style="display:none;" title="Cerrar sesión">
-                            <i class="fas fa-sign-out-alt"></i>
-                        </button>
+                        <button id="logoutBtn" style="display:none;" title="Cerrar sesión"><i class="fas fa-sign-out-alt"></i></button>
                     </div>
                 </div>
             </header>
 
-            <!-- ============================================= -->
             <!-- PAGE CONTENT -->
-            <!-- ============================================= -->
             <div class="page-content">
 
-                <!-- Catálogo Header -->
                 <div class="catalog-header">
                     <h2>📋 Catálogo Disponible</h2>
                     <span class="catalog-count" id="catalogCount">Mostrando 0 de 0 items</span>
                 </div>
 
-                <!-- Filtros -->
                 <div class="catalog-filters">
                     <button class="filter-chip active" data-filter="all">Todos</button>
                     <button class="filter-chip" data-filter="premium">Premium</button>
@@ -136,9 +91,8 @@
                     <button class="filter-chip" data-filter="non-vbv">Non-VBV</button>
                 </div>
 
-                <!-- Tabla de Tarjetas -->
                 <div class="cards-table-wrapper">
-                    <table class="cards-table" id="cardsTable">
+                    <table class="cards-table">
                         <thead>
                             <tr>
                                 <th>NETWORK</th>
@@ -156,7 +110,7 @@
                             </tr>
                         </thead>
                         <tbody id="cardsTableBody">
-                            <!-- Los productos se cargan desde JS -->
+                            <tr><td colspan="12" style="text-align:center;padding:40px;color:#a0aec0;"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Cargando productos...</p></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -166,9 +120,6 @@
         </main>
     </div>
 
-    <!-- ============================================= -->
-    <!-- SCRIPTS -->
-    <!-- ============================================= -->
     <script src="js/app.js"></script>
     <script src="js/products.js"></script>
     <script src="js/cart.js"></script>
@@ -176,277 +127,180 @@
     <script src="js/loading.js"></script>
 
     <script>
-        // =============================================
-        // TOGGLE SIDEBAR EN MÓVIL
-        // =============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuToggle = document.getElementById('menuToggle');
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle sidebar
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
 
-            function toggleSidebar() {
-                sidebar.classList.toggle('open');
-                overlay.classList.toggle('show');
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // Renderizar tabla
+        function renderCardsTable(products) {
+            const tbody = document.getElementById('cardsTableBody');
+            const count = document.getElementById('catalogCount');
+
+            if (!tbody) return;
+            if (!products || products.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:40px;color:#a0aec0;"><i class="fas fa-box-open fa-2x"></i><p>No hay tarjetas disponibles</p></td></tr>`;
+                if (count) count.textContent = 'Mostrando 0 de 0 items';
+                return;
             }
 
-            menuToggle.addEventListener('click', toggleSidebar);
-            overlay.addEventListener('click', toggleSidebar);
+            tbody.innerHTML = products.map(p => `
+                <tr>
+                    <td><span class="badge-status ${p.card_type?.toLowerCase() || 'non'}">${p.card_type || 'N/A'}</span></td>
+                    <td class="bin-cell">${p.bin || p.card_number?.slice(0,6) || 'N/A'}</td>
+                    <td>${p.database || 'DB_July_2026'}</td>
+                    <td>${p.class || 'CREDIT'}</td>
+                    <td>${p.level || p.card_type || 'N/A'}</td>
+                    <td>${p.bank || 'N/A'}</td>
+                    <td>${p.country || 'UNITED STATES'}</td>
+                    <td><span class="badge-status ${p.type?.toLowerCase() === 'cc full' ? 'msc' : 'non'}">${p.type || 'CC Full'}</span></td>
+                    <td><span class="badge-status ${p.service === 'Multifuncional' ? 'msc' : 'non'}">${p.service || 'Multifuncional'}</span></td>
+                    <td><span class="badge-status ${p.extra?.toLowerCase() === 'vbv' ? 'vbv' : p.extra?.toLowerCase() === 'non-vbv' ? 'non-vbv' : 'non'}">${p.extra || 'NON'}</span></td>
+                    <td class="price-cell">$${p.price.toFixed(2)}</td>
+                    <td>
+                        <button class="btn-add-card" onclick="window.buyWithBalance('${p.id}')" ${p.stock <= 0 ? 'disabled' : ''}>
+                            <i class="fas fa-shopping-cart"></i> ${p.stock > 0 ? 'Agregar' : 'Agotado'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
 
-            // Cerrar sidebar al hacer clic en un enlace (móvil)
-            document.querySelectorAll('.sidebar-menu a').forEach(link => {
-                link.addEventListener('click', function() {
-                    if (window.innerWidth <= 992) {
-                        sidebar.classList.remove('open');
-                        overlay.classList.remove('show');
-                    }
-                });
-            });
+            if (count) count.textContent = `Mostrando ${products.length} de ${products.length} items`;
+        }
 
-            // =============================================
-            // RENDERIZAR TARJETAS EN TABLA
-            // =============================================
-            function renderCardsTable(products) {
-                const tbody = document.getElementById('cardsTableBody');
-                const count = document.getElementById('catalogCount');
-
-                if (!tbody) return;
-
-                if (!products || products.length === 0) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="12" style="text-align: center; padding: 40px; color: #a0aec0;">
-                                <i class="fas fa-box-open fa-2x" style="display: block; margin-bottom: 10px; color: #4f46e5;"></i>
-                                No hay tarjetas disponibles
-                            </td>
-                        </tr>
-                    `;
-                    if (count) count.textContent = 'Mostrando 0 de 0 items';
-                    return;
-                }
-
-                tbody.innerHTML = products.map(product => `
-                    <tr>
-                        <td>
-                            <span class="badge-status ${product.card_type?.toLowerCase() || 'non'}">
-                                ${product.card_type || 'N/A'}
-                            </span>
-                        </td>
-                        <td class="bin-cell">${product.bin || product.card_number?.slice(0, 6) || 'N/A'}</td>
-                        <td>${product.database || 'DB_July_2026'}</td>
-                        <td>${product.class || 'CREDIT'}</td>
-                        <td>${product.level || product.card_type || 'N/A'}</td>
-                        <td>${product.bank || 'N/A'}</td>
-                        <td>${product.country || 'UNITED STATES'}</td>
-                        <td>
-                            <span class="badge-status ${product.type?.toLowerCase() === 'cc full' ? 'msc' : 'non'}">
-                                ${product.type || 'CC Full'}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge-status ${product.service === 'Multifuncional' ? 'msc' : 'non'}">
-                                ${product.service || 'Multifuncional'}
-                            </span>
-                        </td>
-                        <td>
-                            <span class="badge-status ${product.extra?.toLowerCase() === 'vbv' ? 'vbv' : product.extra?.toLowerCase() === 'non-vbv' ? 'non-vbv' : 'non'}">
-                                ${product.extra || 'NON'}
-                            </span>
-                        </td>
-                        <td class="price-cell">$${product.price.toFixed(2)}</td>
-                        <td>
-                            <button class="btn-add-card" 
-                                    onclick="window.buyWithBalance('${product.id}')"
-                                    ${product.stock <= 0 ? 'disabled' : ''}>
-                                <i class="fas fa-shopping-cart"></i>
-                                ${product.stock > 0 ? 'Agregar' : 'Agotado'}
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-
-                if (count) {
-                    count.textContent = `Mostrando ${products.length} de ${products.length} items`;
-                }
+        // Comprar con saldo
+        window.buyWithBalance = function(productId) {
+            const user = localStorage.getItem('currentUser');
+            if (!user) {
+                showNotification('⚠️ Inicia sesión para comprar', 'warning');
+                setTimeout(() => window.location.href = 'login.html', 1500);
+                return;
             }
 
-            // =============================================
-            // COMPRAR CON SALDO
-            // =============================================
-            window.buyWithBalance = function(productId) {
-                const user = localStorage.getItem('currentUser');
-                if (!user) {
-                    showNotification('⚠️ Inicia sesión para comprar', 'warning');
-                    setTimeout(() => window.location.href = 'login.html', 1500);
-                    return;
-                }
+            const product = window.productManager?.getProductById(productId);
+            if (!product) { showNotification('❌ Producto no encontrado', 'error'); return; }
+            if (product.stock <= 0) { showNotification('❌ Producto agotado', 'error'); return; }
 
-                const product = window.productManager?.getProductById(productId);
-                if (!product) {
-                    showNotification('❌ Producto no encontrado', 'error');
-                    return;
-                }
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const currentUser = JSON.parse(user);
+            const userData = users.find(u => u.id === currentUser.id);
+            if (!userData) { showNotification('❌ Usuario no encontrado', 'error'); return; }
 
-                if (product.stock <= 0) {
-                    showNotification('❌ Producto agotado', 'error');
-                    return;
-                }
+            const balance = userData.balance || 0;
+            if (balance < product.price) {
+                showNotification(`❌ Saldo insuficiente. Necesitas $${product.price.toFixed(2)}`, 'error');
+                return;
+            }
 
-                // Obtener saldo del usuario
+            if (!confirm(`¿Comprar "${product.name}" por $${product.price.toFixed(2)}?`)) return;
+
+            userData.balance = balance - product.price;
+            localStorage.setItem('users', JSON.stringify(users));
+
+            const products = JSON.parse(localStorage.getItem('products_backup') || '[]');
+            const pIndex = products.findIndex(p => p.id === productId);
+            if (pIndex !== -1) { products[pIndex].stock -= 1; localStorage.setItem('products_backup', JSON.stringify(products)); }
+            if (window.productManager) {
+                const pIdx = window.productManager.products.findIndex(p => p.id === productId);
+                if (pIdx !== -1) window.productManager.products[pIdx].stock -= 1;
+            }
+
+            updateBalanceDisplay();
+            renderCardsTable(window.productManager?.getAllProducts() || []);
+            showNotification(`✅ ${product.name} comprada exitosamente`, 'success');
+        };
+
+        function updateBalanceDisplay() {
+            const user = localStorage.getItem('currentUser');
+            const balanceEl = document.getElementById('balanceAmount');
+            if (user) {
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
                 const currentUser = JSON.parse(user);
                 const userData = users.find(u => u.id === currentUser.id);
-
-                if (!userData) {
-                    showNotification('❌ Usuario no encontrado', 'error');
-                    return;
-                }
-
-                const balance = userData.balance || 0;
-
-                if (balance < product.price) {
-                    showNotification(`❌ Saldo insuficiente. Necesitas $${product.price.toFixed(2)}`, 'error');
-                    return;
-                }
-
-                if (!confirm(`¿Comprar "${product.name}" por $${product.price.toFixed(2)}?`)) {
-                    return;
-                }
-
-                // Descontar saldo
-                userData.balance = balance - product.price;
-                localStorage.setItem('users', JSON.stringify(users));
-
-                // Descontar stock
-                const products = JSON.parse(localStorage.getItem('products_backup') || '[]');
-                const pIndex = products.findIndex(p => p.id === productId);
-                if (pIndex !== -1) {
-                    products[pIndex].stock -= 1;
-                    localStorage.setItem('products_backup', JSON.stringify(products));
-                }
-
-                if (window.productManager) {
-                    const pIdx = window.productManager.products.findIndex(p => p.id === productId);
-                    if (pIdx !== -1) {
-                        window.productManager.products[pIdx].stock -= 1;
-                    }
-                }
-
-                updateBalanceDisplay();
-                renderCardsTable(window.productManager?.getAllProducts() || []);
-
-                showNotification(`✅ ${product.name} comprada exitosamente`, 'success');
-            };
-
-            // =============================================
-            // ACTUALIZAR BALANCE
-            // =============================================
-            function updateBalanceDisplay() {
-                const user = localStorage.getItem('currentUser');
-                const balanceEl = document.getElementById('balanceAmount');
-
-                if (user) {
-                    const users = JSON.parse(localStorage.getItem('users') || '[]');
-                    const currentUser = JSON.parse(user);
-                    const userData = users.find(u => u.id === currentUser.id);
-                    const balance = userData?.balance || 1000;
-                    if (balanceEl) balanceEl.textContent = `$${balance.toFixed(2)}`;
-                } else {
-                    if (balanceEl) balanceEl.textContent = '$0.00';
-                }
+                balanceEl.textContent = `$${(userData?.balance || 0).toFixed(2)}`;
+            } else {
+                balanceEl.textContent = '$0.00';
             }
+        }
 
-            // =============================================
-            // FILTROS
-            // =============================================
-            document.querySelectorAll('.filter-chip').forEach(chip => {
-                chip.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-                    this.classList.add('active');
+        // Filtros
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
 
-                    const filter = this.dataset.filter;
-                    let products = window.productManager?.getAllProducts() || [];
+                const filter = this.dataset.filter;
+                let products = window.productManager?.getAllProducts() || [];
 
-                    if (filter === 'vbv') {
-                        products = products.filter(p => p.extra === 'VBV');
-                    } else if (filter === 'non-vbv') {
-                        products = products.filter(p => p.extra === 'Non-VBV');
-                    } else if (filter !== 'all') {
-                        products = products.filter(p => p.category === filter);
-                    }
+                if (filter === 'vbv') products = products.filter(p => p.extra === 'VBV');
+                else if (filter === 'non-vbv') products = products.filter(p => p.extra === 'Non-VBV');
+                else if (filter !== 'all') products = products.filter(p => p.category === filter);
 
-                    renderCardsTable(products);
-                });
-            });
-
-            // =============================================
-            // FILTROS DEL SIDEBAR
-            // =============================================
-            document.querySelectorAll('.sidebar-menu a[data-filter]').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    document.querySelectorAll('.sidebar-menu a[data-filter]').forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-
-                    const filter = this.dataset.filter;
-                    let products = window.productManager?.getAllProducts() || [];
-
-                    if (filter === 'vbv') {
-                        products = products.filter(p => p.extra === 'VBV');
-                    } else if (filter === 'non-vbv') {
-                        products = products.filter(p => p.extra === 'Non-VBV');
-                    } else if (filter !== 'all') {
-                        products = products.filter(p => p.category === filter);
-                    }
-
-                    // Actualizar filtros chips también
-                    document.querySelectorAll('.filter-chip').forEach(c => {
-                        c.classList.toggle('active', c.dataset.filter === filter);
-                    });
-
-                    renderCardsTable(products);
-                });
-            });
-
-            // =============================================
-            // INICIALIZACIÓN
-            // =============================================
-            async function init() {
-                if (window.productManager) {
-                    await window.productManager.loadProducts();
-                    const products = window.productManager.getAllProducts();
-                    renderCardsTable(products);
-                }
-
-                updateBalanceDisplay();
-
-                const user = localStorage.getItem('currentUser');
-                if (user) {
-                    const currentUser = JSON.parse(user);
-                    document.getElementById('sidebarUserName').textContent = currentUser.username || 'Usuario';
-                    document.getElementById('sidebarUserEmail').textContent = currentUser.email || '';
-                    document.getElementById('sidebarAvatar').textContent = (currentUser.username || 'U')[0].toUpperCase();
-                    document.getElementById('topbarUserName').textContent = currentUser.username || 'Usuario';
-                    document.getElementById('topbarAvatar').textContent = (currentUser.username || 'U')[0].toUpperCase();
-                    document.getElementById('logoutBtn').style.display = 'flex';
-                } else {
-                    document.getElementById('sidebarUserName').textContent = 'Invitado';
-                    document.getElementById('sidebarUserEmail').textContent = 'Inicia sesión';
-                    document.getElementById('sidebarAvatar').textContent = 'I';
-                    document.getElementById('topbarUserName').textContent = 'Invitado';
-                    document.getElementById('topbarAvatar').textContent = 'I';
-                    document.getElementById('logoutBtn').style.display = 'none';
-                }
-            }
-
-            init();
-
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'users' || e.key === 'currentUser') {
-                    updateBalanceDisplay();
-                }
+                renderCardsTable(products);
             });
         });
+
+        // Filtros sidebar
+        document.querySelectorAll('.sidebar-menu a[data-filter]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.sidebar-menu a[data-filter]').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+                const filter = this.dataset.filter;
+                let products = window.productManager?.getAllProducts() || [];
+
+                if (filter === 'vbv') products = products.filter(p => p.extra === 'VBV');
+                else if (filter === 'non-vbv') products = products.filter(p => p.extra === 'Non-VBV');
+                else if (filter !== 'all') products = products.filter(p => p.category === filter);
+
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.filter === filter));
+                renderCardsTable(products);
+            });
+        });
+
+        // Inicializar
+        async function init() {
+            if (window.productManager) {
+                await window.productManager.loadProducts();
+                renderCardsTable(window.productManager.getAllProducts());
+            }
+            updateBalanceDisplay();
+
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                const currentUser = JSON.parse(user);
+                document.getElementById('sidebarUserName').textContent = currentUser.username || 'Usuario';
+                document.getElementById('sidebarUserEmail').textContent = currentUser.email || '';
+                document.getElementById('sidebarAvatar').textContent = (currentUser.username || 'U')[0].toUpperCase();
+                document.getElementById('topbarUserName').textContent = currentUser.username || 'Usuario';
+                document.getElementById('topbarAvatar').textContent = (currentUser.username || 'U')[0].toUpperCase();
+                document.getElementById('logoutBtn').style.display = 'flex';
+            } else {
+                document.getElementById('sidebarUserName').textContent = 'Invitado';
+                document.getElementById('sidebarUserEmail').textContent = 'Inicia sesión';
+                document.getElementById('sidebarAvatar').textContent = 'I';
+                document.getElementById('topbarUserName').textContent = 'Invitado';
+                document.getElementById('topbarAvatar').textContent = 'I';
+                document.getElementById('logoutBtn').style.display = 'none';
+            }
+        }
+
+        init();
+
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'users' || e.key === 'currentUser') updateBalanceDisplay();
+        });
+    });
     </script>
 
 </body>
