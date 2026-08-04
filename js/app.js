@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCatalog();
     updateStats();
     updateDateTime();
+    updateCartBadge();
     
     document.getElementById('cartOverlay').addEventListener('click', toggleCart);
     document.querySelector('.modal-overlay').addEventListener('click', function(e) {
@@ -38,7 +39,7 @@ function renderCatalog() {
     if (pageItems.length === 0) {
         tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:40px;color:var(--text-secondary);"><span class="material-icons-outlined" style="font-size:48px;display:block;">search_off</span>No se encontraron tarjetas</td></tr>`;
     } else {
-        tbody.innerHTML = pageItems.map((card, index) => {
+        tbody.innerHTML = pageItems.map((card) => {
             const realIndex = allProducts.indexOf(card);
             return `<tr>
                 <td>${card.network}</td>
