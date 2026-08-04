@@ -2,19 +2,19 @@
 // AUTH.JS - Sistema de Autenticación
 // ============================================
 
-console.log('🚀 Iniciando Auth.js...');
+console.log('🚀 Auth.js cargado');
 
 const AUTH_CONFIG = {
-    storageKey: 'yx_user',
     tokenKey: 'yx_token',
     usersKey: 'yx_users',
-    sessionTimeout: 3600000
+    sessionTimeout: 3600000 // 1 hora
 };
 
-// ============ REGISTRO DE USUARIO ============
+// ============ REGISTRO ============
 function registerUser(email, password, username) {
-    console.log('🔍 registerUser() EJECUTADO');
+    console.log('🔍 registerUser() ejecutado');
     
+    // Validaciones
     if (!email || !password || !username) {
         showToast('Todos los campos son obligatorios', 'error');
         return false;
@@ -25,6 +25,7 @@ function registerUser(email, password, username) {
         return false;
     }
     
+    // Obtener usuarios existentes
     let users = [];
     try {
         const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
@@ -33,16 +34,19 @@ function registerUser(email, password, username) {
         users = [];
     }
     
+    // Verificar email duplicado
     if (users.find(u => u.email === email)) {
         showToast('El email ya está registrado', 'error');
         return false;
     }
     
+    // Verificar username duplicado
     if (users.find(u => u.username === username)) {
         showToast('El nombre de usuario ya está en uso', 'error');
         return false;
     }
     
+    // Crear usuario
     const newUser = {
         id: 'user_' + Date.now(),
         email: email,
@@ -62,9 +66,9 @@ function registerUser(email, password, username) {
     return true;
 }
 
-// ============ INICIO DE SESIÓN ============
+// ============ LOGIN ============
 function loginUser(email, password) {
-    console.log('🔍 loginUser() EJECUTADO');
+    console.log('🔍 loginUser() ejecutado');
     
     if (!email || !password) {
         showToast('Email y contraseña son obligatorios', 'error');
@@ -75,7 +79,6 @@ function loginUser(email, password) {
     try {
         const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
         users = stored ? JSON.parse(stored) : [];
-        console.log('📦 Usuarios encontrados:', users.length);
     } catch (e) {
         users = [];
     }
@@ -91,6 +94,7 @@ function loginUser(email, password) {
         return false;
     }
     
+    // Crear sesión
     const session = {
         user: {
             id: user.id,
@@ -118,7 +122,7 @@ function loginUser(email, password) {
 function logoutUser() {
     localStorage.removeItem(AUTH_CONFIG.tokenKey);
     showToast('Sesión cerrada', 'info');
-    window.location.href = 'login.html';
+    window.location.href = '/nyxkey.github.io/login.html';
 }
 
 // ============ VERIFICAR SESIÓN ============
@@ -166,6 +170,7 @@ function toggleUserMenu() {
     if (dropdown) dropdown.classList.toggle('active');
 }
 
+// Cerrar dropdown al hacer clic fuera
 document.addEventListener('click', function(e) {
     const dropdown = document.getElementById('userDropdown');
     const avatar = document.querySelector('.user-avatar');
@@ -174,22 +179,22 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// ============ FUNCIONES DE USUARIO ============
-function getUsers() {
-    try {
-        return JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]');
-    } catch (e) {
-        return [];
-    }
-}
-
+// ============ ACTUALIZAR SALDO ============
 function updateUserBalance(userId, amount) {
-    const users = getUsers();
+    let users = [];
+    try {
+        const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
+        users = stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        users = [];
+    }
+    
     const user = users.find(u => u.id === userId);
     if (user) {
         user.balance = (user.balance || 0) + amount;
         localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
         
+        // Actualizar sesión si es el usuario actual
         const currentUser = getCurrentUser();
         if (currentUser && currentUser.id === userId) {
             const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
@@ -219,25 +224,6 @@ function generateToken(userId) {
     return btoa(`${userId}:${Date.now()}:${Math.random()}`);
 }
 
-// ============ PROTECCIÓN DE RUTAS ============
-function requireAuth() {
-    const user = getCurrentUser();
-    if (!user) {
-        window.location.href = 'login.html';
-        return false;
-    }
-    return true;
-}
-
-function requireGuest() {
-    const user = getCurrentUser();
-    if (user) {
-        window.location.href = '/';
-        return false;
-    }
-    return true;
-}
-
 // ============ TOAST ============
 function showToast(message, type = 'info') {
     let container = document.querySelector('.toast-container');
@@ -260,9 +246,8 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// ============ INICIALIZAR UI AL CARGAR ============
+// ============ INICIALIZAR UI ============
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Auth.js inicializado');
     updateUserUI();
 });
 
@@ -273,10 +258,6 @@ window.logoutUser = logoutUser;
 window.getCurrentUser = getCurrentUser;
 window.checkSession = checkSession;
 window.updateUserBalance = updateUserBalance;
-window.requireAuth = requireAuth;
-window.requireGuest = requireGuest;
 window.updateUserUI = updateUserUI;
 window.toggleUserMenu = toggleUserMenu;
 window.showToast = showToast;
-
-console.log('✅ Auth.js cargado correctamente');
