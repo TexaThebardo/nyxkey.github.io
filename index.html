@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- NAVEGACIÓN -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -19,6 +20,7 @@
                 <span class="logo-text-full">Cards</span>
                 <span class="logo-badge">PRO</span>
             </div>
+            
             <div class="nav-links">
                 <a href="#catalogo" class="nav-link active" onclick="showSection('catalogo')">
                     <span class="material-icons-outlined">storefront</span> Tienda
@@ -33,14 +35,23 @@
                     <span class="material-icons-outlined">history</span> Historial
                 </a>
             </div>
+            
             <div class="nav-user">
+                <!-- CARRITO - AHORA VISIBLE -->
+                <button class="btn-cart" onclick="toggleCart()">
+                    <span class="material-icons">shopping_cart</span>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+                
                 <div class="user-balance" id="userBalanceContainer">
                     <span class="material-icons-outlined">account_balance_wallet</span>
                     <span class="balance-amount" id="userBalance">$0.00</span>
                 </div>
+                
                 <button class="btn-add-funds" onclick="openDepositModal()">
                     <span class="material-icons">add</span> Fondos
                 </button>
+                
                 <div class="user-avatar" onclick="toggleUserMenu()">
                     <span class="material-icons-outlined" id="userAvatarIcon">person</span>
                     <div class="user-dropdown" id="userDropdown">
@@ -53,6 +64,7 @@
         </div>
     </nav>
 
+    <!-- HERO -->
     <section class="hero-section">
         <div class="hero-container">
             <div class="hero-content">
@@ -76,6 +88,7 @@
         </div>
     </section>
 
+    <!-- CATÁLOGO -->
     <section id="catalogo" class="catalog-section">
         <div class="catalog-header">
             <div class="catalog-title">
@@ -122,6 +135,7 @@
         </div>
     </section>
 
+    <!-- CHECKER -->
     <section id="checker" class="services-section" style="display:none;">
         <div class="services-grid">
             <div class="service-card full-width">
@@ -151,6 +165,7 @@
         </div>
     </section>
 
+    <!-- BOT OTP -->
     <section id="otp" class="services-section" style="display:none;">
         <div class="services-grid">
             <div class="service-card full-width">
@@ -186,6 +201,7 @@
         </div>
     </section>
 
+    <!-- HISTORIAL -->
     <section id="historial" class="services-section" style="display:none;">
         <div class="services-grid">
             <div class="service-card full-width">
@@ -207,6 +223,7 @@
         </div>
     </section>
 
+    <!-- CARRITO PANEL -->
     <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
     <div class="cart-panel" id="cartPanel">
         <div class="cart-header">
@@ -227,6 +244,7 @@
         </div>
     </div>
 
+    <!-- MODAL DEPÓSITO -->
     <div class="modal-overlay" id="depositModal" onclick="if(event.target===this)closeDepositModal()">
         <div class="modal-container">
             <div class="modal-header"><h3>Agregar Fondos</h3><button class="modal-close" onclick="closeDepositModal()"><span class="material-icons">close</span></button></div>
@@ -246,6 +264,7 @@
         </div>
     </div>
 
+    <!-- FOOTER -->
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-brand"><span class="material-icons-outlined">flash_on</span><span>Yx Cards</span><span class="footer-version">v2.0</span></div>
