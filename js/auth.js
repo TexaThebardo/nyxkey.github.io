@@ -232,7 +232,7 @@ function requireAuth() {
 function requireGuest() {
     const user = getCurrentUser();
     if (user) {
-        window.location.href = 'index.html';
+        window.location.href = '/';
         return false;
     }
     return true;
