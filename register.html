@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Yx Cards</title>
-    <!-- Material Icons - CORREGIDO -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -109,80 +107,59 @@
 
     <script src="js/auth.js"></script>
     <script>
-        // Esperar a que el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ register.html cargado');
+        // ============ FUNCIÓN DE REGISTRO DIRECTA ============
+        function handleRegisterDirect(e) {
+            e.preventDefault();
+            console.log('📝 Registro iniciado');
             
-            const form = document.getElementById('registerForm');
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const termsChecked = document.getElementById('termsCheck').checked;
             const btn = document.getElementById('registerBtn');
             
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                console.log('📝 Formulario enviado');
+            // Validaciones
+            if (!username) { showToast('Ingresa un nombre de usuario', 'error'); return; }
+            if (!email) { showToast('Ingresa un correo electrónico', 'error'); return; }
+            if (!password) { showToast('Ingresa una contraseña', 'error'); return; }
+            if (password.length < 6) { showToast('Mínimo 6 caracteres', 'error'); return; }
+            if (password !== confirmPassword) { showToast('Las contraseñas no coinciden', 'error'); return; }
+            if (!termsChecked) { showToast('Acepta los términos', 'error'); return; }
+            
+            // Deshabilitar botón
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons">sync</span> Registrando...';
+            
+            // Registrar usuario
+            const result = registerUser(email, password, username);
+            
+            if (result) {
+                showToast('✅ Registro exitoso', 'success');
+                console.log('✅ Redirigiendo a login.html...');
                 
-                const username = document.getElementById('regUsername').value.trim();
-                const email = document.getElementById('regEmail').value.trim();
-                const password = document.getElementById('regPassword').value;
-                const confirmPassword = document.getElementById('regConfirmPassword').value;
-                const termsChecked = document.getElementById('termsCheck').checked;
-                
-                console.log('📝 Datos:', { username, email, password: '***', confirmPassword: '***', termsChecked });
-                
-                // Validaciones
-                if (!username) {
-                    showToast('Por favor, ingresa un nombre de usuario', 'error');
-                    return;
-                }
-                
-                if (!email) {
-                    showToast('Por favor, ingresa un correo electrónico', 'error');
-                    return;
-                }
-                
-                if (!password) {
-                    showToast('Por favor, ingresa una contraseña', 'error');
-                    return;
-                }
-                
-                if (password.length < 6) {
-                    showToast('La contraseña debe tener al menos 6 caracteres', 'error');
-                    return;
-                }
-                
-                if (password !== confirmPassword) {
-                    showToast('Las contraseñas no coinciden', 'error');
-                    return;
-                }
-                
-                if (!termsChecked) {
-                    showToast('Debes aceptar los términos y condiciones', 'error');
-                    return;
-                }
-                
-                // Deshabilitar botón
-                btn.disabled = true;
-                btn.innerHTML = '<span class="material-icons">sync</span> Registrando...';
-                
-                // Llamar a la función de registro
-                console.log('🔍 Llamando a registerUser...');
-                const result = registerUser(email, password, username);
-                console.log('🔍 Resultado:', result);
-                
-                if (result) {
-                    console.log('✅ Registro exitoso, redirigiendo a login.html');
-                    showToast('✅ Registro exitoso. Redirigiendo...', 'success');
+                // REDIRECCIÓN FORZADA - MÚLTIPLES MÉTODOS
+                setTimeout(function() {
+                    // Método 1: window.location
+                    window.location.href = 'login.html';
+                    
+                    // Método 2: window.location.replace (fallback)
                     setTimeout(function() {
-                        window.location.href = 'login.html';
-                    }, 1500);
-                } else {
-                    // Habilitar botón de nuevo
-                    btn.disabled = false;
-                    btn.innerHTML = '<span class="material-icons">how_to_reg</span> Registrarse';
-                    console.log('❌ Registro falló');
-                }
-            });
-        });
+                        window.location.replace('login.html');
+                    }, 100);
+                    
+                    // Método 3: window.location.assign (fallback)
+                    setTimeout(function() {
+                        window.location.assign('login.html');
+                    }, 200);
+                }, 500);
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = '<span class="material-icons">how_to_reg</span> Registrarse';
+            }
+        }
 
+        // ============ TOGGLE PASSWORD ============
         function togglePassword(id) {
             const input = document.getElementById(id);
             const icon = input.nextElementSibling.querySelector('.material-icons');
@@ -194,6 +171,13 @@
                 icon.textContent = 'visibility';
             }
         }
+
+        // ============ INICIALIZAR ============
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ register.html cargado');
+            const form = document.getElementById('registerForm');
+            form.addEventListener('submit', handleRegisterDirect);
+        });
     </script>
 </body>
-</html>
+</html>s
