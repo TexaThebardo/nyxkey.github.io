@@ -1,0 +1,140 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "network": "VISA",
+      "bin": "414720",
+      "database": "DB_July_2026",
+      "class": "CREDIT",
+      "level": "PLATINUM",
+      "bank": "JPMORGAN CHASE BANK",
+      "country": "🇺🇸",
+      "countryCode": "US",
+      "type": "CC Full",
+      "uso": "Multifuncional",
+      "nonVbv": false,
+      "nonMsc": false,
+      "price": 28.58,
+      "stock": 45,
+      "active": true,
+      "createdAt": "2026-07-01T10:00:00Z",
+      "updatedAt": "2026-08-04T12:00:00Z",
+      "cardData": {
+        "number": "414720******1234",
+        "expiry": "12/26",
+        "cvv": "***"
+      }
+    },
+    {
+      "id": 2,
+      "network": "MASTERCARD",
+      "bin": "521894",
+      "database": "DB_July_2026",
+      "class": "CREDIT",
+      "level": "TITANIUM",
+      "bank": "CAPITAL ONE BANK",
+      "country": "🇺🇸",
+      "countryCode": "US",
+      "type": "Non VBV",
+      "uso": "Non-VBV",
+      "nonVbv": true,
+      "nonMsc": true,
+      "price": 48.58,
+      "stock": 12,
+      "active": true,
+      "createdAt": "2026-07-01T10:00:00Z",
+      "updatedAt": "2026-08-04T12:00:00Z",
+      "cardData": {
+        "number": "521894******5678",
+        "expiry": "08/27",
+        "cvv": "***"
+      }
+    },
+    {
+      "id": 3,
+      "network": "VISA",
+      "bin": "471612",
+      "database": "DB_July_2026",
+      "class": "DEBIT",
+      "level": "SIGNATURE",
+      "bank": "BANK OF AMERICA",
+      "country": "🇺🇸",
+      "countryCode": "US",
+      "type": "CC Full",
+      "uso": "Multifuncional",
+      "nonVbv": false,
+      "nonMsc": false,
+      "price": 27.90,
+      "stock": 23,
+      "active": true,
+      "createdAt": "2026-07-01T10:00:00Z",
+      "updatedAt": "2026-08-04T12:00:00Z",
+      "cardData": {
+        "number": "471612******9012",
+        "expiry": "03/27",
+        "cvv": "***"
+      }
+    },
+    {
+      "id": 4,
+      "network": "AMEX",
+      "bin": "371449",
+      "database": "DB_July_2026",
+      "class": "CREDIT",
+      "level": "CENTURION",
+      "bank": "AMERICAN EXPRESS",
+      "country": "🇺🇸",
+      "countryCode": "US",
+      "type": "Non VBV",
+      "uso": "Non-VBV",
+      "nonVbv": true,
+      "nonMsc": true,
+      "price": 51.29,
+      "stock": 8,
+      "active": true,
+      "createdAt": "2026-07-01T10:00:00Z",
+      "updatedAt": "2026-08-04T12:00:00Z",
+      "cardData": {
+        "number": "371449******3456",
+        "expiry": "05/27",
+        "cvv": "***"
+      }
+    },
+    {
+      "id": 5,
+      "network": "VISA",
+      "bin": "469566",
+      "database": "DB_July_2026",
+      "class": "CREDIT",
+      "level": "PURCHASING",
+      "bank": "BANCO POPULAR DOMINICANO",
+      "country": "🇩🇴",
+      "countryCode": "DO",
+      "type": "Non VBV",
+      "uso": "Non-VBV",
+      "nonVbv": true,
+      "nonMsc": true,
+      "price": 36.29,
+      "stock": 15,
+      "active": true,
+      "createdAt": "2026-07-01T10:00:00Z",
+      "updatedAt": "2026-08-04T12:00:00Z",
+      "cardData": {
+        "number": "469566******7890",
+        "expiry": "09/26",
+        "cvv": "***"
+      }
+    }
+  ],
+  "categories": {
+    "networks": ["VISA", "MASTERCARD", "AMEX", "DISCOVER"],
+    "countries": ["US", "DO", "MX", "CA", "GB", "AU", "CO", "ES", "EC"],
+    "types": ["CC Full", "Non VBV", "Non MSC"],
+    "levels": ["PLATINUM", "TITANIUM", "SIGNATURE", "CENTURION", "GOLD", "WORLD", "PREMIER", "BUSINESS", "CLASSIC"]
+  },
+  "stats": {
+    "totalProducts": 5,
+    "totalStock": 103,
+    "lastUpdated": "2026-08-04T12:00:00Z"
+  }
+}
