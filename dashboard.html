@@ -3,211 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - NOKICC</title>
+    <title>Dashboard - Yx Cards</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <!-- Navegación -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
-                <span class="material-icons-outlined">dashboard</span>
-                <span class="logo-text">NOKICC</span>
-                <span class="logo-badge">DASH</span>
-            </div>
+            <div class="nav-logo"><span class="material-icons-outlined">flash_on</span><span class="logo-text">Yx</span><span class="logo-text-full">Cards</span><span class="logo-badge">DASH</span></div>
             <div class="nav-user">
-                <span class="user-balance">
-                    <span class="material-icons-outlined">account_balance_wallet</span>
-                    <span id="dashboardBalance">$0.00</span>
-                </span>
-                <button class="btn-add-funds" onclick="openDepositModal()">
-                    <span class="material-icons">add</span>
-                </button>
-                <div class="user-avatar" onclick="toggleUserMenu()">
-                    <span class="material-icons-outlined">person</span>
-                </div>
+                <div class="user-balance"><span class="material-icons-outlined">account_balance_wallet</span><span class="balance-amount" id="dashboardBalance">$0.00</span></div>
+                <div class="user-avatar" onclick="toggleUserMenu()"><span class="material-icons-outlined">person</span></div>
             </div>
         </div>
     </nav>
-
     <div class="dashboard-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <nav class="sidebar-nav">
-                <a href="#" class="sidebar-link active" data-section="overview">
-                    <span class="material-icons-outlined">dashboard</span>
-                    <span>Visión General</span>
-                </a>
-                <a href="#" class="sidebar-link" data-section="inventory">
-                    <span class="material-icons-outlined">inventory_2</span>
-                    <span>Inventario</span>
-                </a>
-                <a href="#" class="sidebar-link" data-section="transactions">
-                    <span class="material-icons-outlined">receipt_long</span>
-                    <span>Transacciones</span>
-                </a>
-                <a href="#" class="sidebar-link" data-section="customers">
-                    <span class="material-icons-outlined">people</span>
-                    <span>Clientes</span>
-                </a>
-                <a href="#" class="sidebar-link" data-section="settings">
-                    <span class="material-icons-outlined">settings</span>
-                    <span>Configuración</span>
-                </a>
+                <a href="#" class="sidebar-link active" data-section="overview"><span class="material-icons-outlined">dashboard</span><span>Visión General</span></a>
+                <a href="#" class="sidebar-link" data-section="inventory"><span class="material-icons-outlined">inventory_2</span><span>Inventario</span></a>
+                <a href="#" class="sidebar-link" data-section="transactions"><span class="material-icons-outlined">receipt_long</span><span>Transacciones</span></a>
+                <a href="profile.html" class="sidebar-link"><span class="material-icons-outlined">person</span><span>Mi Perfil</span></a>
                 <div class="sidebar-divider"></div>
-                <a href="#" class="sidebar-link logout" onclick="logoutUser()">
-                    <span class="material-icons-outlined">logout</span>
-                    <span>Cerrar Sesión</span>
-                </a>
+                <a href="#" class="sidebar-link logout" onclick="logoutUser()"><span class="material-icons-outlined">logout</span><span>Cerrar Sesión</span></a>
             </nav>
         </aside>
-
-        <!-- Contenido Principal -->
         <main class="dashboard-main">
-            <!-- Sección Overview -->
             <section id="overview" class="dashboard-section active">
-                <div class="section-header">
-                    <h2>Visión General</h2>
-                    <span class="date-badge" id="currentDate"></span>
-                </div>
-
+                <div class="section-header"><h2>Visión General</h2><span class="date-badge" id="currentDate"></span></div>
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon green">
-                            <span class="material-icons-outlined">shopping_cart</span>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="totalProducts">0</span>
-                            <span class="stat-label">Productos Total</span>
-                        </div>
-                        <span class="stat-change positive">+12%</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <span class="material-icons-outlined">inventory_2</span>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="totalStock">0</span>
-                            <span class="stat-label">Stock Disponible</span>
-                        </div>
-                        <span class="stat-change positive">+5%</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple">
-                            <span class="material-icons-outlined">attach_money</span>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="totalRevenue">$0</span>
-                            <span class="stat-label">Ingresos Totales</span>
-                        </div>
-                        <span class="stat-change positive">+8%</span>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange">
-                            <span class="material-icons-outlined">people</span>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="totalCustomers">0</span>
-                            <span class="stat-label">Clientes Activos</span>
-                        </div>
-                        <span class="stat-change positive">+3%</span>
-                    </div>
+                    <div class="stat-card"><div class="stat-icon green"><span class="material-icons-outlined">shopping_cart</span></div><div class="stat-info"><span class="stat-value" id="totalProducts">0</span><span class="stat-label">Productos Total</span></div></div>
+                    <div class="stat-card"><div class="stat-icon blue"><span class="material-icons-outlined">inventory_2</span></div><div class="stat-info"><span class="stat-value" id="totalStock">0</span><span class="stat-label">Stock Disponible</span></div></div>
+                    <div class="stat-card"><div class="stat-icon purple"><span class="material-icons-outlined">attach_money</span></div><div class="stat-info"><span class="stat-value" id="totalRevenue">$0</span><span class="stat-label">Ingresos Totales</span></div></div>
+                    <div class="stat-card"><div class="stat-icon orange"><span class="material-icons-outlined">people</span></div><div class="stat-info"><span class="stat-value" id="totalCustomers">0</span><span class="stat-label">Clientes Activos</span></div></div>
                 </div>
-
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3>Ventas por Red</h3>
-                            <span class="chart-badge">Últimos 30 días</span>
-                        </div>
-                        <div id="networkChart" class="chart-container"></div>
-                    </div>
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3>Distribución por País</h3>
-                            <span class="chart-badge">Stock actual</span>
-                        </div>
-                        <div id="countryChart" class="chart-container"></div>
-                    </div>
-                </div>
-
                 <div class="recent-activity">
-                    <div class="activity-header">
-                        <h3>Actividad Reciente</h3>
-                        <button class="btn-secondary-small">Ver todas</button>
-                    </div>
-                    <div id="activityList" class="activity-list">
-                        <!-- Renderizado por JavaScript -->
-                    </div>
+                    <div class="activity-header"><h3>Actividad Reciente</h3></div>
+                    <div id="activityList" class="activity-list"></div>
                 </div>
             </section>
-
-            <!-- Sección Inventario -->
             <section id="inventory" class="dashboard-section">
-                <div class="section-header">
-                    <h2>Gestión de Inventario</h2>
-                    <button class="btn-primary" onclick="addProduct()">
-                        <span class="material-icons">add</span>
-                        Nuevo Producto
-                    </button>
-                </div>
-                
+                <div class="section-header"><h2>Gestión de Inventario</h2><button class="btn-primary" onclick="addProduct()"><span class="material-icons">add</span> Nuevo Producto</button></div>
                 <div class="inventory-controls">
-                    <div class="filter-group">
-                        <input type="text" placeholder="Buscar productos..." oninput="filterInventory(this.value)">
-                        <span class="material-icons-outlined">search</span>
-                    </div>
-                    <select onchange="filterInventoryByStatus(this.value)">
-                        <option value="all">Todos</option>
-                        <option value="active">Activos</option>
-                        <option value="inactive">Inactivos</option>
-                        <option value="low">Stock Bajo</option>
-                    </select>
+                    <div class="filter-group"><input type="text" placeholder="Buscar productos..." oninput="filterInventory(this.value)"><span class="material-icons-outlined">search</span></div>
+                    <select onchange="filterInventoryByStatus(this.value)"><option value="all">Todos</option><option value="active">Activos</option><option value="low">Stock Bajo</option></select>
                 </div>
-
-                <div id="inventoryList" class="inventory-list">
-                    <!-- Renderizado por JavaScript -->
-                </div>
+                <div id="inventoryList" class="inventory-list"></div>
             </section>
-
-            <!-- Sección Transacciones -->
             <section id="transactions" class="dashboard-section">
-                <div class="section-header">
-                    <h2>Historial de Transacciones</h2>
-                    <div class="transaction-filters">
-                        <select onchange="filterTransactions(this.value)">
-                            <option value="all">Todos</option>
-                            <option value="compra">Compras</option>
-                            <option value="depósito">Depósitos</option>
-                            <option value="verificación">Verificaciones</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="transactions-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tipo</th>
-                                <th>Monto</th>
-                                <th>Estado</th>
-                                <th>Fecha</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactionsBody">
-                            <!-- Renderizado por JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
+                <div class="section-header"><h2>Historial de Transacciones</h2></div>
+                <div class="transactions-table"><table><thead><tr><th>ID</th><th>Tipo</th><th>Monto</th><th>Estado</th><th>Fecha</th></tr></thead><tbody id="transactionsBody"></tbody></table></div>
             </section>
         </main>
     </div>
-
     <script src="js/auth.js"></script>
     <script src="js/products.js"></script>
     <script src="js/app.js"></script>
