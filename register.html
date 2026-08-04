@@ -14,56 +14,105 @@
     <div class="auth-container">
         <div class="auth-box">
             <div class="auth-header">
-                <div class="auth-logo"><span class="material-icons-outlined">flash_on</span><span>Yx Cards</span></div>
+                <div class="auth-logo">
+                    <span class="material-icons-outlined">flash_on</span>
+                    <span>Yx Cards</span>
+                </div>
                 <h1>Crear Cuenta</h1>
                 <p>Únete a la plataforma líder en servicios</p>
             </div>
+            
             <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
                 <div class="form-group">
-                    <label><span class="material-icons-outlined">person</span> Nombre Completo</label>
+                    <label>
+                        <span class="material-icons-outlined">person</span>
+                        Nombre Completo
+                    </label>
                     <input type="text" id="regFullName" placeholder="Tu nombre completo" required>
                 </div>
+                
                 <div class="form-group">
-                    <label><span class="material-icons-outlined">badge</span> Nombre de Usuario</label>
+                    <label>
+                        <span class="material-icons-outlined">badge</span>
+                        Nombre de Usuario
+                    </label>
                     <input type="text" id="regUsername" placeholder="Usuario único" required>
                 </div>
+                
                 <div class="form-group">
-                    <label><span class="material-icons-outlined">email</span> Correo Electrónico</label>
+                    <label>
+                        <span class="material-icons-outlined">email</span>
+                        Correo Electrónico
+                    </label>
                     <input type="email" id="regEmail" placeholder="ejemplo@correo.com" required>
                 </div>
+                
                 <div class="form-group">
-                    <label><span class="material-icons-outlined">lock</span> Contraseña</label>
+                    <label>
+                        <span class="material-icons-outlined">lock</span>
+                        Contraseña
+                    </label>
                     <div class="password-input">
                         <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required>
-                        <button type="button" onclick="togglePassword('regPassword')"><span class="material-icons-outlined">visibility</span></button>
+                        <button type="button" onclick="togglePassword('regPassword')">
+                            <span class="material-icons-outlined">visibility</span>
+                        </button>
                     </div>
                 </div>
+                
                 <div class="form-group">
-                    <label><span class="material-icons-outlined">lock_outline</span> Confirmar Contraseña</label>
+                    <label>
+                        <span class="material-icons-outlined">lock_outline</span>
+                        Confirmar Contraseña
+                    </label>
                     <div class="password-input">
                         <input type="password" id="regConfirmPassword" placeholder="Repite la contraseña" required>
-                        <button type="button" onclick="togglePassword('regConfirmPassword')"><span class="material-icons-outlined">visibility</span></button>
+                        <button type="button" onclick="togglePassword('regConfirmPassword')">
+                            <span class="material-icons-outlined">visibility</span>
+                        </button>
                     </div>
                 </div>
+                
                 <div class="form-options">
-                    <label class="checkbox-label"><input type="checkbox" id="termsCheck" required><span>Acepto los <a href="#" class="terms-link">Términos y Condiciones</a></span></label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="termsCheck" required>
+                        <span>Acepto los <a href="#" class="terms-link">Términos y Condiciones</a></span>
+                    </label>
                 </div>
-                <button type="submit" class="btn-primary btn-auth"><span class="material-icons">how_to_reg</span> Registrarse</button>
+                
+                <button type="submit" class="btn-primary btn-auth">
+                    <span class="material-icons">how_to_reg</span>
+                    Registrarse
+                </button>
             </form>
-            <div class="auth-footer"><p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p></div>
+            
+            <div class="auth-footer">
+                <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p>
+            </div>
         </div>
+        
         <div class="auth-info">
             <div class="info-content">
                 <h2>¡Comienza tu viaje!</h2>
                 <p>Accede a herramientas exclusivas para el manejo de tarjetas, verificación en tiempo real y mucho más.</p>
                 <div class="info-features">
-                    <div class="feature"><span class="material-icons-outlined">shopping_cart</span><span>Catálogo actualizado</span></div>
-                    <div class="feature"><span class="material-icons-outlined">analytics</span><span>Estadísticas en vivo</span></div>
-                    <div class="feature"><span class="material-icons-outlined">support_agent</span><span>Soporte 24/7</span></div>
+                    <div class="feature">
+                        <span class="material-icons-outlined">shopping_cart</span>
+                        <span>Catálogo actualizado</span>
+                    </div>
+                    <div class="feature">
+                        <span class="material-icons-outlined">analytics</span>
+                        <span>Estadísticas en vivo</span>
+                    </div>
+                    <div class="feature">
+                        <span class="material-icons-outlined">support_agent</span>
+                        <span>Soporte 24/7</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="js/auth.js"></script>
     <script>
         function handleRegister(e) {
@@ -74,18 +123,37 @@
             const password = document.getElementById('regPassword').value;
             const confirmPassword = document.getElementById('regConfirmPassword').value;
             const termsChecked = document.getElementById('termsCheck').checked;
-            if (!termsChecked) { showToast('Debes aceptar los términos y condiciones', 'error'); return; }
-            if (password !== confirmPassword) { showToast('Las contraseñas no coinciden', 'error'); return; }
-            if (password.length < 6) { showToast('La contraseña debe tener al menos 6 caracteres', 'error'); return; }
+            
+            if (!termsChecked) {
+                showToast('Debes aceptar los términos y condiciones', 'error');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showToast('Las contraseñas no coinciden', 'error');
+                return;
+            }
+            if (password.length < 6) {
+                showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+            
             if (registerUser(email, password, username, fullName)) {
-                setTimeout(() => window.location.href = '/login.html', 1500);
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
             }
         }
+
         function togglePassword(id) {
             const input = document.getElementById(id);
             const icon = input.nextElementSibling.querySelector('.material-icons-outlined');
-            if (input.type === 'password') { input.type = 'text'; icon.textContent = 'visibility_off'; } 
-            else { input.type = 'password'; icon.textContent = 'visibility'; }
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
         }
     </script>
 </body>
