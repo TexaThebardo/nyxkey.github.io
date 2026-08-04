@@ -115,7 +115,8 @@ function loginUser(email, password) {
 function logoutUser() {
     localStorage.removeItem(AUTH_CONFIG.tokenKey);
     showToast('Sesión cerrada', 'info');
-    window.location.href = 'login.html';
+    // REDIRECCIÓN CORRECTA CON LA CARPETA
+    window.location.href = '/nyxkey.github.io/login.html';
 }
 
 // ============ VERIFICAR SESIÓN ============
@@ -240,6 +241,12 @@ function showToast(message, type = 'info') {
 // ============ INICIALIZAR ============
 document.addEventListener('DOMContentLoaded', function() {
     updateUserUI();
+    
+    // Si el usuario ya está logueado y está en login.html, redirigir al home
+    const user = getCurrentUser();
+    if (user && window.location.pathname.includes('login.html')) {
+        window.location.href = '/nyxkey.github.io/';
+    }
 });
 
 // ============ EXPORTAR ============
