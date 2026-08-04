@@ -24,7 +24,11 @@ class ApiService {
         return new Promise((resolve) => {
             const results = cards.map(card => {
                 const isValid = Math.random() > 0.2;
-                return { card, status: isValid ? 'approved' : 'declined', balance: isValid ? Math.floor(Math.random() * 1000) * 100 : 0 };
+                return { 
+                    card, 
+                    status: isValid ? 'approved' : 'declined', 
+                    balance: isValid ? Math.floor(Math.random() * 1000) * 100 : 0 
+                };
             });
             setTimeout(() => resolve({ success: true, results, processed: results.length }), 800);
         });
@@ -34,8 +38,11 @@ class ApiService {
         return new Promise((resolve) => {
             const success = Math.random() > 0.1;
             setTimeout(() => {
-                if (success) resolve({ success: true, orderId: 'ORD-' + Date.now(), amount: orderData.total, status: 'completed' });
-                else resolve({ success: false, error: 'Pago rechazado' });
+                if (success) {
+                    resolve({ success: true, orderId: 'ORD-' + Date.now(), amount: orderData.total, status: 'completed' });
+                } else {
+                    resolve({ success: false, error: 'Pago rechazado' });
+                }
             }, 1500);
         });
     }
