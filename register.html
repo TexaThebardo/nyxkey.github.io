@@ -22,7 +22,7 @@
                 <p>Únete a la plataforma líder en servicios</p>
             </div>
             
-            <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+            <form id="registerForm" class="auth-form">
                 <div class="form-group">
                     <label>
                         <span class="material-icons-outlined">person</span>
@@ -107,60 +107,77 @@
 
     <script src="js/auth.js"></script>
     <script>
-        function handleRegister(e) {
-            e.preventDefault();
+        // Esperar a que el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ register.html cargado');
             
-            const username = document.getElementById('regUsername').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('regConfirmPassword').value;
-            const termsChecked = document.getElementById('termsCheck').checked;
+            const form = document.getElementById('registerForm');
+            const btn = document.getElementById('registerBtn');
             
-            // Validaciones
-            if (!username) {
-                showToast('Por favor, ingresa un nombre de usuario', 'error');
-                return;
-            }
-            
-            if (!email) {
-                showToast('Por favor, ingresa un correo electrónico', 'error');
-                return;
-            }
-            
-            if (!password) {
-                showToast('Por favor, ingresa una contraseña', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showToast('La contraseña debe tener al menos 6 caracteres', 'error');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                showToast('Las contraseñas no coinciden', 'error');
-                return;
-            }
-            
-            if (!termsChecked) {
-                showToast('Debes aceptar los términos y condiciones', 'error');
-                return;
-            }
-            
-            // Llamar a la función de registro
-            const result = registerUser(email, password, username);
-            
-            if (result) {
-                // Deshabilitar botón para evitar doble clic
-                const btn = document.getElementById('registerBtn');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('📝 Formulario enviado');
+                
+                const username = document.getElementById('regUsername').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('regConfirmPassword').value;
+                const termsChecked = document.getElementById('termsCheck').checked;
+                
+                console.log('📝 Datos del formulario:', { username, email, password: '***', confirmPassword: '***', termsChecked });
+                
+                // Validaciones
+                if (!username) {
+                    showToast('Por favor, ingresa un nombre de usuario', 'error');
+                    return;
+                }
+                
+                if (!email) {
+                    showToast('Por favor, ingresa un correo electrónico', 'error');
+                    return;
+                }
+                
+                if (!password) {
+                    showToast('Por favor, ingresa una contraseña', 'error');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showToast('La contraseña debe tener al menos 6 caracteres', 'error');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showToast('Las contraseñas no coinciden', 'error');
+                    return;
+                }
+                
+                if (!termsChecked) {
+                    showToast('Debes aceptar los términos y condiciones', 'error');
+                    return;
+                }
+                
+                // Deshabilitar botón
                 btn.disabled = true;
                 btn.innerHTML = '<span class="material-icons spinning">sync</span> Registrando...';
                 
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 1500);
-            }
-        }
+                // Llamar a la función de registro
+                console.log('🔍 Llamando a registerUser...');
+                const result = registerUser(email, password, username);
+                console.log('🔍 Resultado de registerUser:', result);
+                
+                if (result) {
+                    console.log('✅ Registro exitoso, redirigiendo...');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    // Habilitar botón de nuevo
+                    btn.disabled = false;
+                    btn.innerHTML = '<span class="material-icons">how_to_reg</span> Registrarse';
+                }
+            });
+        });
 
         function togglePassword(id) {
             const input = document.getElementById(id);
