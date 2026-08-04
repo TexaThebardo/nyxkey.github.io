@@ -17,13 +17,7 @@
       "price": 28.58,
       "stock": 45,
       "active": true,
-      "createdAt": "2026-07-01T10:00:00Z",
-      "updatedAt": "2026-08-04T12:00:00Z",
-      "cardData": {
-        "number": "414720******1234",
-        "expiry": "12/26",
-        "cvv": "***"
-      }
+      "createdAt": "2026-07-01T10:00:00Z"
     },
     {
       "id": 2,
@@ -42,13 +36,7 @@
       "price": 48.58,
       "stock": 12,
       "active": true,
-      "createdAt": "2026-07-01T10:00:00Z",
-      "updatedAt": "2026-08-04T12:00:00Z",
-      "cardData": {
-        "number": "521894******5678",
-        "expiry": "08/27",
-        "cvv": "***"
-      }
+      "createdAt": "2026-07-01T10:00:00Z"
     },
     {
       "id": 3,
@@ -67,13 +55,7 @@
       "price": 27.90,
       "stock": 23,
       "active": true,
-      "createdAt": "2026-07-01T10:00:00Z",
-      "updatedAt": "2026-08-04T12:00:00Z",
-      "cardData": {
-        "number": "471612******9012",
-        "expiry": "03/27",
-        "cvv": "***"
-      }
+      "createdAt": "2026-07-01T10:00:00Z"
     },
     {
       "id": 4,
@@ -92,13 +74,7 @@
       "price": 51.29,
       "stock": 8,
       "active": true,
-      "createdAt": "2026-07-01T10:00:00Z",
-      "updatedAt": "2026-08-04T12:00:00Z",
-      "cardData": {
-        "number": "371449******3456",
-        "expiry": "05/27",
-        "cvv": "***"
-      }
+      "createdAt": "2026-07-01T10:00:00Z"
     },
     {
       "id": 5,
@@ -117,24 +93,107 @@
       "price": 36.29,
       "stock": 15,
       "active": true,
-      "createdAt": "2026-07-01T10:00:00Z",
-      "updatedAt": "2026-08-04T12:00:00Z",
-      "cardData": {
-        "number": "469566******7890",
-        "expiry": "09/26",
-        "cvv": "***"
-      }
+      "createdAt": "2026-07-01T10:00:00Z"
+    },
+    {
+      "id": 6,
+      "network": "MASTERCARD",
+      "bin": "546871",
+      "database": "DB_July_2026",
+      "class": "CREDIT",
+      "level": "WORLD",
+      "bank": "BANCOMER, S.A.",
+      "country": "🇲🇽",
+      "countryCode": "MX",
+      "type": "CC Full",
+      "uso": "Multifuncional",
+      "nonVbv": false,
+      "nonMsc": false,
+      "price": 28.66,
+      "stock": 30,
+      "active": true,
+      "createdAt": "2026-07-01T10:00:00Z"
+    },
+    {
+      "id": 7,
+      "network": "VISA",
+      "bin": "438857",
+      "database": "DB_July_2026",
+      "class": "CREDIT",
+      "level": "PREMIER",
+      "bank": "WELLS FARGO BANK",
+      "country": "🇺🇸",
+      "countryCode": "US",
+      "type": "CC Full",
+      "uso": "Wells Fargo",
+      "nonVbv": false,
+      "nonMsc": false,
+      "price": 29.50,
+      "stock": 18,
+      "active": true,
+      "createdAt": "2026-07-01T10:00:00Z"
+    },
+    {
+      "id": 8,
+      "network": "MASTERCARD",
+      "bin": "516329",
+      "database": "DB_July_2026",
+      "class": "CREDIT",
+      "level": "MIXED",
+      "bank": "WESTPAC BANKING CORP",
+      "country": "🇦🇺",
+      "countryCode": "AU",
+      "type": "Non VBV",
+      "uso": "Non-VBV",
+      "nonVbv": true,
+      "nonMsc": true,
+      "price": 32.00,
+      "stock": 10,
+      "active": true,
+      "createdAt": "2026-07-01T10:00:00Z"
+    },
+    {
+      "id": 9,
+      "network": "VISA",
+      "bin": "481523",
+      "database": "DB_July_2026",
+      "class": "DEBIT",
+      "level": "CLASSIC",
+      "bank": "BANCO SANTA CRUZ",
+      "country": "🇩🇴",
+      "countryCode": "DO",
+      "type": "Non VBV",
+      "uso": "Non-VBV",
+      "nonVbv": true,
+      "nonMsc": true,
+      "price": 48.58,
+      "stock": 5,
+      "active": true,
+      "createdAt": "2026-07-01T10:00:00Z"
+    },
+    {
+      "id": 10,
+      "network": "DISCOVER",
+      "bin": "601100",
+      "database": "DB_July_2026",
+      "class": "CREDIT",
+      "level": "GOLD",
+      "bank": "DISCOVER BANK",
+      "country": "🇺🇸",
+      "countryCode": "US",
+      "type": "CC Full",
+      "uso": "Multifuncional",
+      "nonVbv": false,
+      "nonMsc": false,
+      "price": 26.80,
+      "stock": 35,
+      "active": true,
+      "createdAt": "2026-07-01T10:00:00Z"
     }
   ],
   "categories": {
     "networks": ["VISA", "MASTERCARD", "AMEX", "DISCOVER"],
-    "countries": ["US", "DO", "MX", "CA", "GB", "AU", "CO", "ES", "EC"],
-    "types": ["CC Full", "Non VBV", "Non MSC"],
-    "levels": ["PLATINUM", "TITANIUM", "SIGNATURE", "CENTURION", "GOLD", "WORLD", "PREMIER", "BUSINESS", "CLASSIC"]
-  },
-  "stats": {
-    "totalProducts": 5,
-    "totalStock": 103,
-    "lastUpdated": "2026-08-04T12:00:00Z"
+    "countries": ["US", "DO", "MX", "CA", "GB", "AU"],
+    "types": ["CC Full", "Non VBV", "Non MSC"]
   }
 }
