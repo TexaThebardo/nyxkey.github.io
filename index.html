@@ -3,91 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOKICC PRO - Plataforma de Tarjetas</title>
-    
-    <!-- Material Icons (Google) -->
+    <title>Yx Cards - Plataforma de Tarjetas</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    
-    <!-- Font Awesome (Complemento) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts (Tipografía profesional) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- CSS Principal -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- ============ NAVEGACIÓN ============ -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
                 <span class="material-icons-outlined">flash_on</span>
-                <span class="logo-text">NOKICC</span>
+                <span class="logo-text">Yx</span>
+                <span class="logo-text-full">Cards</span>
                 <span class="logo-badge">PRO</span>
             </div>
-            
             <div class="nav-links">
-                <a href="#catalogo" class="nav-link active">
-                    <span class="material-icons-outlined">storefront</span>
-                    Tienda
+                <a href="#catalogo" class="nav-link active" onclick="showSection('catalogo')">
+                    <span class="material-icons-outlined">storefront</span> Tienda
                 </a>
-                <a href="#checker" class="nav-link">
-                    <span class="material-icons-outlined">verified</span>
-                    Checker
+                <a href="#checker" class="nav-link" onclick="showSection('checker')">
+                    <span class="material-icons-outlined">verified</span> Checker
                 </a>
-                <a href="#otp" class="nav-link">
-                    <span class="material-icons-outlined">android</span>
-                    Bot OTP
+                <a href="#otp" class="nav-link" onclick="showSection('otp')">
+                    <span class="material-icons-outlined">android</span> Bot OTP
                 </a>
-                <a href="#historial" class="nav-link">
-                    <span class="material-icons-outlined">history</span>
-                    Historial
+                <a href="#historial" class="nav-link" onclick="showSection('historial')">
+                    <span class="material-icons-outlined">history</span> Historial
                 </a>
             </div>
-            
             <div class="nav-user">
-                <div class="user-balance">
+                <div class="user-balance" id="userBalanceContainer">
                     <span class="material-icons-outlined">account_balance_wallet</span>
                     <span class="balance-amount" id="userBalance">$0.00</span>
                 </div>
                 <button class="btn-add-funds" onclick="openDepositModal()">
-                    <span class="material-icons">add</span>
-                    Fondos
+                    <span class="material-icons">add</span> Fondos
                 </button>
-                <div class="user-avatar">
-                    <span class="material-icons-outlined">person</span>
+                <div class="user-avatar" onclick="toggleUserMenu()">
+                    <span class="material-icons-outlined" id="userAvatarIcon">person</span>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="profile.html"><span class="material-icons-outlined">person</span> Mi Perfil</a>
+                        <a href="dashboard.html"><span class="material-icons-outlined">dashboard</span> Dashboard</a>
+                        <a href="#" onclick="logoutUser()"><span class="material-icons-outlined">logout</span> Cerrar Sesión</a>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- ============ HERO / ESTADÍSTICAS ============ -->
     <section class="hero-section">
         <div class="hero-container">
             <div class="hero-content">
-                <h1>
-                    <span class="hero-highlight">Tarjetas</span> en Tiempo Real
-                    <span class="hero-badge">LIVE</span>
-                </h1>
+                <h1><span class="hero-highlight">Tarjetas</span> en Tiempo Real <span class="hero-badge">LIVE</span></h1>
                 <p>Inventario verificado al instante con más del 99% de precisión</p>
                 <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-number" id="totalCards">0</span>
-                        <span class="stat-label">Tarjetas Activas</span>
-                    </div>
+                    <div class="stat-item"><span class="stat-number" id="totalCards">0</span><span class="stat-label">Tarjetas Activas</span></div>
                     <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="totalBanks">0</span>
-                        <span class="stat-label">Bancos</span>
-                    </div>
+                    <div class="stat-item"><span class="stat-number" id="totalBanks">0</span><span class="stat-label">Bancos</span></div>
                     <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="onlineUsers">0</span>
-                        <span class="stat-label">Usuarios Online</span>
-                    </div>
+                    <div class="stat-item"><span class="stat-number" id="onlineUsers">0</span><span class="stat-label">Usuarios Online</span></div>
                 </div>
             </div>
             <div class="hero-status">
@@ -100,7 +76,6 @@
         </div>
     </section>
 
-    <!-- ============ CATÁLOGO DE TARJETAS ============ -->
     <section id="catalogo" class="catalog-section">
         <div class="catalog-header">
             <div class="catalog-title">
@@ -113,46 +88,27 @@
                     <span class="material-icons-outlined">filter_alt</span>
                     <select id="filterCountry" onchange="applyFilters()">
                         <option value="">Todos los países</option>
-                        <option value="🇺🇸">Estados Unidos</option>
-                        <option value="🇲🇽">México</option>
-                        <option value="🇩🇴">República Dominicana</option>
-                        <option value="🇨🇦">Canadá</option>
-                        <option value="🇬🇧">Reino Unido</option>
+                        <option value="US">🇺🇸 Estados Unidos</option>
+                        <option value="MX">🇲🇽 México</option>
+                        <option value="DO">🇩🇴 República Dominicana</option>
+                        <option value="CA">🇨🇦 Canadá</option>
+                        <option value="GB">🇬🇧 Reino Unido</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <input type="text" id="filterSearch" placeholder="Buscar por BIN o banco..." oninput="applyFilters()">
                     <span class="material-icons-outlined">search</span>
                 </div>
-                <button class="btn-refresh" onclick="refreshCatalog()">
-                    <span class="material-icons">refresh</span>
-                </button>
+                <button class="btn-refresh" onclick="refreshCatalog()"><span class="material-icons">refresh</span></button>
             </div>
         </div>
-
         <div class="table-container">
             <div class="table-responsive">
                 <table>
                     <thead>
-                        <tr>
-                            <th>Red</th>
-                            <th>BIN</th>
-                            <th>Base</th>
-                            <th>Clase</th>
-                            <th>Nivel</th>
-                            <th>Banco</th>
-                            <th>País</th>
-                            <th>Tipo</th>
-                            <th>Uso</th>
-                            <th>Non VBV</th>
-                            <th>Non MSC</th>
-                            <th>Precio</th>
-                            <th>Acción</th>
-                        </tr>
+                        <tr><th>Red</th><th>BIN</th><th>Base</th><th>Clase</th><th>Nivel</th><th>Banco</th><th>País</th><th>Tipo</th><th>Uso</th><th>Non VBV</th><th>Non MSC</th><th>Precio</th><th>Acción</th></tr>
                     </thead>
-                    <tbody id="catalogBody">
-                        <!-- Renderizado por JavaScript -->
-                    </tbody>
+                    <tbody id="catalogBody"></tbody>
                 </table>
             </div>
             <div class="table-footer">
@@ -166,95 +122,50 @@
         </div>
     </section>
 
-    <!-- ============ SERVICIOS: CHECKER + OTP ============ -->
-    <section class="services-section">
+    <section id="checker" class="services-section" style="display:none;">
         <div class="services-grid">
-            <!-- Checker de Saldo -->
-            <div class="service-card" id="checker">
+            <div class="service-card full-width">
                 <div class="service-header">
                     <span class="material-icons-outlined service-icon">verified</span>
-                    <div>
-                        <h3>Checker de Saldo</h3>
-                        <p>Verificación masiva en tiempo real</p>
-                    </div>
+                    <div><h3>Checker de Saldo</h3><p>Verificación masiva en tiempo real</p></div>
                     <span class="service-badge premium">Premium</span>
                 </div>
-                
                 <div class="service-body">
-                    <div class="price-tag">
-                        <span class="price">$40</span>
-                        <span class="price-period">USD · Vida</span>
-                    </div>
-                    
+                    <div class="price-tag"><span class="price">$40</span><span class="price-period">USD · Vida</span></div>
                     <div class="checker-input-area">
                         <textarea id="checkerInput" rows="4" placeholder="Formato: TARJETA|MM|YY|CVC&#10;Ejemplo:&#10;414720|12|26|123&#10;521894|08|27|456"></textarea>
                         <div class="input-actions">
-                            <button class="btn-upload" onclick="uploadFile()">
-                                <span class="material-icons">upload_file</span>
-                            </button>
-                            <button class="btn-clear" onclick="clearChecker()">
-                                <span class="material-icons">clear</span>
-                            </button>
+                            <button class="btn-upload" onclick="uploadFile()"><span class="material-icons">upload_file</span></button>
+                            <button class="btn-clear" onclick="clearChecker()"><span class="material-icons">clear</span></button>
                         </div>
                     </div>
-                    
-                    <button class="btn-primary btn-checker" onclick="runChecker()">
-                        <span class="material-icons">play_arrow</span>
-                        Verificar Tarjetas
-                    </button>
-                    
+                    <button class="btn-primary btn-checker" onclick="runChecker()"><span class="material-icons">play_arrow</span> Verificar Tarjetas</button>
                     <div class="checker-stats">
-                        <div class="stat">
-                            <span class="stat-icon approved">✓</span>
-                            <span>Aprobadas: <strong id="approvedCount">0</strong></span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-icon declined">✗</span>
-                            <span>Declinadas: <strong id="declinedCount">0</strong></span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-icon total">⟳</span>
-                            <span>Total: <strong id="processedCount">0</strong></span>
-                        </div>
+                        <div class="stat"><span class="stat-icon approved">✓</span><span>Aprobadas: <strong id="approvedCount">0</strong></span></div>
+                        <div class="stat"><span class="stat-icon declined">✗</span><span>Declinadas: <strong id="declinedCount">0</strong></span></div>
+                        <div class="stat"><span class="stat-icon total">⟳</span><span>Total: <strong id="processedCount">0</strong></span></div>
                     </div>
-                    
-                    <div class="checker-status">
-                        <span class="status-dot online"></span>
-                        <span>Sistema: <strong>Online & Optimizado</strong></span>
-                    </div>
+                    <div class="checker-status"><span class="status-dot online"></span><span>Sistema: <strong>Online & Optimizado</strong></span></div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Bot OTP con IA -->
-            <div class="service-card" id="otp">
+    <section id="otp" class="services-section" style="display:none;">
+        <div class="services-grid">
+            <div class="service-card full-width">
                 <div class="service-header">
                     <span class="material-icons-outlined service-icon">android</span>
-                    <div>
-                        <h3>Bot OTP con IA</h3>
-                        <p>Intercepción de códigos por llamada</p>
-                    </div>
+                    <div><h3>Bot OTP con IA</h3><p>Intercepción de códigos por llamada</p></div>
                     <span class="service-badge hot">🔥 Hot</span>
                 </div>
-                
                 <div class="service-body">
-                    <div class="price-tag">
-                        <span class="price">$200</span>
-                        <span class="price-period">USD · Vida</span>
-                        <span class="price-old">$499</span>
-                    </div>
-                    
+                    <div class="price-tag"><span class="price">$200</span><span class="price-period">USD · Vida</span><span class="price-old">$499</span></div>
                     <div class="otp-controls">
                         <div class="otp-input-group">
-                            <div class="input-field">
-                                <span class="material-icons-outlined">person</span>
-                                <input type="text" id="otpTarget" placeholder="Nombre de la víctima" value="John Doe">
-                            </div>
-                            <div class="input-field">
-                                <span class="material-icons-outlined">phone</span>
-                                <input type="text" id="otpPhone" placeholder="Número de teléfono" value="+1 (555) 123-4567">
-                            </div>
+                            <div class="input-field"><span class="material-icons-outlined">person</span><input type="text" id="otpTarget" placeholder="Nombre" value="John Doe"></div>
+                            <div class="input-field"><span class="material-icons-outlined">phone</span><input type="text" id="otpPhone" placeholder="Teléfono" value="+1 (555) 123-4567"></div>
                         </div>
-                        
                         <div class="otp-service-select">
                             <span class="material-icons-outlined">business</span>
                             <select id="otpService">
@@ -265,156 +176,87 @@
                             </select>
                         </div>
                     </div>
-                    
-                    <button class="btn-primary btn-otp" onclick="startOTPBot()">
-                        <span class="material-icons">play_circle</span>
-                        Iniciar Bot OTP
-                    </button>
-                    
+                    <button class="btn-primary btn-otp" onclick="startOTPBot()"><span class="material-icons">play_circle</span> Iniciar Bot OTP</button>
                     <div class="otp-logs" id="otpLogs">
-                        <div class="log-entry">
-                            <span class="log-time">[12:34:56]</span>
-                            <span class="log-status">●</span>
-                            <span class="log-message">Sistema listo para interceptar</span>
-                        </div>
-                        <div class="log-entry">
-                            <span class="log-time">[12:34:58]</span>
-                            <span class="log-status calling">📞</span>
-                            <span class="log-message">Llamando al número proporcionado...</span>
-                        </div>
-                        <div class="log-entry highlight">
-                            <span class="log-time">[12:35:12]</span>
-                            <span class="log-status success">✓</span>
-                            <span class="log-message">OTP Capturado: <strong>849201</strong></span>
-                        </div>
+                        <div class="log-entry"><span class="log-time">[12:34:56]</span><span class="log-status">●</span><span class="log-message">Sistema listo para interceptar</span></div>
                     </div>
-                    
-                    <div class="session-info">
-                        <span class="material-icons-outlined">fingerprint</span>
-                        <span>Session ID: <code id="sessionId">1f9071f4-fec3-4a2b-8c7d-9e5f1a3b2c4d</code></span>
+                    <div class="session-info"><span class="material-icons-outlined">fingerprint</span><span>Session ID: <code id="sessionId">1f9071f4-fec3-4a2b-8c7d-9e5f1a3b2c4d</code></span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="historial" class="services-section" style="display:none;">
+        <div class="services-grid">
+            <div class="service-card full-width">
+                <div class="service-header">
+                    <span class="material-icons-outlined service-icon">history</span>
+                    <div><h3>Historial de Transacciones</h3><p>Consulta tus depósitos y compras realizadas</p></div>
+                </div>
+                <div class="service-body">
+                    <div class="transactions-table">
+                        <table>
+                            <thead><tr><th>ID Transacción</th><th>Fecha</th><th>Tipo</th><th>Monto</th><th>Detalles</th><th>Estado</th></tr></thead>
+                            <tbody id="transactionsBody">
+                                <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-secondary);"><span class="material-icons-outlined" style="font-size:48px;display:block;">receipt_long</span>No hay transacciones registradas</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ============ CARRITO DE COMPRAS (Modal) ============ -->
-    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
     <div class="cart-panel" id="cartPanel">
         <div class="cart-header">
-            <div class="cart-title">
-                <span class="material-icons-outlined">shopping_cart</span>
-                <h3>Mi Carrito</h3>
-                <span class="cart-count" id="cartCount">0</span>
-            </div>
-            <button class="cart-close" onclick="toggleCart()">
-                <span class="material-icons">close</span>
-            </button>
+            <div class="cart-title"><span class="material-icons-outlined">shopping_cart</span><h3>Mi Carrito</h3><span class="cart-count" id="cartCount">0</span></div>
+            <button class="cart-close" onclick="toggleCart()"><span class="material-icons">close</span></button>
         </div>
-        
-        <div class="cart-body">
-            <div id="cartItems" class="cart-items">
-                <div class="empty-cart">
-                    <span class="material-icons-outlined">shopping_bag</span>
-                    <p>El carrito está vacío</p>
-                    <span class="empty-sub">Agrega tarjetas desde el catálogo</span>
-                </div>
-            </div>
-        </div>
-        
+        <div class="cart-body"><div id="cartItems" class="cart-items"><div class="empty-cart"><span class="material-icons-outlined">shopping_bag</span><p>El carrito está vacío</p><span class="empty-sub">Agrega tarjetas desde el catálogo</span></div></div></div>
         <div class="cart-footer">
             <div class="cart-summary">
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span id="cartSubtotal">$0.00</span>
-                </div>
-                <div class="summary-row">
-                    <span>Descuento</span>
-                    <span id="cartDiscount">$0.00</span>
-                </div>
-                <div class="summary-row total">
-                    <span>Total a pagar</span>
-                    <span id="cartTotal">$0.00</span>
-                </div>
+                <div class="summary-row"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+                <div class="summary-row"><span>Descuento (10%)</span><span id="cartDiscount">$0.00</span></div>
+                <div class="summary-row total"><span>Total a pagar</span><span id="cartTotal">$0.00</span></div>
             </div>
-            
             <div class="cart-actions">
-                <button class="btn-secondary" onclick="clearCart()">
-                    <span class="material-icons">delete_sweep</span>
-                    Vaciar
-                </button>
-                <button class="btn-primary btn-checkout" onclick="checkout()">
-                    <span class="material-icons">payment</span>
-                    Procesar Pago
-                </button>
+                <button class="btn-secondary" onclick="clearCart()"><span class="material-icons">delete_sweep</span> Vaciar</button>
+                <button class="btn-primary btn-checkout" onclick="checkout()"><span class="material-icons">payment</span> Procesar Pago</button>
             </div>
         </div>
     </div>
 
-    <!-- ============ MODAL DE DEPÓSITO ============ -->
-    <div class="modal-overlay" id="depositModal">
+    <div class="modal-overlay" id="depositModal" onclick="if(event.target===this)closeDepositModal()">
         <div class="modal-container">
-            <div class="modal-header">
-                <h3>Agregar Fondos</h3>
-                <button class="modal-close" onclick="closeDepositModal()">
-                    <span class="material-icons">close</span>
-                </button>
-            </div>
+            <div class="modal-header"><h3>Agregar Fondos</h3><button class="modal-close" onclick="closeDepositModal()"><span class="material-icons">close</span></button></div>
             <div class="modal-body">
                 <div class="deposit-methods">
-                    <button class="method-btn active" onclick="selectMethod('btc')">
-                        <span class="material-icons-outlined">currency_bitcoin</span>
-                        BTC
-                    </button>
-                    <button class="method-btn" onclick="selectMethod('eth')">
-                        <span class="material-icons-outlined">currency_bitcoin</span>
-                        ETH
-                    </button>
-                    <button class="method-btn" onclick="selectMethod('usdt')">
-                        <span class="material-icons-outlined">attach_money</span>
-                        USDT
-                    </button>
+                    <button class="method-btn active" onclick="selectMethod('btc', this)"><span class="material-icons-outlined">currency_bitcoin</span> BTC</button>
+                    <button class="method-btn" onclick="selectMethod('eth', this)"><span class="material-icons-outlined">currency_bitcoin</span> ETH</button>
+                    <button class="method-btn" onclick="selectMethod('usdt', this)"><span class="material-icons-outlined">attach_money</span> USDT</button>
                 </div>
                 <div class="deposit-info">
                     <p>Dirección de pago (BTC):</p>
                     <code id="depositAddress">1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</code>
-                    <button class="btn-copy" onclick="copyAddress()">
-                        <span class="material-icons">content_copy</span>
-                        Copiar
-                    </button>
+                    <button class="btn-copy" onclick="copyAddress()"><span class="material-icons">content_copy</span> Copiar</button>
                     <p class="deposit-note">Los fondos se acreditarán automáticamente después de 1 confirmación.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ============ FOOTER ============ -->
     <footer class="footer">
         <div class="footer-container">
-            <div class="footer-brand">
-                <span class="material-icons-outlined">flash_on</span>
-                <span>NOKICC PRO</span>
-                <span class="footer-version">v2.0</span>
-            </div>
-            <div class="footer-links">
-                <a href="#">Términos</a>
-                <a href="#">Privacidad</a>
-                <a href="#">Soporte</a>
-                <a href="#">API</a>
-            </div>
-            <div class="footer-social">
-                <a href="#"><i class="fab fa-telegram"></i></a>
-                <a href="#"><i class="fab fa-discord"></i></a>
-                <a href="#"><i class="fab fa-github"></i></a>
-            </div>
+            <div class="footer-brand"><span class="material-icons-outlined">flash_on</span><span>Yx Cards</span><span class="footer-version">v2.0</span></div>
+            <div class="footer-links"><a href="#">Términos</a><a href="#">Privacidad</a><a href="#">Soporte</a><a href="#">API</a></div>
+            <div class="footer-social"><a href="#"><i class="fab fa-telegram"></i></a><a href="#"><i class="fab fa-discord"></i></a><a href="#"><i class="fab fa-github"></i></a></div>
         </div>
-        <div class="footer-bottom">
-            <span>© 2026 NOKICC · Plataforma de servicios en tiempo real</span>
-        </div>
+        <div class="footer-bottom"><span>© 2026 Yx Cards · Plataforma de servicios en tiempo real</span></div>
     </footer>
 
-    <!-- ============ SCRIPTS ============ -->
-    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/app.js"></script>
 </body>
