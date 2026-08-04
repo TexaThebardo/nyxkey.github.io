@@ -1,5 +1,5 @@
 // ============================================
-// AUTH.JS - Sistema de Autenticación
+// AUTH.JS - Sistema de Autenticación COMPLETO
 // ============================================
 
 const AUTH_CONFIG = {
@@ -22,15 +22,21 @@ function registerUser(email, password, username, fullName) {
         showToast('El email ya está registrado', 'error');
         return false;
     }
+    
     const newUser = {
         id: 'user_' + Date.now(),
-        email, username, fullName,
+        email,
+        username,
+        fullName,
         password: hashPassword(password),
-        balance: 0, role: 'user',
+        balance: 100, // Saldo inicial para pruebas
+        role: 'user',
         createdAt: new Date().toISOString(),
-        lastLogin: null, avatar: null,
+        lastLogin: null,
+        avatar: null,
         transactions: []
     };
+    
     saveUser(newUser);
     showToast('✅ Registro exitoso. Inicia sesión', 'success');
     return true;
@@ -41,21 +47,36 @@ function loginUser(email, password) {
         showToast('Email y contraseña son obligatorios', 'error');
         return false;
     }
+    
     const user = getUserByEmail(email);
-    if (!user) { showToast('Usuario no encontrado', 'error'); return false; }
+    if (!user) {
+        showToast('Usuario no encontrado', 'error');
+        return false;
+    }
+    
     if (hashPassword(password) !== user.password) {
         showToast('Contraseña incorrecta', 'error');
         return false;
     }
+    
     const session = {
-        user: { id: user.id, email: user.email, username: user.username, fullName: user.fullName, balance: user.balance, role: user.role },
+        user: {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+            fullName: user.fullName,
+            balance: user.balance,
+            role: user.role
+        },
         token: generateToken(user.id),
         expiresAt: Date.now() + AUTH_CONFIG.sessionTimeout
     };
+    
     localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
     user.lastLogin = new Date().toISOString();
     updateUser(user);
     updateUserUI();
+    
     showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
 }
@@ -63,12 +84,14 @@ function loginUser(email, password) {
 function logoutUser() {
     localStorage.removeItem(AUTH_CONFIG.tokenKey);
     showToast('Sesión cerrada', 'info');
+    // Redirigir a login
     window.location.href = '/login.html';
 }
 
 function checkSession() {
     const sessionData = localStorage.getItem(AUTH_CONFIG.tokenKey);
     if (!sessionData) return null;
+    
     try {
         const session = JSON.parse(sessionData);
         if (Date.now() > session.expiresAt) {
@@ -76,7 +99,10 @@ function checkSession() {
             return null;
         }
         return session;
-    } catch (e) { localStorage.removeItem(AUTH_CONFIG.tokenKey); return null; }
+    } catch (e) {
+        localStorage.removeItem(AUTH_CONFIG.tokenKey);
+        return null;
+    }
 }
 
 function getCurrentUser() {
@@ -88,6 +114,7 @@ function updateUserUI() {
     const user = getCurrentUser();
     const balanceEl = document.getElementById('userBalance');
     const avatarEl = document.getElementById('userAvatarIcon');
+    
     if (user) {
         if (balanceEl) balanceEl.textContent = `$${user.balance.toFixed(2)}`;
         if (avatarEl) avatarEl.textContent = 'account_circle';
@@ -102,6 +129,7 @@ function toggleUserMenu() {
     if (dropdown) dropdown.classList.toggle('active');
 }
 
+// Cerrar dropdown al hacer clic fuera
 document.addEventListener('click', function(e) {
     const dropdown = document.getElementById('userDropdown');
     const avatar = document.querySelector('.user-avatar');
@@ -116,8 +144,11 @@ function getUserByEmail(email) {
 }
 
 function getUsers() {
-    try { return JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]'); } 
-    catch (e) { return []; }
+    try {
+        return JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]');
+    } catch (e) {
+        return [];
+    }
 }
 
 function saveUser(user) {
@@ -143,6 +174,7 @@ function updateUserBalance(userId, amount) {
     if (user) {
         user.balance = (user.balance || 0) + amount;
         localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
+        
         const currentUser = getCurrentUser();
         if (currentUser && currentUser.id === userId) {
             const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
@@ -173,15 +205,26 @@ function generateToken(userId) {
 
 function requireAuth() {
     const user = getCurrentUser();
-    if (!user) { window.location.href = '/login.html'; return false; }
+    if (!user) {
+        window.location.href = '/login.html';
+        return false;
+    }
     return true;
 }
 
 function requireGuest() {
     const user = getCurrentUser();
-    if (user) { window.location.href = '/index.html'; return false; }
+    if (user) {
+        window.location.href = '/index.html';
+        return false;
+    }
     return true;
 }
+
+// Verificar autenticación al cargar cualquier página
+document.addEventListener('DOMContentLoaded', function() {
+    updateUserUI();
+});
 
 window.registerUser = registerUser;
 window.loginUser = loginUser;
