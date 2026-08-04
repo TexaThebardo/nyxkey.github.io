@@ -1,1 +1,69 @@
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Yx Cards</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo"><span class="material-icons-outlined">flash_on</span><span class="logo-text">Yx</span><span class="logo-text-full">Cards</span></div>
+            <div class="nav-user">
+                <div class="user-balance"><span class="material-icons-outlined">account_balance_wallet</span><span class="balance-amount" id="userBalance">$0.00</span></div>
+                <div class="user-avatar"><span class="material-icons-outlined">person</span></div>
+            </div>
+        </div>
+    </nav>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-link"><span class="material-icons-outlined">dashboard</span><span>Dashboard</span></a>
+                <a href="profile.html" class="sidebar-link active"><span class="material-icons-outlined">person</span><span>Mi Perfil</span></a>
+                <a href="#" class="sidebar-link" onclick="logoutUser()"><span class="material-icons-outlined">logout</span><span>Cerrar Sesión</span></a>
+            </nav>
+        </aside>
+        <main class="dashboard-main">
+            <div class="section-header"><h2>Mi Perfil</h2></div>
+            <div class="profile-container">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <span class="material-icons-outlined" style="font-size:80px;color:var(--primary);">account_circle</span>
+                        <button class="btn-secondary" onclick="changeAvatar()">Cambiar Avatar</button>
+                    </div>
+                    <div class="profile-info">
+                        <div class="info-group"><label>Nombre Completo</label><p id="profileFullName">-</p></div>
+                        <div class="info-group"><label>Nombre de Usuario</label><p id="profileUsername">-</p></div>
+                        <div class="info-group"><label>Correo Electrónico</label><p id="profileEmail">-</p></div>
+                        <div class="info-group"><label>Saldo Disponible</label><p id="profileBalance">$0.00</p></div>
+                        <div class="info-group"><label>Miembro desde</label><p id="profileSince">-</p></div>
+                        <button class="btn-primary" onclick="editProfile()"><span class="material-icons">edit</span> Editar Perfil</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!requireAuth()) return;
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('profileFullName').textContent = user.fullName || '-';
+                document.getElementById('profileUsername').textContent = user.username || '-';
+                document.getElementById('profileEmail').textContent = user.email || '-';
+                document.getElementById('profileBalance').textContent = `$${(user.balance || 0).toFixed(2)}`;
+                document.getElementById('userBalance').textContent = `$${(user.balance || 0).toFixed(2)}`;
+                document.getElementById('profileSince').textContent = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : '-';
+            }
+        });
+        function changeAvatar() { showToast('Función de avatar (próximamente)', 'info'); }
+        function editProfile() { showToast('Editar perfil (próximamente)', 'info'); }
+    </script>
+</body>
+</html>
