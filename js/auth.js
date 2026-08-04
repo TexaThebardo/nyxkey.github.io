@@ -13,55 +13,36 @@ const AUTH_CONFIG = {
 
 // ============ REGISTRO DE USUARIO ============
 function registerUser(email, password, username) {
-    console.log('========================================');
     console.log('🔍 registerUser() EJECUTADO');
-    console.log('========================================');
-    console.log('📧 Email:', email);
-    console.log('👤 Username:', username);
-    console.log('🔑 Password:', password ? '***' : '(vacío)');
     
-    // Validaciones
     if (!email || !password || !username) {
-        console.log('❌ ERROR: Campos vacíos');
         showToast('Todos los campos son obligatorios', 'error');
         return false;
     }
     
     if (password.length < 6) {
-        console.log('❌ ERROR: Password muy corta');
         showToast('La contraseña debe tener al menos 6 caracteres', 'error');
         return false;
     }
     
-    // Obtener usuarios existentes
     let users = [];
     try {
         const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
-        console.log('📦 Datos en localStorage:', stored);
         users = stored ? JSON.parse(stored) : [];
-        console.log('📦 Usuarios existentes:', users.length);
     } catch (e) {
-        console.error('❌ Error al leer localStorage:', e);
         users = [];
     }
     
-    // Verificar email duplicado
-    const emailExists = users.find(u => u.email === email);
-    if (emailExists) {
-        console.log('❌ ERROR: Email ya registrado:', email);
+    if (users.find(u => u.email === email)) {
         showToast('El email ya está registrado', 'error');
         return false;
     }
     
-    // Verificar username duplicado
-    const usernameExists = users.find(u => u.username === username);
-    if (usernameExists) {
-        console.log('❌ ERROR: Username ya existe:', username);
+    if (users.find(u => u.username === username)) {
         showToast('El nombre de usuario ya está en uso', 'error');
         return false;
     }
     
-    // Crear nuevo usuario
     const newUser = {
         id: 'user_' + Date.now(),
         email: email,
@@ -73,25 +54,17 @@ function registerUser(email, password, username) {
         lastLogin: null,
         transactions: []
     };
-    console.log('✅ Nuevo usuario creado:', newUser);
     
-    // Guardar usuario
     users.push(newUser);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
-    console.log('💾 Usuario guardado en localStorage');
     
-    // Verificar que se guardó
-    const verifyUsers = JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]');
-    console.log('📦 Verificación - Total usuarios:', verifyUsers.length);
-    console.log('✅ REGISTRO COMPLETADO CON ÉXITO');
-    console.log('========================================');
-    
+    console.log('✅ Usuario registrado:', username);
     return true;
 }
 
 // ============ INICIO DE SESIÓN ============
 function loginUser(email, password) {
-    console.log('🔍 loginUser ejecutado');
+    console.log('🔍 loginUser() EJECUTADO');
     
     if (!email || !password) {
         showToast('Email y contraseña son obligatorios', 'error');
@@ -102,6 +75,7 @@ function loginUser(email, password) {
     try {
         const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
         users = stored ? JSON.parse(stored) : [];
+        console.log('📦 Usuarios encontrados:', users.length);
     } catch (e) {
         users = [];
     }
@@ -130,8 +104,13 @@ function loginUser(email, password) {
     };
     
     localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
-    updateUserUI();
-    showToast(`👋 Bienvenido, ${user.username}!`, 'success');
+    console.log('✅ Sesión creada para:', user.username);
+    
+    // Actualizar último login
+    user.lastLogin = new Date().toISOString();
+    const updatedUsers = users.map(u => u.id === user.id ? user : u);
+    localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
+    
     return true;
 }
 
@@ -281,6 +260,12 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
+// ============ INICIALIZAR UI AL CARGAR ============
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ Auth.js inicializado');
+    updateUserUI();
+});
+
 // ============ EXPORTAR ============
 window.registerUser = registerUser;
 window.loginUser = loginUser;
@@ -295,4 +280,3 @@ window.toggleUserMenu = toggleUserMenu;
 window.showToast = showToast;
 
 console.log('✅ Auth.js cargado correctamente');
-console.log('📦 localStorage disponible:', typeof localStorage !== 'undefined');
