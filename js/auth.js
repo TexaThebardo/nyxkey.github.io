@@ -1,5 +1,5 @@
 // ============================================
-// AUTH.JS - Sistema de Autenticación COMPLETO
+// AUTH.JS - Sistema de Autenticación
 // ============================================
 
 const AUTH_CONFIG = {
@@ -11,17 +11,15 @@ const AUTH_CONFIG = {
 
 // ============ REGISTRO DE USUARIO ============
 function registerUser(email, password, username) {
-    console.log('🔍 registerUser llamado con:', { email, password: '***', username });
+    console.log('🔍 registerUser llamado');
     
     // Validaciones
     if (!email || !password || !username) {
-        console.log('❌ Campos vacíos');
         showToast('Todos los campos son obligatorios', 'error');
         return false;
     }
     
     if (password.length < 6) {
-        console.log('❌ Contraseña muy corta');
         showToast('La contraseña debe tener al menos 6 caracteres', 'error');
         return false;
     }
@@ -31,22 +29,18 @@ function registerUser(email, password, username) {
     try {
         const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
         users = stored ? JSON.parse(stored) : [];
-        console.log('📦 Usuarios existentes:', users.length);
     } catch (e) {
-        console.error('❌ Error al leer usuarios:', e);
         users = [];
     }
     
     // Verificar si el email ya está registrado
     if (users.find(u => u.email === email)) {
-        console.log('❌ Email ya registrado:', email);
         showToast('El email ya está registrado', 'error');
         return false;
     }
     
     // Verificar si el nombre de usuario ya existe
     if (users.find(u => u.username === username)) {
-        console.log('❌ Username ya existe:', username);
         showToast('El nombre de usuario ya está en uso', 'error');
         return false;
     }
@@ -63,25 +57,17 @@ function registerUser(email, password, username) {
         lastLogin: null,
         transactions: []
     };
-    console.log('✅ Nuevo usuario creado:', newUser);
     
     // Guardar usuario
     users.push(newUser);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
-    console.log('💾 Usuario guardado en localStorage');
     
-    // Verificar que se guardó correctamente
-    const verifyUsers = JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]');
-    console.log('📦 Verificación - Total usuarios:', verifyUsers.length);
-    
-    showToast('✅ Registro exitoso', 'success');
+    console.log('✅ Usuario registrado:', username);
     return true;
 }
 
 // ============ INICIO DE SESIÓN ============
 function loginUser(email, password) {
-    console.log('🔍 loginUser llamado con:', { email, password: '***' });
-    
     if (!email || !password) {
         showToast('Email y contraseña son obligatorios', 'error');
         return false;
@@ -91,21 +77,17 @@ function loginUser(email, password) {
     try {
         const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
         users = stored ? JSON.parse(stored) : [];
-        console.log('📦 Usuarios encontrados:', users.length);
     } catch (e) {
-        console.error('❌ Error al leer usuarios:', e);
         users = [];
     }
     
     const user = users.find(u => u.email === email);
     if (!user) {
-        console.log('❌ Usuario no encontrado:', email);
         showToast('Usuario no encontrado', 'error');
         return false;
     }
     
     if (hashPassword(password) !== user.password) {
-        console.log('❌ Contraseña incorrecta');
         showToast('Contraseña incorrecta', 'error');
         return false;
     }
@@ -124,13 +106,6 @@ function loginUser(email, password) {
     };
     
     localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
-    console.log('✅ Sesión creada');
-    
-    // Actualizar último login
-    user.lastLogin = new Date().toISOString();
-    const updatedUsers = users.map(u => u.id === user.id ? user : u);
-    localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
-    
     updateUserUI();
     showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
@@ -140,7 +115,6 @@ function loginUser(email, password) {
 function logoutUser() {
     localStorage.removeItem(AUTH_CONFIG.tokenKey);
     showToast('Sesión cerrada', 'info');
-    // Redirigir a login
     window.location.href = 'login.html';
 }
 
@@ -168,7 +142,7 @@ function getCurrentUser() {
     return session ? session.user : null;
 }
 
-// ============ ACTUALIZAR UI DEL USUARIO ============
+// ============ ACTUALIZAR UI ============
 function updateUserUI() {
     const user = getCurrentUser();
     const balanceEl = document.getElementById('userBalance');
@@ -183,13 +157,12 @@ function updateUserUI() {
     }
 }
 
-// ============ TOGGLE MENÚ USUARIO ============
+// ============ TOGGLE MENÚ ============
 function toggleUserMenu() {
     const dropdown = document.getElementById('userDropdown');
     if (dropdown) dropdown.classList.toggle('active');
 }
 
-// Cerrar dropdown al hacer clic fuera
 document.addEventListener('click', function(e) {
     const dropdown = document.getElementById('userDropdown');
     const avatar = document.querySelector('.user-avatar');
@@ -264,8 +237,6 @@ function requireGuest() {
 
 // ============ TOAST ============
 function showToast(message, type = 'info') {
-    console.log(`📢 Toast: ${type} - ${message}`);
-    
     let container = document.querySelector('.toast-container');
     if (!container) {
         container = document.createElement('div');
@@ -299,4 +270,4 @@ window.updateUserUI = updateUserUI;
 window.toggleUserMenu = toggleUserMenu;
 window.showToast = showToast;
 
-console.log('✅ Auth.js cargado correctamente');
+console.log('✅ Auth.js cargado');
