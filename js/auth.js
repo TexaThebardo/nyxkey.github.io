@@ -11,7 +11,7 @@ const AUTH_CONFIG = {
 
 // ============ REGISTRO DE USUARIO ============
 function registerUser(email, password, username) {
-    console.log('🔍 registerUser llamado con:', { email, password, username });
+    console.log('🔍 registerUser llamado con:', { email, password: '***', username });
     
     // Validaciones
     if (!email || !password || !username) {
@@ -70,13 +70,17 @@ function registerUser(email, password, username) {
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
     console.log('💾 Usuario guardado en localStorage');
     
-    showToast('✅ Registro exitoso. Redirigiendo al login...', 'success');
+    // Verificar que se guardó correctamente
+    const verifyUsers = JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]');
+    console.log('📦 Verificación - Total usuarios:', verifyUsers.length);
+    
+    showToast('✅ Registro exitoso', 'success');
     return true;
 }
 
 // ============ INICIO DE SESIÓN ============
 function loginUser(email, password) {
-    console.log('🔍 loginUser llamado con:', { email, password });
+    console.log('🔍 loginUser llamado con:', { email, password: '***' });
     
     if (!email || !password) {
         showToast('Email y contraseña son obligatorios', 'error');
@@ -87,6 +91,7 @@ function loginUser(email, password) {
     try {
         const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
         users = stored ? JSON.parse(stored) : [];
+        console.log('📦 Usuarios encontrados:', users.length);
     } catch (e) {
         console.error('❌ Error al leer usuarios:', e);
         users = [];
@@ -135,6 +140,7 @@ function loginUser(email, password) {
 function logoutUser() {
     localStorage.removeItem(AUTH_CONFIG.tokenKey);
     showToast('Sesión cerrada', 'info');
+    // Redirigir a login
     window.location.href = 'login.html';
 }
 
