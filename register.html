@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Yx Cards</title>
+    <!-- Material Icons - CORREGIDO -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,7 +17,7 @@
         <div class="auth-box">
             <div class="auth-header">
                 <div class="auth-logo">
-                    <span class="material-icons-outlined">flash_on</span>
+                    <span class="material-icons">flash_on</span>
                     <span>Yx Cards</span>
                 </div>
                 <h1>Crear Cuenta</h1>
@@ -25,7 +27,7 @@
             <form id="registerForm" class="auth-form">
                 <div class="form-group">
                     <label>
-                        <span class="material-icons-outlined">person</span>
+                        <span class="material-icons">person</span>
                         Nombre de Usuario
                     </label>
                     <input type="text" id="regUsername" placeholder="Usuario único" required>
@@ -33,7 +35,7 @@
                 
                 <div class="form-group">
                     <label>
-                        <span class="material-icons-outlined">email</span>
+                        <span class="material-icons">email</span>
                         Correo Electrónico
                     </label>
                     <input type="email" id="regEmail" placeholder="ejemplo@correo.com" required>
@@ -41,26 +43,26 @@
                 
                 <div class="form-group">
                     <label>
-                        <span class="material-icons-outlined">lock</span>
+                        <span class="material-icons">lock</span>
                         Contraseña
                     </label>
                     <div class="password-input">
                         <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required>
                         <button type="button" onclick="togglePassword('regPassword')">
-                            <span class="material-icons-outlined">visibility</span>
+                            <span class="material-icons">visibility</span>
                         </button>
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <label>
-                        <span class="material-icons-outlined">lock_outline</span>
+                        <span class="material-icons">lock_outline</span>
                         Confirmar Contraseña
                     </label>
                     <div class="password-input">
                         <input type="password" id="regConfirmPassword" placeholder="Repite la contraseña" required>
                         <button type="button" onclick="togglePassword('regConfirmPassword')">
-                            <span class="material-icons-outlined">visibility</span>
+                            <span class="material-icons">visibility</span>
                         </button>
                     </div>
                 </div>
@@ -89,16 +91,16 @@
                 <p>Accede a herramientas exclusivas para el manejo de tarjetas, verificación en tiempo real y mucho más.</p>
                 <div class="info-features">
                     <div class="feature">
-                        <span class="material-icons-outlined">shopping_cart</span>
-                        <span>Catálogo actualizado</span>
+                        <span class="material-icons">verified</span>
+                        <span>Verificación en tiempo real</span>
                     </div>
                     <div class="feature">
-                        <span class="material-icons-outlined">analytics</span>
-                        <span>Estadísticas en vivo</span>
+                        <span class="material-icons">android</span>
+                        <span>Bot OTP con IA</span>
                     </div>
                     <div class="feature">
-                        <span class="material-icons-outlined">support_agent</span>
-                        <span>Soporte 24/7</span>
+                        <span class="material-icons">security</span>
+                        <span>100% Seguro</span>
                     </div>
                 </div>
             </div>
@@ -124,7 +126,7 @@
                 const confirmPassword = document.getElementById('regConfirmPassword').value;
                 const termsChecked = document.getElementById('termsCheck').checked;
                 
-                console.log('📝 Datos del formulario:', { username, email, password: '***', confirmPassword: '***', termsChecked });
+                console.log('📝 Datos:', { username, email, password: '***', confirmPassword: '***', termsChecked });
                 
                 // Validaciones
                 if (!username) {
@@ -159,29 +161,31 @@
                 
                 // Deshabilitar botón
                 btn.disabled = true;
-                btn.innerHTML = '<span class="material-icons spinning">sync</span> Registrando...';
+                btn.innerHTML = '<span class="material-icons">sync</span> Registrando...';
                 
                 // Llamar a la función de registro
                 console.log('🔍 Llamando a registerUser...');
                 const result = registerUser(email, password, username);
-                console.log('🔍 Resultado de registerUser:', result);
+                console.log('🔍 Resultado:', result);
                 
                 if (result) {
-                    console.log('✅ Registro exitoso, redirigiendo...');
-                    setTimeout(() => {
+                    console.log('✅ Registro exitoso, redirigiendo a login.html');
+                    showToast('✅ Registro exitoso. Redirigiendo...', 'success');
+                    setTimeout(function() {
                         window.location.href = 'login.html';
-                    }, 2000);
+                    }, 1500);
                 } else {
                     // Habilitar botón de nuevo
                     btn.disabled = false;
                     btn.innerHTML = '<span class="material-icons">how_to_reg</span> Registrarse';
+                    console.log('❌ Registro falló');
                 }
             });
         });
 
         function togglePassword(id) {
             const input = document.getElementById(id);
-            const icon = input.nextElementSibling.querySelector('.material-icons-outlined');
+            const icon = input.nextElementSibling.querySelector('.material-icons');
             if (input.type === 'password') {
                 input.type = 'text';
                 icon.textContent = 'visibility_off';
