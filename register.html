@@ -26,14 +26,6 @@
                 <div class="form-group">
                     <label>
                         <span class="material-icons-outlined">person</span>
-                        Nombre Completo
-                    </label>
-                    <input type="text" id="regFullName" placeholder="Tu nombre completo" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>
-                        <span class="material-icons-outlined">badge</span>
                         Nombre de Usuario
                     </label>
                     <input type="text" id="regUsername" placeholder="Usuario único" required>
@@ -80,7 +72,7 @@
                     </label>
                 </div>
                 
-                <button type="submit" class="btn-primary btn-auth">
+                <button type="submit" class="btn-primary btn-auth" id="registerBtn">
                     <span class="material-icons">how_to_reg</span>
                     Registrarse
                 </button>
@@ -117,27 +109,53 @@
     <script>
         function handleRegister(e) {
             e.preventDefault();
-            const fullName = document.getElementById('regFullName').value;
-            const username = document.getElementById('regUsername').value;
-            const email = document.getElementById('regEmail').value;
+            
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
             const confirmPassword = document.getElementById('regConfirmPassword').value;
             const termsChecked = document.getElementById('termsCheck').checked;
             
-            if (!termsChecked) {
-                showToast('Debes aceptar los términos y condiciones', 'error');
+            // Validaciones
+            if (!username) {
+                showToast('Por favor, ingresa un nombre de usuario', 'error');
                 return;
             }
-            if (password !== confirmPassword) {
-                showToast('Las contraseñas no coinciden', 'error');
+            
+            if (!email) {
+                showToast('Por favor, ingresa un correo electrónico', 'error');
                 return;
             }
+            
+            if (!password) {
+                showToast('Por favor, ingresa una contraseña', 'error');
+                return;
+            }
+            
             if (password.length < 6) {
                 showToast('La contraseña debe tener al menos 6 caracteres', 'error');
                 return;
             }
             
-            if (registerUser(email, password, username, fullName)) {
+            if (password !== confirmPassword) {
+                showToast('Las contraseñas no coinciden', 'error');
+                return;
+            }
+            
+            if (!termsChecked) {
+                showToast('Debes aceptar los términos y condiciones', 'error');
+                return;
+            }
+            
+            // Llamar a la función de registro
+            const result = registerUser(email, password, username);
+            
+            if (result) {
+                // Deshabilitar botón para evitar doble clic
+                const btn = document.getElementById('registerBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="material-icons spinning">sync</span> Registrando...';
+                
                 setTimeout(() => {
                     window.location.href = 'login.html';
                 }, 1500);
