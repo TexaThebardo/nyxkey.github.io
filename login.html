@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="/nyxkey.github.io/css/style.css">
+    <link rel="stylesheet" href="/nyxkey.github.io/css/login.css">
 </head>
 <body>
     <div class="auth-container">
@@ -59,7 +59,7 @@
             </form>
             
             <div class="auth-footer">
-                <p>¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
+                <p>¿No tienes cuenta? <a href="/nyxkey.github.io/register.html">Regístrate aquí</a></p>
             </div>
             
             <div class="auth-divider">
@@ -98,19 +98,15 @@
         </div>
     </div>
 
-    <script src="js/auth.js"></script>
+    <script src="/nyxkey.github.io/js/auth.js"></script>
     <script>
         // ============ FUNCIÓN DE LOGIN ============
         function handleLoginDirect(e) {
             e.preventDefault();
-            console.log('📝 LOGIN INICIADO');
             
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const btn = document.getElementById('loginBtn');
-            
-            console.log('📧 Email:', email);
-            console.log('🔑 Password:', password ? '***' : '(vacío)');
             
             if (!email || !password) {
                 showToast('Email y contraseña son obligatorios', 'error');
@@ -121,37 +117,19 @@
             btn.innerHTML = '<span class="material-icons">sync</span> Iniciando...';
             
             const result = loginUser(email, password);
-            console.log('🔍 Resultado loginUser():', result);
             
             if (result === true) {
-                console.log('✅ LOGIN EXITOSO! Redirigiendo a /');
                 showToast('✅ Sesión iniciada', 'success');
-                
-                // REDIRECCIÓN A / (index.html con hash)
+                // REDIRECCIÓN AL HOME
                 setTimeout(function() {
-                    window.location.href = '/';
+                    window.location.href = '/nyxkey.github.io/';
                 }, 500);
-                
-                // Fallback
-                setTimeout(function() {
-                    if (window.location.pathname.includes('login.html')) {
-                        window.location.href = './';
-                    }
-                }, 1000);
-                
-                // Último fallback
-                setTimeout(function() {
-                    if (window.location.pathname.includes('login.html')) {
-                        window.location.replace('./');
-                    }
-                }, 1500);
             } else {
                 btn.disabled = false;
                 btn.innerHTML = '<span class="material-icons">login</span> Iniciar Sesión';
             }
         }
 
-        // ============ TOGGLE PASSWORD ============
         function togglePassword(id) {
             const input = document.getElementById(id);
             const icon = input.nextElementSibling.querySelector('.material-icons');
@@ -164,23 +142,19 @@
             }
         }
 
-        // ============ SOCIAL LOGIN ============
         function socialLogin(provider) {
             showToast(`Iniciando sesión con ${provider}...`, 'info');
             setTimeout(function() {
-                window.location.href = '/';
+                window.location.href = '/nyxkey.github.io/';
             }, 1500);
         }
 
         // ============ INICIALIZAR ============
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ login.html cargado');
-            
-            // Verificar si ya hay sesión
+            // Si ya hay sesión, redirigir al home
             const user = getCurrentUser();
             if (user) {
-                console.log('👤 Usuario ya logueado:', user.username);
-                window.location.href = '/';
+                window.location.href = '/nyxkey.github.io/';
                 return;
             }
             
