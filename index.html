@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yx Cards - Plataforma de Tarjetas</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <title>Tarjetas en Tiempo Real LIVE</title>
+    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <!-- RUTAS CORREGIDAS - CON /nyxkey.github.io/ -->
+    <link rel="stylesheet" href="/nyxkey.github.io/css/style.css">
 </head>
 <body>
-    <!-- NAVEGACIÓN -->
+    <!-- ============ NAVEGACIÓN ============ -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -37,7 +39,7 @@
             </div>
             
             <div class="nav-user">
-                <!-- CARRITO - AHORA VISIBLE -->
+                <!-- CARRITO -->
                 <button class="btn-cart" onclick="toggleCart()">
                     <span class="material-icons">shopping_cart</span>
                     <span class="cart-badge" id="cartBadge">0</span>
@@ -55,8 +57,8 @@
                 <div class="user-avatar" onclick="toggleUserMenu()">
                     <span class="material-icons-outlined" id="userAvatarIcon">person</span>
                     <div class="user-dropdown" id="userDropdown">
-                        <a href="profile.html"><span class="material-icons-outlined">person</span> Mi Perfil</a>
-                        <a href="dashboard.html"><span class="material-icons-outlined">dashboard</span> Dashboard</a>
+                        <a href="/nyxkey.github.io/profile.html"><span class="material-icons-outlined">person</span> Mi Perfil</a>
+                        <a href="/nyxkey.github.io/dashboard.html"><span class="material-icons-outlined">dashboard</span> Dashboard</a>
                         <a href="#" onclick="logoutUser()"><span class="material-icons-outlined">logout</span> Cerrar Sesión</a>
                     </div>
                 </div>
@@ -64,7 +66,7 @@
         </div>
     </nav>
 
-    <!-- HERO -->
+    <!-- ============ HERO ============ -->
     <section class="hero-section">
         <div class="hero-container">
             <div class="hero-content">
@@ -88,7 +90,7 @@
         </div>
     </section>
 
-    <!-- CATÁLOGO -->
+    <!-- ============ CATÁLOGO ============ -->
     <section id="catalogo" class="catalog-section">
         <div class="catalog-header">
             <div class="catalog-title">
@@ -135,7 +137,7 @@
         </div>
     </section>
 
-    <!-- CHECKER -->
+    <!-- ============ CHECKER ============ -->
     <section id="checker" class="services-section" style="display:none;">
         <div class="services-grid">
             <div class="service-card full-width">
@@ -165,7 +167,7 @@
         </div>
     </section>
 
-    <!-- BOT OTP -->
+    <!-- ============ BOT OTP ============ -->
     <section id="otp" class="services-section" style="display:none;">
         <div class="services-grid">
             <div class="service-card full-width">
@@ -201,7 +203,7 @@
         </div>
     </section>
 
-    <!-- HISTORIAL -->
+    <!-- ============ HISTORIAL ============ -->
     <section id="historial" class="services-section" style="display:none;">
         <div class="services-grid">
             <div class="service-card full-width">
@@ -223,7 +225,7 @@
         </div>
     </section>
 
-    <!-- CARRITO PANEL -->
+    <!-- ============ CARRITO PANEL ============ -->
     <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
     <div class="cart-panel" id="cartPanel">
         <div class="cart-header">
@@ -244,7 +246,7 @@
         </div>
     </div>
 
-    <!-- MODAL DEPÓSITO -->
+    <!-- ============ MODAL DEPÓSITO ============ -->
     <div class="modal-overlay" id="depositModal" onclick="if(event.target===this)closeDepositModal()">
         <div class="modal-container">
             <div class="modal-header"><h3>Agregar Fondos</h3><button class="modal-close" onclick="closeDepositModal()"><span class="material-icons">close</span></button></div>
@@ -264,7 +266,7 @@
         </div>
     </div>
 
-    <!-- FOOTER -->
+    <!-- ============ FOOTER ============ -->
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-brand"><span class="material-icons-outlined">flash_on</span><span>Yx Cards</span><span class="footer-version">v2.0</span></div>
@@ -274,9 +276,10 @@
         <div class="footer-bottom"><span>© 2026 Yx Cards · Plataforma de servicios en tiempo real</span></div>
     </footer>
 
-    <script src="js/auth.js"></script>
-    <script src="js/products.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/app.js"></script>
+    <!-- RUTAS CORREGIDAS - CON /nyxkey.github.io/ -->
+    <script src="/nyxkey.github.io/js/auth.js"></script>
+    <script src="/nyxkey.github.io/js/products.js"></script>
+    <script src="/nyxkey.github.io/js/cart.js"></script>
+    <script src="/nyxkey.github.io/js/app.js"></script>
 </body>
 </html>
