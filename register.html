@@ -118,7 +118,6 @@
             const termsChecked = document.getElementById('termsCheck').checked;
             const btn = document.getElementById('registerBtn');
             
-            // Validaciones
             if (!username) {
                 showToast('Ingresa un nombre de usuario', 'error');
                 return;
@@ -151,7 +150,7 @@
             
             if (result === true) {
                 showToast('✅ Registro exitoso', 'success');
-                // REDIRECCIÓN AL LOGIN
+                // REDIRECCIÓN AL LOGIN CON LA CARPETA
                 setTimeout(function() {
                     window.location.href = '/nyxkey.github.io/login.html';
                 }, 500);
@@ -175,7 +174,6 @@
 
         // ============ INICIALIZAR ============
         document.addEventListener('DOMContentLoaded', function() {
-            // Si ya hay sesión, redirigir al home
             const user = getCurrentUser();
             if (user) {
                 window.location.href = '/nyxkey.github.io/';
