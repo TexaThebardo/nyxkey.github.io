@@ -124,19 +124,27 @@
             console.log('🔍 Resultado loginUser():', result);
             
             if (result === true) {
-                console.log('✅ LOGIN EXITOSO! Redirigiendo a index.html');
+                console.log('✅ LOGIN EXITOSO! Redirigiendo a /');
                 showToast('✅ Sesión iniciada', 'success');
                 
-                // REDIRECCIÓN A index.html
+                // REDIRECCIÓN A / (index.html con hash)
                 setTimeout(function() {
-                    window.location.href = 'index.html';
+                    window.location.href = '/';
                 }, 500);
                 
+                // Fallback
                 setTimeout(function() {
                     if (window.location.pathname.includes('login.html')) {
-                        window.location.replace('index.html');
+                        window.location.href = './';
                     }
                 }, 1000);
+                
+                // Último fallback
+                setTimeout(function() {
+                    if (window.location.pathname.includes('login.html')) {
+                        window.location.replace('./');
+                    }
+                }, 1500);
             } else {
                 btn.disabled = false;
                 btn.innerHTML = '<span class="material-icons">login</span> Iniciar Sesión';
@@ -160,7 +168,7 @@
         function socialLogin(provider) {
             showToast(`Iniciando sesión con ${provider}...`, 'info');
             setTimeout(function() {
-                window.location.href = 'index.html';
+                window.location.href = '/';
             }, 1500);
         }
 
@@ -172,7 +180,7 @@
             const user = getCurrentUser();
             if (user) {
                 console.log('👤 Usuario ya logueado:', user.username);
-                window.location.href = 'index.html';
+                window.location.href = '/';
                 return;
             }
             
