@@ -2,6 +2,8 @@
 // AUTH.JS - Sistema de Autenticación
 // ============================================
 
+console.log('🚀 Iniciando Auth.js...');
+
 const AUTH_CONFIG = {
     storageKey: 'yx_user',
     tokenKey: 'yx_token',
@@ -11,15 +13,22 @@ const AUTH_CONFIG = {
 
 // ============ REGISTRO DE USUARIO ============
 function registerUser(email, password, username) {
-    console.log('🔍 registerUser llamado');
+    console.log('========================================');
+    console.log('🔍 registerUser() EJECUTADO');
+    console.log('========================================');
+    console.log('📧 Email:', email);
+    console.log('👤 Username:', username);
+    console.log('🔑 Password:', password ? '***' : '(vacío)');
     
     // Validaciones
     if (!email || !password || !username) {
+        console.log('❌ ERROR: Campos vacíos');
         showToast('Todos los campos son obligatorios', 'error');
         return false;
     }
     
     if (password.length < 6) {
+        console.log('❌ ERROR: Password muy corta');
         showToast('La contraseña debe tener al menos 6 caracteres', 'error');
         return false;
     }
@@ -28,19 +37,26 @@ function registerUser(email, password, username) {
     let users = [];
     try {
         const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
+        console.log('📦 Datos en localStorage:', stored);
         users = stored ? JSON.parse(stored) : [];
+        console.log('📦 Usuarios existentes:', users.length);
     } catch (e) {
+        console.error('❌ Error al leer localStorage:', e);
         users = [];
     }
     
-    // Verificar si el email ya está registrado
-    if (users.find(u => u.email === email)) {
+    // Verificar email duplicado
+    const emailExists = users.find(u => u.email === email);
+    if (emailExists) {
+        console.log('❌ ERROR: Email ya registrado:', email);
         showToast('El email ya está registrado', 'error');
         return false;
     }
     
-    // Verificar si el nombre de usuario ya existe
-    if (users.find(u => u.username === username)) {
+    // Verificar username duplicado
+    const usernameExists = users.find(u => u.username === username);
+    if (usernameExists) {
+        console.log('❌ ERROR: Username ya existe:', username);
         showToast('El nombre de usuario ya está en uso', 'error');
         return false;
     }
@@ -57,17 +73,26 @@ function registerUser(email, password, username) {
         lastLogin: null,
         transactions: []
     };
+    console.log('✅ Nuevo usuario creado:', newUser);
     
     // Guardar usuario
     users.push(newUser);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
+    console.log('💾 Usuario guardado en localStorage');
     
-    console.log('✅ Usuario registrado:', username);
+    // Verificar que se guardó
+    const verifyUsers = JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]');
+    console.log('📦 Verificación - Total usuarios:', verifyUsers.length);
+    console.log('✅ REGISTRO COMPLETADO CON ÉXITO');
+    console.log('========================================');
+    
     return true;
 }
 
 // ============ INICIO DE SESIÓN ============
 function loginUser(email, password) {
+    console.log('🔍 loginUser ejecutado');
+    
     if (!email || !password) {
         showToast('Email y contraseña son obligatorios', 'error');
         return false;
@@ -92,7 +117,6 @@ function loginUser(email, password) {
         return false;
     }
     
-    // Crear sesión
     const session = {
         user: {
             id: user.id,
@@ -270,4 +294,5 @@ window.updateUserUI = updateUserUI;
 window.toggleUserMenu = toggleUserMenu;
 window.showToast = showToast;
 
-console.log('✅ Auth.js cargado');
+console.log('✅ Auth.js cargado correctamente');
+console.log('📦 localStorage disponible:', typeof localStorage !== 'undefined');
