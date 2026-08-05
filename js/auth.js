@@ -164,17 +164,8 @@ function updateUserUI() {
         if (avatarEl) avatarEl.textContent = 'account_circle';
         if (nameEl) nameEl.textContent = user.username || 'Usuario';
 
-        // ============ VERIFICAR ADMIN ============
-        let isUserAdmin = false;
-        try {
-            const whitelistData = localStorage.getItem('admin_whitelist');
-            if (whitelistData) {
-                const whitelist = JSON.parse(whitelistData);
-                if (whitelist.admins && whitelist.admins.includes(user.email)) {
-                    isUserAdmin = true;
-                }
-            }
-        } catch (e) {}
+        // ============ VERIFICAR ADMIN EN TIEMPO REAL ============
+        const isUserAdmin = isAdmin(user.email);
 
         // Mostrar/ocultar botones admin
         const adminBtn = document.getElementById('adminPanelBtn');
@@ -333,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cargar whitelist por defecto si no existe
     if (!localStorage.getItem('admin_whitelist')) {
         const defaultWhitelist = {
-            admins: ['zgxbrielb@gmail.com', 'admin@yxcards.com'],
+            admins: [],
             insignias: {
                 'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
                 'Dev': { icon: 'code', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.15)', description: 'Desarrollador de la plataforma' },
