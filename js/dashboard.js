@@ -5,6 +5,7 @@
 console.log('📊 Dashboard.js cargado');
 
 let currentCardData = null;
+let currentCardIndex = -1;
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📊 Dashboard iniciado');
@@ -91,7 +92,7 @@ function renderPurchases(purchases) {
     container.innerHTML = purchases.map((p, index) => {
         const networkColor = getNetworkColor(p.network);
         return `
-            <div class="purchase-card">
+            <div class="purchase-card" data-index="${index}">
                 <div class="purchase-header">
                     <span class="purchase-network" style="color:${networkColor};">${p.network || 'N/A'}</span>
                     <span class="purchase-bin">${p.bin || '****'}</span>
@@ -116,7 +117,10 @@ function renderPurchases(purchases) {
                     </div>
                 </div>
                 <div class="purchase-footer">
-                    <span class="purchase-status completed">✅ Comprada</span>
+                    <span class="purchase-status completed">
+                        <span class="material-icons" style="font-size:14px;">check_circle</span>
+                        Comprada
+                    </span>
                     <button class="btn-show-data" onclick="showCardData(${index})">
                         <span class="material-icons">visibility</span>
                         Mostrar Datos
@@ -187,15 +191,32 @@ function renderTransactions(transactions) {
 
 // ============ MOSTRAR DATOS DE LA TARJETA ============
 function showCardData(index) {
+    console.log('🔍 showCardData llamado con índice:', index);
+    
     const user = getCurrentUser();
-    if (!user) return;
+    if (!user) {
+        showToast('❌ Usuario no autenticado', 'error');
+        return;
+    }
 
     const users = getUsers();
     const fullUser = users.find(u => u.id === user.id);
-    if (!fullUser) return;
+    if (!fullUser) {
+        showToast('❌ Usuario no encontrado', 'error');
+        return;
+    }
 
     const purchases = fullUser.purchases || [];
+    console.log('📦 Total compras:', purchases.length);
+    
+    if (index < 0 || index >= purchases.length) {
+        showToast('❌ Tarjeta no encontrada', 'error');
+        return;
+    }
+
     const purchase = purchases[index];
+    console.log('📦 Compra seleccionada:', purchase);
+    
     if (!purchase) {
         showToast('❌ No se encontraron datos de esta tarjeta', 'error');
         return;
@@ -203,14 +224,17 @@ function showCardData(index) {
 
     // Guardar datos para copiar
     currentCardData = purchase;
+    currentCardIndex = index;
 
     // Preparar número de tarjeta con formato
     const cardNumber = purchase.cardData?.number || '**** **** **** ****';
     const formattedNumber = cardNumber.replace(/(.{4})/g, '$1 ').trim();
 
     // Mostrar en el modal
-    document.getElementById('modalCardType').textContent = purchase.network || 'N/A';
-    document.getElementById('modalCardType').className = `card-type-badge ${(purchase.network || '').toLowerCase()}`;
+    const typeBadge = document.getElementById('modalCardType');
+    typeBadge.textContent = purchase.network || 'N/A';
+    typeBadge.className = `card-type-badge ${(purchase.network || '').toLowerCase()}`;
+    
     document.getElementById('modalCardNumber').textContent = formattedNumber;
     document.getElementById('modalCardExpiry').textContent = purchase.cardData?.expiry || '**/**';
     document.getElementById('modalCardCvv').textContent = purchase.cardData?.cvv || '***';
@@ -218,12 +242,14 @@ function showCardData(index) {
     document.getElementById('modalCardCountry').textContent = purchase.country || 'N/A';
 
     document.getElementById('cardDataModal').classList.add('active');
+    console.log('✅ Modal abierto');
 }
 
 // ============ CERRAR MODAL ============
 function closeCardDataModal() {
     document.getElementById('cardDataModal').classList.remove('active');
     currentCardData = null;
+    currentCardIndex = -1;
 }
 
 // ============ COPIAR DATOS COMPLETOS ============
@@ -255,7 +281,7 @@ function copyCardData() {
     navigator.clipboard.writeText(textToCopy).then(() => {
         showToast('✅ Datos copiados al portapapeles', 'success');
     }).catch(() => {
-        // Fallback: copiar de otra forma
+        // Fallback
         const textarea = document.createElement('textarea');
         textarea.value = textToCopy;
         document.body.appendChild(textarea);
