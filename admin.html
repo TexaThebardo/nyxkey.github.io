@@ -77,6 +77,18 @@
         .admin-login-box p { color: #a0aab8; text-align: center; margin-bottom: 24px; }
         .admin-login-box .admin-hint { font-size: 12px; color: #5a6575; text-align: center; margin-top: 12px; }
         .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; max-width: 90%; }
+        .admin-warning {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -116,6 +128,12 @@
                     <span class="material-icons-outlined">logout</span> Cerrar Sesión Admin
                 </button>
             </div>
+        </div>
+
+        <!-- WARNING SI NO HAY ADMINS -->
+        <div id="noAdminsWarning" class="admin-warning" style="display:none;">
+            <span class="material-icons">warning</span>
+            ⚠️ No hay administradores configurados. Añade tu correo en "Gestionar Administradores" para tener acceso.
         </div>
 
         <!-- STATS -->
@@ -228,19 +246,30 @@
                 try {
                     const data = JSON.parse(session);
                     if (data.loggedIn && (Date.now() - data.timestamp < 3600000)) {
+                        // Verificar si el email sigue siendo admin
                         if (isAdmin(data.email)) {
                             showAdminPanel();
                             return true;
+                        } else {
+                            localStorage.removeItem('admin_session');
                         }
                     }
                 } catch (e) {}
             }
+            
+            // Si no hay admin en la whitelist, mostrar mensaje
+            const admins = getAdminList();
+            if (admins.length === 0) {
+                document.getElementById('noAdminsWarning').style.display = 'flex';
+            }
+            
             return false;
         }
 
         function showAdminPanel() {
             document.getElementById('adminLoginOverlay').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
+            document.getElementById('noAdminsWarning').style.display = 'none';
             loadAdminData();
             renderAdminList();
         }
@@ -355,11 +384,27 @@
 
         function removeAdminFromList(email) {
             if (!confirm(`¿Quitar permisos de administrador a ${email}?`)) return;
+            
             const result = removeAdminFromWhitelist(email);
             showToast(result.message, result.success ? 'success' : 'error');
+            
             if (result.success) {
                 loadAdminData();
                 renderAdminList();
+                
+                // Si el admin que se quitó es el que está logueado, cerrar sesión de admin
+                const session = localStorage.getItem('admin_session');
+                if (session) {
+                    try {
+                        const data = JSON.parse(session);
+                        if (data.email === email) {
+                            localStorage.removeItem('admin_session');
+                            document.getElementById('adminLoginOverlay').classList.remove('hidden');
+                            document.getElementById('adminPanel').classList.add('hidden');
+                            showToast('🔒 Tu sesión de administrador ha sido removida', 'warning');
+                        }
+                    } catch (e) {}
+                }
             }
         }
 
