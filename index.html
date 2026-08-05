@@ -10,17 +10,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* ============ LOGO ANIMADO EN NAVBAR ============ */
+        /* ============ LOGO ANIMADO EN NAVBAR - MÁS GRANDE ============ */
         .nav-logo .logo-img {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
             overflow: hidden;
             flex-shrink: 0;
             animation: pulseLogo 2.5s ease-in-out infinite;
             display: inline-block;
             vertical-align: middle;
             transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(240, 185, 11, 0.1);
         }
 
         .nav-logo .logo-img img {
@@ -31,41 +32,44 @@
 
         .nav-logo .logo-img:hover {
             transform: scale(1.08);
-            filter: drop-shadow(0 0 25px rgba(240, 185, 11, 0.5));
+            filter: drop-shadow(0 0 30px rgba(240, 185, 11, 0.6));
+            box-shadow: 0 0 40px rgba(240, 185, 11, 0.2);
         }
 
         @keyframes pulseLogo {
             0%, 100% {
                 transform: scale(1);
-                filter: drop-shadow(0 0 10px rgba(240, 185, 11, 0.15));
+                filter: drop-shadow(0 0 12px rgba(240, 185, 11, 0.15));
             }
             50% {
-                transform: scale(1.04);
-                filter: drop-shadow(0 0 25px rgba(240, 185, 11, 0.35));
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 30px rgba(240, 185, 11, 0.4));
             }
         }
 
-        /* ============ LOGO EN HERO ============ */
+        /* ============ LOGO EN HERO - MÁS GRANDE ============ */
         .hero-logo {
             display: flex;
             align-items: center;
-            gap: 40px;
+            gap: 24px;
             margin-bottom: 16px;
         }
 
         .hero-logo .hero-logo-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 16px;
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
             overflow: hidden;
             animation: pulseLogo 2.5s ease-in-out infinite;
             flex-shrink: 0;
             transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(240, 185, 11, 0.1);
         }
 
         .hero-logo .hero-logo-img:hover {
             transform: scale(1.06);
-            filter: drop-shadow(0 0 30px rgba(240, 185, 11, 0.4));
+            filter: drop-shadow(0 0 40px rgba(240, 185, 11, 0.5));
+            box-shadow: 0 0 60px rgba(240, 185, 11, 0.2);
         }
 
         .hero-logo .hero-logo-img img {
@@ -75,13 +79,29 @@
         }
 
         .hero-logo .hero-brand {
-            font-size: 38px;
+            font-size: 44px;
             font-weight: 800;
             color: var(--text-primary);
+            letter-spacing: -1px;
         }
 
         .hero-logo .hero-brand span {
             color: var(--primary);
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 992px) {
+            .hero-logo .hero-brand {
+                font-size: 36px;
+            }
+            .hero-logo .hero-logo-img {
+                width: 80px;
+                height: 80px;
+            }
+            .nav-logo .logo-img {
+                width: 48px;
+                height: 48px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -89,26 +109,39 @@
                 font-size: 28px;
             }
             .hero-logo .hero-logo-img {
-                width: 60px;
-                height: 60px;
+                width: 64px;
+                height: 64px;
+                border-radius: 16px;
             }
             .nav-logo .logo-img {
-                width: 38px;
-                height: 38px;
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+            }
+            .hero-content h1 {
+                font-size: 24px;
             }
         }
 
         @media (max-width: 480px) {
+            .hero-logo {
+                gap: 16px;
+            }
             .hero-logo .hero-brand {
                 font-size: 22px;
             }
             .hero-logo .hero-logo-img {
-                width: 50px;
-                height: 50px;
+                width: 52px;
+                height: 52px;
+                border-radius: 12px;
             }
             .nav-logo .logo-img {
-                width: 32px;
-                height: 32px;
+                width: 34px;
+                height: 34px;
+                border-radius: 8px;
+            }
+            .hero-content h1 {
+                font-size: 20px;
             }
         }
     </style>
@@ -118,7 +151,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <!-- LOGO CON ANIMACIÓN -->
+                <!-- LOGO CON ANIMACIÓN - MÁS GRANDE -->
                 <span class="logo-img">
                     <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards">
                 </span>
@@ -185,11 +218,11 @@
         </div>
     </nav>
 
-    <!-- ============ HERO CON LOGO ============ -->
+    <!-- ============ HERO CON LOGO GRANDE ============ -->
     <section class="hero-section">
         <div class="hero-container">
             <div class="hero-content">
-                <!-- LOGO EN HERO -->
+                <!-- LOGO EN HERO - MÁS GRANDE -->
                 <div class="hero-logo">
                     <div class="hero-logo-img">
                         <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards">
