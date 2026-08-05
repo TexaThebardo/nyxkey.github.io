@@ -10,7 +10,6 @@ const AUTH_CONFIG = {
     sessionTimeout: 3600000
 };
 
-// ============ REGISTRO ============
 function registerUser(email, password, username) {
     console.log('🔍 registerUser() ejecutado');
     
@@ -47,17 +46,15 @@ function registerUser(email, password, username) {
         email: email,
         username: username,
         password: hashPassword(password),
-        balance: 0, // ⚠️ CAMBIADO: Ya no da $100 gratis
+        balance: 0,
         role: 'user',
         createdAt: new Date().toISOString(),
         lastLogin: null,
-        // ============ NUEVO: HISTORIAL DE COMPRAS ============
-        purchases: [], // Array de tarjetas compradas
-        // ============ NUEVO: PERFIL ============
+        purchases: [],
         profile: {
-            banner: '', // URL del banner
-            avatar: '', // URL del avatar
-            bio: '' // Biografía
+            banner: '',
+            avatar: '',
+            bio: ''
         }
     };
     
@@ -69,7 +66,6 @@ function registerUser(email, password, username) {
     return true;
 }
 
-// ============ LOGIN ============
 function loginUser(email, password) {
     console.log('🔍 loginUser() ejecutado');
     
@@ -118,17 +114,16 @@ function loginUser(email, password) {
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
     
+    updateUserUI();
     return true;
 }
 
-// ============ CERRAR SESIÓN ============
 function logoutUser() {
     localStorage.removeItem(AUTH_CONFIG.tokenKey);
     showToast('Sesión cerrada', 'info');
-    window.location.href = '/nyxkey.github.io/login.html';
+    window.location.href = 'login.html';
 }
 
-// ============ VERIFICAR SESIÓN ============
 function checkSession() {
     const sessionData = localStorage.getItem(AUTH_CONFIG.tokenKey);
     if (!sessionData) return null;
@@ -146,28 +141,41 @@ function checkSession() {
     }
 }
 
-// ============ OBTENER USUARIO ACTUAL ============
 function getCurrentUser() {
     const session = checkSession();
     return session ? session.user : null;
 }
 
-// ============ ACTUALIZAR UI ============
 function updateUserUI() {
     const user = getCurrentUser();
     const balanceEl = document.getElementById('userBalance');
     const avatarEl = document.getElementById('userAvatarIcon');
+    const nameEl = document.getElementById('userDisplayName');
     
     if (user) {
         if (balanceEl) balanceEl.textContent = `$${user.balance.toFixed(2)}`;
         if (avatarEl) avatarEl.textContent = 'account_circle';
+        if (nameEl) nameEl.textContent = user.username || 'Usuario';
+        
+        const adminBtn = document.getElementById('adminPanelBtn');
+        if (adminBtn) {
+            if (isAdmin && isAdmin(user.email)) {
+                adminBtn.style.display = 'flex';
+            } else {
+                adminBtn.style.display = 'none';
+            }
+        }
+        
+        if (typeof renderInsignias === 'function') {
+            renderInsignias(user.email, 'userInsignias');
+        }
     } else {
         if (balanceEl) balanceEl.textContent = '$0.00';
         if (avatarEl) avatarEl.textContent = 'person';
+        if (nameEl) nameEl.textContent = 'Invitado';
     }
 }
 
-// ============ TOGGLE MENÚ ============
 function toggleUserMenu() {
     const dropdown = document.getElementById('userDropdown');
     if (dropdown) dropdown.classList.toggle('active');
@@ -181,16 +189,16 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// ============ ACTUALIZAR SALDO ============
-function updateUserBalance(userId, amount) {
-    let users = [];
+function getUsers() {
     try {
-        const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
-        users = stored ? JSON.parse(stored) : [];
+        return JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]');
     } catch (e) {
-        users = [];
+        return [];
     }
-    
+}
+
+function updateUserBalance(userId, amount) {
+    const users = getUsers();
     const user = users.find(u => u.id === userId);
     if (user) {
         user.balance = (user.balance || 0) + amount;
@@ -210,16 +218,8 @@ function updateUserBalance(userId, amount) {
     return false;
 }
 
-// ============ AÑADIR COMPRA AL HISTORIAL ============
 function addPurchaseToHistory(userId, purchaseData) {
-    let users = [];
-    try {
-        const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
-        users = stored ? JSON.parse(stored) : [];
-    } catch (e) {
-        users = [];
-    }
-    
+    const users = getUsers();
     const user = users.find(u => u.id === userId);
     if (user) {
         if (!user.purchases) user.purchases = [];
@@ -230,7 +230,6 @@ function addPurchaseToHistory(userId, purchaseData) {
         });
         localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
         
-        // Actualizar sesión
         const currentUser = getCurrentUser();
         if (currentUser && currentUser.id === userId) {
             const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
@@ -244,36 +243,6 @@ function addPurchaseToHistory(userId, purchaseData) {
     return false;
 }
 
-// ============ ACTUALIZAR PERFIL ============
-function updateUserProfile(userId, profileData) {
-    let users = [];
-    try {
-        const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
-        users = stored ? JSON.parse(stored) : [];
-    } catch (e) {
-        users = [];
-    }
-    
-    const user = users.find(u => u.id === userId);
-    if (user) {
-        if (!user.profile) user.profile = {};
-        user.profile = { ...user.profile, ...profileData };
-        localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
-        
-        const currentUser = getCurrentUser();
-        if (currentUser && currentUser.id === userId) {
-            const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
-            if (session) {
-                session.user.profile = user.profile;
-                localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
-            }
-        }
-        return true;
-    }
-    return false;
-}
-
-// ============ UTILIDADES ============
 function hashPassword(password) {
     let hash = 0;
     for (let i = 0; i < password.length; i++) {
@@ -288,7 +257,6 @@ function generateToken(userId) {
     return btoa(`${userId}:${Date.now()}:${Math.random()}`);
 }
 
-// ============ TOAST ============
 function showToast(message, type = 'info') {
     let container = document.querySelector('.toast-container');
     if (!container) {
@@ -299,8 +267,28 @@ function showToast(message, type = 'info') {
     }
     
     const toast = document.createElement('div');
-    const colors = { success: '#2ecc71', error: '#e74c3c', info: '#3498db', warning: '#f39c12' };
-    toast.style.cssText = `background:#1a232e;color:#e8edf2;padding:12px 24px;border-radius:12px;border-left:4px solid ${colors[type] || colors.info};box-shadow:0 8px 32px rgba(0,0,0,0.5);font-size:14px;font-weight:500;pointer-events:auto;animation:slideUp 0.3s ease;min-width:200px;text-align:center;border:1px solid #2a313c;`;
+    const colors = {
+        success: '#2ecc71',
+        error: '#e74c3c',
+        info: '#3498db',
+        warning: '#f39c12'
+    };
+    
+    toast.style.cssText = `
+        background: #1a232e;
+        color: #e8edf2;
+        padding: 12px 24px;
+        border-radius: 12px;
+        border-left: 4px solid ${colors[type] || colors.info};
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        font-size: 14px;
+        font-weight: 500;
+        pointer-events: auto;
+        animation: slideUp 0.3s ease;
+        min-width: 200px;
+        text-align: center;
+        border: 1px solid #2a313c;
+    `;
     toast.textContent = message;
     container.appendChild(toast);
     
@@ -310,12 +298,10 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// ============ INICIALIZAR ============
 document.addEventListener('DOMContentLoaded', function() {
     updateUserUI();
 });
 
-// ============ EXPORTAR ============
 window.registerUser = registerUser;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
@@ -325,56 +311,7 @@ window.updateUserBalance = updateUserBalance;
 window.updateUserUI = updateUserUI;
 window.toggleUserMenu = toggleUserMenu;
 window.showToast = showToast;
+window.getUsers = getUsers;
 window.addPurchaseToHistory = addPurchaseToHistory;
-window.updateUserProfile = updateUserProfile;
 
-// ============ FUNCIONES DE AUTENTICACIÓN EXISTENTES ============
-// (mantén tu código existente de registerUser, loginUser, etc.)
-
-// ============ ACTUALIZAR UI DEL USUARIO CON INSIGNIAS ============
-function updateUserUIWithInsignias() {
-    const user = getCurrentUser();
-    updateUserUI();
-    
-    if (user) {
-        // Renderizar insignias en el navbar si existe el contenedor
-        const insigniaContainer = document.getElementById('userInsignias');
-        if (insigniaContainer) {
-            renderInsignias(user.email, 'userInsignias');
-        }
-    }
-}
-
-// ============ ACTUALIZAR LA FUNCIÓN updateUserUI ============
-// Reemplaza la función updateUserUI existente con esta:
-function updateUserUI() {
-    const user = getCurrentUser();
-    const balanceEl = document.getElementById('userBalance');
-    const avatarEl = document.getElementById('userAvatarIcon');
-    const nameEl = document.getElementById('userDisplayName');
-    
-    if (user) {
-        if (balanceEl) balanceEl.textContent = `$${user.balance.toFixed(2)}`;
-        if (avatarEl) avatarEl.textContent = 'account_circle';
-        if (nameEl) nameEl.textContent = user.username || 'Usuario';
-        
-        // Verificar si es admin para mostrar botón
-        const adminBtn = document.getElementById('adminPanelBtn');
-        if (adminBtn) {
-            if (isAdmin(user.email)) {
-                adminBtn.style.display = 'flex';
-            } else {
-                adminBtn.style.display = 'none';
-            }
-        }
-    } else {
-        if (balanceEl) balanceEl.textContent = '$0.00';
-        if (avatarEl) avatarEl.textContent = 'person';
-        if (nameEl) nameEl.textContent = 'Invitado';
-    }
-}
-
-// ============ SOBRESCRIBIR FUNCIONES EXISTENTES ============
-// Asegúrate de que estas funciones estén disponibles globalmente
-window.updateUserUI = updateUserUI;
-window.updateUserUIWithInsignias = updateUserUIWithInsignias;
+console.log('✅ Auth.js cargado correctamente');
