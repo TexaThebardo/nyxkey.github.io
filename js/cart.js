@@ -58,7 +58,6 @@ function addToCart(productIndex) {
             price: product.price,
             quantity: 1,
             maxStock: product.stock,
-            // Guardar datos completos para el historial
             cardData: {
                 number: product.cardData?.number || '****',
                 expiry: product.cardData?.expiry || '**/**',
@@ -184,7 +183,6 @@ function toggleCart() {
     if (overlay) overlay.classList.toggle('active');
 }
 
-// ============ CHECKOUT - GUARDAR EN HISTORIAL ============
 function checkout() {
     if (cartItems.length === 0) {
         showToast('El carrito está vacío', 'error');
@@ -194,7 +192,7 @@ function checkout() {
     const user = getCurrentUser();
     if (!user) {
         showToast('Debes iniciar sesión para comprar', 'error');
-        setTimeout(() => window.location.href = '/nyxkey.github.io/login.html', 1500);
+        setTimeout(() => window.location.href = 'login.html', 1500);
         return;
     }
     
@@ -208,10 +206,8 @@ function checkout() {
     }
     
     if (confirm(`💰 Total a pagar: $${total.toFixed(2)} USD\n¿Procesar pago?`)) {
-        // 1. Descontar saldo
         updateUserBalance(user.id, -total);
         
-        // 2. Guardar cada tarjeta comprada en el historial
         cartItems.forEach(item => {
             const purchaseData = {
                 network: item.network,
@@ -226,7 +222,6 @@ function checkout() {
             addPurchaseToHistory(user.id, purchaseData);
         });
         
-        // 3. Registrar transacción (para el historial de transacciones)
         const transaction = {
             id: 'TX-' + Date.now(),
             type: 'compra',
@@ -244,7 +239,6 @@ function checkout() {
             localStorage.setItem('yx_users', JSON.stringify(users));
         }
         
-        // 4. Vaciar carrito
         cartItems = [];
         saveCart();
         updateCartUI();
@@ -256,7 +250,6 @@ function checkout() {
     }
 }
 
-// Inicializar
 document.addEventListener('DOMContentLoaded', function() {
     loadCart();
 });
