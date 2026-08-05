@@ -3,10 +3,9 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar autenticación
     const user = getCurrentUser();
     if (!user) {
-        window.location.href = 'login.html';
+        window.location.href = '/nyxkey.github.io/login.html';
         return;
     }
     
@@ -16,89 +15,120 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadDashboardData() {
-    const products = getProducts();
-    const stats = getProductStats();
     const user = getCurrentUser();
+    if (!user) return;
     
-    document.getElementById('totalProducts').textContent = stats.total || 0;
-    document.getElementById('totalStock').textContent = stats.totalStock || 0;
-    document.getElementById('totalRevenue').textContent = `$${(stats.totalValue || 0).toFixed(2)}`;
-    document.getElementById('totalCustomers').textContent = Math.floor(Math.random() * 50) + 10;
+    // Obtener datos completos del usuario desde localStorage
+    const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
+    const fullUser = users.find(u => u.id === user.id);
+    const purchases = fullUser?.purchases || [];
     
-    if (user) {
-        document.getElementById('dashboardBalance').textContent = `$${(user.balance || 0).toFixed(2)}`;
-    }
+    // Estadísticas
+    const totalPurchases = purchases.length;
+    const totalSpent = purchases.reduce((sum, p) => sum + (p.price * p.quantity), 0);
+    const balance = fullUser?.balance || 0;
     
-    renderInventory(products);
-    loadTransactions();
-    renderRecentActivity(products);
+    document.getElementById('totalPurchases').textContent = totalPurchases;
+    document.getElementById('totalSpent').textContent = `$${totalSpent.toFixed(2)}`;
+    document.getElementById('currentBalance').textContent = `$${balance.toFixed(2)}`;
+    document.getElementById('dashboardBalance').textContent = `$${balance.toFixed(2)}`;
+    document.getElementById('purchaseCount').textContent = `${totalPurchases} tarjetas`;
+    
+    // Renderizar compras
+    renderPurchases(purchases);
+    renderRecentPurchases(purchases);
+    loadTransactions(fullUser);
 }
 
-function renderInventory(products, filter = 'all', search = '') {
-    const container = document.getElementById('inventoryList');
-    let filtered = [...products];
+// ============ RENDERIZAR COMPRAS ============
+function renderPurchases(purchases) {
+    const container = document.getElementById('purchasesGrid');
     
-    if (filter === 'active') {
-        filtered = filtered.filter(p => p.active !== false);
-    }
-    if (filter === 'low') {
-        filtered = filtered.filter(p => p.stock < 10);
-    }
-    if (search) {
-        const s = search.toLowerCase();
-        filtered = filtered.filter(p => 
-            p.bin.includes(s) || 
-            p.bank.toLowerCase().includes(s) ||
-            p.network.toLowerCase().includes(s)
-        );
-    }
-    
-    if (filtered.length === 0) {
+    if (purchases.length === 0) {
         container.innerHTML = `
-            <div class="empty-state">
-                <span class="material-icons-outlined">inventory_2</span>
-                <p>No hay productos para mostrar</p>
+            <div class="empty-state" style="grid-column:1/-1;">
+                <span class="material-icons-outlined">shopping_bag</span>
+                <p>No has comprado ninguna tarjeta aún</p>
+                <span style="font-size:14px;color:var(--text-muted);">Visita la tienda para adquirir tarjetas</span>
             </div>
         `;
         return;
     }
     
-    container.innerHTML = filtered.map(p => `
-        <div class="inventory-item">
-            <div class="item-info">
-                <div class="item-main">
-                    <span class="item-network">${p.network}</span>
-                    <span class="item-bin">${p.bin}</span>
-                    <span class="item-bank">${p.bank}</span>
-                </div>
-                <div class="item-details">
-                    <span>${p.country}</span>
-                    <span>${p.type}</span>
-                    <span class="item-price">$${p.price.toFixed(2)}</span>
-                </div>
+    container.innerHTML = purchases.map((purchase, index) => `
+        <div class="purchase-card">
+            <div class="purchase-header">
+                <span class="purchase-network">${purchase.network}</span>
+                <span class="purchase-bin">${purchase.bin}</span>
+                <span class="purchase-date">${new Date(purchase.purchaseDate).toLocaleDateString()}</span>
             </div>
-            <div class="item-stock">
-                <span class="stock-badge ${p.stock < 10 ? 'low' : p.stock < 25 ? 'medium' : 'high'}">
-                    ${p.stock} unidades
-                </span>
+            <div class="purchase-details">
+                <div class="detail-row">
+                    <span class="detail-label">Banco</span>
+                    <span class="detail-value">${purchase.bank}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">País</span>
+                    <span class="detail-value">${purchase.country}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Cantidad</span>
+                    <span class="detail-value">${purchase.quantity}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Precio</span>
+                    <span class="detail-value">$${(purchase.price * purchase.quantity).toFixed(2)}</span>
+                </div>
+                ${purchase.cardData ? `
+                <div class="detail-row card-data">
+                    <span class="detail-label">Datos de la Tarjeta</span>
+                    <span class="detail-value" style="font-family:monospace;font-size:14px;">
+                        ${purchase.cardData.number || '****'} | ${purchase.cardData.expiry || '**/**'} | ${purchase.cardData.cvv || '***'}
+                    </span>
+                </div>
+                ` : ''}
             </div>
-            <div class="item-actions">
-                <button onclick="editProduct(${p.id})" class="btn-icon">
-                    <span class="material-icons-outlined">edit</span>
-                </button>
-                <button onclick="deleteProduct(${p.id})" class="btn-icon danger">
-                    <span class="material-icons-outlined">delete</span>
-                </button>
+            <div class="purchase-footer">
+                <span class="purchase-status completed">✅ Comprada</span>
             </div>
         </div>
     `).join('');
 }
 
-function loadTransactions() {
-    const user = getCurrentUser();
-    const tbody = document.getElementById('transactionsBody');
+// ============ RENDERIZAR COMPRAS RECIENTES ============
+function renderRecentPurchases(purchases) {
+    const container = document.getElementById('recentPurchases');
+    const recent = purchases.slice(-5).reverse();
     
-    if (!user || !user.transactions || user.transactions.length === 0) {
+    if (recent.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <span class="material-icons-outlined">shopping_bag</span>
+                <p>No has realizado compras aún</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = recent.map(p => `
+        <div class="activity-item">
+            <span class="activity-icon">
+                <span class="material-icons-outlined">credit_card</span>
+            </span>
+            <div class="activity-content">
+                <p>${p.network} ${p.bin} - ${p.quantity}x</p>
+                <span class="activity-time">$${(p.price * p.quantity).toFixed(2)} · ${new Date(p.purchaseDate).toLocaleDateString()}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ============ CARGAR TRANSACCIONES ============
+function loadTransactions(user) {
+    const tbody = document.getElementById('transactionsBody');
+    const transactions = user?.transactions || [];
+    
+    if (transactions.length === 0) {
         tbody.innerHTML = `
             <tr>
                 <td colspan="5" style="text-align:center;padding:40px;color:var(--text-secondary);">
@@ -110,7 +140,7 @@ function loadTransactions() {
         return;
     }
     
-    tbody.innerHTML = user.transactions.slice().reverse().slice(0, 10).map(t => `
+    tbody.innerHTML = transactions.slice().reverse().slice(0, 20).map(t => `
         <tr>
             <td><code>${t.id}</code></td>
             <td><span class="transaction-type ${t.type}">${t.type}</span></td>
@@ -121,32 +151,7 @@ function loadTransactions() {
     `).join('');
 }
 
-function renderRecentActivity(products) {
-    const container = document.getElementById('activityList');
-    const activities = products.slice(0, 5).map(p => ({
-        message: `Actualización: ${p.network} ${p.bin} → ${p.stock} unidades`,
-        time: new Date(),
-        icon: 'inventory_2'
-    }));
-    
-    if (activities.length === 0) {
-        container.innerHTML = `<div class="empty-state"><p>No hay actividad reciente</p></div>`;
-        return;
-    }
-    
-    container.innerHTML = activities.map(a => `
-        <div class="activity-item">
-            <span class="activity-icon">
-                <span class="material-icons-outlined">${a.icon}</span>
-            </span>
-            <div class="activity-content">
-                <p>${a.message}</p>
-                <span class="activity-time">${timeAgo(a.time)}</span>
-            </div>
-        </div>
-    `).join('');
-}
-
+// ============ NAVEGACIÓN ============
 function setupNavigation() {
     document.querySelectorAll('.sidebar-link[data-section]').forEach(link => {
         link.addEventListener('click', function(e) {
@@ -158,17 +163,6 @@ function setupNavigation() {
             document.getElementById(section).classList.add('active');
         });
     });
-}
-
-function timeAgo(date) {
-    const seconds = Math.floor((new Date() - date) / 1000);
-    if (seconds < 60) return 'hace ' + seconds + 's';
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return 'hace ' + minutes + 'm';
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return 'hace ' + hours + 'h';
-    const days = Math.floor(hours / 24);
-    return 'hace ' + days + 'd';
 }
 
 function updateDateTime() {
@@ -183,35 +177,3 @@ function updateDateTime() {
         });
     }
 }
-
-function filterInventory(search) {
-    const products = getProducts();
-    const status = document.querySelector('.inventory-controls select').value;
-    renderInventory(products, status, search);
-}
-
-function filterInventoryByStatus(status) {
-    const products = getProducts();
-    const search = document.querySelector('.inventory-controls input').value;
-    renderInventory(products, status, search);
-}
-
-function editProduct(id) {
-    showToast(`Editando producto ${id}...`, 'info');
-}
-
-function deleteProduct(id) {
-    if (confirm('¿Estás seguro de eliminar este producto?')) {
-        showToast(`Producto ${id} eliminado`, 'success');
-    }
-}
-
-function addProduct() {
-    showToast('Abriendo formulario de nuevo producto...', 'info');
-}
-
-window.filterInventory = filterInventory;
-window.filterInventoryByStatus = filterInventoryByStatus;
-window.editProduct = editProduct;
-window.deleteProduct = deleteProduct;
-window.addProduct = addProduct;
