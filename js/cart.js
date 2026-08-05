@@ -219,7 +219,9 @@ function checkout() {
                 cardData: item.cardData || { number: '****', expiry: '**/**', cvv: '***' },
                 purchaseDate: new Date().toISOString()
             };
-            addPurchaseToHistory(user.id, purchaseData);
+            if (typeof addPurchaseToHistory === 'function') {
+                addPurchaseToHistory(user.id, purchaseData);
+            }
         });
         
         const transaction = {
