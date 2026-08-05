@@ -96,6 +96,35 @@ function loginUser(email, password) {
         return false;
     }
 
+    // ============ SINCORNIZAR INSIGNIAS AL LOGIN ============
+    // Verificar si el usuario debe tener insignias automáticas
+    let userInsignias = getUserInsignias(email);
+    const whitelist = loadWhitelist();
+    const isUserAdmin = whitelist.admins && whitelist.admins.includes(email);
+    
+    let updatedInsignias = [...userInsignias];
+    let insigniasChanged = false;
+    
+    // Si es admin y no tiene Owner, se la añadimos
+    if (isUserAdmin && !updatedInsignias.includes('Owner')) {
+        updatedInsignias.push('Owner');
+        insigniasChanged = true;
+        console.log(`👑 Insignia Owner asignada a ${email} (login)`);
+    }
+    
+    // Si no es admin y tiene Owner, se la quitamos
+    if (!isUserAdmin && updatedInsignias.includes('Owner')) {
+        updatedInsignias = updatedInsignias.filter(i => i !== 'Owner');
+        insigniasChanged = true;
+        console.log(`🔒 Insignia Owner removida de ${email} (login)`);
+    }
+    
+    if (insigniasChanged) {
+        saveUserInsignias(email, updatedInsignias);
+        console.log(`✅ Insignias actualizadas en login:`, updatedInsignias);
+    }
+
+    // Crear sesión con las insignias actualizadas
     const session = {
         user: {
             id: user.id,
@@ -104,7 +133,8 @@ function loginUser(email, password) {
             balance: user.balance,
             role: user.role,
             purchases: user.purchases || [],
-            profile: user.profile || { banner: '', avatar: '', bio: '', pronoun: 'él' }
+            profile: user.profile || { banner: '', avatar: '', bio: '', pronoun: 'él' },
+            insignias: updatedInsignias
         },
         token: generateToken(user.id),
         expiresAt: Date.now() + AUTH_CONFIG.sessionTimeout
@@ -118,6 +148,7 @@ function loginUser(email, password) {
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
 
     updateUserUI();
+    showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
 }
 
@@ -164,7 +195,7 @@ function updateUserUI() {
         if (avatarEl) avatarEl.textContent = 'account_circle';
         if (nameEl) nameEl.textContent = user.username || 'Usuario';
 
-        // ============ VERIFICAR ADMIN EN TIEMPO REAL ============
+        // Verificar si es admin (desde la whitelist)
         const isUserAdmin = isAdmin(user.email);
 
         // Mostrar/ocultar botones admin
@@ -355,4 +386,4 @@ window.showToast = showToast;
 window.getUsers = getUsers;
 window.addPurchaseToHistory = addPurchaseToHistory;
 
-console.log('✅ Auth.js cargado correctamente');
+console.log('✅ Auth.js cargado correctamente - Sin emails fijos');
