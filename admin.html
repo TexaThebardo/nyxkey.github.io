@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .admin-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        /* ============ ADMIN STYLES ============ */
+        .admin-container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        /* HEADER */
         .admin-header {
             background: #131a22;
             border: 1px solid #2a313c;
@@ -26,55 +29,352 @@
         .admin-header h1 { font-size: 24px; font-weight: 700; color: #e8edf2; display: flex; align-items: center; gap: 12px; }
         .admin-header h1 .material-icons-outlined { color: #f0b90b; font-size: 32px; }
         .admin-badge { background: #f0b90b; color: #0b0e14; padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
-        .admin-panel { background: #131a22; border: 1px solid #2a313c; border-radius: 16px; padding: 24px; margin-bottom: 24px; }
-        .admin-panel h2 { font-size: 18px; font-weight: 600; color: #e8edf2; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        
+        /* STATS */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .admin-stat-card {
+            background: #131a22;
+            border: 1px solid #2a313c;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .admin-stat-card:hover { border-color: #f0b90b; transform: translateY(-2px); }
+        .admin-stat-card .stat-number { font-size: 28px; font-weight: 800; color: #e8edf2; display: block; }
+        .admin-stat-card .stat-label { font-size: 13px; color: #a0aab8; }
+        
+        /* PANELS */
+        .admin-panel {
+            background: #131a22;
+            border: 1px solid #2a313c;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .admin-panel h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e8edf2;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         .admin-panel h2 .material-icons-outlined { color: #f0b90b; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-        .form-group label { font-size: 14px; font-weight: 500; color: #a0aab8; display: flex; align-items: center; gap: 8px; }
-        .form-group input { background: #0b0e14; border: 1px solid #2a313c; border-radius: 10px; padding: 12px 16px; color: #e8edf2; font-size: 14px; font-family: 'Inter', sans-serif; transition: all 0.3s ease; width: 100%; }
-        .form-group input:focus { outline: none; border-color: #f0b90b; box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1); }
+        
+        /* FORMS */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #a0aab8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-group label .material-icons-outlined { font-size: 18px; color: #f0b90b; }
+        .form-group input {
+            background: #0b0e14;
+            border: 1px solid #2a313c;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #e8edf2;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #f0b90b;
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
+        }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } }
-        .btn-admin { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 30px; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.3s ease; border: none; font-family: 'Inter', sans-serif; width: 100%; }
+        
+        /* BUTTONS */
+        .btn-admin {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
         .btn-admin-primary { background: #f0b90b; color: #0b0e14; }
         .btn-admin-primary:hover { background: #d4a40a; transform: scale(1.02); }
         .btn-admin-success { background: #2ecc71; color: #0b0e14; }
         .btn-admin-success:hover { background: #27ae60; transform: scale(1.02); }
         .btn-admin-secondary { background: #1a232e; color: #a0aab8; border: 1px solid #2a313c; }
         .btn-admin-secondary:hover { background: #1e2a38; color: #e8edf2; }
-        .users-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .users-table th { text-align: left; padding: 12px 16px; background: #1a232e; color: #a0aab8; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #2a313c; }
-        .users-table td { padding: 10px 16px; border-bottom: 1px solid #1e2630; color: #e8edf2; }
+        .btn-admin-danger { background: #e74c3c; color: white; }
+        .btn-admin-danger:hover { background: #c0392b; transform: scale(1.02); }
+        
+        /* TABLES */
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .users-table th {
+            text-align: left;
+            padding: 12px 16px;
+            background: #1a232e;
+            color: #a0aab8;
+            font-weight: 500;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #2a313c;
+        }
+        .users-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #1e2630;
+            color: #e8edf2;
+        }
         .users-table tr:hover td { background: #1e2a38; }
         .users-table .user-email { color: #f0b90b; font-weight: 500; }
         .users-table .user-balance { font-weight: 700; color: #2ecc71; }
+        .users-table .admin-tag {
+            background: rgba(240, 185, 11, 0.15);
+            color: #f0b90b;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
         .table-responsive { overflow-x: auto; }
-        .admin-login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-        .admin-login-box { background: #131a22; border: 1px solid #2a313c; border-radius: 16px; padding: 40px; max-width: 400px; width: 100%; }
-        .admin-login-box h2 { color: #e8edf2; font-size: 24px; font-weight: 700; margin-bottom: 8px; text-align: center; }
-        .admin-login-box p { color: #a0aab8; text-align: center; margin-bottom: 24px; }
-        .admin-login-box .admin-hint { font-size: 12px; color: #5a6575; text-align: center; margin-top: 12px; }
-        .admin-login-box .input-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
-        .admin-login-box .input-group label { font-size: 13px; font-weight: 500; color: #a0aab8; display: flex; align-items: center; gap: 8px; }
-        .admin-login-box .input-group label .material-icons-outlined { font-size: 18px; color: #f0b90b; }
-        .admin-login-box .input-group input { background: #0b0e14; border: 1px solid #2a313c; border-radius: 10px; padding: 12px 16px; color: #e8edf2; font-size: 14px; font-family: 'Inter', sans-serif; transition: all 0.3s ease; width: 100%; }
-        .admin-login-box .input-group input:focus { outline: none; border-color: #f0b90b; box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1); }
-        .hidden { display: none !important; }
-        .admin-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-        .admin-actions .btn-sm { padding: 4px 12px; font-size: 12px; border-radius: 20px; border: none; cursor: pointer; font-weight: 600; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
+        
+        /* ADMIN LOGIN MODAL */
+        .admin-login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+        .admin-login-overlay.hidden {
+            display: none;
+        }
+        .admin-login-box {
+            background: #131a22;
+            border: 1px solid #2a313c;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 420px;
+            width: 100%;
+            animation: slideUp 0.4s ease;
+            position: relative;
+        }
+        .admin-login-box .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #5a6575;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .admin-login-box .close-btn:hover {
+            color: #e8edf2;
+            transform: rotate(90deg);
+        }
+        .admin-login-box h2 {
+            color: #e8edf2;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .admin-login-box p {
+            color: #a0aab8;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .admin-login-box .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+        .admin-login-box .input-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #a0aab8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .admin-login-box .input-group label .material-icons-outlined {
+            font-size: 18px;
+            color: #f0b90b;
+        }
+        .admin-login-box .input-group input {
+            background: #0b0e14;
+            border: 1px solid #2a313c;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #e8edf2;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .admin-login-box .input-group input:focus {
+            outline: none;
+            border-color: #f0b90b;
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
+        }
+        .admin-login-box .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 0;
+            color: #a0aab8;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .admin-login-box .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #f0b90b;
+            cursor: pointer;
+        }
+        .admin-login-box .admin-hint {
+            font-size: 12px;
+            color: #5a6575;
+            text-align: center;
+            margin-top: 12px;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .admin-actions .btn-sm {
+            padding: 4px 12px;
+            font-size: 12px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
         .btn-sm-add { background: #2ecc71; color: #0b0e14; }
         .btn-sm-add:hover { background: #27ae60; }
         .btn-sm-view { background: #3498db; color: white; }
         .btn-sm-view:hover { background: #2980b9; }
-        .toast-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; max-width: 90%; }
-        .admin-logout-btn { background: #e74c3c; color: white; border: none; padding: 8px 20px; border-radius: 30px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif; }
-        .admin-logout-btn:hover { background: #c0392b; transform: scale(1.05); }
+        
+        .admin-logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+        .admin-logout-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+        
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            pointer-events: none;
+            max-width: 90%;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #a0aab8;
+        }
+        .empty-state .material-icons-outlined {
+            font-size: 40px;
+            color: #5a6575;
+        }
+        .empty-state p {
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+        
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(30px); }
+        }
+        @keyframes slideUpToast {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDownToast {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+        }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <!-- LOGIN ADMIN -->
+    <!-- ============ ADMIN LOGIN MODAL ============ -->
     <div class="admin-login-overlay" id="adminLoginOverlay">
         <div class="admin-login-box">
+            <button class="close-btn" onclick="closeAdminLogin()" title="Cerrar">
+                <span class="material-icons">close</span>
+            </button>
             <div style="text-align:center;margin-bottom:16px;">
                 <span class="material-icons-outlined" style="font-size:48px;color:#f0b90b;">admin_panel_settings</span>
                 <h2>Panel de Administración</h2>
@@ -89,8 +389,12 @@
                     <label><span class="material-icons-outlined">key</span> Clave de Acceso</label>
                     <input type="password" id="adminKey" placeholder="Ingresa tu clave" required>
                 </div>
+                <label class="remember-me">
+                    <input type="checkbox" id="rememberMe" checked>
+                    <span>Recordarme</span>
+                </label>
                 <button type="submit" class="btn-admin btn-admin-primary">
-                    <span class="material-icons">login</span> Acceder
+                    <span class="material-icons">login</span> Acceder al Panel
                 </button>
             </form>
             <div class="admin-hint">
@@ -99,8 +403,9 @@
         </div>
     </div>
 
-    <!-- PANEL ADMIN -->
+    <!-- ============ ADMIN PANEL ============ -->
     <div id="adminPanel" class="admin-container hidden">
+        <!-- HEADER -->
         <div class="admin-header">
             <h1>
                 <span class="material-icons-outlined">admin_panel_settings</span>
@@ -117,9 +422,25 @@
             </div>
         </div>
 
+        <!-- STATS -->
+        <div class="admin-stats">
+            <div class="admin-stat-card">
+                <span class="stat-number" id="totalUsers">0</span>
+                <span class="stat-label">Usuarios Registrados</span>
+            </div>
+            <div class="admin-stat-card">
+                <span class="stat-number" id="totalBalance">$0</span>
+                <span class="stat-label">Saldo Total</span>
+            </div>
+            <div class="admin-stat-card">
+                <span class="stat-number" id="totalAdmins">0</span>
+                <span class="stat-label">Administradores</span>
+            </div>
+        </div>
+
         <!-- AGREGAR SALDO -->
         <div class="admin-panel">
-            <h2><span class="material-icons-outlined">add_circle</span> Agregar Saldo</h2>
+            <h2><span class="material-icons-outlined">add_circle</span> Agregar Saldo a Usuario</h2>
             <form id="addBalanceForm">
                 <div class="form-row">
                     <div class="form-group">
@@ -152,6 +473,7 @@
                             <th>Correo</th>
                             <th>Saldo</th>
                             <th>Tarjetas</th>
+                            <th>Rol</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -165,24 +487,68 @@
     <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // ADMIN - SCRIPT COMPLETO
+        // ADMIN.JS - COMPLETO Y MEJORADO
         // ============================================
 
-        // LOGIN CON EMAIL + KEY
+        // ============ CERRAR LOGIN MODAL ============
+        function closeAdminLogin() {
+            document.getElementById('adminLoginOverlay').classList.add('hidden');
+        }
+
+        // ============ RECORDARME ============
+        function loadRememberedCredentials() {
+            try {
+                const saved = localStorage.getItem('admin_remember');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.email && data.remember) {
+                        document.getElementById('adminEmail').value = data.email;
+                        document.getElementById('rememberMe').checked = true;
+                        // Si hay key guardada (opcional)
+                        if (data.key) {
+                            document.getElementById('adminKey').value = data.key;
+                        }
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function saveRememberedCredentials(email, key) {
+            const remember = document.getElementById('rememberMe').checked;
+            if (remember) {
+                localStorage.setItem('admin_remember', JSON.stringify({
+                    email: email,
+                    key: key || '',
+                    remember: true
+                }));
+            } else {
+                localStorage.removeItem('admin_remember');
+            }
+        }
+
+        // ============ LOGIN ADMIN ============
         document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('adminEmail').value.trim();
             const key = document.getElementById('adminKey').value.trim();
 
             if (verifyAdminKey(email, key)) {
-                localStorage.setItem('admin_session', JSON.stringify({ email: email, loggedIn: true, timestamp: Date.now() }));
+                // Guardar credenciales si "Recordarme" está activado
+                saveRememberedCredentials(email, key);
+                
+                localStorage.setItem('admin_session', JSON.stringify({
+                    email: email,
+                    loggedIn: true,
+                    timestamp: Date.now()
+                }));
                 showAdminPanel();
                 showToast('✅ Bienvenido Administrador', 'success');
             } else {
-                showToast('❌ Credenciales incorrectas', 'error');
+                showToast('❌ Credenciales incorrectas. Verifica tu email y clave.', 'error');
             }
         });
 
+        // ============ VERIFICAR SESIÓN ADMIN ============
         function checkAdminSession() {
             const session = localStorage.getItem('admin_session');
             if (session) {
@@ -201,12 +567,14 @@
             return false;
         }
 
+        // ============ MOSTRAR PANEL ADMIN ============
         function showAdminPanel() {
             document.getElementById('adminLoginOverlay').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
             loadAdminData();
         }
 
+        // ============ CERRAR SESIÓN ADMIN ============
         function logoutAdmin() {
             localStorage.removeItem('admin_session');
             document.getElementById('adminLoginOverlay').classList.remove('hidden');
@@ -214,88 +582,172 @@
             showToast('Sesión de administrador cerrada', 'info');
         }
 
+        // ============ CARGAR DATOS ============
         function loadAdminData() {
+            // Obtener usuarios desde localStorage
             const users = getUsers();
+            const admins = getAdminList ? getAdminList() : [];
+            
+            // Calcular total de saldo
             const totalBalance = users.reduce((sum, u) => sum + (u.balance || 0), 0);
 
+            // Actualizar estadísticas
             document.getElementById('totalUsers').textContent = users.length;
             document.getElementById('totalBalance').textContent = `$${totalBalance.toFixed(2)}`;
+            document.getElementById('totalAdmins').textContent = admins.length;
 
+            // Renderizar tabla de usuarios
             renderUsersTable(users);
         }
 
+        // ============ RENDERIZAR TABLA DE USUARIOS ============
         function renderUsersTable(users) {
             const tbody = document.getElementById('usersTableBody');
+            const admins = getAdminList ? getAdminList() : [];
 
-            if (users.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:30px;color:#5a6575;">No hay usuarios registrados</td></tr>`;
+            if (!users || users.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align:center;padding:40px;color:#5a6575;">
+                            <span class="material-icons-outlined" style="font-size:48px;display:block;margin-bottom:8px;">person_off</span>
+                            No hay usuarios registrados aún
+                        </td>
+                    </tr>
+                `;
                 return;
             }
 
-            tbody.innerHTML = users.map(u => `
-                <tr>
-                    <td><strong>${u.username || 'N/A'}</strong></td>
-                    <td class="user-email">${u.email}</td>
-                    <td class="user-balance">$${(u.balance || 0).toFixed(2)}</td>
-                    <td>${(u.purchases || []).length}</td>
-                    <td>
-                        <div class="admin-actions">
-                            <button class="btn-sm btn-sm-add" onclick="quickAddBalance('${u.email}')">
-                                <span class="material-icons" style="font-size:14px;">add</span>
-                            </button>
-                            <button class="btn-sm btn-sm-view" onclick="viewUserDetails('${u.email}')">
-                                <span class="material-icons" style="font-size:14px;">visibility</span>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = users.map(u => {
+                const isUserAdmin = admins.some(a => a.email === u.email);
+                return `
+                    <tr>
+                        <td><strong>${u.username || 'N/A'}</strong></td>
+                        <td class="user-email">${u.email}</td>
+                        <td class="user-balance">$${(u.balance || 0).toFixed(2)}</td>
+                        <td>${(u.purchases || []).length}</td>
+                        <td>${isUserAdmin ? '<span class="admin-tag">👑 Admin</span>' : 'Usuario'}</td>
+                        <td>
+                            <div class="admin-actions">
+                                <button class="btn-sm btn-sm-add" onclick="quickAddBalance('${u.email}')">
+                                    <span class="material-icons" style="font-size:14px;">add</span>
+                                </button>
+                                <button class="btn-sm btn-sm-view" onclick="viewUserDetails('${u.email}')">
+                                    <span class="material-icons" style="font-size:14px;">visibility</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
-        // AGREGAR SALDO
+        // ============ AGREGAR SALDO ============
         document.getElementById('addBalanceForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('targetUserEmail').value.trim();
             const amount = parseFloat(document.getElementById('amountToAdd').value);
             const concept = document.getElementById('transactionConcept').value.trim() || 'Depósito por administrador';
 
-            if (!email || !amount || amount <= 0) {
-                showToast('❌ Ingresa datos válidos', 'error');
+            if (!email) {
+                showToast('❌ Ingresa un correo válido', 'error');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                showToast('❌ Ingresa un monto válido mayor a 0', 'error');
                 return;
             }
 
-            const result = updateUserBalanceByEmail(email, amount, concept);
-            if (result.success) {
-                loadAdminData();
-                document.getElementById('targetUserEmail').value = '';
-                document.getElementById('amountToAdd').value = '';
-                document.getElementById('transactionConcept').value = '';
-                showToast(result.message, 'success');
-            } else {
-                showToast(result.message, 'error');
+            // Buscar usuario
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.email === email);
+            
+            if (userIndex === -1) {
+                showToast(`❌ Usuario "${email}" no encontrado. Verifica el correo.`, 'error');
+                return;
             }
+
+            // Actualizar saldo
+            users[userIndex].balance = (users[userIndex].balance || 0) + amount;
+            localStorage.setItem('yx_users', JSON.stringify(users));
+
+            // Guardar transacción
+            const transaction = {
+                id: 'ADMIN-' + Date.now(),
+                userEmail: email,
+                username: users[userIndex].username,
+                amount: amount,
+                concept: concept,
+                date: new Date().toISOString(),
+                type: 'depósito_admin'
+            };
+            
+            let adminTx = { transactions: [] };
+            try {
+                const stored = localStorage.getItem('admin_transactions');
+                if (stored) adminTx = JSON.parse(stored);
+            } catch (e) {}
+            adminTx.transactions.push(transaction);
+            localStorage.setItem('admin_transactions', JSON.stringify(adminTx));
+
+            // Actualizar UI
+            loadAdminData();
+            document.getElementById('targetUserEmail').value = '';
+            document.getElementById('amountToAdd').value = '';
+            document.getElementById('transactionConcept').value = '';
+            
+            showToast(`✅ Se agregaron $${amount.toFixed(2)} a "${email}"`, 'success');
         });
 
+        // ============ AGREGAR SALDO RÁPIDO ============
         function quickAddBalance(email) {
-            const amount = prompt(`¿Cuánto saldo quieres agregar a ${email}?`, '10');
+            const amount = prompt(`💰 ¿Cuánto saldo quieres agregar a ${email}?`, '10');
             if (amount === null) return;
+            
             const parsedAmount = parseFloat(amount);
             if (isNaN(parsedAmount) || parsedAmount <= 0) {
                 showToast('❌ Ingresa un monto válido', 'error');
                 return;
             }
-            const result = updateUserBalanceByEmail(email, parsedAmount, 'Depósito rápido por admin');
-            if (result.success) {
-                loadAdminData();
-                showToast(result.message, 'success');
-            } else {
-                showToast(result.message, 'error');
+
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.email === email);
+            
+            if (userIndex === -1) {
+                showToast(`❌ Usuario "${email}" no encontrado`, 'error');
+                return;
             }
+
+            users[userIndex].balance = (users[userIndex].balance || 0) + parsedAmount;
+            localStorage.setItem('yx_users', JSON.stringify(users));
+
+            // Guardar transacción
+            const transaction = {
+                id: 'ADMIN-' + Date.now(),
+                userEmail: email,
+                username: users[userIndex].username,
+                amount: parsedAmount,
+                concept: 'Depósito rápido por administrador',
+                date: new Date().toISOString(),
+                type: 'depósito_admin'
+            };
+            
+            let adminTx = { transactions: [] };
+            try {
+                const stored = localStorage.getItem('admin_transactions');
+                if (stored) adminTx = JSON.parse(stored);
+            } catch (e) {}
+            adminTx.transactions.push(transaction);
+            localStorage.setItem('admin_transactions', JSON.stringify(adminTx));
+
+            loadAdminData();
+            showToast(`✅ Se agregaron $${parsedAmount.toFixed(2)} a "${email}"`, 'success');
         }
 
+        // ============ VER DETALLES DE USUARIO ============
         function viewUserDetails(email) {
             const users = getUsers();
             const user = users.find(u => u.email === email);
+            
             if (!user) {
                 showToast('❌ Usuario no encontrado', 'error');
                 return;
@@ -303,12 +755,12 @@
 
             const purchases = user.purchases || [];
             let details = `📊 DETALLES DE USUARIO\n\n`;
-            details += `👤 Usuario: ${user.username}\n`;
+            details += `👤 Usuario: ${user.username || 'N/A'}\n`;
             details += `📧 Email: ${user.email}\n`;
             details += `💰 Saldo: $${(user.balance || 0).toFixed(2)}\n`;
-            details += `🃏 Tarjetas: ${purchases.length}\n`;
+            details += `🃏 Tarjetas compradas: ${purchases.length}\n`;
             details += `📅 Miembro desde: ${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}\n\n`;
-
+            
             if (purchases.length > 0) {
                 details += `🃏 TARJETAS COMPRADAS:\n`;
                 purchases.forEach((p, i) => {
@@ -317,9 +769,11 @@
             } else {
                 details += `🃏 No ha comprado tarjetas aún.\n`;
             }
+            
             alert(details);
         }
 
+        // ============ TOAST ============
         function showToast(message, type = 'info') {
             let container = document.querySelector('.toast-container');
             if (!container) {
@@ -327,21 +781,57 @@
                 container.className = 'toast-container';
                 document.body.appendChild(container);
             }
+            
             const toast = document.createElement('div');
-            const colors = { success: '#2ecc71', error: '#e74c3c', info: '#3498db', warning: '#f39c12' };
-            toast.style.cssText = `background:#1a232e;color:#e8edf2;padding:12px 24px;border-radius:12px;border-left:4px solid ${colors[type] || colors.info};box-shadow:0 8px 32px rgba(0,0,0,0.5);font-size:14px;font-weight:500;pointer-events:auto;animation:slideUp 0.3s ease;min-width:200px;text-align:center;border:1px solid #2a313c;`;
+            const colors = {
+                success: '#2ecc71',
+                error: '#e74c3c',
+                info: '#3498db',
+                warning: '#f39c12'
+            };
+            
+            toast.style.cssText = `
+                background: #1a232e;
+                color: #e8edf2;
+                padding: 12px 24px;
+                border-radius: 12px;
+                border-left: 4px solid ${colors[type] || colors.info};
+                box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+                font-size: 14px;
+                font-weight: 500;
+                pointer-events: auto;
+                animation: slideUpToast 0.3s ease;
+                min-width: 200px;
+                text-align: center;
+                border: 1px solid #2a313c;
+            `;
             toast.textContent = message;
             container.appendChild(toast);
-            setTimeout(() => { toast.style.animation = 'slideDown 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3000);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideDownToast 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
-        if (!checkAdminSession()) {
-            document.getElementById('adminLoginOverlay').classList.remove('hidden');
-        }
+        // ============ INICIALIZAR ============
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar credenciales guardadas
+            loadRememberedCredentials();
+            
+            // Verificar si ya hay sesión activa
+            if (!checkAdminSession()) {
+                document.getElementById('adminLoginOverlay').classList.remove('hidden');
+            }
+        });
 
-        const styleSheet = document.createElement("style");
-        styleSheet.textContent = `@keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } } @keyframes slideDown { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(20px); } }`;
-        document.head.appendChild(styleSheet);
+        // ============ EXPORTAR FUNCIONES ============
+        window.closeAdminLogin = closeAdminLogin;
+        window.logoutAdmin = logoutAdmin;
+        window.quickAddBalance = quickAddBalance;
+        window.viewUserDetails = viewUserDetails;
+        window.showToast = showToast;
+        window.loadAdminData = loadAdminData;
     </script>
 </body>
 </html>
