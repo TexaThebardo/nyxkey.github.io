@@ -3,12 +3,12 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📊 Dashboard cargado');
+    console.log('📊 Dashboard iniciado');
     
     const user = getCurrentUser();
     if (!user) {
-        console.log('❌ Usuario no autenticado, redirigiendo...');
-        window.location.href = '/nyxkey.github.io/login.html';
+        console.log('❌ Usuario no autenticado');
+        window.location.href = 'login.html';
         return;
     }
     
@@ -18,33 +18,28 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDateTime();
 });
 
-// ============ CARGAR DATOS ============
 function loadDashboardData() {
     const user = getCurrentUser();
     if (!user) return;
     
-    // Obtener datos completos del usuario desde localStorage
     const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
     const fullUser = users.find(u => u.id === user.id);
     
-    console.log('📦 Datos completos del usuario:', fullUser);
+    console.log('📦 Datos completos:', fullUser);
     
     const purchases = fullUser?.purchases || [];
     const transactions = fullUser?.transactions || [];
     const balance = fullUser?.balance || 0;
     
-    console.log('📦 Compras encontradas:', purchases.length);
-    console.log('📦 Transacciones encontradas:', transactions.length);
+    console.log('📦 Compras:', purchases.length);
+    console.log('📦 Transacciones:', transactions.length);
     
-    // Estadísticas
-    const totalPurchases = purchases.length;
-    const totalSpent = purchases.reduce((sum, p) => sum + (p.price * p.quantity), 0);
-    
-    document.getElementById('totalPurchases').textContent = totalPurchases;
-    document.getElementById('totalSpent').textContent = `$${totalSpent.toFixed(2)}`;
+    // Actualizar estadísticas
+    document.getElementById('totalPurchases').textContent = purchases.length;
+    document.getElementById('totalSpent').textContent = `$${purchases.reduce((sum, p) => sum + (p.price * p.quantity), 0).toFixed(2)}`;
     document.getElementById('currentBalance').textContent = `$${balance.toFixed(2)}`;
     document.getElementById('dashboardBalance').textContent = `$${balance.toFixed(2)}`;
-    document.getElementById('purchaseCount').textContent = `${totalPurchases} tarjetas`;
+    document.getElementById('purchaseCount').textContent = `${purchases.length} tarjetas`;
     
     // Renderizar secciones
     renderPurchases(purchases);
@@ -52,10 +47,8 @@ function loadDashboardData() {
     renderTransactions(transactions);
 }
 
-// ============ RENDERIZAR COMPRAS ============
 function renderPurchases(purchases) {
     const container = document.getElementById('purchasesGrid');
-    
     if (!container) return;
     
     if (purchases.length === 0) {
@@ -69,45 +62,38 @@ function renderPurchases(purchases) {
         return;
     }
     
-    container.innerHTML = purchases.map((purchase, index) => `
+    container.innerHTML = purchases.map(p => `
         <div class="purchase-card">
             <div class="purchase-header">
-                <span class="purchase-network">${purchase.network || 'N/A'}</span>
-                <span class="purchase-bin">${purchase.bin || '****'}</span>
-                <span class="purchase-date">${purchase.purchaseDate ? new Date(purchase.purchaseDate).toLocaleDateString() : 'Fecha desconocida'}</span>
+                <span class="purchase-network">${p.network || 'N/A'}</span>
+                <span class="purchase-bin">${p.bin || '****'}</span>
+                <span class="purchase-date">${p.purchaseDate ? new Date(p.purchaseDate).toLocaleDateString() : '-'}</span>
             </div>
             <div class="purchase-details">
                 <div class="detail-row">
                     <span class="detail-label">Banco</span>
-                    <span class="detail-value">${purchase.bank || 'N/A'}</span>
+                    <span class="detail-value">${p.bank || 'N/A'}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">País</span>
-                    <span class="detail-value">${purchase.country || 'N/A'}</span>
+                    <span class="detail-value">${p.country || 'N/A'}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Cantidad</span>
-                    <span class="detail-value">${purchase.quantity || 1}</span>
+                    <span class="detail-value">${p.quantity || 1}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Precio</span>
-                    <span class="detail-value">$${((purchase.price || 0) * (purchase.quantity || 1)).toFixed(2)}</span>
+                    <span class="detail-value">$${((p.price || 0) * (p.quantity || 1)).toFixed(2)}</span>
                 </div>
-                ${purchase.cardData ? `
+                ${p.cardData ? `
                 <div class="detail-row card-data">
-                    <span class="detail-label">Datos de la Tarjeta</span>
-                    <span class="detail-value" style="font-family:monospace;font-size:14px;">
-                        ${purchase.cardData.number || '****'} | ${purchase.cardData.expiry || '**/**'} | ${purchase.cardData.cvv || '***'}
+                    <span class="detail-label">Datos</span>
+                    <span class="detail-value" style="font-family:monospace;font-size:13px;">
+                        ${p.cardData.number || '****'} | ${p.cardData.expiry || '**/**'} | ${p.cardData.cvv || '***'}
                     </span>
                 </div>
-                ` : `
-                <div class="detail-row card-data">
-                    <span class="detail-label">Datos de la Tarjeta</span>
-                    <span class="detail-value" style="font-family:monospace;font-size:14px;color:var(--text-muted);">
-                        🔒 Datos protegidos
-                    </span>
-                </div>
-                `}
+                ` : ''}
             </div>
             <div class="purchase-footer">
                 <span class="purchase-status completed">✅ Comprada</span>
@@ -116,10 +102,8 @@ function renderPurchases(purchases) {
     `).join('');
 }
 
-// ============ RENDERIZAR COMPRAS RECIENTES ============
 function renderRecentPurchases(purchases) {
     const container = document.getElementById('recentPurchases');
-    
     if (!container) return;
     
     const recent = purchases.slice(-5).reverse();
@@ -141,16 +125,14 @@ function renderRecentPurchases(purchases) {
             </span>
             <div class="activity-content">
                 <p>${p.network || 'N/A'} ${p.bin || '****'} - ${p.quantity || 1}x</p>
-                <span class="activity-time">$${((p.price || 0) * (p.quantity || 1)).toFixed(2)} · ${p.purchaseDate ? new Date(p.purchaseDate).toLocaleDateString() : 'Fecha desconocida'}</span>
+                <span class="activity-time">$${((p.price || 0) * (p.quantity || 1)).toFixed(2)} · ${p.purchaseDate ? new Date(p.purchaseDate).toLocaleDateString() : '-'}</span>
             </div>
         </div>
     `).join('');
 }
 
-// ============ RENDERIZAR TRANSACCIONES ============
 function renderTransactions(transactions) {
     const tbody = document.getElementById('transactionsBody');
-    
     if (!tbody) return;
     
     if (!transactions || transactions.length === 0) {
@@ -171,36 +153,28 @@ function renderTransactions(transactions) {
             <td><span class="transaction-type ${t.type || 'desconocido'}">${t.type || 'Desconocido'}</span></td>
             <td>$${(t.amount || 0).toFixed(2)}</td>
             <td><span class="status-badge ${t.status || 'pendiente'}">${t.status || 'Pendiente'}</span></td>
-            <td>${t.date ? new Date(t.date).toLocaleDateString() : 'Fecha desconocida'}</td>
+            <td>${t.date ? new Date(t.date).toLocaleDateString() : '-'}</td>
         </tr>
     `).join('');
 }
 
-// ============ NAVEGACIÓN ============
 function setupNavigation() {
     console.log('🔧 Configurando navegación...');
     
-    const links = document.querySelectorAll('.sidebar-link[data-section]');
-    console.log('📎 Enlaces encontrados:', links.length);
-    
-    links.forEach(link => {
+    document.querySelectorAll('.sidebar-link[data-section]').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('🔄 Click en:', this.dataset.section);
+            const sectionId = this.dataset.section;
+            console.log('🔄 Cambiando a:', sectionId);
             
-            // Quitar active de todos
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             this.classList.add('active');
             
-            // Ocultar todas las secciones
             document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
-            
-            // Mostrar la sección seleccionada
-            const sectionId = this.dataset.section;
             const section = document.getElementById(sectionId);
             if (section) {
                 section.classList.add('active');
-                console.log('✅ Sección mostrada:', sectionId);
+                console.log('✅ Sección activada:', sectionId);
             } else {
                 console.log('❌ Sección no encontrada:', sectionId);
             }
@@ -208,7 +182,6 @@ function setupNavigation() {
     });
 }
 
-// ============ ACTUALIZAR FECHA ============
 function updateDateTime() {
     const date = new Date();
     const el = document.getElementById('currentDate');
@@ -222,5 +195,4 @@ function updateDateTime() {
     }
 }
 
-// ============ EXPORTAR ============
-console.log('✅ dashboard.js cargado correctamente');
+console.log('✅ dashboard.js cargado');
