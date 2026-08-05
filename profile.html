@@ -8,9 +8,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- RUTAS ABSOLUTAS -->
-    <link rel="stylesheet" href="/nyxkey.github.io/css/style.css">
-    <link rel="stylesheet" href="/nyxkey.github.io/css/dashboard.css">
+    <!-- RUTAS RELATIVAS - CORRECTAS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
     <nav class="navbar">
@@ -35,15 +35,15 @@
     <div class="dashboard-container">
         <aside class="sidebar">
             <nav class="sidebar-nav">
-                <a href="/nyxkey.github.io/dashboard.html" class="sidebar-link">
+                <a href="dashboard.html" class="sidebar-link">
                     <span class="material-icons-outlined">dashboard</span>
                     <span>Dashboard</span>
                 </a>
-                <a href="/nyxkey.github.io/profile.html" class="sidebar-link active">
+                <a href="profile.html" class="sidebar-link active">
                     <span class="material-icons-outlined">person</span>
                     <span>Mi Perfil</span>
                 </a>
-                <a href="/nyxkey.github.io/" class="sidebar-link">
+                <a href="index.html" class="sidebar-link">
                     <span class="material-icons-outlined">storefront</span>
                     <span>Tienda</span>
                 </a>
@@ -96,16 +96,15 @@
         </main>
     </div>
 
-    <script src="/nyxkey.github.io/js/auth.js"></script>
+    <script src="js/auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const user = getCurrentUser();
             if (!user) {
-                window.location.href = '/nyxkey.github.io/login.html';
+                window.location.href = 'login.html';
                 return;
             }
             
-            // Obtener datos completos
             const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
             const fullUser = users.find(u => u.id === user.id);
             
