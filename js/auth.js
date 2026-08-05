@@ -10,6 +10,74 @@ const AUTH_CONFIG = {
     sessionTimeout: 3600000
 };
 
+// ============ FUNCIONES DE INSIGNIAS INTERNAS (para evitar dependencias) ============
+function _getUserInsigniasInternal(email) {
+    try {
+        const stored = localStorage.getItem('user_insignias');
+        if (stored) {
+            const data = JSON.parse(stored);
+            return data[email] || ['Guest'];
+        }
+    } catch (e) {}
+    return ['Guest'];
+}
+
+function _saveUserInsigniasInternal(email, insignias) {
+    let data = {};
+    try {
+        const stored = localStorage.getItem('user_insignias');
+        if (stored) {
+            data = JSON.parse(stored);
+        }
+    } catch (e) {}
+    data[email] = insignias;
+    localStorage.setItem('user_insignias', JSON.stringify(data));
+}
+
+function _isAdminInternal(email) {
+    if (!email) return false;
+    try {
+        const stored = localStorage.getItem('admin_whitelist');
+        if (stored) {
+            const data = JSON.parse(stored);
+            if (data.admins) {
+                return data.admins.some(a => a.email === email);
+            }
+        }
+    } catch (e) {}
+    return false;
+}
+
+function _loadWhitelistInternal() {
+    try {
+        const stored = localStorage.getItem('admin_whitelist');
+        if (stored) {
+            const data = JSON.parse(stored);
+            if (data.admins && data.insignias) {
+                return data;
+            }
+        }
+    } catch (e) {}
+
+    const defaultWhitelist = {
+        admins: [
+            { email: 'admin@yxcards.com', key: 'admin123' }
+        ],
+        insignias: {
+            'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
+            'Dev': { icon: 'code', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.15)', description: 'Desarrollador de la plataforma' },
+            'Verificado': { icon: 'verified_user', color: '#2ecc71', bgColor: 'rgba(46, 204, 113, 0.15)', description: 'Usuario verificado' },
+            'Guest': { icon: 'person_outline', color: '#95a5a6', bgColor: 'rgba(149, 165, 166, 0.15)', description: 'Usuario invitado' },
+            'VIP': { icon: 'stars', color: '#e67e22', bgColor: 'rgba(230, 126, 34, 0.15)', description: 'Usuario VIP' },
+            'Moderador': { icon: 'shield', color: '#9b59b6', bgColor: 'rgba(155, 89, 182, 0.15)', description: 'Moderador de la comunidad' },
+            'Colaborador': { icon: 'group', color: '#1abc9c', bgColor: 'rgba(26, 188, 156, 0.15)', description: 'Colaborador activo' },
+            'Fundador': { icon: 'emoji_events', color: '#e74c3c', bgColor: 'rgba(231, 76, 60, 0.15)', description: 'Fundador de la plataforma' }
+        }
+    };
+    localStorage.setItem('admin_whitelist', JSON.stringify(defaultWhitelist));
+    return defaultWhitelist;
+}
+
 // ============ REGISTRO ============
 function registerUser(email, password, username) {
     console.log('🔍 registerUser() ejecutado');
@@ -97,8 +165,8 @@ function loginUser(email, password) {
     }
 
     // ============ SINCRONIZAR INSIGNIAS AL LOGIN ============
-    let userInsignias = getUserInsignias(email);
-    const whitelist = loadWhitelist();
+    let userInsignias = _getUserInsigniasInternal(email);
+    const whitelist = _loadWhitelistInternal();
     const isUserAdmin = whitelist.admins && whitelist.admins.some(a => a.email === email);
     
     let updatedInsignias = [...userInsignias];
@@ -115,7 +183,7 @@ function loginUser(email, password) {
     }
     
     if (insigniasChanged) {
-        saveUserInsignias(email, updatedInsignias);
+        _saveUserInsigniasInternal(email, updatedInsignias);
     }
 
     // Crear sesión
@@ -141,7 +209,6 @@ function loginUser(email, password) {
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
 
-    // Actualizar UI
     updateUserUI();
     showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
@@ -149,17 +216,14 @@ function loginUser(email, password) {
 
 // ============ CERRAR SESIÓN COMPLETO ============
 function logoutUser() {
-    // Eliminar token de usuario
     localStorage.removeItem(AUTH_CONFIG.tokenKey);
     
-    // Eliminar sesión de admin si existe
     if (localStorage.getItem('admin_session')) {
         localStorage.removeItem('admin_session');
     }
     
     showToast('Sesión cerrada', 'info');
     
-    // Redirigir a login
     setTimeout(() => {
         window.location.href = 'login.html';
     }, 500);
@@ -189,6 +253,32 @@ function getCurrentUser() {
     return session ? session.user : null;
 }
 
+// ============ RENDERIZAR INSIGNIAS (función interna) ============
+function _renderInsigniasInternal(email, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const insignias = _getUserInsigniasInternal(email);
+    const whitelist = _loadWhitelistInternal();
+    const allInsignias = whitelist.insignias || {};
+
+    if (!insignias || insignias.length === 0) {
+        container.innerHTML = `<span class="insignia-guest"><span class="material-icons" style="font-size:14px;">person_outline</span> Guest</span>`;
+        return;
+    }
+
+    container.innerHTML = insignias.map(name => {
+        const ins = allInsignias[name];
+        if (!ins) return '';
+        return `
+            <span class="insignia-badge" style="background:${ins.bgColor || 'rgba(149,165,166,0.15)'}; color:${ins.color || '#95a5a6'};">
+                <span class="material-icons" style="font-size:14px;">${ins.icon || 'person_outline'}</span>
+                ${name}
+            </span>
+        `;
+    }).join('');
+}
+
 // ============ ACTUALIZAR UI ============
 function updateUserUI() {
     const user = getCurrentUser();
@@ -201,14 +291,9 @@ function updateUserUI() {
         if (avatarEl) avatarEl.textContent = 'account_circle';
         if (nameEl) nameEl.textContent = user.username || 'Usuario';
 
-        // ============ VERIFICAR ADMIN ============
-        // Asegurarse de que la función isAdmin exista
-        let isUserAdmin = false;
-        if (typeof isAdmin === 'function') {
-            isUserAdmin = isAdmin(user.email);
-        }
+        // Verificar admin usando función interna
+        const isUserAdmin = _isAdminInternal(user.email);
 
-        // Mostrar/ocultar botones admin
         const adminBtn = document.getElementById('adminPanelBtn');
         const adminSidebarBtn = document.getElementById('adminSidebarBtn');
         const adminDropdownBtn = document.getElementById('adminDropdownBtn');
@@ -224,9 +309,7 @@ function updateUserUI() {
         }
 
         // Renderizar insignias
-        if (typeof renderInsignias === 'function') {
-            renderInsignias(user.email, 'userInsignias');
-        }
+        _renderInsigniasInternal(user.email, 'userInsignias');
     } else {
         if (balanceEl) balanceEl.textContent = '$0.00';
         if (avatarEl) avatarEl.textContent = 'person';
@@ -364,22 +447,7 @@ function showToast(message, type = 'info') {
 document.addEventListener('DOMContentLoaded', function() {
     // Cargar whitelist por defecto si no existe
     if (!localStorage.getItem('admin_whitelist')) {
-        const defaultWhitelist = {
-            admins: [
-                { email: 'admin@yxcards.com', key: 'admin123' }
-            ],
-            insignias: {
-                'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
-                'Dev': { icon: 'code', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.15)', description: 'Desarrollador de la plataforma' },
-                'Verificado': { icon: 'verified_user', color: '#2ecc71', bgColor: 'rgba(46, 204, 113, 0.15)', description: 'Usuario verificado' },
-                'Guest': { icon: 'person_outline', color: '#95a5a6', bgColor: 'rgba(149, 165, 166, 0.15)', description: 'Usuario invitado' },
-                'VIP': { icon: 'stars', color: '#e67e22', bgColor: 'rgba(230, 126, 34, 0.15)', description: 'Usuario VIP' },
-                'Moderador': { icon: 'shield', color: '#9b59b6', bgColor: 'rgba(155, 89, 182, 0.15)', description: 'Moderador de la comunidad' },
-                'Colaborador': { icon: 'group', color: '#1abc9c', bgColor: 'rgba(26, 188, 156, 0.15)', description: 'Colaborador activo' },
-                'Fundador': { icon: 'emoji_events', color: '#e74c3c', bgColor: 'rgba(231, 76, 60, 0.15)', description: 'Fundador de la plataforma' }
-            }
-        };
-        localStorage.setItem('admin_whitelist', JSON.stringify(defaultWhitelist));
+        _loadWhitelistInternal();
     }
 
     updateUserUI();
@@ -398,4 +466,4 @@ window.showToast = showToast;
 window.getUsers = getUsers;
 window.addPurchaseToHistory = addPurchaseToHistory;
 
-console.log('✅ Auth.js cargado correctamente');
+console.log('✅ Auth.js cargado correctamente (con funciones internas)');
