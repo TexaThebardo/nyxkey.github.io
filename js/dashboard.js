@@ -32,12 +32,34 @@ function loadDashboardData() {
     const transactions = fullUser?.transactions || [];
     const balance = fullUser?.balance || 0;
 
-    console.log('📦 Compras:', purchases.length);
-    console.log('📦 Transacciones:', transactions.length);
+    // ============ ESTADÍSTICAS ACTUALIZADAS ============
+    // Total de usuarios registrados
+    const totalUsers = users.length || 0;
+
+    // Total de administradores
+    let totalAdmins = 0;
+    if (typeof getAdminList === 'function') {
+        const admins = getAdminList();
+        totalAdmins = admins.length || 0;
+    } else if (typeof ADMIN_LIST !== 'undefined') {
+        totalAdmins = ADMIN_LIST.length || 0;
+    } else {
+        try {
+            const stored = localStorage.getItem('admin_whitelist');
+            if (stored) {
+                const data = JSON.parse(stored);
+                totalAdmins = data.admins ? data.admins.length : 0;
+            }
+        } catch (e) {}
+    }
+
+    console.log('📦 Usuarios totales:', totalUsers);
+    console.log('📦 Administradores:', totalAdmins);
 
     // Actualizar estadísticas
     document.getElementById('totalPurchases').textContent = purchases.length;
-    document.getElementById('totalSpent').textContent = `$${purchases.reduce((sum, p) => sum + (p.price * p.quantity), 0).toFixed(2)}`;
+    document.getElementById('totalUsers').textContent = totalUsers;
+    document.getElementById('totalAdmins').textContent = totalAdmins;
     document.getElementById('currentBalance').textContent = `$${balance.toFixed(2)}`;
     document.getElementById('dashboardBalance').textContent = `$${balance.toFixed(2)}`;
     document.getElementById('purchaseCount').textContent = `${purchases.length} tarjetas`;
@@ -184,14 +206,11 @@ function setupNavigation() {
             const sectionId = this.dataset.section;
             console.log('🔄 Click en:', sectionId);
 
-            // Quitar active de todos
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             this.classList.add('active');
 
-            // Ocultar todas las secciones
             document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
 
-            // Mostrar la sección seleccionada
             const section = document.getElementById(sectionId);
             if (section) {
                 section.classList.add('active');
