@@ -10,27 +10,19 @@ const AUTH_CONFIG = {
     sessionTimeout: 3600000
 };
 
-// ============ ADMINISTRADORES DEFINIDOS EN CÓDIGO ============
-// ⚠️ COPIA EXACTA DE TU EMAIL - CON LA "l"
+// ============ ADMINISTRADORES - CORREGIDO ============
 const ADMIN_LIST = [
     'admin@yxcards.com',
-    'personalbusiness2626@gmail.com'  // ✅ CORREGIDO - CON LA "l"
+    'personalbusiness2626@gmail.com'  // ✅ CON LA "l" - COPIA EXACTA
 ];
 
-// ============ VERIFICAR ADMIN ============
 function isAdmin(email) {
     if (!email) return false;
-    console.log('🔍 Verificando admin para:', email);
-    console.log('📋 Lista de admins:', ADMIN_LIST);
-    const result = ADMIN_LIST.includes(email);
-    console.log('✅ ¿Es admin?', result);
-    return result;
+    return ADMIN_LIST.includes(email);
 }
 
 // ============ REGISTRO ============
 function registerUser(email, password, username) {
-    console.log('🔍 registerUser() ejecutado');
-
     if (!email || !password || !username) {
         showToast('Todos los campos son obligatorios', 'error');
         return false;
@@ -80,15 +72,12 @@ function registerUser(email, password, username) {
     users.push(newUser);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
 
-    console.log('✅ Usuario registrado:', username);
     showToast('✅ Registro exitoso. Inicia sesión.', 'success');
     return true;
 }
 
 // ============ LOGIN ============
 function loginUser(email, password) {
-    console.log('🔍 LOGIN EJECUTADO');
-    
     if (!email || !password) {
         showToast('Email y contraseña son obligatorios', 'error');
         return false;
@@ -113,7 +102,6 @@ function loginUser(email, password) {
         return false;
     }
 
-    // Verificar si es admin
     const esAdmin = isAdmin(email);
     console.log('👑 ¿Es admin?', esAdmin);
 
@@ -133,13 +121,11 @@ function loginUser(email, password) {
     };
 
     localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
-    console.log('✅ Sesión creada para:', user.username);
 
     user.lastLogin = new Date().toISOString();
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
 
-    // Actualizar UI
     updateUserUI();
     showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
@@ -180,7 +166,7 @@ function getCurrentUser() {
     return session ? session.user : null;
 }
 
-// ============ RENDERIZAR INSIGNIAS ============
+// ============ INSIGNIAS ============
 function renderUserInsignias(email, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -205,10 +191,7 @@ function renderUserInsignias(email, containerId) {
 
 // ============ ACTUALIZAR UI ============
 function updateUserUI() {
-    console.log('🔄 updateUserUI ejecutado');
-    
     const user = getCurrentUser();
-    console.log('👤 Usuario actual:', user);
 
     // Actualizar balance
     const balanceEl = document.getElementById('userBalance');
@@ -224,9 +207,7 @@ function updateUserUI() {
 
     // ============ MOSTRAR/OCULTAR BOTÓN ADMIN ============
     const esAdmin = user ? isAdmin(user.email) : false;
-    console.log('👑 ¿Es admin?', esAdmin);
 
-    // Buscar TODOS los elementos relacionados con admin
     const adminElements = [
         document.getElementById('adminPanelBtn'),
         document.getElementById('adminSidebarBtn'),
@@ -235,13 +216,7 @@ function updateUserUI() {
 
     adminElements.forEach(el => {
         if (el) {
-            console.log('🔍 Elemento encontrado:', el.id);
-            if (esAdmin) {
-                el.style.display = 'flex';
-                el.style.display = 'inline-flex';
-            } else {
-                el.style.display = 'none';
-            }
+            el.style.display = esAdmin ? 'flex' : 'none';
         }
     });
 
