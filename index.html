@@ -1,339 +1,521 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yx Cards - Tarjetas en Tiempo Real</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <!-- ============ NAVEGACIÓN ============ -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <span class="logo-img">
-                    <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards">
-                </span>
-                <span class="logo-text">Yx</span>
-                <span class="logo-text-full">Cards</span>
-                <span class="logo-badge">PRO</span>
-            </div>
-            
-            <div class="nav-links">
-                <a href="#catalogo" class="nav-link active" onclick="showSection('catalogo')">
-                    <span class="material-icons-outlined">storefront</span> Tienda
-                </a>
-                <a href="#checker" class="nav-link" onclick="showSection('checker')">
-                    <span class="material-icons-outlined">verified</span> Checker
-                </a>
-                <a href="#otp" class="nav-link" onclick="showSection('otp')">
-                    <span class="material-icons-outlined">android</span> Bot OTP
-                </a>
-                <a href="#historial" class="nav-link" onclick="showSection('historial')">
-                    <span class="material-icons-outlined">history</span> Historial
-                </a>
-            </div>
-            
-            <div class="nav-user">
-                <!-- CARRITO -->
-                <button class="btn-cart" onclick="toggleCart()">
-                    <span class="material-icons">shopping_cart</span>
-                    <span class="cart-badge" id="cartBadge">0</span>
-                </button>
-                
-                <!-- INFO USUARIO CON INSIGNIAS -->
-                <div class="user-info">
-                    <span id="userDisplayName" class="user-name">Invitado</span>
-                    <div id="userInsignias" class="user-insignias"></div>
-                </div>
-                
-                <!-- BOTÓN ADMIN -->
-                <button id="adminPanelBtn" class="btn-admin-link" onclick="window.location.href='admin.html'" style="display:none;">
-                    <span class="material-icons">admin_panel_settings</span>
-                    Admin
-                </button>
-                
-                <div class="user-balance" id="userBalanceContainer">
-                    <span class="material-icons-outlined">account_balance_wallet</span>
-                    <span class="balance-amount" id="userBalance">$0.00</span>
-                </div>
-                
-                <button class="btn-add-funds" onclick="openDepositModal()">
-                    <span class="material-icons">add</span> Fondos
-                </button>
-                
-                <div class="user-avatar" onclick="toggleUserMenu()">
-                    <span class="material-icons-outlined" id="userAvatarIcon">person</span>
-                    <div class="user-dropdown" id="userDropdown">
-                        <a href="profile.html"><span class="material-icons-outlined">person</span> Mi Perfil</a>
-                        <a href="dashboard.html"><span class="material-icons-outlined">dashboard</span> Dashboard</a>
-                        <a href="admin.html" id="adminDropdownBtn" style="display:none;">
-                            <span class="material-icons-outlined">admin_panel_settings</span> Admin Manager
-                        </a>
-                        <a href="#" onclick="logoutUser()"><span class="material-icons-outlined">logout</span> Cerrar Sesión</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
+// ============================================
+// APP.JS - Lógica Principal (INDEX.HTML)
+// ============================================
 
-    <!-- ============ HERO CON LOGO ============ -->
-    <section class="hero-section">
-        <div class="hero-container">
-            <div class="hero-content">
-                <div class="hero-logo">
-                    <div class="hero-logo-img">
-                        <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards">
-                    </div>
-                    <div class="hero-brand">
-                        Yx <span>Cards</span>
-                    </div>
-                </div>
-                <h1><span class="hero-highlight">Tarjetas</span> en Tiempo Real <span class="hero-badge">LIVE</span></h1>
-                <p>Inventario verificado al instante con más del 99% de precisión</p>
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-number" id="totalCards">0</span>
-                        <span class="stat-label">Tarjetas Activas</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="totalUsers">0</span>
-                        <span class="stat-label">Usuarios Registrados</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="totalAdmins">0</span>
-                        <span class="stat-label">Administradores</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-status">
-                <div class="status-indicator">
-                    <span class="status-dot online"></span>
-                    <span>Sistema Operativo</span>
-                    <span class="status-text">100%</span>
-                </div>
-            </div>
-        </div>
-    </section>
+console.log('🚀 App.js cargado');
 
-    <!-- ============ CATÁLOGO ============ -->
-    <section id="catalogo" class="catalog-section">
-        <div class="catalog-header">
-            <div class="catalog-title">
-                <span class="material-icons-outlined">grid_view</span>
-                <h2>Catálogo Disponible</h2>
-                <span class="catalog-badge">Stock Verificado</span>
-            </div>
-            
-            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
-                <!-- ============ BOTONES DE VISTA ============ -->
-                <div class="view-controls">
-                    <button class="view-btn active" data-view="grid" onclick="changeView('grid')" title="Vista en tarjetas">
-                        <span class="material-icons">grid_view</span>
-                        <span>Grid</span>
-                    </button>
-                    <button class="view-btn" data-view="list" onclick="changeView('list')" title="Vista en lista">
-                        <span class="material-icons">view_list</span>
-                        <span>Lista</span>
-                    </button>
-                    <button class="view-btn" data-view="compact" onclick="changeView('compact')" title="Vista compacta">
-                        <span class="material-icons">view_compact</span>
-                        <span>Compacto</span>
-                    </button>
-                </div>
-                
-                <div class="catalog-filters">
-                    <div class="filter-group">
-                        <span class="material-icons-outlined">filter_alt</span>
-                        <select id="filterCountry" onchange="applyFilters()">
-                            <option value="">Todos los países</option>
-                            <option value="US">🇺🇸 Estados Unidos</option>
-                            <option value="MX">🇲🇽 México</option>
-                            <option value="DO">🇩🇴 República Dominicana</option>
-                            <option value="CA">🇨🇦 Canadá</option>
-                            <option value="GB">🇬🇧 Reino Unido</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <input type="text" id="filterSearch" placeholder="Buscar por BIN o banco..." oninput="applyFilters()">
-                        <span class="material-icons-outlined">search</span>
-                    </div>
-                    <button class="btn-refresh" onclick="refreshCatalog()"><span class="material-icons">refresh</span></button>
-                </div>
-            </div>
-        </div>
+let currentPage = 1;
+const itemsPerPage = 8;
+let currentFilter = { country: '', search: '' };
+let viewMode = 'grid';
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 DOM cargado - iniciando app');
+    
+    const catalogBody = document.getElementById('catalogBody');
+    if (!catalogBody) {
+        console.log('ℹ️ catalogBody no encontrado - probablemente estamos en dashboard.html');
+        return;
+    }
+    
+    loadProductsFromJSON();
+    
+    if (typeof loadCart === 'function') {
+        console.log('🔄 loadCart encontrada, ejecutando...');
+        loadCart();
+    }
+    
+    if (typeof updateUserUI === 'function') {
+        updateUserUI();
+    }
+    
+    const savedView = localStorage.getItem('yx_view_mode');
+    if (savedView) {
+        viewMode = savedView;
+    }
+    updateViewButtons();
+    
+    renderCatalog();
+    updateStats();
+    updateDateTime();
+    if (typeof updateCartBadge === 'function') {
+        updateCartBadge();
+    }
+    
+    const overlay = document.getElementById('cartOverlay');
+    if (overlay) overlay.addEventListener('click', toggleCart);
+    
+    const modal = document.querySelector('.modal-overlay');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) closeDepositModal();
+        });
+    }
+});
+
+function showSection(sectionId) {
+    document.querySelectorAll('.catalog-section, .services-section').forEach(el => el.style.display = 'none');
+    const section = document.getElementById(sectionId);
+    if (section) section.style.display = 'block';
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.querySelector(`.nav-link[href="#${sectionId}"]`)?.classList.add('active');
+}
+
+// ============ CAMBIO DE VISTA ============
+function changeView(mode) {
+    viewMode = mode;
+    localStorage.setItem('yx_view_mode', mode);
+    updateViewButtons();
+    renderCatalog();
+    showToast(`Vista: ${mode === 'list' ? 'Lista' : mode === 'grid' ? 'Tarjetas' : 'Compacta'}`, 'info');
+}
+
+function updateViewButtons() {
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.view === viewMode) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+// ============ RENDERIZAR CATÁLOGO ============
+function renderCatalog() {
+    const container = document.getElementById('catalogBody');
+    if (!container) {
+        console.warn('⚠️ catalogBody no encontrado');
+        return;
+    }
+    
+    const products = getProducts();
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageItems = products.slice(start, end);
+    
+    if (pageItems.length === 0) {
+        container.innerHTML = `<div class="empty-catalog"><span class="material-icons-outlined" style="font-size:48px;display:block;margin-bottom:12px;">search_off</span><p>No se encontraron tarjetas</p></div>`;
+    } else {
+        if (viewMode === 'list') {
+            container.innerHTML = renderListView(pageItems);
+        } else if (viewMode === 'grid') {
+            container.innerHTML = renderGridView(pageItems);
+        } else if (viewMode === 'compact') {
+            container.innerHTML = renderCompactView(pageItems);
+        }
+    }
+    
+    const showingCount = document.getElementById('showingCount');
+    if (showingCount) showingCount.textContent = products.length;
+    const currentPageEl = document.getElementById('currentPage');
+    if (currentPageEl) currentPageEl.textContent = currentPage;
+}
+
+// ============ VISTA LISTA ============
+function renderListView(products) {
+    return `
+        <table>
+            <thead>
+                <tr>
+                    <th>Red</th><th>BIN</th><th>Base</th><th>Clase</th><th>Nivel</th>
+                    <th>Banco</th><th>País</th><th>Tipo</th><th>Uso</th>
+                    <th>Non VBV</th><th>Non MSC</th><th>Precio</th><th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${products.map((card) => {
+                    const realIndex = allProducts.indexOf(card);
+                    const networkColor = getNetworkColor(card.network);
+                    const starsHtml = renderStars(card.rating || 0);
+                    const stockStatus = getStockStatus(card.stock);
+                    const isNew = card.id > 20;
+                    
+                    return `
+                        <tr>
+                            <td style="color:${networkColor}; font-weight:700;">${card.network}</td>
+                            <td><strong>${card.bin}</strong></td>
+                            <td>${card.database}</td>
+                            <td>${card.class}</td>
+                            <td>${card.level}</td>
+                            <td>${card.bank}</td>
+                            <td>${card.country}</td>
+                            <td>${card.type}</td>
+                            <td>${card.uso}</td>
+                            <td>${card.nonVbv ? '✓ SI' : '✗ NO'}</td>
+                            <td>${card.nonMsc ? '✓ SI' : '✗ NO'}</td>
+                            <td>
+                                <div style="display:flex; flex-direction:column; gap:2px;">
+                                    <strong style="color:var(--primary);">$${card.price.toFixed(2)}</strong>
+                                    <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:var(--text-muted);">
+                                        <span class="rating-stars">${starsHtml}</span>
+                                        <span>(${card.sales || 0})</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+                                    <button class="btn-buy" onclick="addToCart(${realIndex})" ${card.stock <= 0 ? 'disabled' : ''}>
+                                        <span class="material-icons">add_shopping_cart</span> Comprar
+                                    </button>
+                                    <div style="display:flex; align-items:center; gap:4px; font-size:10px; color:var(--text-muted);">
+                                        <span class="stock-indicator">
+                                            <span class="dot ${stockStatus.dot}"></span>
+                                            ${stockStatus.label}
+                                        </span>
+                                        ${isNew ? '<span class="product-new-badge">Nuevo</span>' : ''}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+// ============ VISTA GRID ============
+function renderGridView(products) {
+    return `<div class="catalog-grid">${products.map((card) => {
+        const realIndex = allProducts.indexOf(card);
+        const networkColor = getNetworkColor(card.network);
+        const starsHtml = renderStars(card.rating || 0);
+        const stockStatus = getStockStatus(card.stock);
+        const isNew = card.id > 20;
         
-        <div class="table-container">
-            <div class="table-responsive">
-                <div id="catalogBody">
-                    <!-- Renderizado por JavaScript -->
-                </div>
-            </div>
-            <div class="table-footer">
-                <span>Mostrando <span id="showingCount">0</span> tarjetas</span>
-                <div class="pagination">
-                    <button class="page-btn" onclick="changePage(-1)">Anterior</button>
-                    <span class="page-info">Página <span id="currentPage">1</span></span>
-                    <button class="page-btn" onclick="changePage(1)">Siguiente</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ CHECKER ============ -->
-    <section id="checker" class="services-section" style="display:none;">
-        <div class="services-grid">
-            <div class="service-card full-width">
-                <div class="service-header">
-                    <span class="material-icons-outlined service-icon">verified</span>
-                    <div><h3>Checker de Saldo</h3><p>Verificación masiva en tiempo real</p></div>
-                    <span class="service-badge premium">Premium</span>
-                </div>
-                <div class="service-body">
-                    <div class="price-tag"><span class="price">$40</span><span class="price-period">USD · Vida</span></div>
-                    <div class="checker-input-area">
-                        <textarea id="checkerInput" rows="4" placeholder="Formato: TARJETA|MM|YY|CVC&#10;Ejemplo:&#10;414720|12|26|123&#10;521894|08|27|456"></textarea>
-                        <div class="input-actions">
-                            <button class="btn-upload" onclick="uploadFile()"><span class="material-icons">upload_file</span></button>
-                            <button class="btn-clear" onclick="clearChecker()"><span class="material-icons">clear</span></button>
-                        </div>
+        return `
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-network" style="color:${networkColor};">
+                        <span class="material-icons">credit_card</span>
+                        ${card.network}
                     </div>
-                    <button class="btn-primary btn-checker" onclick="runChecker()"><span class="material-icons">play_arrow</span> Verificar Tarjetas</button>
-                    <div class="checker-stats">
-                        <div class="stat"><span class="stat-icon approved">✓</span><span>Aprobadas: <strong id="approvedCount">0</strong></span></div>
-                        <div class="stat"><span class="stat-icon declined">✗</span><span>Declinadas: <strong id="declinedCount">0</strong></span></div>
-                        <div class="stat"><span class="stat-icon total">⟳</span><span>Total: <strong id="processedCount">0</strong></span></div>
-                    </div>
-                    <div class="checker-status"><span class="status-dot online"></span><span>Sistema: <strong>Online & Optimizado</strong></span></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ BOT OTP ============ -->
-    <section id="otp" class="services-section" style="display:none;">
-        <div class="services-grid">
-            <div class="service-card full-width">
-                <div class="service-header">
-                    <span class="material-icons-outlined service-icon">android</span>
-                    <div><h3>Bot OTP con IA</h3><p>Intercepción de códigos por llamada</p></div>
-                    <span class="service-badge hot">🔥 Hot</span>
-                </div>
-                <div class="service-body">
-                    <div class="price-tag"><span class="price">$200</span><span class="price-period">USD · Vida</span><span class="price-old">$499</span></div>
-                    <div class="otp-controls">
-                        <div class="otp-input-group">
-                            <div class="input-field"><span class="material-icons-outlined">person</span><input type="text" id="otpTarget" placeholder="Nombre" value="John Doe"></div>
-                            <div class="input-field"><span class="material-icons-outlined">phone</span><input type="text" id="otpPhone" placeholder="Teléfono" value="+1 (555) 123-4567"></div>
-                        </div>
-                        <div class="otp-service-select">
-                            <span class="material-icons-outlined">business</span>
-                            <select id="otpService">
-                                <option value="wellsfargo">Wells Fargo</option>
-                                <option value="chase">Chase Bank</option>
-                                <option value="bankofamerica">Bank of America</option>
-                                <option value="capitalone">Capital One</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="btn-primary btn-otp" onclick="startOTPBot()"><span class="material-icons">play_circle</span> Iniciar Bot OTP</button>
-                    <div class="otp-logs" id="otpLogs">
-                        <div class="log-entry"><span class="log-time">[12:34:56]</span><span class="log-status">●</span><span class="log-message">Sistema listo para interceptar</span></div>
-                    </div>
-                    <div class="session-info"><span class="material-icons-outlined">fingerprint</span><span>Session ID: <code id="sessionId">1f9071f4-fec3-4a2b-8c7d-9e5f1a3b2c4d</code></span></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ HISTORIAL ============ -->
-    <section id="historial" class="services-section" style="display:none;">
-        <div class="services-grid">
-            <div class="service-card full-width">
-                <div class="service-header">
-                    <span class="material-icons-outlined service-icon">history</span>
-                    <div><h3>Historial de Transacciones</h3><p>Consulta tus depósitos y compras realizadas</p></div>
-                </div>
-                <div class="service-body">
-                    <div class="transactions-table">
-                        <table>
-                            <thead><tr><th>ID Transacción</th><th>Fecha</th><th>Tipo</th><th>Monto</th><th>Detalles</th><th>Estado</th></tr></thead>
-                            <tbody id="transactionsBody">
-                                <tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-secondary);"><span class="material-icons-outlined" style="font-size:48px;display:block;">receipt_long</span>No hay transacciones registradas</td></tr>
-                            </tbody>
-                        </table>
+                    <div class="product-card-badge">
+                        ${isNew ? '<span class="product-new-badge">Nuevo</span>' : ''}
+                        <span class="stock-indicator">
+                            <span class="dot ${stockStatus.dot}"></span>
+                            ${stockStatus.label}
+                        </span>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============ CARRITO PANEL ============ -->
-    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-    <div class="cart-panel" id="cartPanel">
-        <div class="cart-header">
-            <div class="cart-title"><span class="material-icons-outlined">shopping_cart</span><h3>Mi Carrito</h3><span class="cart-count" id="cartCount">0</span></div>
-            <button class="cart-close" onclick="toggleCart()"><span class="material-icons">close</span></button>
-        </div>
-        <div class="cart-body"><div id="cartItems" class="cart-items"><div class="empty-cart"><span class="material-icons-outlined">shopping_bag</span><p>El carrito está vacío</p><span class="empty-sub">Agrega tarjetas desde el catálogo</span></div></div></div>
-        <div class="cart-footer">
-            <div class="cart-summary">
-                <div class="summary-row"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
-                <div class="summary-row"><span>Descuento (10%)</span><span id="cartDiscount">$0.00</span></div>
-                <div class="summary-row total"><span>Total a pagar</span><span id="cartTotal">$0.00</span></div>
-            </div>
-            <div class="cart-actions">
-                <button class="btn-secondary" onclick="clearCart()"><span class="material-icons">delete_sweep</span> Vaciar</button>
-                <button class="btn-primary btn-checkout" onclick="checkout()"><span class="material-icons">payment</span> Procesar Pago</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============ MODAL DEPÓSITO ============ -->
-    <div class="modal-overlay" id="depositModal" onclick="if(event.target===this)closeDepositModal()">
-        <div class="modal-container">
-            <div class="modal-header"><h3>Agregar Fondos</h3><button class="modal-close" onclick="closeDepositModal()"><span class="material-icons">close</span></button></div>
-            <div class="modal-body">
-                <div class="deposit-methods">
-                    <button class="method-btn active" onclick="selectMethod('btc', this)"><span class="material-icons-outlined">currency_bitcoin</span> BTC</button>
-                    <button class="method-btn" onclick="selectMethod('eth', this)"><span class="material-icons-outlined">currency_bitcoin</span> ETH</button>
-                    <button class="method-btn" onclick="selectMethod('usdt', this)"><span class="material-icons-outlined">attach_money</span> USDT</button>
+                <div class="product-card-body">
+                    <div class="product-card-bin">${card.bin}</div>
+                    <div class="product-card-bank">${card.bank}</div>
+                    <div class="product-card-country">${card.country}</div>
+                    <div class="product-card-type">
+                        <span class="type-badge ${card.type === 'CC Full' ? 'full' : 'nonvbv'}">${card.type}</span>
+                        <span class="uso-badge">${card.uso}</span>
+                    </div>
+                    <div class="product-card-features">
+                        <span class="feature ${card.nonVbv ? 'active' : 'inactive'}">
+                            <span class="material-icons">${card.nonVbv ? 'check_circle' : 'cancel'}</span>
+                            Non VBV
+                        </span>
+                        <span class="feature ${card.nonMsc ? 'active' : 'inactive'}">
+                            <span class="material-icons">${card.nonMsc ? 'check_circle' : 'cancel'}</span>
+                            Non MSC
+                        </span>
+                    </div>
+                    <div class="product-card-rating">
+                        <span class="rating-stars">${starsHtml}</span>
+                        <span>${card.sales || 0} ventas</span>
+                    </div>
                 </div>
-                <div class="deposit-info">
-                    <p>Dirección de pago (BTC):</p>
-                    <code id="depositAddress">1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</code>
-                    <button class="btn-copy" onclick="copyAddress()"><span class="material-icons">content_copy</span> Copiar</button>
-                    <p class="deposit-note">Los fondos se acreditarán automáticamente después de 1 confirmación.</p>
+                <div class="product-card-footer">
+                    <div class="product-card-price">$${card.price.toFixed(2)}</div>
+                    <button class="btn-buy" onclick="addToCart(${realIndex})" ${card.stock <= 0 ? 'disabled' : ''}>
+                        <span class="material-icons">add_shopping_cart</span> Comprar
+                    </button>
                 </div>
             </div>
-        </div>
-    </div>
+        `;
+    }).join('')}</div>`;
+}
 
-    <!-- ============ FOOTER ============ -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-brand">
-                <span class="material-icons-outlined">flash_on</span>
-                <span>Yx Cards</span>
-                <span class="footer-version">v2.0</span>
+// ============ VISTA COMPACTA ============
+function renderCompactView(products) {
+    return products.map((card) => {
+        const realIndex = allProducts.indexOf(card);
+        const networkColor = getNetworkColor(card.network);
+        const stockStatus = getStockStatus(card.stock);
+        const isNew = card.id > 20;
+        
+        return `
+            <div class="product-card-compact">
+                <div class="compact-left">
+                    <div class="compact-network" style="color:${networkColor};">
+                        <span class="material-icons">credit_card</span>
+                        ${card.network}
+                    </div>
+                    <div class="compact-bin">${card.bin}</div>
+                    <div class="compact-bank">${card.bank}</div>
+                    <div class="compact-country">${card.country}</div>
+                </div>
+                <div class="compact-center">
+                    <div class="compact-type">
+                        <span class="type-badge ${card.type === 'CC Full' ? 'full' : 'nonvbv'}">${card.type}</span>
+                        <span class="compact-uso">${card.uso}</span>
+                    </div>
+                    <div class="compact-features">
+                        <span class="feature ${card.nonVbv ? 'active' : 'inactive'}">
+                            <span class="material-icons">${card.nonVbv ? 'check_circle' : 'cancel'}</span>
+                        </span>
+                        <span class="feature ${card.nonMsc ? 'active' : 'inactive'}">
+                            <span class="material-icons">${card.nonMsc ? 'check_circle' : 'cancel'}</span>
+                        </span>
+                    </div>
+                    <div class="compact-stock">
+                        <span class="dot ${stockStatus.dot}"></span>
+                        ${stockStatus.label}
+                        ${isNew ? '<span class="product-new-badge">Nuevo</span>' : ''}
+                    </div>
+                </div>
+                <div class="compact-right">
+                    <div class="compact-price">$${card.price.toFixed(2)}</div>
+                    <button class="btn-buy compact-btn" onclick="addToCart(${realIndex})" ${card.stock <= 0 ? 'disabled' : ''}>
+                        <span class="material-icons">add_shopping_cart</span>
+                    </button>
+                </div>
             </div>
-            <div class="footer-links"><a href="#">Términos</a><a href="#">Privacidad</a><a href="#">Soporte</a><a href="#">API</a></div>
-            <div class="footer-social"><a href="#"><i class="fab fa-telegram"></i></a><a href="#"><i class="fab fa-discord"></i></a><a href="#"><i class="fab fa-github"></i></a></div>
-        </div>
-        <div class="footer-bottom"><span>© 2026 Yx Cards · Plataforma de servicios en tiempo real</span></div>
-    </footer>
+        `;
+    }).join('');
+}
 
-    <!-- ============ SCRIPTS ============ -->
-    <script src="js/auth.js"></script>
-    <script src="js/admin.js"></script>
-    <script src="js/products.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/app.js"></script>
-</body>
-</html>
+// ============ FUNCIONES AUXILIARES ============
+function getNetworkColor(network) {
+    const colors = { 'VISA': '#1a539a', 'MASTERCARD': '#eb0a1e', 'AMEX': '#0066cc', 'DISCOVER': '#ff6600' };
+    return colors[network] || '#a0aab8';
+}
+
+function renderStars(rating) {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating - fullStars >= 0.5;
+    let html = '';
+    for (let i = 0; i < 5; i++) {
+        if (i < fullStars) html += `<span class="material-icons">star</span>`;
+        else if (i === fullStars && halfStar) html += `<span class="material-icons">star_half</span>`;
+        else html += `<span class="material-icons empty">star_border</span>`;
+    }
+    return html;
+}
+
+function getStockStatus(stock) {
+    if (stock > 20) return { dot: 'high', label: 'Alto' };
+    if (stock > 5) return { dot: 'medium', label: 'Medio' };
+    if (stock > 0) return { dot: 'low', label: 'Bajo' };
+    return { dot: 'low', label: 'Agotado' };
+}
+
+// ============ FILTROS Y PAGINACIÓN ============
+function applyFilters() {
+    const country = document.getElementById('filterCountry');
+    const search = document.getElementById('filterSearch');
+    currentFilter = { 
+        country: country ? country.value : '', 
+        search: search ? search.value : '' 
+    };
+    filteredProducts = filterProducts(currentFilter);
+    currentPage = 1;
+    renderCatalog();
+}
+
+function changePage(direction) {
+    const products = getProducts();
+    const totalPages = Math.ceil(products.length / itemsPerPage);
+    const newPage = currentPage + direction;
+    if (newPage < 1 || newPage > totalPages) return;
+    currentPage = newPage;
+    renderCatalog();
+    document.getElementById('catalogBody')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function refreshCatalog() {
+    const btn = document.querySelector('.btn-refresh');
+    if (btn) btn.classList.add('rotating');
+    setTimeout(() => {
+        if (btn) btn.classList.remove('rotating');
+        loadProductsFromJSON();
+        applyFilters();
+        updateStats();
+        showToast('Catálogo actualizado', 'success');
+    }, 800);
+}
+
+function updateStats() {
+    const stats = getProductStats();
+    const totalCards = document.getElementById('totalCards');
+    if (totalCards) totalCards.textContent = stats.total || 0;
+    
+    const users = getUsers();
+    const totalUsers = users.length || 0;
+    const totalUsersEl = document.getElementById('totalUsers');
+    if (totalUsersEl) totalUsersEl.textContent = totalUsers;
+    
+    let totalAdmins = 0;
+    try {
+        const stored = localStorage.getItem('admin_whitelist');
+        if (stored) {
+            const data = JSON.parse(stored);
+            totalAdmins = data.admins ? data.admins.length : 0;
+        }
+    } catch (e) {}
+    const totalAdminsEl = document.getElementById('totalAdmins');
+    if (totalAdminsEl) totalAdminsEl.textContent = totalAdmins;
+}
+
+function updateDateTime() {
+    const date = new Date();
+    const el = document.getElementById('currentDate');
+    if (el) el.textContent = date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+// ============ CHECKER ============
+function runChecker() {
+    const input = document.getElementById('checkerInput');
+    if (!input) return;
+    const lines = input.value.split('\n').filter(line => line.trim());
+    if (lines.length === 0) { showToast('Por favor, ingresa al menos una tarjeta', 'error'); return; }
+    const btn = document.querySelector('.btn-checker');
+    if (!btn) return;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-icons spinning">sync</span> Verificando...';
+    let approved = 0, declined = 0;
+    const total = lines.length;
+    const interval = setInterval(() => {
+        const status = Math.random() > 0.3 ? 'approved' : 'declined';
+        if (status === 'approved') approved++; else declined++;
+        const approvedEl = document.getElementById('approvedCount');
+        const declinedEl = document.getElementById('declinedCount');
+        const processedEl = document.getElementById('processedCount');
+        if (approvedEl) approvedEl.textContent = approved;
+        if (declinedEl) declinedEl.textContent = declined;
+        if (processedEl) processedEl.textContent = approved + declined;
+        if (approved + declined >= total) {
+            clearInterval(interval);
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-icons">play_arrow</span> Verificar Tarjetas';
+            showToast(`Verificación completada: ${approved} aprobadas, ${declined} declinadas`, 'success');
+        }
+    }, 400);
+}
+
+function uploadFile() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.txt,.csv';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const checkerInput = document.getElementById('checkerInput');
+            if (checkerInput) checkerInput.value = event.target.result;
+            showToast(`Archivo cargado: ${file.name}`, 'success');
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
+function clearChecker() {
+    const checkerInput = document.getElementById('checkerInput');
+    if (checkerInput) checkerInput.value = '';
+    const approvedEl = document.getElementById('approvedCount');
+    const declinedEl = document.getElementById('declinedCount');
+    const processedEl = document.getElementById('processedCount');
+    if (approvedEl) approvedEl.textContent = '0';
+    if (declinedEl) declinedEl.textContent = '0';
+    if (processedEl) processedEl.textContent = '0';
+}
+
+// ============ OTP ============
+let otpInterval = null;
+
+function startOTPBot() {
+    const btn = document.querySelector('.btn-otp');
+    if (!btn) return;
+    const target = document.getElementById('otpTarget');
+    const phone = document.getElementById('otpPhone');
+    const service = document.getElementById('otpService');
+    const targetVal = target ? target.value : 'Desconocido';
+    const phoneVal = phone ? phone.value : 'Sin número';
+    const serviceVal = service ? service.value : 'unknown';
+    if (otpInterval) {
+        clearInterval(otpInterval);
+        otpInterval = null;
+        btn.innerHTML = '<span class="material-icons">play_circle</span> Iniciar Bot OTP';
+        btn.style.background = '#2a4a6a';
+        addOTPLog('Bot detenido manualmente', 'info');
+        return;
+    }
+    btn.innerHTML = '<span class="material-icons spinning">sync</span> Detener Bot';
+    btn.style.background = '#6a2a2a';
+    addOTPLog(`Iniciando bot para ${targetVal} (${phoneVal}) - Servicio: ${serviceVal}`, 'info');
+    const stages = ['Llamando al número...', 'Estableciendo conexión...', 'Bienvenida: "Esta es una llamada automática..."', 'La víctima está en otra llamada...', 'Esperando código OTP...', 'La víctima está ingresando datos...'];
+    let stageIndex = 0;
+    otpInterval = setInterval(() => {
+        if (stageIndex < stages.length) {
+            addOTPLog(stages[stageIndex], 'progress');
+            stageIndex++;
+        } else {
+            const otp = Math.floor(100000 + Math.random() * 900000);
+            addOTPLog(`🎯 OTP Capturado: ${otp}`, 'success');
+            stageIndex = 0;
+        }
+    }, 1200);
+}
+
+function addOTPLog(message, type = 'info') {
+    const logsContainer = document.getElementById('otpLogs');
+    if (!logsContainer) return;
+    const time = new Date().toLocaleTimeString();
+    const entry = document.createElement('div');
+    entry.className = `log-entry ${type === 'success' ? 'highlight' : ''}`;
+    const statusMap = { 'info': '●', 'progress': '⏳', 'success': '✓' };
+    entry.innerHTML = `<span class="log-time">[${time}]</span><span class="log-status">${statusMap[type] || '●'}</span><span class="log-message">${message}</span>`;
+    logsContainer.appendChild(entry);
+    logsContainer.scrollTop = logsContainer.scrollHeight;
+}
+
+// ============ MODAL DEPÓSITO ============
+function openDepositModal() {
+    const modal = document.getElementById('depositModal');
+    if (modal) modal.classList.add('active');
+}
+
+function closeDepositModal() {
+    const modal = document.getElementById('depositModal');
+    if (modal) modal.classList.remove('active');
+}
+
+function selectMethod(method, btn) {
+    document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const addresses = { btc: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', eth: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', usdt: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e' };
+    const addressEl = document.getElementById('depositAddress');
+    if (addressEl) addressEl.textContent = addresses[method] || addresses.btc;
+}
+
+function copyAddress() {
+    const addressEl = document.getElementById('depositAddress');
+    if (!addressEl) return;
+    navigator.clipboard.writeText(addressEl.textContent).then(() => showToast('Dirección copiada al portapapeles', 'success'));
+}
+
+// ============ EXPORTAR ============
+window.showSection = showSection;
+window.applyFilters = applyFilters;
+window.changePage = changePage;
+window.refreshCatalog = refreshCatalog;
+window.runChecker = runChecker;
+window.uploadFile = uploadFile;
+window.clearChecker = clearChecker;
+window.startOTPBot = startOTPBot;
+window.openDepositModal = openDepositModal;
+window.closeDepositModal = closeDepositModal;
+window.selectMethod = selectMethod;
+window.copyAddress = copyAddress;
+window.updateStats = updateStats;
+window.changeView = changeView;
+window.renderCatalog = renderCatalog;
+
+console.log('✅ App.js cargado correctamente');
