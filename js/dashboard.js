@@ -31,9 +31,6 @@ function loadDashboardData() {
     const transactions = fullUser?.transactions || [];
     const balance = fullUser?.balance || 0;
     
-    console.log('📦 Compras:', purchases.length);
-    console.log('📦 Transacciones:', transactions.length);
-    
     // Actualizar estadísticas
     document.getElementById('totalPurchases').textContent = purchases.length;
     document.getElementById('totalSpent').textContent = `$${purchases.reduce((sum, p) => sum + (p.price * p.quantity), 0).toFixed(2)}`;
@@ -54,9 +51,9 @@ function renderPurchases(purchases) {
     if (purchases.length === 0) {
         container.innerHTML = `
             <div class="empty-state" style="grid-column:1/-1;">
-                <span class="material-icons-outlined" style="font-size:48px;display:block;margin-bottom:12px;color:var(--text-muted);">shopping_bag</span>
-                <p style="font-size:18px;font-weight:600;">No has comprado ninguna tarjeta aún</p>
-                <span style="font-size:14px;color:var(--text-muted);">Visita la tienda para adquirir tarjetas</span>
+                <span class="material-icons-outlined" style="font-size:48px;display:block;margin-bottom:12px;color:#5a6575;">shopping_bag</span>
+                <p style="font-size:18px;font-weight:600;color:#e8edf2;">No has comprado ninguna tarjeta aún</p>
+                <span style="font-size:14px;color:#a0aab8;">Visita la tienda para adquirir tarjetas</span>
             </div>
         `;
         return;
@@ -111,8 +108,8 @@ function renderRecentPurchases(purchases) {
     if (recent.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <span class="material-icons-outlined" style="font-size:32px;display:block;margin-bottom:8px;color:var(--text-muted);">shopping_bag</span>
-                <p>No has realizado compras aún</p>
+                <span class="material-icons-outlined" style="font-size:32px;display:block;margin-bottom:8px;color:#5a6575;">shopping_bag</span>
+                <p style="color:#a0aab8;">No has realizado compras aún</p>
             </div>
         `;
         return;
@@ -138,7 +135,7 @@ function renderTransactions(transactions) {
     if (!transactions || transactions.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="5" style="text-align:center;padding:40px;color:var(--text-secondary);">
+                <td colspan="5" style="text-align:center;padding:40px;color:#5a6575;">
                     <span class="material-icons-outlined" style="font-size:48px;display:block;margin-bottom:8px;">receipt_long</span>
                     No hay transacciones registradas
                 </td>
@@ -149,7 +146,7 @@ function renderTransactions(transactions) {
     
     tbody.innerHTML = transactions.slice().reverse().slice(0, 20).map(t => `
         <tr>
-            <td><code style="background:var(--bg-primary);padding:4px 8px;border-radius:4px;font-size:12px;">${t.id || 'N/A'}</code></td>
+            <td><code style="background:#0b0e14;padding:4px 8px;border-radius:4px;font-size:12px;color:#a0aab8;">${t.id || 'N/A'}</code></td>
             <td><span class="transaction-type ${t.type || 'desconocido'}">${t.type || 'Desconocido'}</span></td>
             <td>$${(t.amount || 0).toFixed(2)}</td>
             <td><span class="status-badge ${t.status || 'pendiente'}">${t.status || 'Pendiente'}</span></td>
