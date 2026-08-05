@@ -247,3 +247,180 @@ tbody tr:hover { background:var(--bg-hover); }
 @keyframes rotate { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
 .spinning { animation:spin 1s linear infinite; }
 @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+
+/* ============================================
+   INSIGNIAS - ESTILOS
+   ============================================ */
+
+/* Contenedor de insignias en navbar */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 12px;
+}
+
+.user-name {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.user-insignias {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-top: 2px;
+}
+
+/* Badge de insignia */
+.insignia-badge {
+    font-size: 10px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+}
+
+.insignia-badge:hover {
+    transform: scale(1.05);
+}
+
+.insignia-badge .material-icons {
+    font-size: 14px;
+}
+
+/* Badge para invitado */
+.insignia-guest {
+    font-size: 10px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    background: rgba(149, 165, 166, 0.15);
+    color: #95a5a6;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.insignia-guest .material-icons {
+    font-size: 14px;
+}
+
+/* Botón de Admin en navbar */
+.btn-admin-link {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    background: rgba(240, 185, 11, 0.15);
+    border: 1px solid rgba(240, 185, 11, 0.3);
+    color: var(--primary);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font);
+    text-decoration: none;
+    margin-left: 8px;
+}
+
+.btn-admin-link:hover {
+    background: rgba(240, 185, 11, 0.25);
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+.btn-admin-link .material-icons {
+    font-size: 16px;
+}
+
+/* Insignias en perfil */
+.profile-insignias-container {
+    margin-top: 8px;
+}
+
+.profile-insignias-container label {
+    font-size: 12px;
+    color: #5a6575;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.profile-insignias-container .user-insignias {
+    justify-content: flex-start;
+}
+
+.profile-insignias-container .insignia-badge {
+    font-size: 12px;
+    padding: 4px 14px;
+}
+
+.profile-insignias-container .insignia-badge .material-icons {
+    font-size: 16px;
+}
+
+/* Herramientas de Admin en perfil */
+.admin-tools-container {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #1e2630;
+    display: none;
+}
+
+.admin-tools-container .btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-tools-container .btn-group .btn-primary,
+.admin-tools-container .btn-group .btn-secondary {
+    width: auto;
+    padding: 8px 20px;
+    font-size: 13px;
+}
+
+/* ============================================
+   RESPONSIVE INSIGNIAS
+   ============================================ */
+@media (max-width: 768px) {
+    .user-info {
+        align-items: flex-start;
+        margin-right: 8px;
+    }
+    
+    .user-name {
+        font-size: 12px;
+    }
+    
+    .user-insignias {
+        justify-content: flex-start;
+    }
+    
+    .insignia-badge {
+        font-size: 9px;
+        padding: 1px 8px;
+    }
+    
+    .insignia-badge .material-icons {
+        font-size: 12px;
+    }
+    
+    .btn-admin-link {
+        font-size: 10px;
+        padding: 2px 10px;
+    }
+    
+    .btn-admin-link .material-icons {
+        font-size: 14px;
+    }
+}
