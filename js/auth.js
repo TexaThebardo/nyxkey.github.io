@@ -26,7 +26,6 @@ function verifyAdminKey(email, key) {
     return isAdmin(email) && key === 'admin123';
 }
 
-// ============ CARGAR WHITELIST ============
 function loadWhitelist() {
     try {
         const stored = localStorage.getItem('admin_whitelist');
@@ -310,7 +309,7 @@ function toggleUserMenu() {
     }
 }
 
-// ============ ACTUALIZAR UI - VERSIÓN COMPLETA ============
+// ============ ACTUALIZAR UI ============
 function updateUserUI() {
     console.log('🔄 updateUserUI ejecutado');
     
@@ -322,7 +321,6 @@ function updateUserUI() {
     console.log('👤 Usuario actual:', user);
 
     if (user) {
-        // Actualizar balance
         if (balanceEl) {
             balanceEl.textContent = `$${user.balance.toFixed(2)}`;
             console.log(`💰 Saldo actualizado: $${user.balance.toFixed(2)}`);
@@ -330,7 +328,6 @@ function updateUserUI() {
         if (avatarEl) avatarEl.textContent = 'account_circle';
         if (nameEl) nameEl.textContent = user.username || 'Usuario';
 
-        // Verificar admin
         const esAdmin = isAdmin(user.email);
 
         const adminBtn = document.getElementById('adminPanelBtn');
@@ -405,7 +402,6 @@ document.addEventListener('DOMContentLoaded', function() {
         loadWhitelist();
     }
     
-    // Cerrar dropdown al hacer clic fuera
     document.addEventListener('click', function(e) {
         const dropdown = document.getElementById('userDropdown');
         const avatar = document.querySelector('.user-avatar');
@@ -417,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUserUI();
 });
 
-// ============ EXPORTAR TODAS LAS FUNCIONES ============
+// ============ EXPORTAR ============
 window.registerUser = registerUser;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
