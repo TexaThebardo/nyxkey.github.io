@@ -2,8 +2,17 @@
 // DASHBOARD.JS - Lógica del Dashboard
 // ============================================
 
+console.log('📊 Dashboard.js cargado');
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📊 Dashboard iniciado');
+
+    // Verificar que estamos en dashboard.html
+    const dashboardContainer = document.querySelector('.dashboard-container');
+    if (!dashboardContainer) {
+        console.log('ℹ️ dashboard-container no encontrado - no estamos en dashboard.html');
+        return;
+    }
 
     const user = getCurrentUser();
     if (!user) {
