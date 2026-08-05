@@ -13,8 +13,8 @@ const AUTH_CONFIG = {
 // ============ ADMINISTRADORES DEFINIDOS EN CÓDIGO ============
 // ⚠️ AÑADE AQUÍ LOS EMAILS DE LOS ADMINISTRADORES
 const ADMIN_LIST = [
-    'personabusiness2626@gmail.com',
-    'tu-email@dominio.com'
+    'admin@yxcards.com',
+    'personalbusiness2626@gmail.com'  // ✅ TU EMAIL AÑADIDO
     // AÑADE MÁS CORREOS AQUÍ
 ];
 
@@ -26,6 +26,8 @@ function isAdmin(email) {
 
 // ============ REGISTRO ============
 function registerUser(email, password, username) {
+    console.log('🔍 registerUser() ejecutado');
+
     if (!email || !password || !username) {
         showToast('Todos los campos son obligatorios', 'error');
         return false;
@@ -75,6 +77,7 @@ function registerUser(email, password, username) {
     users.push(newUser);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
 
+    console.log('✅ Usuario registrado:', username);
     showToast('✅ Registro exitoso. Inicia sesión.', 'success');
     return true;
 }
@@ -127,6 +130,7 @@ function loginUser(email, password) {
     };
 
     localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
+    console.log('✅ Sesión creada para:', user.username);
 
     user.lastLogin = new Date().toISOString();
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
@@ -173,6 +177,29 @@ function getCurrentUser() {
     return session ? session.user : null;
 }
 
+// ============ RENDERIZAR INSIGNIAS ============
+function renderUserInsignias(email, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const esAdmin = isAdmin(email);
+    
+    if (esAdmin) {
+        container.innerHTML = `
+            <span class="insignia-badge" style="background:rgba(240, 185, 11, 0.15); color:#f0b90b;">
+                <span class="material-icons" style="font-size:14px;">verified</span>
+                Owner
+            </span>
+        `;
+    } else {
+        container.innerHTML = `
+            <span class="insignia-guest">
+                <span class="material-icons" style="font-size:14px;">person_outline</span> Guest
+            </span>
+        `;
+    }
+}
+
 // ============ ACTUALIZAR UI ============
 function updateUserUI() {
     console.log('🔄 updateUserUI ejecutado');
@@ -214,6 +241,11 @@ function updateUserUI() {
             }
         }
     });
+
+    // Renderizar insignias
+    if (user) {
+        renderUserInsignias(user.email, 'userInsignias');
+    }
 }
 
 // ============ TOGGLE MENÚ ============
@@ -356,6 +388,7 @@ window.showToast = showToast;
 window.getUsers = getUsers;
 window.addPurchaseToHistory = addPurchaseToHistory;
 window.isAdmin = isAdmin;
+window.renderUserInsignias = renderUserInsignias;
 
 console.log('✅ Auth.js cargado correctamente');
 console.log('👑 Administradores configurados:', ADMIN_LIST);
