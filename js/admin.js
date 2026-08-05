@@ -20,11 +20,9 @@ function loadWhitelist() {
         }
     } catch (e) {}
 
-    // ============ WHITELIST POR DEFECTO ============
-    // ⚠️ CAMBIA ESTOS EMAILS POR LOS QUE QUIERAS QUE SEAN ADMIN
-    // O USA EL BOTÓN "AÑADIR ADMIN" EN EL PANEL DE ADMIN
+    // WHITELIST POR DEFECTO - VACÍA
     const defaultWhitelist = {
-        admins: [], // ⚠️ VACÍO POR DEFECTO - TÚ DECIDES QUIÉNES SON ADMINS
+        admins: [],
         insignias: {
             'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
             'Dev': { icon: 'code', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.15)', description: 'Desarrollador de la plataforma' },
@@ -216,6 +214,20 @@ function removeAdminFromWhitelist(email) {
         if (filtered.length < whitelist.admins.length) {
             whitelist.admins = filtered;
             saveWhitelist(whitelist);
+            
+            // ============ LIMPIAR SESIÓN DE ADMIN SI EL USUARIO LA TIENE ============
+            // Si el usuario que fue removido tiene una sesión de admin activa, la eliminamos
+            const adminSession = localStorage.getItem('admin_session');
+            if (adminSession) {
+                try {
+                    const session = JSON.parse(adminSession);
+                    if (session.email === email) {
+                        localStorage.removeItem('admin_session');
+                        console.log(`🔒 Sesión de admin eliminada para ${email}`);
+                    }
+                } catch (e) {}
+            }
+            
             return { success: true, message: `✅ ${email} ya no es administrador` };
         }
     }
@@ -226,6 +238,30 @@ function removeAdminFromWhitelist(email) {
 function getAdminList() {
     const whitelist = loadWhitelist();
     return whitelist.admins || [];
+}
+
+// ============ VERIFICAR SESIÓN ADMIN EN TIEMPO REAL ============
+function checkAdminSession() {
+    const sessionData = localStorage.getItem('admin_session');
+    if (!sessionData) return null;
+    
+    try {
+        const session = JSON.parse(sessionData);
+        if (session.loggedIn && (Date.now() - session.timestamp < 3600000)) {
+            // Verificar si el email sigue siendo admin en la whitelist
+            if (isAdmin(session.email)) {
+                return session;
+            } else {
+                // Si ya no es admin, eliminar sesión
+                localStorage.removeItem('admin_session');
+                console.log(`🔒 Sesión de admin eliminada por whitelist: ${session.email}`);
+                return null;
+            }
+        }
+        return null;
+    } catch (e) {
+        return null;
+    }
 }
 
 // ============ EXPORTAR ============
@@ -243,5 +279,6 @@ window.saveUserInsignias = saveUserInsignias;
 window.addAdminToWhitelist = addAdminToWhitelist;
 window.removeAdminFromWhitelist = removeAdminFromWhitelist;
 window.getAdminList = getAdminList;
+window.checkAdminSession = checkAdminSession;
 
 console.log('✅ Admin.js cargado');
