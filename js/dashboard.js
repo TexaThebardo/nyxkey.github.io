@@ -3,16 +3,12 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📊 Dashboard iniciado');
-    
     const user = getCurrentUser();
     if (!user) {
-        console.log('❌ Usuario no autenticado');
         window.location.href = 'login.html';
         return;
     }
     
-    console.log('👤 Usuario:', user.username);
     loadDashboardData();
     setupNavigation();
     updateDateTime();
@@ -25,20 +21,16 @@ function loadDashboardData() {
     const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
     const fullUser = users.find(u => u.id === user.id);
     
-    console.log('📦 Datos completos:', fullUser);
-    
     const purchases = fullUser?.purchases || [];
     const transactions = fullUser?.transactions || [];
     const balance = fullUser?.balance || 0;
     
-    // Actualizar estadísticas
     document.getElementById('totalPurchases').textContent = purchases.length;
     document.getElementById('totalSpent').textContent = `$${purchases.reduce((sum, p) => sum + (p.price * p.quantity), 0).toFixed(2)}`;
     document.getElementById('currentBalance').textContent = `$${balance.toFixed(2)}`;
     document.getElementById('dashboardBalance').textContent = `$${balance.toFixed(2)}`;
     document.getElementById('purchaseCount').textContent = `${purchases.length} tarjetas`;
     
-    // Renderizar secciones
     renderPurchases(purchases);
     renderRecentPurchases(purchases);
     renderTransactions(transactions);
@@ -156,13 +148,10 @@ function renderTransactions(transactions) {
 }
 
 function setupNavigation() {
-    console.log('🔧 Configurando navegación...');
-    
     document.querySelectorAll('.sidebar-link[data-section]').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const sectionId = this.dataset.section;
-            console.log('🔄 Cambiando a:', sectionId);
             
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             this.classList.add('active');
@@ -171,9 +160,6 @@ function setupNavigation() {
             const section = document.getElementById(sectionId);
             if (section) {
                 section.classList.add('active');
-                console.log('✅ Sección activada:', sectionId);
-            } else {
-                console.log('❌ Sección no encontrada:', sectionId);
             }
         });
     });
@@ -191,5 +177,3 @@ function updateDateTime() {
         });
     }
 }
-
-console.log('✅ dashboard.js cargado');
