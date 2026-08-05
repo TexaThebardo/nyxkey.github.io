@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tarjetas en Tiempo Real LIVE</title>
+    <title>Yx Cards - Tarjetas en Tiempo Real</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- RUTAS RELATIVAS - FUNCIONAN EN CUALQUIER SERVIDOR -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -38,9 +37,22 @@
             </div>
             
             <div class="nav-user">
+                <!-- CARRITO -->
                 <button class="btn-cart" onclick="toggleCart()">
                     <span class="material-icons">shopping_cart</span>
                     <span class="cart-badge" id="cartBadge">0</span>
+                </button>
+                
+                <!-- INFO USUARIO CON INSIGNIAS -->
+                <div class="user-info">
+                    <span id="userDisplayName" class="user-name">Invitado</span>
+                    <div id="userInsignias" class="user-insignias"></div>
+                </div>
+                
+                <!-- BOTÓN ADMIN (solo visible para admins) -->
+                <button id="adminPanelBtn" class="btn-admin-link" onclick="window.location.href='admin.html'" style="display:none;">
+                    <span class="material-icons">admin_panel_settings</span>
+                    Admin
                 </button>
                 
                 <div class="user-balance" id="userBalanceContainer">
@@ -274,8 +286,9 @@
         <div class="footer-bottom"><span>© 2026 Yx Cards · Plataforma de servicios en tiempo real</span></div>
     </footer>
 
-    <!-- SCRIPTS CON RUTAS RELATIVAS -->
+    <!-- ============ SCRIPTS ============ -->
     <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
     <script src="js/products.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/app.js"></script>
