@@ -166,9 +166,7 @@ function loginUser(email, password) {
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
 
-    if (typeof updateUserUI === 'function') {
-        updateUserUI();
-    }
+    updateUserUI();
     showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
 }
@@ -234,9 +232,7 @@ function updateUserBalance(userId, amount) {
             }
         }
         
-        if (typeof updateUserUI === 'function') {
-            updateUserUI();
-        }
+        updateUserUI();
         return true;
     }
     return false;
@@ -309,10 +305,12 @@ function renderUserInsignias(email, containerId) {
 // ============ TOGGLE MENÚ ============
 function toggleUserMenu() {
     const dropdown = document.getElementById('userDropdown');
-    if (dropdown) dropdown.classList.toggle('active');
+    if (dropdown) {
+        dropdown.classList.toggle('active');
+    }
 }
 
-// ============ ACTUALIZAR UI ============
+// ============ ACTUALIZAR UI - VERSIÓN COMPLETA ============
 function updateUserUI() {
     console.log('🔄 updateUserUI ejecutado');
     
@@ -321,11 +319,18 @@ function updateUserUI() {
     const avatarEl = document.getElementById('userAvatarIcon');
     const nameEl = document.getElementById('userDisplayName');
 
+    console.log('👤 Usuario actual:', user);
+
     if (user) {
-        if (balanceEl) balanceEl.textContent = `$${user.balance.toFixed(2)}`;
+        // Actualizar balance
+        if (balanceEl) {
+            balanceEl.textContent = `$${user.balance.toFixed(2)}`;
+            console.log(`💰 Saldo actualizado: $${user.balance.toFixed(2)}`);
+        }
         if (avatarEl) avatarEl.textContent = 'account_circle';
         if (nameEl) nameEl.textContent = user.username || 'Usuario';
 
+        // Verificar admin
         const esAdmin = isAdmin(user.email);
 
         const adminBtn = document.getElementById('adminPanelBtn');
@@ -394,9 +399,12 @@ function showToast(message, type = 'info') {
 
 // ============ INICIALIZAR ============
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 auth.js - DOM cargado');
+    
     if (!localStorage.getItem('admin_whitelist')) {
         loadWhitelist();
     }
+    
     // Cerrar dropdown al hacer clic fuera
     document.addEventListener('click', function(e) {
         const dropdown = document.getElementById('userDropdown');
@@ -405,12 +413,11 @@ document.addEventListener('DOMContentLoaded', function() {
             dropdown.classList.remove('active');
         }
     });
-    if (typeof updateUserUI === 'function') {
-        updateUserUI();
-    }
+    
+    updateUserUI();
 });
 
-// ============ EXPORTAR ============
+// ============ EXPORTAR TODAS LAS FUNCIONES ============
 window.registerUser = registerUser;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
