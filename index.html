@@ -12,14 +12,15 @@
     <style>
         /* ============ LOGO ANIMADO EN NAVBAR ============ */
         .nav-logo .logo-img {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             overflow: hidden;
             flex-shrink: 0;
-            animation: pulseLogo 3s ease-in-out infinite;
+            animation: pulseLogo 2.5s ease-in-out infinite;
             display: inline-block;
             vertical-align: middle;
+            transition: all 0.3s ease;
         }
 
         .nav-logo .logo-img img {
@@ -28,14 +29,19 @@
             object-fit: cover;
         }
 
+        .nav-logo .logo-img:hover {
+            transform: scale(1.08);
+            filter: drop-shadow(0 0 25px rgba(240, 185, 11, 0.5));
+        }
+
         @keyframes pulseLogo {
             0%, 100% {
                 transform: scale(1);
-                filter: drop-shadow(0 0 8px rgba(240, 185, 11, 0.2));
+                filter: drop-shadow(0 0 10px rgba(240, 185, 11, 0.15));
             }
             50% {
-                transform: scale(1.05);
-                filter: drop-shadow(0 0 20px rgba(240, 185, 11, 0.4));
+                transform: scale(1.04);
+                filter: drop-shadow(0 0 25px rgba(240, 185, 11, 0.35));
             }
         }
 
@@ -43,17 +49,23 @@
         .hero-logo {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
             margin-bottom: 16px;
         }
 
         .hero-logo .hero-logo-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
             overflow: hidden;
-            animation: pulseLogo 3s ease-in-out infinite;
+            animation: pulseLogo 2.5s ease-in-out infinite;
             flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .hero-logo .hero-logo-img:hover {
+            transform: scale(1.06);
+            filter: drop-shadow(0 0 30px rgba(240, 185, 11, 0.4));
         }
 
         .hero-logo .hero-logo-img img {
@@ -63,7 +75,7 @@
         }
 
         .hero-logo .hero-brand {
-            font-size: 32px;
+            font-size: 38px;
             font-weight: 800;
             color: var(--text-primary);
         }
@@ -74,25 +86,29 @@
 
         @media (max-width: 768px) {
             .hero-logo .hero-brand {
-                font-size: 24px;
+                font-size: 28px;
             }
             .hero-logo .hero-logo-img {
-                width: 48px;
-                height: 48px;
+                width: 60px;
+                height: 60px;
             }
             .nav-logo .logo-img {
-                width: 28px;
-                height: 28px;
+                width: 38px;
+                height: 38px;
             }
         }
 
         @media (max-width: 480px) {
             .hero-logo .hero-brand {
-                font-size: 20px;
+                font-size: 22px;
             }
             .hero-logo .hero-logo-img {
-                width: 40px;
-                height: 40px;
+                width: 50px;
+                height: 50px;
+            }
+            .nav-logo .logo-img {
+                width: 32px;
+                height: 32px;
             }
         }
     </style>
@@ -185,11 +201,20 @@
                 <h1><span class="hero-highlight">Tarjetas</span> en Tiempo Real <span class="hero-badge">LIVE</span></h1>
                 <p>Inventario verificado al instante con más del 99% de precisión</p>
                 <div class="hero-stats">
-                    <div class="stat-item"><span class="stat-number" id="totalCards">0</span><span class="stat-label">Tarjetas Activas</span></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalCards">0</span>
+                        <span class="stat-label">Tarjetas Activas</span>
+                    </div>
                     <div class="stat-divider"></div>
-                    <div class="stat-item"><span class="stat-number" id="totalBanks">0</span><span class="stat-label">Bancos</span></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalUsers">0</span>
+                        <span class="stat-label">Usuarios Registrados</span>
+                    </div>
                     <div class="stat-divider"></div>
-                    <div class="stat-item"><span class="stat-number" id="onlineUsers">0</span><span class="stat-label">Usuarios Online</span></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalAdmins">0</span>
+                        <span class="stat-label">Administradores</span>
+                    </div>
                 </div>
             </div>
             <div class="hero-status">
