@@ -10,10 +10,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* ============ ADMIN STYLES ============ */
-        .admin-container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        /* ============================================
+           ADMIN STYLES
+           ============================================ */
         
-        /* HEADER */
+        .admin-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ============ HEADER ============ */
         .admin-header {
             background: #131a22;
             border: 1px solid #2a313c;
@@ -26,11 +33,29 @@
             flex-wrap: wrap;
             gap: 16px;
         }
-        .admin-header h1 { font-size: 24px; font-weight: 700; color: #e8edf2; display: flex; align-items: center; gap: 12px; }
-        .admin-header h1 .material-icons-outlined { color: #f0b90b; font-size: 32px; }
-        .admin-badge { background: #f0b90b; color: #0b0e14; padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
-        
-        /* STATS */
+        .admin-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e8edf2;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .admin-header h1 .material-icons-outlined {
+            color: #f0b90b;
+            font-size: 32px;
+        }
+        .admin-badge {
+            background: #f0b90b;
+            color: #0b0e14;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* ============ STATS ============ */
         .admin-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -45,11 +70,22 @@
             text-align: center;
             transition: all 0.3s ease;
         }
-        .admin-stat-card:hover { border-color: #f0b90b; transform: translateY(-2px); }
-        .admin-stat-card .stat-number { font-size: 28px; font-weight: 800; color: #e8edf2; display: block; }
-        .admin-stat-card .stat-label { font-size: 13px; color: #a0aab8; }
-        
-        /* PANELS */
+        .admin-stat-card:hover {
+            border-color: #f0b90b;
+            transform: translateY(-2px);
+        }
+        .admin-stat-card .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #e8edf2;
+            display: block;
+        }
+        .admin-stat-card .stat-label {
+            font-size: 13px;
+            color: #a0aab8;
+        }
+
+        /* ============ PANELS ============ */
         .admin-panel {
             background: #131a22;
             border: 1px solid #2a313c;
@@ -66,9 +102,11 @@
             align-items: center;
             gap: 8px;
         }
-        .admin-panel h2 .material-icons-outlined { color: #f0b90b; }
-        
-        /* FORMS */
+        .admin-panel h2 .material-icons-outlined {
+            color: #f0b90b;
+        }
+
+        /* ============ FORMS ============ */
         .form-group {
             display: flex;
             flex-direction: column;
@@ -83,7 +121,10 @@
             align-items: center;
             gap: 8px;
         }
-        .form-group label .material-icons-outlined { font-size: 18px; color: #f0b90b; }
+        .form-group label .material-icons-outlined {
+            font-size: 18px;
+            color: #f0b90b;
+        }
         .form-group input {
             background: #0b0e14;
             border: 1px solid #2a313c;
@@ -100,10 +141,18 @@
             border-color: #f0b90b;
             box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
         }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } }
-        
-        /* BUTTONS */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============ BUTTONS ============ */
         .btn-admin {
             display: inline-flex;
             align-items: center;
@@ -119,16 +168,41 @@
             font-family: 'Inter', sans-serif;
             width: 100%;
         }
-        .btn-admin-primary { background: #f0b90b; color: #0b0e14; }
-        .btn-admin-primary:hover { background: #d4a40a; transform: scale(1.02); }
-        .btn-admin-success { background: #2ecc71; color: #0b0e14; }
-        .btn-admin-success:hover { background: #27ae60; transform: scale(1.02); }
-        .btn-admin-secondary { background: #1a232e; color: #a0aab8; border: 1px solid #2a313c; }
-        .btn-admin-secondary:hover { background: #1e2a38; color: #e8edf2; }
-        .btn-admin-danger { background: #e74c3c; color: white; }
-        .btn-admin-danger:hover { background: #c0392b; transform: scale(1.02); }
-        
-        /* TABLES */
+        .btn-admin-primary {
+            background: #f0b90b;
+            color: #0b0e14;
+        }
+        .btn-admin-primary:hover {
+            background: #d4a40a;
+            transform: scale(1.02);
+        }
+        .btn-admin-success {
+            background: #2ecc71;
+            color: #0b0e14;
+        }
+        .btn-admin-success:hover {
+            background: #27ae60;
+            transform: scale(1.02);
+        }
+        .btn-admin-secondary {
+            background: #1a232e;
+            color: #a0aab8;
+            border: 1px solid #2a313c;
+        }
+        .btn-admin-secondary:hover {
+            background: #1e2a38;
+            color: #e8edf2;
+        }
+        .btn-admin-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-admin-danger:hover {
+            background: #c0392b;
+            transform: scale(1.02);
+        }
+
+        /* ============ TABLES ============ */
         .users-table {
             width: 100%;
             border-collapse: collapse;
@@ -150,9 +224,17 @@
             border-bottom: 1px solid #1e2630;
             color: #e8edf2;
         }
-        .users-table tr:hover td { background: #1e2a38; }
-        .users-table .user-email { color: #f0b90b; font-weight: 500; }
-        .users-table .user-balance { font-weight: 700; color: #2ecc71; }
+        .users-table tr:hover td {
+            background: #1e2a38;
+        }
+        .users-table .user-email {
+            color: #f0b90b;
+            font-weight: 500;
+        }
+        .users-table .user-balance {
+            font-weight: 700;
+            color: #2ecc71;
+        }
         .users-table .admin-tag {
             background: rgba(240, 185, 11, 0.15);
             color: #f0b90b;
@@ -161,63 +243,100 @@
             font-size: 11px;
             font-weight: 600;
         }
-        .table-responsive { overflow-x: auto; }
-        
-        /* ADMIN LOGIN MODAL */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        /* ============================================
+           ADMIN LOGIN MODAL - CON BLUR Y CIERRE
+           ============================================ */
         .admin-login-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.4s ease;
+            transition: all 0.3s ease;
         }
         .admin-login-overlay.hidden {
             display: none;
         }
+
         .admin-login-box {
-            background: #131a22;
-            border: 1px solid #2a313c;
-            border-radius: 16px;
+            background: rgba(19, 26, 34, 0.95);
+            border: 1px solid rgba(42, 49, 60, 0.8);
+            border-radius: 20px;
             padding: 40px;
             max-width: 420px;
             width: 100%;
-            animation: slideUp 0.4s ease;
+            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
+
+        /* ============ CERRAR BOTÓN ============ */
         .admin-login-box .close-btn {
             position: absolute;
-            top: 12px;
-            right: 16px;
-            background: none;
+            top: 14px;
+            right: 18px;
+            background: rgba(255, 255, 255, 0.05);
             border: none;
             color: #5a6575;
-            font-size: 24px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .admin-login-box .close-btn:hover {
-            color: #e8edf2;
-            transform: rotate(90deg);
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            transform: rotate(90deg) scale(1.1);
         }
+        .admin-login-box .close-btn .material-icons {
+            font-size: 20px;
+        }
+
+        .admin-login-box .login-icon {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .admin-login-box .login-icon .material-icons-outlined {
+            font-size: 52px;
+            color: #f0b90b;
+            background: rgba(240, 185, 11, 0.1);
+            padding: 12px;
+            border-radius: 50%;
+        }
+
         .admin-login-box h2 {
             color: #e8edf2;
             font-size: 24px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             text-align: center;
         }
-        .admin-login-box p {
+        .admin-login-box .subtitle {
             color: #a0aab8;
             text-align: center;
             margin-bottom: 24px;
+            font-size: 14px;
         }
+
         .admin-login-box .input-group {
             display: flex;
             flex-direction: column;
@@ -237,7 +356,7 @@
             color: #f0b90b;
         }
         .admin-login-box .input-group input {
-            background: #0b0e14;
+            background: rgba(11, 14, 20, 0.8);
             border: 1px solid #2a313c;
             border-radius: 10px;
             padding: 12px 16px;
@@ -246,34 +365,54 @@
             font-family: 'Inter', sans-serif;
             transition: all 0.3s ease;
             width: 100%;
+            backdrop-filter: blur(4px);
         }
         .admin-login-box .input-group input:focus {
             outline: none;
             border-color: #f0b90b;
             box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
         }
+
+        /* ============ RECORDARME ============ */
         .admin-login-box .remember-me {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin: 12px 0;
+            gap: 10px;
+            margin: 16px 0 20px;
             color: #a0aab8;
             font-size: 13px;
             cursor: pointer;
+            user-select: none;
         }
         .admin-login-box .remember-me input[type="checkbox"] {
             width: 18px;
             height: 18px;
             accent-color: #f0b90b;
             cursor: pointer;
+            flex-shrink: 0;
         }
+        .admin-login-box .remember-me:hover {
+            color: #e8edf2;
+        }
+
+        .admin-login-box .btn-admin {
+            margin-top: 4px;
+        }
+
         .admin-login-box .admin-hint {
             font-size: 12px;
             color: #5a6575;
             text-align: center;
-            margin-top: 12px;
+            margin-top: 16px;
         }
-        
+
+        .admin-login-box .admin-hint .material-icons-outlined {
+            font-size: 14px;
+            vertical-align: middle;
+            color: #f39c12;
+        }
+
+        /* ============ ADMIN ACTIONS ============ */
         .admin-actions {
             display: flex;
             gap: 8px;
@@ -288,12 +427,27 @@
             font-weight: 600;
             transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
-        .btn-sm-add { background: #2ecc71; color: #0b0e14; }
-        .btn-sm-add:hover { background: #27ae60; }
-        .btn-sm-view { background: #3498db; color: white; }
-        .btn-sm-view:hover { background: #2980b9; }
-        
+        .btn-sm-add {
+            background: #2ecc71;
+            color: #0b0e14;
+        }
+        .btn-sm-add:hover {
+            background: #27ae60;
+            transform: scale(1.05);
+        }
+        .btn-sm-view {
+            background: #3498db;
+            color: white;
+        }
+        .btn-sm-view:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
         .admin-logout-btn {
             background: #e74c3c;
             color: white;
@@ -313,7 +467,8 @@
             background: #c0392b;
             transform: scale(1.05);
         }
-        
+
+        /* ============ TOAST ============ */
         .toast-container {
             position: fixed;
             bottom: 20px;
@@ -327,7 +482,8 @@
             pointer-events: none;
             max-width: 90%;
         }
-        
+
+        /* ============ EMPTY STATE ============ */
         .empty-state {
             text-align: center;
             padding: 30px 20px;
@@ -342,68 +498,142 @@
             font-weight: 500;
             margin-top: 8px;
         }
-        
-        /* ANIMATIONS */
+
+        /* ============ ANIMATIONS ============ */
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideDown {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(30px); }
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         @keyframes slideUpToast {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         @keyframes slideDownToast {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(20px); }
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(20px);
+            }
         }
-        
-        .hidden { display: none !important; }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 480px) {
+            .admin-login-box {
+                padding: 28px 20px;
+                margin: 16px;
+            }
+            .admin-login-box .close-btn {
+                top: 10px;
+                right: 12px;
+                width: 30px;
+                height: 30px;
+            }
+            .admin-login-box .login-icon .material-icons-outlined {
+                font-size: 40px;
+                padding: 8px;
+            }
+            .admin-login-box h2 {
+                font-size: 20px;
+            }
+            .admin-header {
+                padding: 16px 20px;
+            }
+            .admin-header h1 {
+                font-size: 18px;
+            }
+            .admin-panel {
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- ============ ADMIN LOGIN MODAL ============ -->
+    <!-- ==========================================
+    ADMIN LOGIN MODAL - CON BLUR Y CIERRE
+    ========================================== -->
     <div class="admin-login-overlay" id="adminLoginOverlay">
         <div class="admin-login-box">
+            <!-- BOTÓN CERRAR - REDIRIGE A INDEX -->
             <button class="close-btn" onclick="closeAdminLogin()" title="Cerrar">
                 <span class="material-icons">close</span>
             </button>
-            <div style="text-align:center;margin-bottom:16px;">
-                <span class="material-icons-outlined" style="font-size:48px;color:#f0b90b;">admin_panel_settings</span>
-                <h2>Panel de Administración</h2>
-                <p>Acceso restringido para administradores</p>
+
+            <!-- ICONO -->
+            <div class="login-icon">
+                <span class="material-icons-outlined">admin_panel_settings</span>
             </div>
+
+            <!-- TÍTULO -->
+            <h2>Panel de Administración</h2>
+            <p class="subtitle">Acceso restringido para administradores</p>
+
+            <!-- FORMULARIO -->
             <form id="adminLoginForm">
                 <div class="input-group">
-                    <label><span class="material-icons-outlined">email</span> Correo Administrador</label>
+                    <label>
+                        <span class="material-icons-outlined">email</span>
+                        Correo Administrador
+                    </label>
                     <input type="email" id="adminEmail" placeholder="admin@yxcards.com" required>
                 </div>
+
                 <div class="input-group">
-                    <label><span class="material-icons-outlined">key</span> Clave de Acceso</label>
+                    <label>
+                        <span class="material-icons-outlined">key</span>
+                        Clave de Acceso
+                    </label>
                     <input type="password" id="adminKey" placeholder="Ingresa tu clave" required>
                 </div>
+
+                <!-- RECORDARME -->
                 <label class="remember-me">
                     <input type="checkbox" id="rememberMe" checked>
                     <span>Recordarme</span>
                 </label>
+
                 <button type="submit" class="btn-admin btn-admin-primary">
-                    <span class="material-icons">login</span> Acceder al Panel
+                    <span class="material-icons">login</span>
+                    Acceder al Panel
                 </button>
             </form>
+
             <div class="admin-hint">
-                ⚠️ Solo administradores autorizados con clave pueden ingresar
+                <span class="material-icons-outlined">info</span>
+                Solo administradores autorizados con clave pueden ingresar
             </div>
         </div>
     </div>
 
-    <!-- ============ ADMIN PANEL ============ -->
+    <!-- ==========================================
+    ADMIN PANEL
+    ========================================== -->
     <div id="adminPanel" class="admin-container hidden">
         <!-- HEADER -->
         <div class="admin-header">
@@ -414,10 +644,12 @@
             </h1>
             <div style="display:flex; gap:12px; flex-wrap:wrap;">
                 <button class="admin-logout-btn" onclick="logoutAdmin()">
-                    <span class="material-icons">logout</span> Cerrar Sesión
+                    <span class="material-icons">logout</span>
+                    Cerrar Sesión
                 </button>
                 <button class="btn-admin btn-admin-secondary" onclick="window.location.href='index.html'">
-                    <span class="material-icons-outlined">home</span> Tienda
+                    <span class="material-icons-outlined">home</span>
+                    Tienda
                 </button>
             </div>
         </div>
@@ -440,31 +672,47 @@
 
         <!-- AGREGAR SALDO -->
         <div class="admin-panel">
-            <h2><span class="material-icons-outlined">add_circle</span> Agregar Saldo a Usuario</h2>
+            <h2>
+                <span class="material-icons-outlined">add_circle</span>
+                Agregar Saldo a Usuario
+            </h2>
             <form id="addBalanceForm">
                 <div class="form-row">
                     <div class="form-group">
-                        <label><span class="material-icons-outlined">email</span> Correo del Usuario</label>
+                        <label>
+                            <span class="material-icons-outlined">email</span>
+                            Correo del Usuario
+                        </label>
                         <input type="email" id="targetUserEmail" placeholder="usuario@correo.com" required>
                     </div>
                     <div class="form-group">
-                        <label><span class="material-icons-outlined">attach_money</span> Monto</label>
+                        <label>
+                            <span class="material-icons-outlined">attach_money</span>
+                            Monto
+                        </label>
                         <input type="number" id="amountToAdd" placeholder="0.00" min="1" step="0.01" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><span class="material-icons-outlined">description</span> Concepto</label>
+                    <label>
+                        <span class="material-icons-outlined">description</span>
+                        Concepto
+                    </label>
                     <input type="text" id="transactionConcept" placeholder="Ej: Depósito por promoción">
                 </div>
                 <button type="submit" class="btn-admin btn-admin-success">
-                    <span class="material-icons">paid</span> Agregar Saldo
+                    <span class="material-icons">paid</span>
+                    Agregar Saldo
                 </button>
             </form>
         </div>
 
         <!-- LISTA DE USUARIOS -->
         <div class="admin-panel">
-            <h2><span class="material-icons-outlined">people</span> Usuarios Registrados</h2>
+            <h2>
+                <span class="material-icons-outlined">people</span>
+                Usuarios Registrados
+            </h2>
             <div class="table-responsive">
                 <table class="users-table">
                     <thead>
@@ -487,12 +735,14 @@
     <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // ADMIN.JS - COMPLETO Y MEJORADO
+        // ADMIN.JS - COMPLETO
         // ============================================
 
-        // ============ CERRAR LOGIN MODAL ============
+        // ============ CERRAR MODAL Y REDIRIGIR ============
         function closeAdminLogin() {
             document.getElementById('adminLoginOverlay').classList.add('hidden');
+            // Redirigir a index.html al cerrar la modal
+            window.location.href = 'index.html';
         }
 
         // ============ RECORDARME ============
@@ -504,7 +754,6 @@
                     if (data.email && data.remember) {
                         document.getElementById('adminEmail').value = data.email;
                         document.getElementById('rememberMe').checked = true;
-                        // Si hay key guardada (opcional)
                         if (data.key) {
                             document.getElementById('adminKey').value = data.key;
                         }
@@ -533,9 +782,7 @@
             const key = document.getElementById('adminKey').value.trim();
 
             if (verifyAdminKey(email, key)) {
-                // Guardar credenciales si "Recordarme" está activado
                 saveRememberedCredentials(email, key);
-                
                 localStorage.setItem('admin_session', JSON.stringify({
                     email: email,
                     loggedIn: true,
@@ -582,9 +829,9 @@
             showToast('Sesión de administrador cerrada', 'info');
         }
 
-        // ============ CARGAR DATOS ============
+        // ============ CARGAR DATOS DE TODOS LOS USUARIOS ============
         function loadAdminData() {
-            // Obtener usuarios desde localStorage
+            // Obtener TODOS los usuarios de localStorage
             const users = getUsers();
             const admins = getAdminList ? getAdminList() : [];
             
@@ -617,8 +864,21 @@
                 return;
             }
 
-            tbody.innerHTML = users.map(u => {
+            // Mostrar usuarios ordenados por fecha de creación (más recientes primero)
+            const sortedUsers = [...users].sort((a, b) => {
+                const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                return dateB - dateA;
+            });
+
+            tbody.innerHTML = sortedUsers.map(u => {
                 const isUserAdmin = admins.some(a => a.email === u.email);
+                const memberSince = u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                }) : 'N/A';
+                
                 return `
                     <tr>
                         <td><strong>${u.username || 'N/A'}</strong></td>
@@ -657,20 +917,17 @@
                 return;
             }
 
-            // Buscar usuario
             const users = getUsers();
             const userIndex = users.findIndex(u => u.email === email);
-            
+
             if (userIndex === -1) {
                 showToast(`❌ Usuario "${email}" no encontrado. Verifica el correo.`, 'error');
                 return;
             }
 
-            // Actualizar saldo
             users[userIndex].balance = (users[userIndex].balance || 0) + amount;
             localStorage.setItem('yx_users', JSON.stringify(users));
 
-            // Guardar transacción
             const transaction = {
                 id: 'ADMIN-' + Date.now(),
                 userEmail: email,
@@ -680,7 +937,7 @@
                 date: new Date().toISOString(),
                 type: 'depósito_admin'
             };
-            
+
             let adminTx = { transactions: [] };
             try {
                 const stored = localStorage.getItem('admin_transactions');
@@ -689,12 +946,11 @@
             adminTx.transactions.push(transaction);
             localStorage.setItem('admin_transactions', JSON.stringify(adminTx));
 
-            // Actualizar UI
             loadAdminData();
             document.getElementById('targetUserEmail').value = '';
             document.getElementById('amountToAdd').value = '';
             document.getElementById('transactionConcept').value = '';
-            
+
             showToast(`✅ Se agregaron $${amount.toFixed(2)} a "${email}"`, 'success');
         });
 
@@ -702,7 +958,7 @@
         function quickAddBalance(email) {
             const amount = prompt(`💰 ¿Cuánto saldo quieres agregar a ${email}?`, '10');
             if (amount === null) return;
-            
+
             const parsedAmount = parseFloat(amount);
             if (isNaN(parsedAmount) || parsedAmount <= 0) {
                 showToast('❌ Ingresa un monto válido', 'error');
@@ -711,7 +967,7 @@
 
             const users = getUsers();
             const userIndex = users.findIndex(u => u.email === email);
-            
+
             if (userIndex === -1) {
                 showToast(`❌ Usuario "${email}" no encontrado`, 'error');
                 return;
@@ -720,7 +976,6 @@
             users[userIndex].balance = (users[userIndex].balance || 0) + parsedAmount;
             localStorage.setItem('yx_users', JSON.stringify(users));
 
-            // Guardar transacción
             const transaction = {
                 id: 'ADMIN-' + Date.now(),
                 userEmail: email,
@@ -730,7 +985,7 @@
                 date: new Date().toISOString(),
                 type: 'depósito_admin'
             };
-            
+
             let adminTx = { transactions: [] };
             try {
                 const stored = localStorage.getItem('admin_transactions');
@@ -747,7 +1002,7 @@
         function viewUserDetails(email) {
             const users = getUsers();
             const user = users.find(u => u.email === email);
-            
+
             if (!user) {
                 showToast('❌ Usuario no encontrado', 'error');
                 return;
@@ -760,7 +1015,7 @@
             details += `💰 Saldo: $${(user.balance || 0).toFixed(2)}\n`;
             details += `🃏 Tarjetas compradas: ${purchases.length}\n`;
             details += `📅 Miembro desde: ${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}\n\n`;
-            
+
             if (purchases.length > 0) {
                 details += `🃏 TARJETAS COMPRADAS:\n`;
                 purchases.forEach((p, i) => {
@@ -769,7 +1024,7 @@
             } else {
                 details += `🃏 No ha comprado tarjetas aún.\n`;
             }
-            
+
             alert(details);
         }
 
@@ -781,7 +1036,7 @@
                 container.className = 'toast-container';
                 document.body.appendChild(container);
             }
-            
+
             const toast = document.createElement('div');
             const colors = {
                 success: '#2ecc71',
@@ -789,7 +1044,7 @@
                 info: '#3498db',
                 warning: '#f39c12'
             };
-            
+
             toast.style.cssText = `
                 background: #1a232e;
                 color: #e8edf2;
@@ -807,7 +1062,7 @@
             `;
             toast.textContent = message;
             container.appendChild(toast);
-            
+
             setTimeout(() => {
                 toast.style.animation = 'slideDownToast 0.3s ease';
                 setTimeout(() => toast.remove(), 300);
