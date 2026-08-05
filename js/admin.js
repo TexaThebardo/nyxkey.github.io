@@ -5,27 +5,6 @@
 console.log('🚀 Admin.js cargado');
 
 // ============ USAR FUNCIONES DE AUTH.JS ============
-function loadWhitelist() {
-    return loadWhitelistData();
-}
-
-function isAdmin(email) {
-    return isUserAdmin(email);
-}
-
-function getUserInsignias(email) {
-    return getInsigniasFromStorage(email);
-}
-
-function saveUserInsignias(email, insignias) {
-    saveInsigniasToStorage(email, insignias);
-}
-
-function getAllInsignias() {
-    const whitelist = loadWhitelist();
-    return whitelist.insignias || {};
-}
-
 function getAllUsers() {
     return getUsers();
 }
@@ -82,49 +61,6 @@ function getAdminTransactions() {
     return [];
 }
 
-function renderInsignias(email, containerId) {
-    renderUserInsignias(email, containerId);
-}
-
-function addInsigniaToUser(email, insigniaName) {
-    const allInsignias = getAllInsignias();
-    if (!allInsignias[insigniaName]) {
-        return { success: false, message: '❌ Insignia no existe' };
-    }
-
-    const current = getUserInsignias(email);
-    if (!current.includes(insigniaName)) {
-        current.push(insigniaName);
-        saveUserInsignias(email, current);
-        return { success: true, message: `✅ Insignia "${insigniaName}" añadida` };
-    }
-    return { success: false, message: `❌ El usuario ya tiene "${insigniaName}"` };
-}
-
-function removeInsigniaFromUser(email, insigniaName) {
-    const current = getUserInsignias(email);
-    const filtered = current.filter(i => i !== insigniaName);
-    if (filtered.length < current.length) {
-        saveUserInsignias(email, filtered);
-        return { success: true, message: `✅ Insignia "${insigniaName}" eliminada` };
-    }
-    return { success: false, message: `❌ El usuario no tiene "${insigniaName}"` };
-}
-
-function getAdminList() {
-    const whitelist = loadWhitelist();
-    return whitelist.admins || [];
-}
-
-function verifyAdminKey(email, key) {
-    if (!email || !key) return false;
-    const whitelist = loadWhitelist();
-    if (!whitelist.admins) return false;
-    const admin = whitelist.admins.find(a => a.email === email);
-    if (!admin) return false;
-    return admin.key === key;
-}
-
 function checkAdminSession() {
     const sessionData = localStorage.getItem('admin_session');
     if (!sessionData) return null;
@@ -150,19 +86,9 @@ function logoutAdmin() {
     window.location.reload();
 }
 
-window.isAdmin = isAdmin;
-window.verifyAdminKey = verifyAdminKey;
-window.loadWhitelist = loadWhitelist;
 window.getAllUsers = getAllUsers;
 window.updateUserBalanceByEmail = updateUserBalanceByEmail;
 window.getAdminTransactions = getAdminTransactions;
-window.renderInsignias = renderInsignias;
-window.getUserInsignias = getUserInsignias;
-window.getAllInsignias = getAllInsignias;
-window.addInsigniaToUser = addInsigniaToUser;
-window.removeInsigniaFromUser = removeInsigniaFromUser;
-window.saveUserInsignias = saveUserInsignias;
-window.getAdminList = getAdminList;
 window.checkAdminSession = checkAdminSession;
 window.logoutAdmin = logoutAdmin;
 
