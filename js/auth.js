@@ -141,14 +141,15 @@ function loginUser(email, password) {
 
     const esAdmin = isAdmin(email);
     console.log('👑 ¿Es admin?', esAdmin);
+    console.log('💰 Saldo del usuario en localStorage:', user.balance);
 
-    // ============ CREAR SESIÓN CON DATOS ACTUALIZADOS ============
+    // ============ CREAR SESIÓN CON EL SALDO ACTUAL ============
     const session = {
         user: {
             id: user.id,
             email: user.email,
             username: user.username,
-            balance: user.balance,
+            balance: user.balance,  // <--- SALDO ACTUAL DESDE localStorage
             role: user.role,
             purchases: user.purchases || [],
             transactions: user.transactions || [],
@@ -160,8 +161,7 @@ function loginUser(email, password) {
     };
 
     localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
-    console.log('✅ Sesión creada para:', user.username);
-    console.log('💰 Saldo en sesión:', user.balance);
+    console.log('✅ Sesión creada con saldo:', user.balance);
 
     user.lastLogin = new Date().toISOString();
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
@@ -217,7 +217,7 @@ function getUsers() {
     }
 }
 
-// ============ ACTUALIZAR SALDO - CON SINCRONIZACIÓN COMPLETA ============
+// ============ ACTUALIZAR SALDO - DEFINITIVO ============
 function updateUserBalance(userId, amount) {
     console.log('💰 updateUserBalance ejecutado - userId:', userId, 'amount:', amount);
     
@@ -236,23 +236,20 @@ function updateUserBalance(userId, amount) {
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
     console.log(`💰 Balance actualizado: $${oldBalance.toFixed(2)} → $${users[userIndex].balance.toFixed(2)}`);
 
-    // 3. Actualizar la sesión del usuario actual si es el mismo
-    const currentUser = getCurrentUser();
-    if (currentUser && currentUser.id === userId) {
-        const sessionData = localStorage.getItem(AUTH_CONFIG.tokenKey);
-        if (sessionData) {
-            try {
-                const session = JSON.parse(sessionData);
-                session.user.balance = users[userIndex].balance;
-                localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
-                console.log('✅ Sesión actualizada con nuevo saldo:', session.user.balance);
-            } catch (e) {
-                console.error('❌ Error actualizando sesión:', e);
-            }
+    // 3. ACTUALIZAR LA SESIÓN COMPLETAMENTE
+    const sessionData = localStorage.getItem(AUTH_CONFIG.tokenKey);
+    if (sessionData) {
+        try {
+            const session = JSON.parse(sessionData);
+            session.user.balance = users[userIndex].balance;
+            localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
+            console.log('✅ Sesión actualizada con nuevo saldo:', session.user.balance);
+        } catch (e) {
+            console.error('❌ Error actualizando sesión:', e);
         }
     }
 
-    // 4. Actualizar UI en tiempo real
+    // 4. FORZAR ACTUALIZACIÓN DE UI
     updateUserUI();
     
     return true;
@@ -334,55 +331,62 @@ function toggleUserMenu() {
 function updateUserUI() {
     console.log('🔄 updateUserUI ejecutado');
     
-    // Obtener usuario actual de la sesión
-    const user = getCurrentUser();
-    
     // Obtener elementos DOM
     const balanceEl = document.getElementById('userBalance');
     const avatarEl = document.getElementById('userAvatarIcon');
     const nameEl = document.getElementById('userDisplayName');
 
-    console.log('👤 Usuario actual:', user);
-
-    if (user) {
-        // ============ ACTUALIZAR SALDO DESDE LOCALSTORAGE ============
-        // Obtener el saldo más actualizado desde localStorage
-        const users = getUsers();
-        const fullUser = users.find(u => u.id === user.id);
-        const realBalance = fullUser ? fullUser.balance : user.balance;
-        
-        // Actualizar balance en pantalla
-        if (balanceEl) {
-            balanceEl.textContent = `$${realBalance.toFixed(2)}`;
-            console.log(`💰 Saldo mostrado en UI: $${realBalance.toFixed(2)}`);
-        }
-        
-        if (avatarEl) avatarEl.textContent = 'account_circle';
-        if (nameEl) nameEl.textContent = user.username || 'Usuario';
-
-        // Verificar admin
-        const esAdmin = isAdmin(user.email);
-
-        const adminBtn = document.getElementById('adminPanelBtn');
-        const adminSidebarBtn = document.getElementById('adminSidebarBtn');
-        const adminDropdownBtn = document.getElementById('adminDropdownBtn');
-
-        if (esAdmin) {
-            if (adminBtn) adminBtn.style.display = 'inline-flex';
-            if (adminSidebarBtn) adminSidebarBtn.style.display = 'flex';
-            if (adminDropdownBtn) adminDropdownBtn.style.display = 'flex';
-        } else {
-            if (adminBtn) adminBtn.style.display = 'none';
-            if (adminSidebarBtn) adminSidebarBtn.style.display = 'none';
-            if (adminDropdownBtn) adminDropdownBtn.style.display = 'none';
-        }
-
-        renderUserInsignias(user.email, 'userInsignias');
-    } else {
+    // ============ OBTENER SALDO DESDE localStorage DIRECTAMENTE ============
+    // 1. Obtener usuario de la sesión
+    const user = getCurrentUser();
+    
+    if (!user) {
         if (balanceEl) balanceEl.textContent = '$0.00';
         if (avatarEl) avatarEl.textContent = 'person';
         if (nameEl) nameEl.textContent = 'Invitado';
+        console.log('👤 No hay usuario logueado');
+        return;
     }
+
+    // 2. Obtener el saldo REAL desde localStorage (NO desde la sesión)
+    const users = getUsers();
+    const fullUser = users.find(u => u.id === user.id);
+    
+    // 3. Usar el saldo de localStorage si existe, si no, el de la sesión
+    const realBalance = fullUser ? fullUser.balance : user.balance;
+    
+    console.log('👤 Usuario:', user.username);
+    console.log('💰 Saldo en localStorage:', fullUser ? fullUser.balance : 'No encontrado');
+    console.log('💰 Saldo en sesión:', user.balance);
+    console.log('💰 Saldo REAL a mostrar:', realBalance);
+
+    // 4. Actualizar UI con el saldo REAL
+    if (balanceEl) {
+        balanceEl.textContent = `$${realBalance.toFixed(2)}`;
+        console.log(`✅ Saldo mostrado en UI: $${realBalance.toFixed(2)}`);
+    }
+    
+    if (avatarEl) avatarEl.textContent = 'account_circle';
+    if (nameEl) nameEl.textContent = user.username || 'Usuario';
+
+    // 5. Verificar admin
+    const esAdmin = isAdmin(user.email);
+
+    const adminBtn = document.getElementById('adminPanelBtn');
+    const adminSidebarBtn = document.getElementById('adminSidebarBtn');
+    const adminDropdownBtn = document.getElementById('adminDropdownBtn');
+
+    if (esAdmin) {
+        if (adminBtn) adminBtn.style.display = 'inline-flex';
+        if (adminSidebarBtn) adminSidebarBtn.style.display = 'flex';
+        if (adminDropdownBtn) adminDropdownBtn.style.display = 'flex';
+    } else {
+        if (adminBtn) adminBtn.style.display = 'none';
+        if (adminSidebarBtn) adminSidebarBtn.style.display = 'none';
+        if (adminDropdownBtn) adminDropdownBtn.style.display = 'none';
+    }
+
+    renderUserInsignias(user.email, 'userInsignias');
 }
 
 // ============ TOAST ============
