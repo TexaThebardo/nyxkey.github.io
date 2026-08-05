@@ -23,14 +23,11 @@ function loadDashboardData() {
     const user = getCurrentUser();
     if (!user) return;
 
-    // Obtener TODOS los usuarios
     const users = getUsers();
     const fullUser = users.find(u => u.id === user.id);
 
-    console.log('📦 Usuarios totales:', users.length);
-    console.log('📦 Usuario actual:', fullUser);
+    console.log('📦 Datos completos:', fullUser);
 
-    // Obtener compras y transacciones del usuario
     const purchases = fullUser?.purchases || [];
     const transactions = fullUser?.transactions || [];
     const balance = fullUser?.balance || 0;
@@ -41,24 +38,31 @@ function loadDashboardData() {
 
     // ============ ESTADÍSTICAS ============
     const totalUsers = users.length || 0;
-
-    // Total de administradores
     let totalAdmins = 0;
     try {
-        const whitelist = localStorage.getItem('admin_whitelist');
-        if (whitelist) {
-            const data = JSON.parse(whitelist);
+        const stored = localStorage.getItem('admin_whitelist');
+        if (stored) {
+            const data = JSON.parse(stored);
             totalAdmins = data.admins ? data.admins.length : 0;
         }
     } catch (e) {}
 
-    // Actualizar estadísticas
-    document.getElementById('totalPurchases').textContent = purchases.length;
-    document.getElementById('totalUsers').textContent = totalUsers;
-    document.getElementById('totalAdmins').textContent = totalAdmins;
-    document.getElementById('currentBalance').textContent = `$${balance.toFixed(2)}`;
-    document.getElementById('dashboardBalance').textContent = `$${balance.toFixed(2)}`;
-    document.getElementById('purchaseCount').textContent = `${purchases.length} tarjetas`;
+    // ============ ACTUALIZAR ELEMENTOS CON VERIFICACIÓN ============
+    const elements = {
+        totalPurchases: document.getElementById('totalPurchases'),
+        totalUsers: document.getElementById('totalUsers'),
+        totalAdmins: document.getElementById('totalAdmins'),
+        currentBalance: document.getElementById('currentBalance'),
+        dashboardBalance: document.getElementById('dashboardBalance'),
+        purchaseCount: document.getElementById('purchaseCount')
+    };
+
+    if (elements.totalPurchases) elements.totalPurchases.textContent = purchases.length;
+    if (elements.totalUsers) elements.totalUsers.textContent = totalUsers;
+    if (elements.totalAdmins) elements.totalAdmins.textContent = totalAdmins;
+    if (elements.currentBalance) elements.currentBalance.textContent = `$${balance.toFixed(2)}`;
+    if (elements.dashboardBalance) elements.dashboardBalance.textContent = `$${balance.toFixed(2)}`;
+    if (elements.purchaseCount) elements.purchaseCount.textContent = `${purchases.length} tarjetas`;
 
     // Renderizar secciones
     renderPurchases(purchases);
