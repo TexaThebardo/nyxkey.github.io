@@ -7,6 +7,7 @@ console.log('🚀 App.js cargado');
 let currentPage = 1;
 const itemsPerPage = 8;
 let currentFilter = { country: '', search: '' };
+let viewMode = 'grid'; // 'list', 'grid', 'compact'
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOM cargado - iniciando app');
@@ -31,6 +32,13 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.warn('⚠️ updateUserUI no está definida - asegúrate de cargar auth.js');
     }
+    
+    // Cargar vista guardada
+    const savedView = localStorage.getItem('yx_view_mode');
+    if (savedView) {
+        viewMode = savedView;
+    }
+    updateViewButtons();
     
     renderCatalog();
     updateStats();
@@ -58,108 +66,280 @@ function showSection(sectionId) {
     document.querySelector(`.nav-link[href="#${sectionId}"]`)?.classList.add('active');
 }
 
+// ============ CAMBIO DE VISTA ============
+function changeView(mode) {
+    viewMode = mode;
+    localStorage.setItem('yx_view_mode', mode);
+    updateViewButtons();
+    renderCatalog();
+    showToast(`Vista: ${mode === 'list' ? 'Lista' : mode === 'grid' ? 'Tarjetas' : 'Compacta'}`, 'info');
+}
+
+function updateViewButtons() {
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.view === viewMode) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+// ============ RENDERIZAR CATÁLOGO ============
 function renderCatalog() {
-    const tbody = document.getElementById('catalogBody');
-    if (!tbody) {
+    const container = document.getElementById('catalogBody');
+    if (!container) {
         console.warn('⚠️ catalogBody no encontrado - saltando renderizado');
         return;
     }
+    
     const products = getProducts();
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const pageItems = products.slice(start, end);
     
     if (pageItems.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:40px;color:var(--text-secondary);"><span class="material-icons-outlined" style="font-size:48px;display:block;">search_off</span>No se encontraron tarjetas</td></tr>`;
+        container.innerHTML = `<div class="empty-catalog"><span class="material-icons-outlined" style="font-size:48px;display:block;margin-bottom:12px;">search_off</span><p>No se encontraron tarjetas</p></div>`;
     } else {
-        tbody.innerHTML = pageItems.map((card) => {
-            const realIndex = allProducts.indexOf(card);
-            
-            // Determinar color de red
-            let networkColor = '';
-            if (card.network === 'VISA') networkColor = '#1a539a';
-            else if (card.network === 'MASTERCARD') networkColor = '#eb0a1e';
-            else if (card.network === 'AMEX') networkColor = '#0066cc';
-            else if (card.network === 'DISCOVER') networkColor = '#ff6600';
-            
-            // Estrellas de rating
-            const rating = card.rating || 0;
-            const fullStars = Math.floor(rating);
-            const halfStar = rating - fullStars >= 0.5;
-            let starsHtml = '';
-            for (let i = 0; i < 5; i++) {
-                if (i < fullStars) {
-                    starsHtml += `<span class="material-icons">star</span>`;
-                } else if (i === fullStars && halfStar) {
-                    starsHtml += `<span class="material-icons">star_half</span>`;
-                } else {
-                    starsHtml += `<span class="material-icons empty">star_border</span>`;
-                }
-            }
-            
-            // Stock status
-            let stockStatus = '';
-            let stockDot = '';
-            if (card.stock > 20) {
-                stockStatus = 'Alto';
-                stockDot = 'high';
-            } else if (card.stock > 5) {
-                stockStatus = 'Medio';
-                stockDot = 'medium';
-            } else if (card.stock > 0) {
-                stockStatus = 'Bajo';
-                stockDot = 'low';
-            } else {
-                stockStatus = 'Agotado';
-                stockDot = 'low';
-            }
-            
-            const isNew = card.id > 20;
-            
-            return `<tr>
-                <td>
-                    <span style="color:${networkColor}; font-weight:700;">${card.network}</span>
-                </td>
-                <td><strong>${card.bin}</strong></td>
-                <td>${card.database}</td>
-                <td>${card.class}</td>
-                <td>${card.level}</td>
-                <td>${card.bank}</td>
-                <td>${card.country}</td>
-                <td>${card.type}</td>
-                <td>${card.uso}</td>
-                <td>${card.nonVbv ? '✓ SI' : '✗ NO'}</td>
-                <td>${card.nonMsc ? '✓ SI' : '✗ NO'}</td>
-                <td>
-                    <div style="display:flex; flex-direction:column; gap:2px;">
-                        <strong style="color:var(--primary);">$${card.price.toFixed(2)}</strong>
-                        <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:var(--text-muted);">
-                            <span class="rating-stars" style="font-size:12px;">${starsHtml}</span>
-                            <span>(${card.sales || 0})</span>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
-                        <button class="btn-buy" onclick="addToCart(${realIndex})" ${card.stock <= 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
-                            <span class="material-icons">add_shopping_cart</span> Comprar
-                        </button>
-                        <div style="display:flex; align-items:center; gap:4px; font-size:10px; color:var(--text-muted);">
-                            <span class="stock-indicator">
-                                <span class="dot ${stockDot}"></span>
-                                ${stockStatus}
-                            </span>
-                            ${isNew ? '<span class="product-new-badge">Nuevo</span>' : ''}
-                        </div>
-                    </div>
-                </td>
-            </tr>`;
-        }).join('');
+        if (viewMode === 'list') {
+            container.innerHTML = renderListView(pageItems);
+            container.className = 'catalog-view-list';
+        } else if (viewMode === 'grid') {
+            container.innerHTML = renderGridView(pageItems);
+            container.className = 'catalog-view-grid';
+        } else if (viewMode === 'compact') {
+            container.innerHTML = renderCompactView(pageItems);
+            container.className = 'catalog-view-compact';
+        }
     }
+    
     const showingCount = document.getElementById('showingCount');
     if (showingCount) showingCount.textContent = products.length;
     const currentPageEl = document.getElementById('currentPage');
     if (currentPageEl) currentPageEl.textContent = currentPage;
+}
+
+// ============ VISTA LISTA (TABLA) ============
+function renderListView(products) {
+    return `
+        <table>
+            <thead>
+                <tr>
+                    <th>Red</th>
+                    <th>BIN</th>
+                    <th>Base</th>
+                    <th>Clase</th>
+                    <th>Nivel</th>
+                    <th>Banco</th>
+                    <th>País</th>
+                    <th>Tipo</th>
+                    <th>Uso</th>
+                    <th>Non VBV</th>
+                    <th>Non MSC</th>
+                    <th>Precio</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${products.map((card) => {
+                    const realIndex = allProducts.indexOf(card);
+                    const networkColor = getNetworkColor(card.network);
+                    const starsHtml = renderStars(card.rating || 0);
+                    const stockStatus = getStockStatus(card.stock);
+                    const isNew = card.id > 20;
+                    
+                    return `
+                        <tr>
+                            <td style="color:${networkColor}; font-weight:700;">${card.network}</td>
+                            <td><strong>${card.bin}</strong></td>
+                            <td>${card.database}</td>
+                            <td>${card.class}</td>
+                            <td>${card.level}</td>
+                            <td>${card.bank}</td>
+                            <td>${card.country}</td>
+                            <td>${card.type}</td>
+                            <td>${card.uso}</td>
+                            <td>${card.nonVbv ? '✓ SI' : '✗ NO'}</td>
+                            <td>${card.nonMsc ? '✓ SI' : '✗ NO'}</td>
+                            <td>
+                                <div style="display:flex; flex-direction:column; gap:2px;">
+                                    <strong style="color:var(--primary);">$${card.price.toFixed(2)}</strong>
+                                    <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:var(--text-muted);">
+                                        <span class="rating-stars" style="font-size:12px;">${starsHtml}</span>
+                                        <span>(${card.sales || 0})</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+                                    <button class="btn-buy" onclick="addToCart(${realIndex})" ${card.stock <= 0 ? 'disabled' : ''}>
+                                        <span class="material-icons">add_shopping_cart</span> Comprar
+                                    </button>
+                                    <div style="display:flex; align-items:center; gap:4px; font-size:10px; color:var(--text-muted);">
+                                        <span class="stock-indicator">
+                                            <span class="dot ${stockStatus.dot}"></span>
+                                            ${stockStatus.label}
+                                        </span>
+                                        ${isNew ? '<span class="product-new-badge">Nuevo</span>' : ''}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+// ============ VISTA GRID (TARJETAS) ============
+function renderGridView(products) {
+    return products.map((card) => {
+        const realIndex = allProducts.indexOf(card);
+        const networkColor = getNetworkColor(card.network);
+        const starsHtml = renderStars(card.rating || 0);
+        const stockStatus = getStockStatus(card.stock);
+        const isNew = card.id > 20;
+        
+        return `
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-network" style="color:${networkColor};">
+                        <span class="material-icons">${getNetworkIcon(card.network)}</span>
+                        ${card.network}
+                    </div>
+                    <div class="product-card-badge">
+                        ${isNew ? '<span class="product-new-badge">Nuevo</span>' : ''}
+                        <span class="stock-indicator">
+                            <span class="dot ${stockStatus.dot}"></span>
+                            ${stockStatus.label}
+                        </span>
+                    </div>
+                </div>
+                <div class="product-card-body">
+                    <div class="product-card-bin">${card.bin}</div>
+                    <div class="product-card-bank">${card.bank}</div>
+                    <div class="product-card-country">${card.country}</div>
+                    <div class="product-card-type">
+                        <span class="type-badge ${card.type === 'CC Full' ? 'full' : 'nonvbv'}">${card.type}</span>
+                        <span class="uso-badge">${card.uso}</span>
+                    </div>
+                    <div class="product-card-features">
+                        <span class="feature ${card.nonVbv ? 'active' : 'inactive'}">
+                            <span class="material-icons">${card.nonVbv ? 'check_circle' : 'cancel'}</span>
+                            Non VBV
+                        </span>
+                        <span class="feature ${card.nonMsc ? 'active' : 'inactive'}">
+                            <span class="material-icons">${card.nonMsc ? 'check_circle' : 'cancel'}</span>
+                            Non MSC
+                        </span>
+                    </div>
+                    <div class="product-card-rating">
+                        <span class="rating-stars">${starsHtml}</span>
+                        <span>${card.sales || 0} ventas</span>
+                    </div>
+                </div>
+                <div class="product-card-footer">
+                    <div class="product-card-price">$${card.price.toFixed(2)}</div>
+                    <button class="btn-buy" onclick="addToCart(${realIndex})" ${card.stock <= 0 ? 'disabled' : ''}>
+                        <span class="material-icons">add_shopping_cart</span> Comprar
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ============ VISTA COMPACTA ============
+function renderCompactView(products) {
+    return products.map((card) => {
+        const realIndex = allProducts.indexOf(card);
+        const networkColor = getNetworkColor(card.network);
+        const stockStatus = getStockStatus(card.stock);
+        const isNew = card.id > 20;
+        
+        return `
+            <div class="product-card-compact">
+                <div class="compact-left">
+                    <div class="compact-network" style="color:${networkColor};">
+                        <span class="material-icons">${getNetworkIcon(card.network)}</span>
+                        ${card.network}
+                    </div>
+                    <div class="compact-bin">${card.bin}</div>
+                    <div class="compact-bank">${card.bank}</div>
+                    <div class="compact-country">${card.country}</div>
+                </div>
+                <div class="compact-center">
+                    <div class="compact-type">
+                        <span class="type-badge ${card.type === 'CC Full' ? 'full' : 'nonvbv'}">${card.type}</span>
+                        <span class="compact-uso">${card.uso}</span>
+                    </div>
+                    <div class="compact-features">
+                        <span class="feature ${card.nonVbv ? 'active' : 'inactive'}">
+                            <span class="material-icons">${card.nonVbv ? 'check_circle' : 'cancel'}</span>
+                        </span>
+                        <span class="feature ${card.nonMsc ? 'active' : 'inactive'}">
+                            <span class="material-icons">${card.nonMsc ? 'check_circle' : 'cancel'}</span>
+                        </span>
+                    </div>
+                    <div class="compact-stock">
+                        <span class="dot ${stockStatus.dot}"></span>
+                        ${stockStatus.label}
+                        ${isNew ? '<span class="product-new-badge">Nuevo</span>' : ''}
+                    </div>
+                </div>
+                <div class="compact-right">
+                    <div class="compact-price">$${card.price.toFixed(2)}</div>
+                    <button class="btn-buy compact-btn" onclick="addToCart(${realIndex})" ${card.stock <= 0 ? 'disabled' : ''}>
+                        <span class="material-icons">add_shopping_cart</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ============ FUNCIONES AUXILIARES ============
+function getNetworkColor(network) {
+    const colors = {
+        'VISA': '#1a539a',
+        'MASTERCARD': '#eb0a1e',
+        'AMEX': '#0066cc',
+        'DISCOVER': '#ff6600'
+    };
+    return colors[network] || '#a0aab8';
+}
+
+function getNetworkIcon(network) {
+    const icons = {
+        'VISA': 'credit_card',
+        'MASTERCARD': 'credit_card',
+        'AMEX': 'credit_card',
+        'DISCOVER': 'credit_card'
+    };
+    return icons[network] || 'credit_card';
+}
+
+function renderStars(rating) {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating - fullStars >= 0.5;
+    let html = '';
+    for (let i = 0; i < 5; i++) {
+        if (i < fullStars) {
+            html += `<span class="material-icons">star</span>`;
+        } else if (i === fullStars && halfStar) {
+            html += `<span class="material-icons">star_half</span>`;
+        } else {
+            html += `<span class="material-icons empty">star_border</span>`;
+        }
+    }
+    return html;
+}
+
+function getStockStatus(stock) {
+    if (stock > 20) return { dot: 'high', label: 'Alto' };
+    if (stock > 5) return { dot: 'medium', label: 'Medio' };
+    if (stock > 0) return { dot: 'low', label: 'Bajo' };
+    return { dot: 'low', label: 'Agotado' };
 }
 
 function applyFilters() {
@@ -368,5 +548,7 @@ window.closeDepositModal = closeDepositModal;
 window.selectMethod = selectMethod;
 window.copyAddress = copyAddress;
 window.updateStats = updateStats;
+window.changeView = changeView;
+window.renderCatalog = renderCatalog;
 
 console.log('✅ App.js cargado correctamente');
