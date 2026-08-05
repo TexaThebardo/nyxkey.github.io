@@ -74,8 +74,52 @@ function renderCatalog() {
     } else {
         tbody.innerHTML = pageItems.map((card) => {
             const realIndex = allProducts.indexOf(card);
+            
+            // Determinar color de red
+            let networkColor = '';
+            if (card.network === 'VISA') networkColor = '#1a539a';
+            else if (card.network === 'MASTERCARD') networkColor = '#eb0a1e';
+            else if (card.network === 'AMEX') networkColor = '#0066cc';
+            else if (card.network === 'DISCOVER') networkColor = '#ff6600';
+            
+            // Estrellas de rating
+            const rating = card.rating || 0;
+            const fullStars = Math.floor(rating);
+            const halfStar = rating - fullStars >= 0.5;
+            let starsHtml = '';
+            for (let i = 0; i < 5; i++) {
+                if (i < fullStars) {
+                    starsHtml += `<span class="material-icons">star</span>`;
+                } else if (i === fullStars && halfStar) {
+                    starsHtml += `<span class="material-icons">star_half</span>`;
+                } else {
+                    starsHtml += `<span class="material-icons empty">star_border</span>`;
+                }
+            }
+            
+            // Stock status
+            let stockStatus = '';
+            let stockDot = '';
+            if (card.stock > 20) {
+                stockStatus = 'Alto';
+                stockDot = 'high';
+            } else if (card.stock > 5) {
+                stockStatus = 'Medio';
+                stockDot = 'medium';
+            } else if (card.stock > 0) {
+                stockStatus = 'Bajo';
+                stockDot = 'low';
+            } else {
+                stockStatus = 'Agotado';
+                stockDot = 'low';
+            }
+            
+            const isNew = card.id > 20;
+            
             return `<tr>
-                <td>${card.network}</td>
+                <td>
+                    <span style="color:${networkColor}; font-weight:700;">${card.network}</span>
+                </td>
                 <td><strong>${card.bin}</strong></td>
                 <td>${card.database}</td>
                 <td>${card.class}</td>
@@ -86,8 +130,29 @@ function renderCatalog() {
                 <td>${card.uso}</td>
                 <td>${card.nonVbv ? '✓ SI' : '✗ NO'}</td>
                 <td>${card.nonMsc ? '✓ SI' : '✗ NO'}</td>
-                <td><strong>$${card.price.toFixed(2)}</strong></td>
-                <td><button class="btn-buy" onclick="addToCart(${realIndex})"><span class="material-icons">add_shopping_cart</span> Comprar</button></td>
+                <td>
+                    <div style="display:flex; flex-direction:column; gap:2px;">
+                        <strong style="color:var(--primary);">$${card.price.toFixed(2)}</strong>
+                        <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:var(--text-muted);">
+                            <span class="rating-stars" style="font-size:12px;">${starsHtml}</span>
+                            <span>(${card.sales || 0})</span>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div style="display:flex; flex-direction:column; gap:4px; align-items:center;">
+                        <button class="btn-buy" onclick="addToCart(${realIndex})" ${card.stock <= 0 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
+                            <span class="material-icons">add_shopping_cart</span> Comprar
+                        </button>
+                        <div style="display:flex; align-items:center; gap:4px; font-size:10px; color:var(--text-muted);">
+                            <span class="stock-indicator">
+                                <span class="dot ${stockDot}"></span>
+                                ${stockStatus}
+                            </span>
+                            ${isNew ? '<span class="product-new-badge">Nuevo</span>' : ''}
+                        </div>
+                    </div>
+                </td>
             </tr>`;
         }).join('');
     }
