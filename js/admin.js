@@ -20,7 +20,7 @@ function loadWhitelist() {
         }
     } catch (e) {}
 
-    // WHITELIST POR DEFECTO - VACÍA
+    // WHITELIST POR DEFECTO - VACÍA (sin emails fijos)
     const defaultWhitelist = {
         admins: [],
         insignias: {
@@ -215,15 +215,13 @@ function removeAdminFromWhitelist(email) {
             whitelist.admins = filtered;
             saveWhitelist(whitelist);
             
-            // ============ LIMPIAR SESIÓN DE ADMIN SI EL USUARIO LA TIENE ============
-            // Si el usuario que fue removido tiene una sesión de admin activa, la eliminamos
+            // Limpiar sesión de admin si el usuario la tiene
             const adminSession = localStorage.getItem('admin_session');
             if (adminSession) {
                 try {
                     const session = JSON.parse(adminSession);
                     if (session.email === email) {
                         localStorage.removeItem('admin_session');
-                        console.log(`🔒 Sesión de admin eliminada para ${email}`);
                     }
                 } catch (e) {}
             }
@@ -240,7 +238,7 @@ function getAdminList() {
     return whitelist.admins || [];
 }
 
-// ============ VERIFICAR SESIÓN ADMIN EN TIEMPO REAL ============
+// ============ VERIFICAR SESIÓN ADMIN ============
 function checkAdminSession() {
     const sessionData = localStorage.getItem('admin_session');
     if (!sessionData) return null;
@@ -248,13 +246,10 @@ function checkAdminSession() {
     try {
         const session = JSON.parse(sessionData);
         if (session.loggedIn && (Date.now() - session.timestamp < 3600000)) {
-            // Verificar si el email sigue siendo admin en la whitelist
             if (isAdmin(session.email)) {
                 return session;
             } else {
-                // Si ya no es admin, eliminar sesión
                 localStorage.removeItem('admin_session');
-                console.log(`🔒 Sesión de admin eliminada por whitelist: ${session.email}`);
                 return null;
             }
         }
@@ -262,6 +257,37 @@ function checkAdminSession() {
     } catch (e) {
         return null;
     }
+}
+
+// ============ SINCRONIZAR INSIGNIAS AL INICIAR SESIÓN ============
+function syncUserInsigniasOnLogin(email) {
+    // Esta función se ejecuta cuando un usuario inicia sesión
+    // Asigna insignias automáticamente según la whitelist
+    const whitelist = loadWhitelist();
+    const userInsignias = getUserInsignias(email);
+    const isUserAdmin = whitelist.admins && whitelist.admins.includes(email);
+    
+    let newInsignias = [...userInsignias];
+    
+    // Si es admin y no tiene la insignia Owner, se la añadimos
+    if (isUserAdmin && !newInsignias.includes('Owner')) {
+        newInsignias.push('Owner');
+        console.log(`👑 Insignia Owner asignada a ${email}`);
+    }
+    
+    // Si no es admin y tiene Owner, se la quitamos
+    if (!isUserAdmin && newInsignias.includes('Owner')) {
+        newInsignias = newInsignias.filter(i => i !== 'Owner');
+        console.log(`🔒 Insignia Owner removida de ${email}`);
+    }
+    
+    // Guardar insignias actualizadas
+    if (JSON.stringify(newInsignias) !== JSON.stringify(userInsignias)) {
+        saveUserInsignias(email, newInsignias);
+        console.log(`✅ Insignias sincronizadas para ${email}:`, newInsignias);
+    }
+    
+    return newInsignias;
 }
 
 // ============ EXPORTAR ============
@@ -280,5 +306,6 @@ window.addAdminToWhitelist = addAdminToWhitelist;
 window.removeAdminFromWhitelist = removeAdminFromWhitelist;
 window.getAdminList = getAdminList;
 window.checkAdminSession = checkAdminSession;
+window.syncUserInsigniasOnLogin = syncUserInsigniasOnLogin;
 
-console.log('✅ Admin.js cargado');
+console.log('✅ Admin.js cargado - Sin emails fijos');
