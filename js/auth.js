@@ -10,10 +10,26 @@ const AUTH_CONFIG = {
     sessionTimeout: 3600000
 };
 
-// ============ CARGAR ACCESOS ============
-function loadAccessData() {
+// ============ ADMINISTRADORES ============
+const ADMIN_LIST = [
+    'admin@yxcards.com',
+    'personalbusiness2626@gmail.com'
+];
+
+function isAdmin(email) {
+    if (!email) return false;
+    return ADMIN_LIST.includes(email);
+}
+
+function verifyAdminKey(email, key) {
+    if (!email || !key) return false;
+    return isAdmin(email) && key === 'admin123';
+}
+
+// ============ CARGAR WHITELIST ============
+function loadWhitelist() {
     try {
-        const stored = localStorage.getItem('admin_access');
+        const stored = localStorage.getItem('admin_whitelist');
         if (stored) {
             const data = JSON.parse(stored);
             if (data.admins) {
@@ -22,32 +38,19 @@ function loadAccessData() {
         }
     } catch (e) {}
 
-    // ACCESOS POR DEFECTO
-    const defaultAccess = {
+    const defaultWhitelist = {
         admins: [
-            { email: 'personalbusiness2626@gmail.com', key: 'admin123' },
-            { email: 'admin@yxcards.com', key: 'admin123' }
+            { email: 'admin@yxcards.com', key: 'admin123' },
+            { email: 'personalbusiness2626@gmail.com', key: 'admin123' }
         ]
     };
-    localStorage.setItem('admin_access', JSON.stringify(defaultAccess));
-    return defaultAccess;
+    localStorage.setItem('admin_whitelist', JSON.stringify(defaultWhitelist));
+    return defaultWhitelist;
 }
 
-// ============ VERIFICAR ADMIN ============
-function isAdmin(email) {
-    if (!email) return false;
-    const access = loadAccessData();
-    if (!access.admins) return false;
-    return access.admins.some(a => a.email === email);
-}
-
-function verifyAdminKey(email, key) {
-    if (!email || !key) return false;
-    const access = loadAccessData();
-    if (!access.admins) return false;
-    const admin = access.admins.find(a => a.email === email);
-    if (!admin) return false;
-    return admin.key === key;
+function getAdminList() {
+    const whitelist = loadWhitelist();
+    return whitelist.admins || [];
 }
 
 // ============ REGISTRO ============
@@ -136,7 +139,7 @@ function loginUser(email, password) {
         return false;
     }
 
-    // ============ VERIFICAR ADMIN ============
+    // Verificar admin
     const esAdmin = isAdmin(email);
     console.log('👑 ¿Es admin?', esAdmin);
 
@@ -162,8 +165,10 @@ function loginUser(email, password) {
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
 
-    // Actualizar UI
-    updateUserUI();
+    // ============ ACTUALIZAR UI ============
+    if (typeof updateUserUI === 'function') {
+        updateUserUI();
+    }
     showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
 }
@@ -203,90 +208,7 @@ function getCurrentUser() {
     return session ? session.user : null;
 }
 
-// ============ INSIGNIAS ============
-function renderUserInsignias(email, containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    const esAdmin = isAdmin(email);
-    
-    if (esAdmin) {
-        container.innerHTML = `
-            <span class="insignia-badge" style="background:rgba(240, 185, 11, 0.15); color:#f0b90b;">
-                <span class="material-icons" style="font-size:14px;">verified</span>
-                Admin
-            </span>
-        `;
-    } else {
-        container.innerHTML = `
-            <span class="insignia-guest">
-                <span class="material-icons" style="font-size:14px;">person_outline</span> Guest
-            </span>
-        `;
-    }
-}
-
-// ============ ACTUALIZAR UI ============
-function updateUserUI() {
-    console.log('🔄 updateUserUI ejecutado');
-    
-    const user = getCurrentUser();
-    console.log('👤 Usuario actual:', user);
-
-    // Actualizar balance
-    const balanceEl = document.getElementById('userBalance');
-    if (balanceEl && user) {
-        balanceEl.textContent = `$${user.balance.toFixed(2)}`;
-    }
-
-    // Actualizar nombre
-    const nameEl = document.getElementById('userDisplayName');
-    if (nameEl && user) {
-        nameEl.textContent = user.username || 'Usuario';
-    }
-
-    // ============ MOSTRAR/OCULTAR BOTÓN ADMIN ============
-    const esAdmin = user ? isAdmin(user.email) : false;
-    console.log('👑 ¿Es admin?', esAdmin);
-
-    const adminElements = [
-        document.getElementById('adminPanelBtn'),
-        document.getElementById('adminSidebarBtn'),
-        document.getElementById('adminDropdownBtn')
-    ];
-
-    adminElements.forEach(el => {
-        if (el) {
-            console.log('🔍 Elemento encontrado:', el.id);
-            if (esAdmin) {
-                el.style.display = 'flex';
-                el.style.display = 'inline-flex';
-            } else {
-                el.style.display = 'none';
-            }
-        }
-    });
-
-    // Renderizar insignias
-    if (user) {
-        renderUserInsignias(user.email, 'userInsignias');
-    }
-}
-
-// ============ TOGGLE MENÚ ============
-function toggleUserMenu() {
-    const dropdown = document.getElementById('userDropdown');
-    if (dropdown) dropdown.classList.toggle('active');
-}
-
-document.addEventListener('click', function(e) {
-    const dropdown = document.getElementById('userDropdown');
-    const avatar = document.querySelector('.user-avatar');
-    if (dropdown && avatar && !avatar.contains(e.target)) {
-        dropdown.classList.remove('active');
-    }
-});
-
+// ============ OBTENER TODOS LOS USUARIOS ============
 function getUsers() {
     try {
         return JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]');
@@ -295,6 +217,7 @@ function getUsers() {
     }
 }
 
+// ============ ACTUALIZAR SALDO ============
 function updateUserBalance(userId, amount) {
     const users = getUsers();
     const user = users.find(u => u.id === userId);
@@ -302,6 +225,7 @@ function updateUserBalance(userId, amount) {
         user.balance = (user.balance || 0) + amount;
         localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
 
+        // Actualizar sesión también
         const currentUser = getCurrentUser();
         if (currentUser && currentUser.id === userId) {
             const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
@@ -309,6 +233,10 @@ function updateUserBalance(userId, amount) {
                 session.user.balance = user.balance;
                 localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
             }
+        }
+        
+        // ============ ACTUALIZAR UI ============
+        if (typeof updateUserUI === 'function') {
             updateUserUI();
         }
         return true;
@@ -316,6 +244,7 @@ function updateUserBalance(userId, amount) {
     return false;
 }
 
+// ============ AÑADIR COMPRA ============
 function addPurchaseToHistory(userId, purchaseData) {
     const users = getUsers();
     const user = users.find(u => u.id === userId);
@@ -341,6 +270,7 @@ function addPurchaseToHistory(userId, purchaseData) {
     return false;
 }
 
+// ============ UTILIDADES ============
 function hashPassword(password) {
     let hash = 0;
     for (let i = 0; i < password.length; i++) {
@@ -355,6 +285,7 @@ function generateToken(userId) {
     return btoa(`${userId}:${Date.now()}:${Math.random()}`);
 }
 
+// ============ TOAST ============
 function showToast(message, type = 'info') {
     let container = document.querySelector('.toast-container');
     if (!container) {
@@ -396,11 +327,37 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    if (!localStorage.getItem('admin_access')) {
-        loadAccessData();
+// ============ RENDERIZAR INSIGNIAS ============
+function renderUserInsignias(email, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const esAdmin = isAdmin(email);
+    
+    if (esAdmin) {
+        container.innerHTML = `
+            <span class="insignia-badge" style="background:rgba(240, 185, 11, 0.15); color:#f0b90b;">
+                <span class="material-icons" style="font-size:14px;">verified</span>
+                Admin
+            </span>
+        `;
+    } else {
+        container.innerHTML = `
+            <span class="insignia-guest">
+                <span class="material-icons" style="font-size:14px;">person_outline</span> Guest
+            </span>
+        `;
     }
-    updateUserUI();
+}
+
+// ============ INICIALIZAR ============
+document.addEventListener('DOMContentLoaded', function() {
+    if (!localStorage.getItem('admin_whitelist')) {
+        loadWhitelist();
+    }
+    if (typeof updateUserUI === 'function') {
+        updateUserUI();
+    }
 });
 
 // ============ EXPORTAR ============
@@ -410,15 +367,15 @@ window.logoutUser = logoutUser;
 window.getCurrentUser = getCurrentUser;
 window.checkSession = checkSession;
 window.updateUserBalance = updateUserBalance;
-window.updateUserUI = updateUserUI;
 window.toggleUserMenu = toggleUserMenu;
 window.showToast = showToast;
 window.getUsers = getUsers;
 window.addPurchaseToHistory = addPurchaseToHistory;
 window.isAdmin = isAdmin;
 window.verifyAdminKey = verifyAdminKey;
+window.loadWhitelist = loadWhitelist;
+window.getAdminList = getAdminList;
 window.renderUserInsignias = renderUserInsignias;
-window.loadAccessData = loadAccessData;
 
 console.log('✅ Auth.js cargado correctamente');
-console.log('👑 Administradores configurados en access.json');
+console.log('👑 Administradores:', ADMIN_LIST);
