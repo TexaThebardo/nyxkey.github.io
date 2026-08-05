@@ -7,7 +7,7 @@ console.log('🚀 App.js cargado');
 let currentPage = 1;
 const itemsPerPage = 8;
 let currentFilter = { country: '', search: '' };
-let viewMode = 'grid'; // 'list', 'grid', 'compact'
+let viewMode = 'grid';
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOM cargado - iniciando app');
@@ -23,17 +23,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof loadCart === 'function') {
         console.log('🔄 loadCart encontrada, ejecutando...');
         loadCart();
-    } else {
-        console.warn('⚠️ loadCart no está definida - asegúrate de cargar cart.js');
     }
     
     if (typeof updateUserUI === 'function') {
         updateUserUI();
-    } else {
-        console.warn('⚠️ updateUserUI no está definida - asegúrate de cargar auth.js');
     }
     
-    // Cargar vista guardada
     const savedView = localStorage.getItem('yx_view_mode');
     if (savedView) {
         viewMode = savedView;
@@ -88,7 +83,7 @@ function updateViewButtons() {
 function renderCatalog() {
     const container = document.getElementById('catalogBody');
     if (!container) {
-        console.warn('⚠️ catalogBody no encontrado - saltando renderizado');
+        console.warn('⚠️ catalogBody no encontrado');
         return;
     }
     
@@ -102,13 +97,10 @@ function renderCatalog() {
     } else {
         if (viewMode === 'list') {
             container.innerHTML = renderListView(pageItems);
-            container.className = 'catalog-view-list';
         } else if (viewMode === 'grid') {
             container.innerHTML = renderGridView(pageItems);
-            container.className = 'catalog-view-grid';
         } else if (viewMode === 'compact') {
             container.innerHTML = renderCompactView(pageItems);
-            container.className = 'catalog-view-compact';
         }
     }
     
@@ -118,25 +110,15 @@ function renderCatalog() {
     if (currentPageEl) currentPageEl.textContent = currentPage;
 }
 
-// ============ VISTA LISTA (TABLA) ============
+// ============ VISTA LISTA ============
 function renderListView(products) {
     return `
         <table>
             <thead>
                 <tr>
-                    <th>Red</th>
-                    <th>BIN</th>
-                    <th>Base</th>
-                    <th>Clase</th>
-                    <th>Nivel</th>
-                    <th>Banco</th>
-                    <th>País</th>
-                    <th>Tipo</th>
-                    <th>Uso</th>
-                    <th>Non VBV</th>
-                    <th>Non MSC</th>
-                    <th>Precio</th>
-                    <th>Acción</th>
+                    <th>Red</th><th>BIN</th><th>Base</th><th>Clase</th><th>Nivel</th>
+                    <th>Banco</th><th>País</th><th>Tipo</th><th>Uso</th>
+                    <th>Non VBV</th><th>Non MSC</th><th>Precio</th><th>Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -164,7 +146,7 @@ function renderListView(products) {
                                 <div style="display:flex; flex-direction:column; gap:2px;">
                                     <strong style="color:var(--primary);">$${card.price.toFixed(2)}</strong>
                                     <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:var(--text-muted);">
-                                        <span class="rating-stars" style="font-size:12px;">${starsHtml}</span>
+                                        <span class="rating-stars">${starsHtml}</span>
                                         <span>(${card.sales || 0})</span>
                                     </div>
                                 </div>
@@ -191,9 +173,9 @@ function renderListView(products) {
     `;
 }
 
-// ============ VISTA GRID (TARJETAS) ============
+// ============ VISTA GRID ============
 function renderGridView(products) {
-    return products.map((card) => {
+    return `<div class="catalog-grid">${products.map((card) => {
         const realIndex = allProducts.indexOf(card);
         const networkColor = getNetworkColor(card.network);
         const starsHtml = renderStars(card.rating || 0);
@@ -204,7 +186,7 @@ function renderGridView(products) {
             <div class="product-card">
                 <div class="product-card-header">
                     <div class="product-card-network" style="color:${networkColor};">
-                        <span class="material-icons">${getNetworkIcon(card.network)}</span>
+                        <span class="material-icons">credit_card</span>
                         ${card.network}
                     </div>
                     <div class="product-card-badge">
@@ -246,7 +228,7 @@ function renderGridView(products) {
                 </div>
             </div>
         `;
-    }).join('');
+    }).join('')}</div>`;
 }
 
 // ============ VISTA COMPACTA ============
@@ -261,7 +243,7 @@ function renderCompactView(products) {
             <div class="product-card-compact">
                 <div class="compact-left">
                     <div class="compact-network" style="color:${networkColor};">
-                        <span class="material-icons">${getNetworkIcon(card.network)}</span>
+                        <span class="material-icons">credit_card</span>
                         ${card.network}
                     </div>
                     <div class="compact-bin">${card.bin}</div>
@@ -300,23 +282,8 @@ function renderCompactView(products) {
 
 // ============ FUNCIONES AUXILIARES ============
 function getNetworkColor(network) {
-    const colors = {
-        'VISA': '#1a539a',
-        'MASTERCARD': '#eb0a1e',
-        'AMEX': '#0066cc',
-        'DISCOVER': '#ff6600'
-    };
+    const colors = { 'VISA': '#1a539a', 'MASTERCARD': '#eb0a1e', 'AMEX': '#0066cc', 'DISCOVER': '#ff6600' };
     return colors[network] || '#a0aab8';
-}
-
-function getNetworkIcon(network) {
-    const icons = {
-        'VISA': 'credit_card',
-        'MASTERCARD': 'credit_card',
-        'AMEX': 'credit_card',
-        'DISCOVER': 'credit_card'
-    };
-    return icons[network] || 'credit_card';
 }
 
 function renderStars(rating) {
@@ -324,13 +291,9 @@ function renderStars(rating) {
     const halfStar = rating - fullStars >= 0.5;
     let html = '';
     for (let i = 0; i < 5; i++) {
-        if (i < fullStars) {
-            html += `<span class="material-icons">star</span>`;
-        } else if (i === fullStars && halfStar) {
-            html += `<span class="material-icons">star_half</span>`;
-        } else {
-            html += `<span class="material-icons empty">star_border</span>`;
-        }
+        if (i < fullStars) html += `<span class="material-icons">star</span>`;
+        else if (i === fullStars && halfStar) html += `<span class="material-icons">star_half</span>`;
+        else html += `<span class="material-icons empty">star_border</span>`;
     }
     return html;
 }
@@ -342,6 +305,7 @@ function getStockStatus(stock) {
     return { dot: 'low', label: 'Agotado' };
 }
 
+// ============ FILTROS Y PAGINACIÓN ============
 function applyFilters() {
     const country = document.getElementById('filterCountry');
     const search = document.getElementById('filterSearch');
@@ -404,6 +368,7 @@ function updateDateTime() {
     if (el) el.textContent = date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
+// ============ CHECKER ============
 function runChecker() {
     const input = document.getElementById('checkerInput');
     if (!input) return;
@@ -462,6 +427,7 @@ function clearChecker() {
     if (processedEl) processedEl.textContent = '0';
 }
 
+// ============ OTP ============
 let otpInterval = null;
 
 function startOTPBot() {
@@ -510,6 +476,7 @@ function addOTPLog(message, type = 'info') {
     logsContainer.scrollTop = logsContainer.scrollHeight;
 }
 
+// ============ MODAL DEPÓSITO ============
 function openDepositModal() {
     const modal = document.getElementById('depositModal');
     if (modal) modal.classList.add('active');
