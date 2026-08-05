@@ -47,17 +47,25 @@ function registerUser(email, password, username) {
         email: email,
         username: username,
         password: hashPassword(password),
-        balance: 100,
+        balance: 0, // ⚠️ CAMBIADO: Ya no da $100 gratis
         role: 'user',
         createdAt: new Date().toISOString(),
         lastLogin: null,
-        transactions: []
+        // ============ NUEVO: HISTORIAL DE COMPRAS ============
+        purchases: [], // Array de tarjetas compradas
+        // ============ NUEVO: PERFIL ============
+        profile: {
+            banner: '', // URL del banner
+            avatar: '', // URL del avatar
+            bio: '' // Biografía
+        }
     };
     
     users.push(newUser);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
     
     console.log('✅ Usuario registrado:', username);
+    showToast('✅ Registro exitoso. Inicia sesión.', 'success');
     return true;
 }
 
@@ -95,7 +103,9 @@ function loginUser(email, password) {
             email: user.email,
             username: user.username,
             balance: user.balance,
-            role: user.role
+            role: user.role,
+            purchases: user.purchases || [],
+            profile: user.profile || { banner: '', avatar: '', bio: '' }
         },
         token: generateToken(user.id),
         expiresAt: Date.now() + AUTH_CONFIG.sessionTimeout
@@ -115,7 +125,6 @@ function loginUser(email, password) {
 function logoutUser() {
     localStorage.removeItem(AUTH_CONFIG.tokenKey);
     showToast('Sesión cerrada', 'info');
-    // REDIRECCIÓN CORRECTA CON LA CARPETA
     window.location.href = '/nyxkey.github.io/login.html';
 }
 
@@ -201,6 +210,69 @@ function updateUserBalance(userId, amount) {
     return false;
 }
 
+// ============ AÑADIR COMPRA AL HISTORIAL ============
+function addPurchaseToHistory(userId, purchaseData) {
+    let users = [];
+    try {
+        const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
+        users = stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        users = [];
+    }
+    
+    const user = users.find(u => u.id === userId);
+    if (user) {
+        if (!user.purchases) user.purchases = [];
+        user.purchases.push({
+            ...purchaseData,
+            purchaseDate: new Date().toISOString(),
+            id: 'purchase_' + Date.now()
+        });
+        localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
+        
+        // Actualizar sesión
+        const currentUser = getCurrentUser();
+        if (currentUser && currentUser.id === userId) {
+            const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
+            if (session) {
+                session.user.purchases = user.purchases;
+                localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
+// ============ ACTUALIZAR PERFIL ============
+function updateUserProfile(userId, profileData) {
+    let users = [];
+    try {
+        const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
+        users = stored ? JSON.parse(stored) : [];
+    } catch (e) {
+        users = [];
+    }
+    
+    const user = users.find(u => u.id === userId);
+    if (user) {
+        if (!user.profile) user.profile = {};
+        user.profile = { ...user.profile, ...profileData };
+        localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
+        
+        const currentUser = getCurrentUser();
+        if (currentUser && currentUser.id === userId) {
+            const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
+            if (session) {
+                session.user.profile = user.profile;
+                localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
 // ============ UTILIDADES ============
 function hashPassword(password) {
     let hash = 0;
@@ -241,12 +313,6 @@ function showToast(message, type = 'info') {
 // ============ INICIALIZAR ============
 document.addEventListener('DOMContentLoaded', function() {
     updateUserUI();
-    
-    // Si el usuario ya está logueado y está en login.html, redirigir al home
-    const user = getCurrentUser();
-    if (user && window.location.pathname.includes('login.html')) {
-        window.location.href = '/nyxkey.github.io/';
-    }
 });
 
 // ============ EXPORTAR ============
@@ -259,3 +325,5 @@ window.updateUserBalance = updateUserBalance;
 window.updateUserUI = updateUserUI;
 window.toggleUserMenu = toggleUserMenu;
 window.showToast = showToast;
+window.addPurchaseToHistory = addPurchaseToHistory;
+window.updateUserProfile = updateUserProfile;
