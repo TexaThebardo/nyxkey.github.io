@@ -11,17 +11,20 @@ const AUTH_CONFIG = {
 };
 
 // ============ ADMINISTRADORES DEFINIDOS EN CÓDIGO ============
-// ⚠️ AÑADE AQUÍ LOS EMAILS DE LOS ADMINISTRADORES
+// ⚠️ COPIA EXACTA DE TU EMAIL - CON LA "l"
 const ADMIN_LIST = [
     'admin@yxcards.com',
-    'personalbusiness2626@gmail.com'  // ✅ TU EMAIL AÑADIDO
-    // AÑADE MÁS CORREOS AQUÍ
+    'personalbusiness2626@gmail.com'  // ✅ CORREGIDO - CON LA "l"
 ];
 
 // ============ VERIFICAR ADMIN ============
 function isAdmin(email) {
     if (!email) return false;
-    return ADMIN_LIST.includes(email);
+    console.log('🔍 Verificando admin para:', email);
+    console.log('📋 Lista de admins:', ADMIN_LIST);
+    const result = ADMIN_LIST.includes(email);
+    console.log('✅ ¿Es admin?', result);
+    return result;
 }
 
 // ============ REGISTRO ============
