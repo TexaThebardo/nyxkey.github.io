@@ -20,9 +20,11 @@ function loadWhitelist() {
         }
     } catch (e) {}
 
-    // WHITELIST POR DEFECTO - VACÍA (sin emails fijos)
+    // WHITELIST POR DEFECTO
     const defaultWhitelist = {
-        admins: [],
+        admins: [
+            { email: 'admin@yxcards.com', key: 'admin123' }
+        ],
         insignias: {
             'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
             'Dev': { icon: 'code', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.15)', description: 'Desarrollador de la plataforma' },
@@ -46,7 +48,26 @@ function saveWhitelist(data) {
 function isAdmin(email) {
     if (!email) return false;
     const whitelist = loadWhitelist();
-    return whitelist.admins && whitelist.admins.includes(email);
+    if (!whitelist.admins) return false;
+    return whitelist.admins.some(admin => admin.email === email);
+}
+
+// ============ VERIFICAR ADMIN CON CLAVE ============
+function verifyAdminKey(email, key) {
+    if (!email || !key) return false;
+    const whitelist = loadWhitelist();
+    if (!whitelist.admins) return false;
+    const admin = whitelist.admins.find(a => a.email === email);
+    if (!admin) return false;
+    return admin.key === key;
+}
+
+// ============ OBTENER CLAVE DE ADMIN ============
+function getAdminKey(email) {
+    const whitelist = loadWhitelist();
+    if (!whitelist.admins) return null;
+    const admin = whitelist.admins.find(a => a.email === email);
+    return admin ? admin.key : null;
 }
 
 // ============ OBTENER INSIGNIAS ============
@@ -193,13 +214,13 @@ function removeInsigniaFromUser(email, insigniaName) {
 }
 
 // ============ AÑADIR ADMIN A LA WHITELIST ============
-function addAdminToWhitelist(email) {
+function addAdminToWhitelist(email, key) {
     const whitelist = loadWhitelist();
     if (!whitelist.admins) {
         whitelist.admins = [];
     }
-    if (!whitelist.admins.includes(email)) {
-        whitelist.admins.push(email);
+    if (!whitelist.admins.some(a => a.email === email)) {
+        whitelist.admins.push({ email, key: key || 'default123' });
         saveWhitelist(whitelist);
         return { success: true, message: `✅ ${email} ahora es administrador` };
     }
@@ -210,12 +231,11 @@ function addAdminToWhitelist(email) {
 function removeAdminFromWhitelist(email) {
     const whitelist = loadWhitelist();
     if (whitelist.admins) {
-        const filtered = whitelist.admins.filter(e => e !== email);
+        const filtered = whitelist.admins.filter(a => a.email !== email);
         if (filtered.length < whitelist.admins.length) {
             whitelist.admins = filtered;
             saveWhitelist(whitelist);
             
-            // Limpiar sesión de admin si el usuario la tiene
             const adminSession = localStorage.getItem('admin_session');
             if (adminSession) {
                 try {
@@ -259,32 +279,31 @@ function checkAdminSession() {
     }
 }
 
+// ============ CERRAR SESIÓN ADMIN ============
+function logoutAdmin() {
+    localStorage.removeItem('admin_session');
+    // Recargar la página para mostrar el login de admin
+    window.location.reload();
+}
+
 // ============ SINCRONIZAR INSIGNIAS AL INICIAR SESIÓN ============
 function syncUserInsigniasOnLogin(email) {
-    // Esta función se ejecuta cuando un usuario inicia sesión
-    // Asigna insignias automáticamente según la whitelist
     const whitelist = loadWhitelist();
     const userInsignias = getUserInsignias(email);
-    const isUserAdmin = whitelist.admins && whitelist.admins.includes(email);
+    const isUserAdmin = whitelist.admins && whitelist.admins.some(a => a.email === email);
     
     let newInsignias = [...userInsignias];
     
-    // Si es admin y no tiene la insignia Owner, se la añadimos
     if (isUserAdmin && !newInsignias.includes('Owner')) {
         newInsignias.push('Owner');
-        console.log(`👑 Insignia Owner asignada a ${email}`);
     }
     
-    // Si no es admin y tiene Owner, se la quitamos
     if (!isUserAdmin && newInsignias.includes('Owner')) {
         newInsignias = newInsignias.filter(i => i !== 'Owner');
-        console.log(`🔒 Insignia Owner removida de ${email}`);
     }
     
-    // Guardar insignias actualizadas
     if (JSON.stringify(newInsignias) !== JSON.stringify(userInsignias)) {
         saveUserInsignias(email, newInsignias);
-        console.log(`✅ Insignias sincronizadas para ${email}:`, newInsignias);
     }
     
     return newInsignias;
@@ -292,6 +311,8 @@ function syncUserInsigniasOnLogin(email) {
 
 // ============ EXPORTAR ============
 window.isAdmin = isAdmin;
+window.verifyAdminKey = verifyAdminKey;
+window.getAdminKey = getAdminKey;
 window.loadWhitelist = loadWhitelist;
 window.getAllUsers = getAllUsers;
 window.updateUserBalanceByEmail = updateUserBalanceByEmail;
@@ -306,6 +327,7 @@ window.addAdminToWhitelist = addAdminToWhitelist;
 window.removeAdminFromWhitelist = removeAdminFromWhitelist;
 window.getAdminList = getAdminList;
 window.checkAdminSession = checkAdminSession;
+window.logoutAdmin = logoutAdmin;
 window.syncUserInsigniasOnLogin = syncUserInsigniasOnLogin;
 
-console.log('✅ Admin.js cargado - Sin emails fijos');
+console.log('✅ Admin.js cargado - Con sistema de clave');
