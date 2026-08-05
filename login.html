@@ -133,6 +133,60 @@
             box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
         }
 
+        /* ============ PASSWORD INPUT CON TOGGLE ============ */
+        .forgot-modal-box .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .forgot-modal-box .password-input-wrapper input {
+            flex: 1;
+            padding-right: 48px;
+        }
+        .forgot-modal-box .password-input-wrapper .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #5a6575;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .forgot-modal-box .password-input-wrapper .toggle-password-btn:hover {
+            color: #e8edf2;
+        }
+        .forgot-modal-box .password-input-wrapper .toggle-password-btn .material-icons {
+            font-size: 20px;
+        }
+
+        /* ============ REQUISITOS DE CONTRASEÑA ============ */
+        .password-requirements {
+            font-size: 12px;
+            color: #5a6575;
+            margin-top: 4px;
+            padding: 8px 12px;
+            background: rgba(11, 14, 20, 0.5);
+            border-radius: 8px;
+        }
+        .password-requirements .req {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 0;
+        }
+        .password-requirements .req .material-icons {
+            font-size: 14px;
+        }
+        .password-requirements .req.valid {
+            color: #2ecc71;
+        }
+        .password-requirements .req.invalid {
+            color: #5a6575;
+        }
+
         .forgot-modal-box .btn-forgot {
             display: inline-flex;
             align-items: center;
@@ -153,6 +207,11 @@
         .forgot-modal-box .btn-forgot:hover {
             background: #d4a40a;
             transform: scale(1.02);
+        }
+        .forgot-modal-box .btn-forgot:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .forgot-modal-box .btn-forgot-secondary {
@@ -197,21 +256,18 @@
             vertical-align: middle;
         }
 
-        .forgot-modal-box .new-password-display {
-            background: rgba(11, 14, 20, 0.8);
-            border: 1px solid #2a313c;
+        .forgot-modal-box .error-message {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.3);
             border-radius: 10px;
             padding: 12px 16px;
-            color: #f0b90b;
-            font-family: 'Courier New', monospace;
-            font-size: 18px;
-            font-weight: 700;
+            color: #e74c3c;
             text-align: center;
-            letter-spacing: 2px;
-            margin: 12px 0;
+            font-size: 14px;
+            margin-bottom: 16px;
             display: none;
         }
-        .forgot-modal-box .new-password-display.show {
+        .forgot-modal-box .error-message.show {
             display: block;
         }
 
@@ -264,7 +320,6 @@
                         <input type="checkbox" id="rememberMe">
                         <span>Recordarme</span>
                     </label>
-                    <!-- ============ LINK OLVIDASTE CONTRASEÑA ============ -->
                     <a href="#" class="forgot-link" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
                 </div>
                 
@@ -331,17 +386,16 @@
 
             <!-- TÍTULO -->
             <h2>Recuperar Contraseña</h2>
-            <p class="subtitle">Ingresa tu correo y te enviaremos una nueva contraseña</p>
+            <p class="subtitle">Ingresa tu correo y establece una nueva contraseña</p>
 
-            <!-- MENSAJE DE ÉXITO -->
+            <!-- MENSAJES -->
             <div class="success-message" id="forgotSuccessMessage">
                 <span class="material-icons-outlined">check_circle</span>
-                <span id="forgotSuccessText">Contraseña restablecida</span>
+                <span id="forgotSuccessText">✅ Contraseña actualizada correctamente</span>
             </div>
-
-            <!-- NUEVA CONTRASEÑA GENERADA -->
-            <div class="new-password-display" id="newPasswordDisplay">
-                <!-- Se llena con JavaScript -->
+            <div class="error-message" id="forgotErrorMessage">
+                <span class="material-icons-outlined">error</span>
+                <span id="forgotErrorText">Error al actualizar la contraseña</span>
             </div>
 
             <!-- FORMULARIO -->
@@ -354,9 +408,54 @@
                     <input type="email" id="forgotEmail" placeholder="ejemplo@correo.com" required>
                 </div>
 
+                <div class="input-group">
+                    <label>
+                        <span class="material-icons-outlined">lock</span>
+                        Nueva Contraseña
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="forgotNewPassword" placeholder="Mínimo 6 caracteres" required>
+                        <button type="button" class="toggle-password-btn" onclick="toggleForgotPassword('forgotNewPassword')">
+                            <span class="material-icons">visibility</span>
+                        </button>
+                    </div>
+                    <!-- REQUISITOS DE CONTRASEÑA -->
+                    <div class="password-requirements" id="passwordRequirements">
+                        <div class="req invalid" id="reqLength">
+                            <span class="material-icons">close</span>
+                            <span>Mínimo 6 caracteres</span>
+                        </div>
+                        <div class="req invalid" id="reqLower">
+                            <span class="material-icons">close</span>
+                            <span>Al menos una letra minúscula</span>
+                        </div>
+                        <div class="req invalid" id="reqUpper">
+                            <span class="material-icons">close</span>
+                            <span>Al menos una letra mayúscula</span>
+                        </div>
+                        <div class="req invalid" id="reqNumber">
+                            <span class="material-icons">close</span>
+                            <span>Al menos un número</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <span class="material-icons-outlined">lock_outline</span>
+                        Confirmar Contraseña
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="forgotConfirmPassword" placeholder="Repite la contraseña" required>
+                        <button type="button" class="toggle-password-btn" onclick="toggleForgotPassword('forgotConfirmPassword')">
+                            <span class="material-icons">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn-forgot" id="forgotBtn">
-                    <span class="material-icons">send</span>
-                    Restablecer Contraseña
+                    <span class="material-icons">check_circle</span>
+                    Actualizar Contraseña
                 </button>
 
                 <button type="button" class="btn-forgot btn-forgot-secondary" onclick="closeForgotModal()">
@@ -367,7 +466,7 @@
 
             <div class="forgot-hint">
                 <span class="material-icons-outlined">info</span>
-                Se generará una nueva contraseña y se mostrará en pantalla
+                La contraseña debe tener al menos 6 caracteres
             </div>
         </div>
     </div>
@@ -420,6 +519,44 @@
             }
         }
 
+        function toggleForgotPassword(id) {
+            const input = document.getElementById(id);
+            const wrapper = input.closest('.password-input-wrapper');
+            const icon = wrapper.querySelector('.toggle-password-btn .material-icons');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+
+        // ============ VALIDAR CONTRASEÑA ============
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 6,
+                lower: /[a-z]/.test(password),
+                upper: /[A-Z]/.test(password),
+                number: /[0-9]/.test(password)
+            };
+            
+            // Actualizar UI de requisitos
+            document.getElementById('reqLength').className = `req ${requirements.length ? 'valid' : 'invalid'}`;
+            document.getElementById('reqLength').querySelector('.material-icons').textContent = requirements.length ? 'check_circle' : 'close';
+            
+            document.getElementById('reqLower').className = `req ${requirements.lower ? 'valid' : 'invalid'}`;
+            document.getElementById('reqLower').querySelector('.material-icons').textContent = requirements.lower ? 'check_circle' : 'close';
+            
+            document.getElementById('reqUpper').className = `req ${requirements.upper ? 'valid' : 'invalid'}`;
+            document.getElementById('reqUpper').querySelector('.material-icons').textContent = requirements.upper ? 'check_circle' : 'close';
+            
+            document.getElementById('reqNumber').className = `req ${requirements.number ? 'valid' : 'invalid'}`;
+            document.getElementById('reqNumber').querySelector('.material-icons').textContent = requirements.number ? 'check_circle' : 'close';
+            
+            return requirements.length && requirements.lower && requirements.upper && requirements.number;
+        }
+
         // ============ SOCIAL LOGIN ============
         function socialLogin(provider) {
             showToast(`Iniciando sesión con ${provider}...`, 'info');
@@ -429,26 +566,39 @@
         }
 
         // ============ RECUPERAR CONTRASEÑA ============
-        function generateRandomPassword() {
-            const length = 10;
-            const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
-            let password = '';
-            for (let i = 0; i < length; i++) {
-                password += charset.charAt(Math.floor(Math.random() * charset.length));
-            }
-            return password;
-        }
-
         function handleForgotPassword(e) {
             e.preventDefault();
             
             const email = document.getElementById('forgotEmail').value.trim();
+            const newPassword = document.getElementById('forgotNewPassword').value;
+            const confirmPassword = document.getElementById('forgotConfirmPassword').value;
             const btn = document.getElementById('forgotBtn');
             const successMsg = document.getElementById('forgotSuccessMessage');
-            const newPassDisplay = document.getElementById('newPasswordDisplay');
+            const errorMsg = document.getElementById('forgotErrorMessage');
             
+            // Limpiar mensajes
+            successMsg.classList.remove('show');
+            errorMsg.classList.remove('show');
+            
+            // Validaciones
             if (!email) {
                 showToast('❌ Ingresa un correo electrónico', 'error');
+                return;
+            }
+
+            if (!newPassword || newPassword.length < 6) {
+                showToast('❌ La contraseña debe tener al menos 6 caracteres', 'error');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showToast('❌ Las contraseñas no coinciden', 'error');
+                return;
+            }
+
+            // Validar requisitos de contraseña
+            if (!validatePassword(newPassword)) {
+                showToast('❌ La contraseña no cumple con los requisitos', 'error');
                 return;
             }
 
@@ -461,41 +611,26 @@
                 return;
             }
 
-            // Generar nueva contraseña
-            const newPassword = generateRandomPassword();
-            
-            // Actualizar contraseña del usuario
+            // Actualizar contraseña
             users[userIndex].password = hashPassword(newPassword);
             localStorage.setItem('yx_users', JSON.stringify(users));
 
-            // Mostrar mensaje de éxito y nueva contraseña
+            // Mostrar mensaje de éxito
             successMsg.classList.add('show');
-            document.getElementById('forgotSuccessText').textContent = '✅ Contraseña restablecida correctamente';
-            
-            newPassDisplay.textContent = newPassword;
-            newPassDisplay.classList.add('show');
+            document.getElementById('forgotSuccessText').textContent = '✅ Contraseña actualizada correctamente';
             
             btn.disabled = true;
-            btn.innerHTML = '<span class="material-icons">check</span> Contraseña restablecida';
+            btn.innerHTML = '<span class="material-icons">check</span> Contraseña actualizada';
             
-            showToast('✅ Nueva contraseña generada. Revisa la pantalla.', 'success');
+            showToast('✅ Contraseña actualizada correctamente. Ahora puedes iniciar sesión.', 'success');
             
-            // Botón para copiar contraseña
-            if (!document.getElementById('copyPasswordBtn')) {
-                const copyBtn = document.createElement('button');
-                copyBtn.id = 'copyPasswordBtn';
-                copyBtn.className = 'btn-forgot';
-                copyBtn.style.marginTop = '8px';
-                copyBtn.style.background = '#3498db';
-                copyBtn.style.color = 'white';
-                copyBtn.innerHTML = '<span class="material-icons">content_copy</span> Copiar Contraseña';
-                copyBtn.onclick = function() {
-                    navigator.clipboard.writeText(newPassword).then(() => {
-                        showToast('📋 Contraseña copiada al portapapeles', 'success');
-                    });
-                };
-                document.getElementById('forgotForm').appendChild(copyBtn);
-            }
+            // Redirigir al login después de 3 segundos
+            setTimeout(function() {
+                closeForgotModal();
+                document.getElementById('loginEmail').value = email;
+                document.getElementById('loginPassword').value = '';
+                showToast('🔑 Ahora inicia sesión con tu nueva contraseña', 'info');
+            }, 2500);
         }
 
         // ============ ABRIR/CERRAR MODAL ============
@@ -504,21 +639,27 @@
             // Resetear formulario
             document.getElementById('forgotForm').reset();
             document.getElementById('forgotSuccessMessage').classList.remove('show');
-            document.getElementById('newPasswordDisplay').classList.remove('show');
-            document.getElementById('newPasswordDisplay').textContent = '';
+            document.getElementById('forgotErrorMessage').classList.remove('show');
             document.getElementById('forgotBtn').disabled = false;
-            document.getElementById('forgotBtn').innerHTML = '<span class="material-icons">send</span> Restablecer Contraseña';
-            // Eliminar botón de copiar si existe
-            const copyBtn = document.getElementById('copyPasswordBtn');
-            if (copyBtn) copyBtn.remove();
+            document.getElementById('forgotBtn').innerHTML = '<span class="material-icons">check_circle</span> Actualizar Contraseña';
+            // Resetear requisitos
+            document.querySelectorAll('.password-requirements .req').forEach(el => {
+                el.className = 'req invalid';
+                el.querySelector('.material-icons').textContent = 'close';
+            });
         }
 
         function closeForgotModal() {
             document.getElementById('forgotModal').classList.remove('active');
         }
 
-        // ============ INICIALIZAR ============
+        // ============ VALIDACIÓN EN TIEMPO REAL ============
         document.addEventListener('DOMContentLoaded', function() {
+            // Validar contraseña en tiempo real
+            document.getElementById('forgotNewPassword').addEventListener('input', function() {
+                validatePassword(this.value);
+            });
+
             // Verificar si ya hay sesión
             const user = getCurrentUser();
             if (user) {
