@@ -3,342 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración - Yx Cards</title>
+    <title>Dashboard - Yx Cards</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
     <style>
-        /* ============================================
-           ADMIN STYLES
-           ============================================ */
-        
-        .admin-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* HEADER CON LOGO */
-        .admin-header {
-            background: #131a22;
-            border: 1px solid #2a313c;
-            border-radius: 16px;
-            padding: 20px 28px;
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-        .admin-header .header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .admin-header .header-logo {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            overflow: hidden;
-            animation: pulseLogo 2.5s ease-in-out infinite;
-        }
-        .admin-header .header-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        @keyframes pulseLogo {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(240,185,11,0.15)); }
-            50% { transform: scale(1.04); filter: drop-shadow(0 0 25px rgba(240,185,11,0.35)); }
-        }
-        .admin-header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #e8edf2;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .admin-badge {
-            background: #f0b90b;
-            color: #0b0e14;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        /* STATS */
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .admin-stat-card {
-            background: #131a22;
-            border: 1px solid #2a313c;
-            border-radius: 14px;
-            padding: 16px 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .admin-stat-card:hover {
-            border-color: #f0b90b;
-            transform: translateY(-2px);
-        }
-        .admin-stat-card .stat-number {
-            font-size: 26px;
-            font-weight: 800;
-            color: #e8edf2;
-            display: block;
-        }
-        .admin-stat-card .stat-label {
-            font-size: 12px;
-            color: #a0aab8;
-        }
-
-        /* PANELS */
-        .admin-panel {
-            background: #131a22;
-            border: 1px solid #2a313c;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-        }
-        .admin-panel h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #e8edf2;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .admin-panel h2 .material-icons-outlined {
-            color: #f0b90b;
-        }
-
-        /* FORMS */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 14px;
-        }
-        .form-group label {
-            font-size: 13px;
-            font-weight: 500;
-            color: #a0aab8;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .form-group label .material-icons-outlined {
-            font-size: 18px;
-            color: #f0b90b;
-        }
-        .form-group input, .form-group select {
-            background: #0b0e14;
-            border: 1px solid #2a313c;
-            border-radius: 10px;
-            padding: 10px 14px;
-            color: #e8edf2;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-        .form-group input:focus, .form-group select:focus {
-            outline: none;
-            border-color: #f0b90b;
-            box-shadow: 0 0 0 3px rgba(240,185,11,0.1);
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-        @media (max-width: 768px) {
-            .form-row { grid-template-columns: 1fr; }
-        }
-
-        /* BUTTONS */
-        .btn-admin {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            font-family: 'Inter', sans-serif;
-            width: 100%;
-        }
-        .btn-admin-primary { background: #f0b90b; color: #0b0e14; }
-        .btn-admin-primary:hover { background: #d4a40a; transform: scale(1.02); }
-        .btn-admin-success { background: #2ecc71; color: #0b0e14; }
-        .btn-admin-success:hover { background: #27ae60; transform: scale(1.02); }
-        .btn-admin-danger { background: #e74c3c; color: white; }
-        .btn-admin-danger:hover { background: #c0392b; transform: scale(1.02); }
-        .btn-admin-secondary { background: #1a232e; color: #a0aab8; border: 1px solid #2a313c; }
-        .btn-admin-secondary:hover { background: #1e2a38; color: #e8edf2; }
-
-        .admin-logout-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-family: 'Inter', sans-serif;
-        }
-        .admin-logout-btn:hover {
-            background: #c0392b;
-            transform: scale(1.05);
-        }
-
-        /* TABLA DE USUARIOS */
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        .users-table th {
-            text-align: left;
-            padding: 10px 14px;
-            background: #1a232e;
-            color: #a0aab8;
-            font-weight: 500;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid #2a313c;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-        }
-        .users-table td {
-            padding: 10px 14px;
-            border-bottom: 1px solid #1e2630;
-            color: #e8edf2;
-            vertical-align: middle;
-        }
-        .users-table tr:hover td {
-            background: #1e2a38;
-        }
-        .users-table .user-email {
-            color: #f0b90b;
-            font-weight: 500;
-        }
-        .users-table .user-balance {
-            font-weight: 700;
-            color: #2ecc71;
-        }
-        .users-table .admin-tag {
-            background: rgba(240,185,11,0.15);
-            color: #f0b90b;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .table-responsive {
-            overflow-x: auto;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        /* ACCIONES EN TABLA */
-        .admin-actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .admin-actions .btn-sm {
-            padding: 4px 10px;
-            font-size: 11px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .btn-sm-add { background: #2ecc71; color: #0b0e14; }
-        .btn-sm-add:hover { background: #27ae60; transform: scale(1.05); }
-        .btn-sm-remove { background: #e74c3c; color: white; }
-        .btn-sm-remove:hover { background: #c0392b; transform: scale(1.05); }
-        .btn-sm-view { background: #3498db; color: white; }
-        .btn-sm-view:hover { background: #2980b9; transform: scale(1.05); }
-        .btn-sm-purchases { background: #9b59b6; color: white; }
-        .btn-sm-purchases:hover { background: #8e44ad; transform: scale(1.05); }
-
-        /* ============================================
-           ADMIN LOGIN MODAL
-           ============================================ */
-        .admin-login-overlay {
+        /* ============ MODAL PARA MOSTRAR DATOS DE TARJETA ============ */
+        .card-data-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(20px);
-            display: flex;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            animation: fadeIn 0.4s ease;
+            animation: fadeIn 0.3s ease;
         }
-        .admin-login-overlay.hidden { display: none; }
-        .admin-login-box {
-            background: rgba(19,26,34,0.95);
-            border: 1px solid rgba(42,49,60,0.8);
+        .card-data-modal.active {
+            display: flex;
+        }
+        .card-data-box {
+            background: #131a22;
+            border: 1px solid #2a313c;
             border-radius: 20px;
-            padding: 36px;
-            max-width: 400px;
-            width: 100%;
-            animation: slideUp 0.5s cubic-bezier(0.34,1.56,0.64,1);
+            padding: 32px;
+            max-width: 420px;
+            width: 90%;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
             position: relative;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-            backdrop-filter: blur(20px);
         }
-        .admin-login-box .login-logo {
-            width: 72px;
-            height: 72px;
-            margin: 0 auto 14px;
-            border-radius: 16px;
-            overflow: hidden;
-            animation: pulseLogo 3s ease-in-out infinite;
-        }
-        .admin-login-box .login-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .admin-login-box .close-btn {
+        .card-data-box .close-modal {
             position: absolute;
             top: 12px;
             right: 16px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border: none;
             color: #5a6575;
             width: 34px;
@@ -349,200 +55,111 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 20px;
         }
-        .admin-login-box .close-btn:hover {
-            background: rgba(231,76,60,0.2);
-            color: #e74c3c;
-            transform: rotate(90deg) scale(1.1);
-        }
-        .admin-login-box h2 {
-            color: #e8edf2;
-            font-size: 22px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 4px;
-        }
-        .admin-login-box .subtitle {
-            color: #a0aab8;
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 13px;
-        }
-        .admin-login-box .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-bottom: 14px;
-        }
-        .admin-login-box .input-group label {
-            font-size: 13px;
-            font-weight: 500;
-            color: #a0aab8;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .admin-login-box .input-group label .material-icons-outlined {
-            font-size: 18px;
-            color: #f0b90b;
-        }
-        .admin-login-box .input-group input {
-            background: rgba(11,14,20,0.8);
-            border: 1px solid #2a313c;
-            border-radius: 10px;
-            padding: 10px 14px;
-            color: #e8edf2;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-        .admin-login-box .input-group input:focus {
-            outline: none;
-            border-color: #f0b90b;
-            box-shadow: 0 0 0 3px rgba(240,185,11,0.1);
-        }
-        .admin-login-box .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 14px 0 18px;
-            color: #a0aab8;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .admin-login-box .remember-me input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #f0b90b;
-            cursor: pointer;
-        }
-        .admin-login-box .admin-hint {
-            font-size: 12px;
-            color: #5a6575;
-            text-align: center;
-            margin-top: 14px;
-        }
-        .admin-login-box .admin-hint .material-icons-outlined {
-            font-size: 14px;
-            vertical-align: middle;
-            color: #f39c12;
-        }
-
-        /* MODAL PARA VER DETALLES */
-        .modal-overlay-detail {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(12px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9998;
-        }
-        .modal-overlay-detail.active { display: flex; }
-        .modal-detail-box {
-            background: #131a22;
-            border: 1px solid #2a313c;
-            border-radius: 16px;
-            padding: 28px;
-            max-width: 550px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            animation: slideUp 0.4s ease;
-        }
-        .modal-detail-box .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #1e2630;
-        }
-        .modal-detail-box .modal-header h3 {
-            color: #e8edf2;
-            font-size: 18px;
-            font-weight: 700;
-        }
-        .modal-detail-box .modal-header .close-modal {
-            background: none;
-            border: none;
-            color: #5a6575;
-            cursor: pointer;
-            font-size: 24px;
-            transition: all 0.3s ease;
-        }
-        .modal-detail-box .modal-header .close-modal:hover {
+        .card-data-box .close-modal:hover {
+            background: rgba(231, 76, 60, 0.2);
             color: #e74c3c;
             transform: rotate(90deg);
         }
-        .modal-detail-box .detail-item {
+        .card-data-box .card-number-display {
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: #e8edf2;
+            text-align: center;
+            letter-spacing: 3px;
+            padding: 16px 0;
+            background: #0b0e14;
+            border-radius: 12px;
+            border: 1px solid #2a313c;
+            margin: 12px 0;
+            word-break: break-all;
+        }
+        .card-data-box .card-detail-row {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px solid #1e2630;
             font-size: 14px;
         }
-        .modal-detail-box .detail-item .label {
+        .card-data-box .card-detail-row .label {
             color: #a0aab8;
         }
-        .modal-detail-box .detail-item .value {
-            color: #e8edf2;
-            font-weight: 500;
+        .card-data-box .card-detail-row .value {
+            color: #f0b90b;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
         }
-        .modal-detail-box .detail-item .value.gold { color: #f0b90b; }
-        .modal-detail-box .detail-item .value.green { color: #2ecc71; }
+        .card-data-box .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0b90b;
+            color: #0b0e14;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .card-data-box .copy-btn:hover {
+            background: #d4a40a;
+            transform: scale(1.02);
+        }
+        .card-data-box .copy-btn .material-icons {
+            font-size: 18px;
+        }
+        .card-data-box .card-type-badge {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .card-data-box .card-type-badge.visa { background: rgba(26, 83, 154, 0.2); color: #1a539a; }
+        .card-data-box .card-type-badge.mastercard { background: rgba(235, 10, 30, 0.2); color: #eb0a1e; }
+        .card-data-box .card-type-badge.amex { background: rgba(0, 102, 204, 0.2); color: #0066cc; }
+        .card-data-box .card-type-badge.discover { background: rgba(255, 102, 0, 0.2); color: #ff6600; }
 
-        .modal-detail-box .purchase-item {
-            background: #0b0e14;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            border: 1px solid #1e2630;
+        /* Botón "Mostrar Datos" en la tarjeta de compra */
+        .btn-show-data {
+            background: #2a4a6a;
+            color: white;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Inter', sans-serif;
         }
-        .modal-detail-box .purchase-item .purchase-header {
+        .btn-show-data:hover {
+            background: #3a5a8a;
+            transform: scale(1.05);
+        }
+        .btn-show-data .material-icons {
+            font-size: 14px;
+        }
+
+        /* Ajustes en la tarjeta de compra */
+        .purchase-card .purchase-footer {
             display: flex;
             justify-content: space-between;
-            font-weight: 600;
-        }
-        .modal-detail-box .purchase-item .purchase-details {
-            font-size: 13px;
-            color: #a0aab8;
-            margin-top: 4px;
-        }
-
-        /* TOAST */
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
             align-items: center;
-            pointer-events: none;
-            max-width: 90%;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 30px 20px;
-            color: #a0aab8;
-        }
-        .empty-state .material-icons-outlined {
-            font-size: 40px;
-            color: #5a6575;
-        }
-        .empty-state p {
-            font-size: 16px;
-            font-weight: 500;
-            margin-top: 8px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         @keyframes fadeIn {
@@ -561,616 +178,174 @@
             from { opacity: 1; transform: translateY(0); }
             to { opacity: 0; transform: translateY(20px); }
         }
-
-        .hidden { display: none !important; }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .admin-header { padding: 16px 20px; }
-            .admin-header .header-logo { width: 40px; height: 40px; }
-            .admin-header h1 { font-size: 18px; }
-            .admin-login-box { padding: 28px 20px; margin: 16px; }
-            .admin-login-box .login-logo { width: 60px; height: 60px; }
-            .admin-stats { grid-template-columns: 1fr 1fr; }
-            .modal-detail-box { padding: 20px; }
-            .admin-actions .btn-sm { padding: 3px 8px; font-size: 10px; }
-            .admin-actions .btn-sm .material-icons { font-size: 14px; }
-        }
-        @media (max-width: 480px) {
-            .admin-stats { grid-template-columns: 1fr; }
-            .admin-header { flex-direction: column; align-items: stretch; }
-            .admin-header .header-left { justify-content: center; }
-            .admin-header .header-right { display: flex; gap: 8px; justify-content: center; }
-            .users-table { font-size: 12px; }
-            .users-table th, .users-table td { padding: 6px 8px; }
-            .form-row { grid-template-columns: 1fr; }
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            pointer-events: none;
+            max-width: 90%;
         }
     </style>
 </head>
 <body>
-    <!-- ==========================================
-    ADMIN LOGIN MODAL
-    ========================================== -->
-    <div class="admin-login-overlay" id="adminLoginOverlay">
-        <div class="admin-login-box">
-            <button class="close-btn" onclick="closeAdminLogin()" title="Cerrar">
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-img">
+                    <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards">
+                </span>
+                <span class="logo-text">Yx</span>
+                <span class="logo-text-full">Cards</span>
+                <span class="logo-badge">DASH</span>
+            </div>
+            <div class="nav-user">
+                <button id="adminPanelBtn" class="btn-admin-link" onclick="window.location.href='admin.html'" style="display:none;">
+                    <span class="material-icons">admin_panel_settings</span> Admin
+                </button>
+                <div class="user-balance">
+                    <span class="material-icons-outlined">account_balance_wallet</span>
+                    <span class="balance-amount" id="dashboardBalance">$0.00</span>
+                </div>
+                <div class="user-avatar">
+                    <span class="material-icons-outlined">person</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <span class="sidebar-title">Navegación</span>
+                <a href="#" class="sidebar-link active" data-section="overview">
+                    <span class="material-icons-outlined">dashboard</span> Visión General
+                </a>
+                <a href="#" class="sidebar-link" data-section="purchases">
+                    <span class="material-icons-outlined">shopping_bag</span> Mis Compras
+                </a>
+                <a href="#" class="sidebar-link" data-section="transactions">
+                    <span class="material-icons-outlined">receipt_long</span> Transacciones
+                </a>
+                <a href="profile.html" class="sidebar-link">
+                    <span class="material-icons-outlined">person</span> Mi Perfil
+                </a>
+                <a href="index.html" class="sidebar-link">
+                    <span class="material-icons-outlined">storefront</span> Tienda
+                </a>
+                <a href="admin.html" class="sidebar-link" id="adminSidebarBtn" style="display:none;">
+                    <span class="material-icons-outlined">admin_panel_settings</span> Admin Manager
+                </a>
+                <div class="sidebar-divider"></div>
+                <a href="#" class="sidebar-link logout" onclick="logoutUser()">
+                    <span class="material-icons-outlined">logout</span> Cerrar Sesión
+                </a>
+            </nav>
+        </aside>
+
+        <main class="dashboard-main">
+            <!-- OVERVIEW -->
+            <section id="overview" class="dashboard-section active">
+                <div class="section-header">
+                    <h2>Visión General</h2>
+                    <span class="date-badge" id="currentDate"></span>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon green"><span class="material-icons-outlined">shopping_cart</span></div>
+                        <div class="stat-info"><span class="stat-value" id="totalPurchases">0</span><span class="stat-label">Tarjetas Compradas</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><span class="material-icons-outlined">people</span></div>
+                        <div class="stat-info"><span class="stat-value" id="totalUsers">0</span><span class="stat-label">Usuarios Registrados</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gold"><span class="material-icons-outlined">admin_panel_settings</span></div>
+                        <div class="stat-info"><span class="stat-value" id="totalAdmins">0</span><span class="stat-label">Administradores</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple"><span class="material-icons-outlined">account_balance_wallet</span></div>
+                        <div class="stat-info"><span class="stat-value" id="currentBalance">$0</span><span class="stat-label">Saldo Actual</span></div>
+                    </div>
+                </div>
+                <div class="recent-activity">
+                    <div class="activity-header"><h3>Últimas Compras</h3></div>
+                    <div id="recentPurchases" class="activity-list">
+                        <div class="empty-state"><span class="material-icons-outlined">shopping_bag</span><p>No has realizado compras aún</p></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MIS COMPRAS -->
+            <section id="purchases" class="dashboard-section">
+                <div class="section-header">
+                    <h2>Mis Tarjetas Compradas</h2>
+                    <span class="purchase-count" id="purchaseCount">0 tarjetas</span>
+                </div>
+                <div class="purchases-grid" id="purchasesGrid"></div>
+            </section>
+
+            <!-- TRANSACCIONES -->
+            <section id="transactions" class="dashboard-section">
+                <div class="section-header"><h2>Historial de Transacciones</h2></div>
+                <div class="transactions-table">
+                    <table>
+                        <thead><tr><th>ID</th><th>Tipo</th><th>Monto</th><th>Estado</th><th>Fecha</th></tr></thead>
+                        <tbody id="transactionsBody">
+                            <tr><td colspan="5" style="text-align:center;padding:40px;color:#5a6575;"><span class="material-icons-outlined" style="font-size:48px;display:block;">receipt_long</span>No hay transacciones registradas</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL PARA MOSTRAR DATOS DE LA TARJETA -->
+    <div class="card-data-modal" id="cardDataModal">
+        <div class="card-data-box">
+            <button class="close-modal" onclick="closeCardDataModal()">
                 <span class="material-icons">close</span>
             </button>
-            <div class="login-logo">
-                <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards">
+            <div style="text-align:center;">
+                <span class="card-type-badge" id="modalCardType">VISA</span>
             </div>
-            <h2>Panel de Administración</h2>
-            <p class="subtitle">Acceso restringido para administradores</p>
-            <form id="adminLoginForm">
-                <div class="input-group">
-                    <label><span class="material-icons-outlined">email</span> Correo Administrador</label>
-                    <input type="email" id="adminEmail" placeholder="admin@yxcards.com" required>
+            <div class="card-number-display" id="modalCardNumber">**** **** **** ****</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+                <div class="card-detail-row" style="flex-direction:column; align-items:flex-start; border-bottom:none; background:#0b0e14; padding:10px 14px; border-radius:10px;">
+                    <span class="label" style="font-size:11px;">Fecha Exp.</span>
+                    <span class="value" id="modalCardExpiry">**/**</span>
                 </div>
-                <div class="input-group">
-                    <label><span class="material-icons-outlined">key</span> Clave de Acceso</label>
-                    <input type="password" id="adminKey" placeholder="Ingresa tu clave" required>
+                <div class="card-detail-row" style="flex-direction:column; align-items:flex-start; border-bottom:none; background:#0b0e14; padding:10px 14px; border-radius:10px;">
+                    <span class="label" style="font-size:11px;">CVV</span>
+                    <span class="value" id="modalCardCvv">***</span>
                 </div>
-                <label class="remember-me">
-                    <input type="checkbox" id="rememberMe" checked>
-                    <span>Recordarme</span>
-                </label>
-                <button type="submit" class="btn-admin btn-admin-primary">
-                    <span class="material-icons">login</span> Acceder al Panel
-                </button>
-            </form>
-            <div class="admin-hint">
-                <span class="material-icons-outlined">info</span>
-                Solo administradores autorizados con clave pueden ingresar
             </div>
+            <div class="card-detail-row" style="border-bottom:none; padding-top:12px;">
+                <span class="label">Banco</span>
+                <span class="value" id="modalCardBank" style="color:#e8edf2; font-family:inherit;">-</span>
+            </div>
+            <div class="card-detail-row" style="border-bottom:none; padding-bottom:12px;">
+                <span class="label">País</span>
+                <span class="value" id="modalCardCountry" style="color:#e8edf2; font-family:inherit;">-</span>
+            </div>
+            <button class="copy-btn" onclick="copyCardData()">
+                <span class="material-icons">content_copy</span>
+                Copiar Datos Completos
+            </button>
         </div>
     </div>
 
-    <!-- ==========================================
-    ADMIN PANEL
-    ========================================== -->
-    <div id="adminPanel" class="admin-container hidden">
-        <!-- HEADER -->
-        <div class="admin-header">
-            <div class="header-left">
-                <div class="header-logo">
-                    <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards">
-                </div>
-                <h1>
-                    Panel de Administración
-                    <span class="admin-badge">ADMIN</span>
-                </h1>
-            </div>
-            <div class="header-right" style="display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="admin-logout-btn" onclick="logoutAdmin()">
-                    <span class="material-icons">logout</span> Cerrar Sesión
-                </button>
-                <button class="btn-admin btn-admin-secondary" onclick="window.location.href='index.html'" style="width:auto; padding:8px 18px;">
-                    <span class="material-icons-outlined">home</span> Tienda
-                </button>
-            </div>
-        </div>
-
-        <!-- STATS -->
-        <div class="admin-stats">
-            <div class="admin-stat-card">
-                <span class="stat-number" id="totalUsers">0</span>
-                <span class="stat-label">Usuarios Registrados</span>
-            </div>
-            <div class="admin-stat-card">
-                <span class="stat-number" id="totalBalance">$0</span>
-                <span class="stat-label">Saldo Total</span>
-            </div>
-            <div class="admin-stat-card">
-                <span class="stat-number" id="totalAdmins">0</span>
-                <span class="stat-label">Administradores</span>
-            </div>
-            <div class="admin-stat-card">
-                <span class="stat-number" id="totalPurchases">0</span>
-                <span class="stat-label">Tarjetas Compradas</span>
-            </div>
-        </div>
-
-        <!-- AGREGAR SALDO -->
-        <div class="admin-panel">
-            <h2><span class="material-icons-outlined">add_circle</span> Agregar/Quitar Saldo</h2>
-            <form id="addBalanceForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label><span class="material-icons-outlined">email</span> Correo del Usuario</label>
-                        <input type="email" id="targetUserEmail" placeholder="usuario@correo.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label><span class="material-icons-outlined">attach_money</span> Monto</label>
-                        <input type="number" id="amountToAdd" placeholder="0.00" step="0.01" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label><span class="material-icons-outlined">description</span> Concepto</label>
-                        <input type="text" id="transactionConcept" placeholder="Ej: Depósito por promoción">
-                    </div>
-                    <div class="form-group" style="display:flex; gap:8px; align-items:flex-end;">
-                        <button type="submit" class="btn-admin btn-admin-success" style="flex:1;">
-                            <span class="material-icons">add</span> Agregar
-                        </button>
-                        <button type="button" class="btn-admin btn-admin-danger" onclick="subtractBalance()" style="flex:1;">
-                            <span class="material-icons">remove</span> Quitar
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- LISTA DE USUARIOS -->
-        <div class="admin-panel">
-            <h2><span class="material-icons-outlined">people</span> Usuarios Registrados</h2>
-            <div class="table-responsive">
-                <table class="users-table">
-                    <thead>
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Correo</th>
-                            <th>Saldo</th>
-                            <th>Tarjetas</th>
-                            <th>Rol</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTableBody">
-                        <tr>
-                            <td colspan="6" style="text-align:center;padding:30px;color:#5a6575;">
-                                <span class="material-icons-outlined" style="font-size:40px;display:block;margin-bottom:8px;">person_off</span>
-                                No hay usuarios registrados
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==========================================
-    MODAL PARA VER DETALLES
-    ========================================== -->
-    <div class="modal-overlay-detail" id="detailModal">
-        <div class="modal-detail-box">
-            <div class="modal-header">
-                <h3 id="detailModalTitle">Detalles del Usuario</h3>
-                <button class="close-modal" onclick="closeDetailModal()">
-                    <span class="material-icons">close</span>
-                </button>
-            </div>
-            <div id="detailModalContent">
-                <!-- Renderizado por JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <!-- SCRIPTS -->
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
-    <script>
-        // ============================================
-        // ADMIN.JS - COMPLETO
-        // ============================================
-
-        // ============ CERRAR MODAL LOGIN ============
-        function closeAdminLogin() {
-            document.getElementById('adminLoginOverlay').classList.add('hidden');
-            window.location.href = 'index.html';
-        }
-
-        // ============ RECORDARME ============
-        function loadRememberedCredentials() {
-            try {
-                const saved = localStorage.getItem('admin_remember');
-                if (saved) {
-                    const data = JSON.parse(saved);
-                    if (data.email && data.remember) {
-                        document.getElementById('adminEmail').value = data.email;
-                        document.getElementById('rememberMe').checked = true;
-                        if (data.key) {
-                            document.getElementById('adminKey').value = data.key;
-                        }
-                    }
-                }
-            } catch (e) {}
-        }
-
-        function saveRememberedCredentials(email, key) {
-            const remember = document.getElementById('rememberMe').checked;
-            if (remember) {
-                localStorage.setItem('admin_remember', JSON.stringify({
-                    email: email,
-                    key: key || '',
-                    remember: true
-                }));
-            } else {
-                localStorage.removeItem('admin_remember');
-            }
-        }
-
-        // ============ LOGIN ADMIN ============
-        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('adminEmail').value.trim();
-            const key = document.getElementById('adminKey').value.trim();
-
-            if (verifyAdminKey(email, key)) {
-                saveRememberedCredentials(email, key);
-                localStorage.setItem('admin_session', JSON.stringify({
-                    email: email,
-                    loggedIn: true,
-                    timestamp: Date.now()
-                }));
-                showAdminPanel();
-                showToast('✅ Bienvenido Administrador', 'success');
-            } else {
-                showToast('❌ Credenciales incorrectas', 'error');
-            }
-        });
-
-        // ============ VERIFICAR SESIÓN ============
-        function checkAdminSession() {
-            const session = localStorage.getItem('admin_session');
-            if (session) {
-                try {
-                    const data = JSON.parse(session);
-                    if (data.loggedIn && (Date.now() - data.timestamp < 3600000)) {
-                        if (isAdmin(data.email)) {
-                            showAdminPanel();
-                            return true;
-                        } else {
-                            localStorage.removeItem('admin_session');
-                        }
-                    }
-                } catch (e) {}
-            }
-            return false;
-        }
-
-        // ============ MOSTRAR PANEL ============
-        function showAdminPanel() {
-            document.getElementById('adminLoginOverlay').classList.add('hidden');
-            document.getElementById('adminPanel').classList.remove('hidden');
-            loadAdminData();
-        }
-
-        // ============ CERRAR SESIÓN ADMIN ============
-        function logoutAdmin() {
-            localStorage.removeItem('admin_session');
-            document.getElementById('adminLoginOverlay').classList.remove('hidden');
-            document.getElementById('adminPanel').classList.add('hidden');
-            showToast('Sesión de administrador cerrada', 'info');
-        }
-
-        // ============ CARGAR DATOS ============
-        function loadAdminData() {
-            const users = getUsers();
-            const admins = getAdminList();
-            const totalBalance = users.reduce((sum, u) => sum + (u.balance || 0), 0);
-            const totalPurchases = users.reduce((sum, u) => sum + ((u.purchases || []).length), 0);
-
-            document.getElementById('totalUsers').textContent = users.length;
-            document.getElementById('totalBalance').textContent = `$${totalBalance.toFixed(2)}`;
-            document.getElementById('totalAdmins').textContent = admins.length;
-            document.getElementById('totalPurchases').textContent = totalPurchases;
-
-            renderUsersTable(users);
-        }
-
-        // ============ RENDERIZAR TABLA ============
-        function renderUsersTable(users) {
-            const tbody = document.getElementById('usersTableBody');
-            const admins = getAdminList();
-
-            if (!users || users.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align:center;padding:30px;color:#5a6575;">
-                            <span class="material-icons-outlined" style="font-size:40px;display:block;margin-bottom:8px;">person_off</span>
-                            No hay usuarios registrados
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            tbody.innerHTML = users.map(u => {
-                const isUserAdmin = admins.some(a => a.email === u.email);
-                const purchasesCount = (u.purchases || []).length;
-                return `
-                    <tr>
-                        <td><strong>${u.username || 'N/A'}</strong></td>
-                        <td class="user-email">${u.email}</td>
-                        <td class="user-balance">$${(u.balance || 0).toFixed(2)}</td>
-                        <td>${purchasesCount}</td>
-                        <td>${isUserAdmin ? '<span class="admin-tag">👑 Admin</span>' : 'Usuario'}</td>
-                        <td>
-                            <div class="admin-actions">
-                                <button class="btn-sm btn-sm-add" onclick="quickAddBalance('${u.email}')" title="Agregar saldo">
-                                    <span class="material-icons" style="font-size:14px;">add</span>
-                                </button>
-                                <button class="btn-sm btn-sm-remove" onclick="quickSubtractBalance('${u.email}')" title="Quitar saldo">
-                                    <span class="material-icons" style="font-size:14px;">remove</span>
-                                </button>
-                                <button class="btn-sm btn-sm-view" onclick="viewUserDetails('${u.email}')" title="Ver detalles">
-                                    <span class="material-icons" style="font-size:14px;">visibility</span>
-                                </button>
-                                <button class="btn-sm btn-sm-purchases" onclick="viewUserPurchases('${u.email}')" title="Ver compras">
-                                    <span class="material-icons" style="font-size:14px;">shopping_bag</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // ============ AGREGAR SALDO ============
-        document.getElementById('addBalanceForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('targetUserEmail').value.trim();
-            const amount = parseFloat(document.getElementById('amountToAdd').value);
-            const concept = document.getElementById('transactionConcept').value.trim() || 'Depósito por administrador';
-
-            if (!email) {
-                showToast('❌ Ingresa un correo válido', 'error');
-                return;
-            }
-            if (!amount || amount <= 0) {
-                showToast('❌ Ingresa un monto válido mayor a 0', 'error');
-                return;
-            }
-
-            const result = updateUserBalanceByEmail(email, amount, concept);
-            if (result.success) {
-                loadAdminData();
-                document.getElementById('targetUserEmail').value = '';
-                document.getElementById('amountToAdd').value = '';
-                document.getElementById('transactionConcept').value = '';
-                showToast(result.message, 'success');
-            } else {
-                showToast(result.message, 'error');
-            }
-        });
-
-        // ============ QUITAR SALDO ============
-        function subtractBalance() {
-            const email = document.getElementById('targetUserEmail').value.trim();
-            const amount = parseFloat(document.getElementById('amountToAdd').value);
-            const concept = document.getElementById('transactionConcept').value.trim() || 'Retiro por administrador';
-
-            if (!email) {
-                showToast('❌ Ingresa un correo válido', 'error');
-                return;
-            }
-            if (!amount || amount <= 0) {
-                showToast('❌ Ingresa un monto válido mayor a 0', 'error');
-                return;
-            }
-
-            const result = updateUserBalanceByEmail(email, -amount, concept);
-            if (result.success) {
-                loadAdminData();
-                document.getElementById('targetUserEmail').value = '';
-                document.getElementById('amountToAdd').value = '';
-                document.getElementById('transactionConcept').value = '';
-                showToast(result.message, 'success');
-            } else {
-                showToast(result.message, 'error');
-            }
-        }
-
-        // ============ AGREGAR SALDO RÁPIDO ============
-        function quickAddBalance(email) {
-            const amount = prompt(`💰 ¿Cuánto saldo quieres AGREGAR a ${email}?`, '10');
-            if (amount === null) return;
-            const parsedAmount = parseFloat(amount);
-            if (isNaN(parsedAmount) || parsedAmount <= 0) {
-                showToast('❌ Ingresa un monto válido', 'error');
-                return;
-            }
-            const result = updateUserBalanceByEmail(email, parsedAmount, 'Depósito rápido por admin');
-            if (result.success) {
-                loadAdminData();
-                showToast(result.message, 'success');
-            } else {
-                showToast(result.message, 'error');
-            }
-        }
-
-        // ============ QUITAR SALDO RÁPIDO ============
-        function quickSubtractBalance(email) {
-            const amount = prompt(`💰 ¿Cuánto saldo quieres QUITAR a ${email}?`, '10');
-            if (amount === null) return;
-            const parsedAmount = parseFloat(amount);
-            if (isNaN(parsedAmount) || parsedAmount <= 0) {
-                showToast('❌ Ingresa un monto válido', 'error');
-                return;
-            }
-            const result = updateUserBalanceByEmail(email, -parsedAmount, 'Retiro rápido por admin');
-            if (result.success) {
-                loadAdminData();
-                showToast(result.message, 'success');
-            } else {
-                showToast(result.message, 'error');
-            }
-        }
-
-        // ============ VER DETALLES DE USUARIO ============
-        function viewUserDetails(email) {
-            const users = getUsers();
-            const user = users.find(u => u.email === email);
-            if (!user) {
-                showToast('❌ Usuario no encontrado', 'error');
-                return;
-            }
-
-            const purchases = user.purchases || [];
-            const transactions = user.transactions || [];
-
-            document.getElementById('detailModalTitle').textContent = `👤 ${user.username || 'Usuario'}`;
-            
-            let html = `
-                <div class="detail-item">
-                    <span class="label">Correo</span>
-                    <span class="value gold">${user.email}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">Saldo</span>
-                    <span class="value green">$${(user.balance || 0).toFixed(2)}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">Tarjetas Compradas</span>
-                    <span class="value">${purchases.length}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">Transacciones</span>
-                    <span class="value">${transactions.length}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">Miembro desde</span>
-                    <span class="value">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</span>
-                </div>
-                ${user.profile?.bio ? `
-                <div class="detail-item">
-                    <span class="label">Biografía</span>
-                    <span class="value">${user.profile.bio}</span>
-                </div>
-                ` : ''}
-            `;
-
-            if (transactions.length > 0) {
-                html += `
-                    <div style="margin-top:16px; padding-top:12px; border-top:1px solid #1e2630;">
-                        <h4 style="color:#a0aab8; font-size:14px; margin-bottom:8px;">📋 Últimas Transacciones</h4>
-                        ${transactions.slice(-5).reverse().map(t => `
-                            <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #1e2630; font-size:13px;">
-                                <span style="color:#a0aab8;">${t.type || 'Desconocido'}</span>
-                                <span style="color:${t.amount >= 0 ? '#2ecc71' : '#e74c3c'}; font-weight:600;">
-                                    ${t.amount >= 0 ? '+' : ''}$${(t.amount || 0).toFixed(2)}
-                                </span>
-                                <span style="color:#5a6575; font-size:12px;">${t.date ? new Date(t.date).toLocaleDateString() : ''}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-
-            document.getElementById('detailModalContent').innerHTML = html;
-            document.getElementById('detailModal').classList.add('active');
-        }
-
-        // ============ VER COMPRAS DEL USUARIO ============
-        function viewUserPurchases(email) {
-            const users = getUsers();
-            const user = users.find(u => u.email === email);
-            if (!user) {
-                showToast('❌ Usuario no encontrado', 'error');
-                return;
-            }
-
-            const purchases = user.purchases || [];
-
-            document.getElementById('detailModalTitle').textContent = `🃏 ${user.username || 'Usuario'} - Compras`;
-
-            if (purchases.length === 0) {
-                document.getElementById('detailModalContent').innerHTML = `
-                    <div class="empty-state">
-                        <span class="material-icons-outlined">shopping_bag</span>
-                        <p>No ha comprado ninguna tarjeta</p>
-                    </div>
-                `;
-            } else {
-                let html = `
-                    <div style="margin-bottom:12px; color:#a0aab8; font-size:13px;">
-                        Total: <strong style="color:#e8edf2;">${purchases.length}</strong> tarjetas
-                    </div>
-                `;
-                purchases.slice().reverse().forEach((p, i) => {
-                    html += `
-                        <div class="purchase-item">
-                            <div class="purchase-header">
-                                <span style="color:#f0b90b;">${p.network || 'N/A'} ${p.bin || '****'}</span>
-                                <span style="color:#2ecc71;">$${((p.price || 0) * (p.quantity || 1)).toFixed(2)}</span>
-                            </div>
-                            <div class="purchase-details">
-                                ${p.bank ? `🏦 ${p.bank}` : ''} ${p.country ? `· ${p.country}` : ''}
-                                ${p.quantity ? `· ${p.quantity}x` : ''}
-                                ${p.purchaseDate ? `· ${new Date(p.purchaseDate).toLocaleDateString()}` : ''}
-                                ${p.cardData ? `<br>💳 ${p.cardData.number || '****'} | ${p.cardData.expiry || '**/**'} | ${p.cardData.cvv || '***'}` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-                document.getElementById('detailModalContent').innerHTML = html;
-            }
-            document.getElementById('detailModal').classList.add('active');
-        }
-
-        // ============ CERRAR MODAL DETALLES ============
-        function closeDetailModal() {
-            document.getElementById('detailModal').classList.remove('active');
-        }
-
-        // ============ TOAST ============
-        function showToast(message, type = 'info') {
-            let container = document.querySelector('.toast-container');
-            if (!container) {
-                container = document.createElement('div');
-                container.className = 'toast-container';
-                document.body.appendChild(container);
-            }
-            const toast = document.createElement('div');
-            const colors = {
-                success: '#2ecc71',
-                error: '#e74c3c',
-                info: '#3498db',
-                warning: '#f39c12'
-            };
-            toast.style.cssText = `
-                background: #1a232e;
-                color: #e8edf2;
-                padding: 10px 22px;
-                border-radius: 12px;
-                border-left: 4px solid ${colors[type] || colors.info};
-                box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-                font-size: 14px;
-                font-weight: 500;
-                pointer-events: auto;
-                animation: slideUpToast 0.3s ease;
-                min-width: 200px;
-                text-align: center;
-                border: 1px solid #2a313c;
-            `;
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.animation = 'slideDownToast 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // ============ INICIALIZAR ============
-        document.addEventListener('DOMContentLoaded', function() {
-            loadRememberedCredentials();
-            if (!checkAdminSession()) {
-                document.getElementById('adminLoginOverlay').classList.remove('hidden');
-            }
-        });
-
-        // ============ EXPORTAR ============
-        window.closeAdminLogin = closeAdminLogin;
-        window.logoutAdmin = logoutAdmin;
-        window.quickAddBalance = quickAddBalance;
-        window.quickSubtractBalance = quickSubtractBalance;
-        window.viewUserDetails = viewUserDetails;
-        window.viewUserPurchases = viewUserPurchases;
-        window.closeDetailModal = closeDetailModal;
-        window.showToast = showToast;
-        window.subtractBalance = subtractBalance;
-        window.loadAdminData = loadAdminData;
-    </script>
+    <script src="js/products.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
