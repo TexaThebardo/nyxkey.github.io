@@ -12,32 +12,35 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
         /* ============================================
-           PERFIL ESTILO DISCORD
+           PERFIL MEJORADO
            ============================================ */
 
-        .profile-discord-container {
-            max-width: 900px;
+        .profile-container {
+            max-width: 1100px;
             margin: 0 auto;
+        }
+
+        .profile-card {
             background: var(--bg-secondary);
-            border-radius: var(--radius);
             border: 1px solid var(--border-color);
+            border-radius: var(--radius);
             overflow: hidden;
-            position: relative;
+            box-shadow: var(--shadow);
         }
 
         /* ============ BANNER ============ */
-        .profile-discord-banner {
+        .profile-banner {
             width: 100%;
             height: 200px;
             background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
             background-size: 400% 400%;
             position: relative;
+            overflow: hidden;
             cursor: pointer;
             transition: all 0.3s ease;
-            overflow: hidden;
         }
 
-        .profile-discord-banner.animated {
+        .profile-banner.animated {
             animation: gradientMove 12s ease infinite;
         }
 
@@ -47,18 +50,53 @@
             100% { background-position: 0% 50%; }
         }
 
-        .profile-discord-banner img {
+        .profile-banner img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .profile-discord-banner .banner-overlay {
+        .profile-banner .banner-actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .profile-banner:hover .banner-actions {
+            opacity: 1;
+        }
+
+        .profile-banner .banner-actions button {
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+            font-family: var(--font);
+        }
+
+        .profile-banner .banner-actions button:hover {
+            background: rgba(240, 185, 11, 0.3);
+            border-color: var(--primary);
+        }
+
+        .profile-banner .banner-overlay {
             position: absolute;
             bottom: 12px;
             right: 16px;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 11px;
@@ -70,61 +108,26 @@
             pointer-events: none;
         }
 
-        .profile-discord-banner .banner-actions {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            display: flex;
-            gap: 6px;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .profile-discord-banner:hover .banner-actions {
-            opacity: 1;
-        }
-
-        .profile-discord-banner .banner-actions button {
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-primary);
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-size: 11px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            transition: all 0.3s ease;
-            font-family: var(--font);
-        }
-
-        .profile-discord-banner .banner-actions button:hover {
-            background: rgba(240, 185, 11, 0.3);
-            border-color: var(--primary);
-        }
-
-        /* ============ HEADER PERFIL ============ */
-        .profile-discord-header {
-            padding: 0 24px 24px;
-            margin-top: -50px;
+        /* ============ HEADER ============ */
+        .profile-header {
+            padding: 0 28px 28px;
+            margin-top: -55px;
             position: relative;
             z-index: 2;
         }
 
-        .profile-discord-avatar-section {
+        .profile-avatar-section {
             display: flex;
             align-items: flex-end;
-            gap: 20px;
+            gap: 24px;
             flex-wrap: wrap;
         }
 
         /* ============ AVATAR ============ */
-        .profile-discord-avatar {
+        .profile-avatar-wrapper {
             position: relative;
-            width: 110px;
-            height: 110px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             border: 4px solid var(--bg-secondary);
             background: var(--bg-card);
@@ -135,84 +138,84 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
-        .profile-discord-avatar:hover {
+        .profile-avatar-wrapper:hover {
             border-color: var(--primary);
             transform: scale(1.02);
         }
 
-        .profile-discord-avatar img {
+        .profile-avatar-wrapper img {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
         }
 
-        .profile-discord-avatar .avatar-placeholder {
+        .profile-avatar-wrapper .avatar-placeholder {
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: 52px;
             color: var(--text-muted);
             background: var(--bg-card);
             border-radius: 50%;
         }
 
-        .profile-discord-avatar .avatar-edit {
+        .profile-avatar-wrapper .avatar-edit {
             position: absolute;
             bottom: 4px;
             right: 4px;
             background: var(--primary);
             color: var(--bg-primary);
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 16px;
             border: 2px solid var(--bg-secondary);
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .profile-discord-avatar .avatar-edit:hover {
+        .profile-avatar-wrapper .avatar-edit:hover {
             transform: scale(1.1);
             background: var(--primary-dark);
         }
 
         /* ============ INFO USUARIO ============ */
-        .profile-discord-info {
+        .profile-info {
             flex: 1;
             padding-top: 10px;
         }
 
-        .profile-discord-name-row {
+        .profile-name-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
-        .profile-discord-name-row h1 {
-            font-size: 26px;
+        .profile-name-row h1 {
+            font-size: 28px;
             font-weight: 800;
             color: var(--text-primary);
             margin: 0;
         }
 
-        .profile-discord-name-row .discord-tag {
-            font-size: 14px;
+        .profile-name-row .profile-tag {
+            font-size: 15px;
             color: var(--text-secondary);
             font-weight: 500;
         }
 
-        .profile-discord-name-row .discord-pronoun {
+        .profile-name-row .pronoun-selector {
             font-size: 13px;
             color: var(--text-secondary);
             background: var(--bg-card);
-            padding: 2px 12px;
+            padding: 2px 14px;
             border-radius: 20px;
             border: 1px solid var(--border-light);
             font-weight: 500;
@@ -223,20 +226,24 @@
             gap: 4px;
         }
 
-        .profile-discord-name-row .discord-pronoun:hover {
+        .profile-name-row .pronoun-selector:hover {
             border-color: var(--primary);
             color: var(--primary);
         }
 
+        .profile-name-row .pronoun-selector .material-icons {
+            font-size: 16px;
+        }
+
         /* ============ INSIGNIAS ============ */
-        .profile-discord-insignias {
+        .profile-insignias {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
             margin-top: 6px;
         }
 
-        .profile-discord-insignias .insignia-badge {
+        .profile-insignias .insignia-badge {
             font-size: 11px;
             padding: 3px 12px;
             border-radius: 20px;
@@ -247,7 +254,7 @@
             border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .profile-discord-insignias .insignia-guest {
+        .profile-insignias .insignia-guest {
             font-size: 11px;
             padding: 3px 12px;
             border-radius: 20px;
@@ -260,21 +267,27 @@
         }
 
         /* ============ BIO ============ */
-        .profile-discord-bio {
+        .profile-bio {
             margin-top: 10px;
             color: var(--text-secondary);
             font-size: 14px;
-            max-width: 500px;
+            max-width: 550px;
             padding: 8px 14px;
             background: var(--bg-primary);
             border-radius: 8px;
             border: 1px solid var(--border-light);
             min-height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .profile-discord-bio-input {
+        .profile-bio:hover {
+            border-color: var(--primary);
+        }
+
+        .profile-bio-input {
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
@@ -289,74 +302,149 @@
             margin-top: 10px;
         }
 
-        .profile-discord-bio-input:focus {
+        .profile-bio-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
         }
 
-        /* ============ CONTENIDO PRINCIPAL ============ */
-        .profile-discord-main {
+        /* ============ STATS ROW ============ */
+        .profile-stats-row {
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .profile-stat {
+            background: var(--bg-primary);
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .profile-stat .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .profile-stat .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ============ MAIN CONTENT ============ */
+        .profile-main {
+            display: grid;
+            grid-template-columns: 1fr 320px;
             gap: 24px;
-            padding: 0 24px 24px;
+            padding: 0 28px 28px;
         }
 
         @media (max-width: 768px) {
-            .profile-discord-main {
+            .profile-main {
                 grid-template-columns: 1fr;
                 padding: 0 16px 16px;
+            }
+            .profile-header {
+                padding: 0 16px 20px;
+                margin-top: -40px;
+            }
+            .profile-avatar-wrapper {
+                width: 80px;
+                height: 80px;
+            }
+            .profile-name-row h1 {
+                font-size: 20px;
+            }
+            .profile-avatar-section {
+                gap: 12px;
+            }
+            .profile-banner {
+                height: 150px;
+            }
+            .profile-stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-banner {
+                height: 120px;
+            }
+            .profile-avatar-wrapper {
+                width: 64px;
+                height: 64px;
+            }
+            .profile-header {
+                padding: 0 12px 16px;
+                margin-top: -32px;
+            }
+            .profile-name-row h1 {
+                font-size: 17px;
+            }
+            .profile-name-row .profile-tag {
+                font-size: 12px;
+            }
+            .profile-main {
+                padding: 0 12px 16px;
+            }
+            .profile-stats-row {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
         /* ============ COLUMNA IZQUIERDA ============ */
-        .profile-discord-left {
+        .profile-left-col {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
 
-        /* ============ ACTIVIDAD RECIENTE ============ */
-        .profile-discord-activity {
+        /* ============ ACTIVIDAD ============ */
+        .profile-activity {
             background: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border-light);
             padding: 16px;
         }
 
-        .profile-discord-activity .activity-header {
+        .profile-activity .activity-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
         }
 
-        .profile-discord-activity .activity-header h3 {
+        .profile-activity .activity-header h3 {
             font-size: 14px;
             font-weight: 600;
             color: var(--text-secondary);
         }
 
-        .profile-discord-activity .activity-header span {
-            font-size: 12px;
+        .profile-activity .activity-header span {
+            font-size: 11px;
             color: var(--text-muted);
         }
 
-        .profile-discord-activity .activity-item {
+        .activity-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 8px;
             transition: all 0.3s ease;
         }
 
-        .profile-discord-activity .activity-item:hover {
+        .activity-item:hover {
             background: var(--bg-hover);
         }
 
-        .profile-discord-activity .activity-item .activity-icon {
+        .activity-item .activity-icon {
             width: 32px;
             height: 32px;
             border-radius: 8px;
@@ -367,49 +455,62 @@
             flex-shrink: 0;
         }
 
-        .profile-discord-activity .activity-item .activity-icon .material-icons {
+        .activity-item .activity-icon .material-icons {
             font-size: 18px;
             color: var(--primary);
         }
 
-        .profile-discord-activity .activity-item .activity-content {
+        .activity-item .activity-content {
             flex: 1;
         }
 
-        .profile-discord-activity .activity-item .activity-content p {
-            font-size: 14px;
+        .activity-item .activity-content p {
+            font-size: 13px;
             color: var(--text-primary);
-            margin-bottom: 2px;
+            margin-bottom: 1px;
         }
 
-        .profile-discord-activity .activity-item .activity-content .activity-time {
-            font-size: 12px;
+        .activity-item .activity-content .activity-time {
+            font-size: 11px;
             color: var(--text-muted);
         }
 
+        .activity-item .activity-amount {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .activity-item .activity-amount.positive {
+            color: #2ecc71;
+        }
+
+        .activity-item .activity-amount.negative {
+            color: #e74c3c;
+        }
+
         /* ============ COLUMNA DERECHA ============ */
-        .profile-discord-right {
+        .profile-right-col {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
 
         /* ============ MIEMBRO DESDE ============ */
-        .profile-discord-member {
+        .profile-member {
             background: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border-light);
             padding: 16px;
         }
 
-        .profile-discord-member .member-label {
+        .profile-member .member-label {
             font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .profile-discord-member .member-date {
+        .profile-member .member-date {
             font-size: 14px;
             font-weight: 600;
             color: var(--text-primary);
@@ -417,27 +518,27 @@
         }
 
         /* ============ CONEXIONES ============ */
-        .profile-discord-connections {
+        .profile-connections {
             background: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border-light);
             padding: 16px;
         }
 
-        .profile-discord-connections .connections-header {
+        .profile-connections .connections-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
         }
 
-        .profile-discord-connections .connections-header h3 {
+        .profile-connections .connections-header h3 {
             font-size: 14px;
             font-weight: 600;
             color: var(--text-secondary);
         }
 
-        .profile-discord-connections .connections-header .add-connection {
+        .profile-connections .connections-header .add-connection {
             font-size: 12px;
             color: var(--primary);
             cursor: pointer;
@@ -447,71 +548,69 @@
             gap: 4px;
         }
 
-        .profile-discord-connections .connections-header .add-connection:hover {
+        .profile-connections .connections-header .add-connection:hover {
             color: var(--primary-dark);
         }
 
-        .profile-discord-connections .connection-item {
+        .connection-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 6px 12px;
+            gap: 10px;
+            padding: 5px 10px;
             border-radius: 8px;
             transition: all 0.3s ease;
             text-decoration: none;
             color: var(--text-primary);
         }
 
-        .profile-discord-connections .connection-item:hover {
+        .connection-item:hover {
             background: var(--bg-hover);
         }
 
-        .profile-discord-connections .connection-item .connection-icon {
-            width: 28px;
-            height: 28px;
+        .connection-item .connection-icon {
+            width: 26px;
+            height: 26px;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
             flex-shrink: 0;
         }
 
-        .profile-discord-connections .connection-item .connection-icon.instagram { background: rgba(228, 64, 95, 0.2); color: #e4405f; }
-        .profile-discord-connections .connection-item .connection-icon.twitter { background: rgba(29, 161, 242, 0.2); color: #1da1f2; }
-        .profile-discord-connections .connection-item .connection-icon.discord { background: rgba(88, 101, 242, 0.2); color: #5865f2; }
-        .profile-discord-connections .connection-item .connection-icon.telegram { background: rgba(0, 136, 204, 0.2); color: #0088cc; }
-        .profile-discord-connections .connection-item .connection-icon.github { background: rgba(110, 84, 148, 0.2); color: #6e5494; }
+        .connection-item .connection-icon.instagram { background: rgba(228, 64, 95, 0.2); color: #e4405f; }
+        .connection-item .connection-icon.twitter { background: rgba(29, 161, 242, 0.2); color: #1da1f2; }
+        .connection-item .connection-icon.discord { background: rgba(88, 101, 242, 0.2); color: #5865f2; }
+        .connection-item .connection-icon.telegram { background: rgba(0, 136, 204, 0.2); color: #0088cc; }
+        .connection-item .connection-icon.github { background: rgba(110, 84, 148, 0.2); color: #6e5494; }
 
-        .profile-discord-connections .connection-item .connection-name {
+        .connection-item .connection-name {
             flex: 1;
             font-size: 13px;
             font-weight: 500;
         }
 
-        .profile-discord-connections .connection-item .connection-status {
+        .connection-item .connection-status {
             font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .profile-discord-connections .connection-item .connection-status .material-icons {
-            font-size: 14px;
-            vertical-align: middle;
-        }
-
-        .profile-discord-connections .connection-item .connection-status.connected {
             color: #2ecc71;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        /* ============ NOTA PERSONAL ============ */
-        .profile-discord-note {
+        .connection-item .connection-status .material-icons {
+            font-size: 14px;
+        }
+
+        /* ============ NOTA ============ */
+        .profile-note {
             background: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border-light);
             padding: 16px;
         }
 
-        .profile-discord-note .note-label {
+        .profile-note .note-label {
             font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -521,11 +620,11 @@
             gap: 6px;
         }
 
-        .profile-discord-note .note-label .material-icons {
+        .profile-note .note-label .material-icons {
             font-size: 14px;
         }
 
-        .profile-discord-note .note-content {
+        .profile-note .note-content {
             font-size: 13px;
             color: var(--text-secondary);
             margin-top: 4px;
@@ -534,11 +633,11 @@
             min-height: 20px;
         }
 
-        .profile-discord-note .note-content:hover {
+        .profile-note .note-content:hover {
             color: var(--text-primary);
         }
 
-        .profile-discord-note .note-input {
+        .profile-note .note-input {
             width: 100%;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
@@ -554,21 +653,21 @@
             margin-top: 4px;
         }
 
-        .profile-discord-note .note-input:focus {
+        .profile-note .note-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
         }
 
         /* ============ BOTONES DE ACCIÓN ============ */
-        .profile-discord-actions {
+        .profile-actions {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            margin-top: 8px;
+            margin-top: 4px;
         }
 
-        .profile-discord-actions .btn-action {
+        .profile-actions .btn-action {
             padding: 8px 20px;
             border-radius: 30px;
             font-weight: 600;
@@ -582,37 +681,225 @@
             border: none;
         }
 
-        .profile-discord-actions .btn-action-primary {
+        .profile-actions .btn-action-primary {
             background: var(--primary);
             color: var(--bg-primary);
         }
 
-        .profile-discord-actions .btn-action-primary:hover {
+        .profile-actions .btn-action-primary:hover {
             background: var(--primary-dark);
             transform: scale(1.02);
         }
 
-        .profile-discord-actions .btn-action-secondary {
+        .profile-actions .btn-action-secondary {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
         }
 
-        .profile-discord-actions .btn-action-secondary:hover {
+        .profile-actions .btn-action-secondary:hover {
             background: var(--bg-hover);
             color: var(--text-primary);
             border-color: var(--primary);
         }
 
-        .profile-discord-actions .btn-action-settings {
+        .profile-actions .btn-action-settings {
             background: rgba(52, 152, 219, 0.12);
             border: 1px solid rgba(52, 152, 219, 0.2);
             color: #3498db;
         }
 
-        .profile-discord-actions .btn-action-settings:hover {
+        .profile-actions .btn-action-settings:hover {
             background: rgba(52, 152, 219, 0.2);
             transform: scale(1.02);
+        }
+
+        /* ============================================
+           MODAL AJUSTES
+           ============================================ */
+        .settings-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .settings-modal-overlay.active {
+            display: flex;
+        }
+
+        .settings-modal-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 480px;
+            width: 90%;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .settings-modal-box .close-modal {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            color: var(--text-muted);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .settings-modal-box .close-modal:hover {
+            background: rgba(231,76,60,0.2);
+            color: #e74c3c;
+            transform: rotate(90deg);
+        }
+
+        .settings-modal-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-modal-box .subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .settings-group {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .settings-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .settings-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .settings-group .helper-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .settings-group input {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-family: var(--font);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .settings-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
+        }
+
+        .settings-group .input-with-toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .settings-group .input-with-toggle input {
+            padding-right: 50px;
+        }
+
+        .settings-group .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 4px;
+        }
+
+        .settings-group .toggle-password-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .settings-group .btn-save-setting {
+            margin-top: 8px;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: var(--font);
+            background: var(--primary);
+            color: var(--bg-primary);
+        }
+
+        .settings-group .btn-save-setting:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+
+        .password-strength {
+            display: flex;
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .password-strength .bar {
+            flex: 1;
+            height: 4px;
+            border-radius: 4px;
+            background: var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .password-strength .bar.active.weak { background: #e74c3c; }
+        .password-strength .bar.active.medium { background: #f39c12; }
+        .password-strength .bar.active.strong { background: #2ecc71; }
+
+        .password-strength-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
         }
 
         /* ============================================
@@ -660,66 +947,13 @@
             from { opacity: 1; transform: translateY(0); }
             to { opacity: 0; transform: translateY(20px); }
         }
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 768px) {
-            .profile-discord-banner {
-                height: 150px;
-            }
-            .profile-discord-header {
-                padding: 0 16px 20px;
-                margin-top: -40px;
-            }
-            .profile-discord-avatar {
-                width: 80px;
-                height: 80px;
-            }
-            .profile-discord-avatar .avatar-placeholder {
-                font-size: 36px;
-            }
-            .profile-discord-avatar .avatar-edit {
-                width: 22px;
-                height: 22px;
-                font-size: 12px;
-            }
-            .profile-discord-name-row h1 {
-                font-size: 20px;
-            }
-            .profile-discord-avatar-section {
-                gap: 12px;
-            }
-            .profile-discord-main {
-                padding: 0 16px 16px;
-            }
-            .profile-discord-actions {
-                flex-direction: column;
-            }
-            .profile-discord-actions .btn-action {
-                justify-content: center;
-                width: 100%;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-
-        @media (max-width: 480px) {
-            .profile-discord-banner {
-                height: 120px;
-            }
-            .profile-discord-avatar {
-                width: 64px;
-                height: 64px;
-            }
-            .profile-discord-header {
-                padding: 0 12px 16px;
-                margin-top: -32px;
-            }
-            .profile-discord-name-row h1 {
-                font-size: 17px;
-            }
-            .profile-discord-name-row .discord-tag {
-                font-size: 12px;
-            }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
     </style>
 </head>
@@ -775,120 +1009,140 @@
 
         <!-- ============ MAIN CONTENT ============ -->
         <main class="dashboard-main">
-            <div class="profile-discord-container">
-                <!-- ============ BANNER ============ -->
-                <div class="profile-discord-banner animated" id="bannerContainer">
-                    <img id="bannerImage" src="" alt="Banner" style="display:none; width:100%; height:100%; object-fit:cover;">
-                    <div class="banner-overlay">
-                        <span class="material-icons">photo_camera</span> Cambiar Banner
-                    </div>
-                    <div class="banner-actions">
-                        <button onclick="uploadBanner()">
-                            <span class="material-icons">upload</span> Subir
-                        </button>
-                        <button onclick="removeBanner()">
-                            <span class="material-icons">delete</span> Eliminar
-                        </button>
-                        <button onclick="toggleBannerAnimation()" id="bannerAnimBtn">
-                            <span class="material-icons">animation</span> Animación
-                        </button>
-                    </div>
-                </div>
-
-                <!-- ============ HEADER ============ -->
-                <div class="profile-discord-header">
-                    <div class="profile-discord-avatar-section">
-                        <!-- AVATAR -->
-                        <div class="profile-discord-avatar" onclick="document.getElementById('avatarInput').click()">
-                            <div class="avatar-placeholder" id="avatarPlaceholder">
-                                <span class="material-icons-outlined">person</span>
-                            </div>
-                            <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
-                            <div class="avatar-edit">
-                                <span class="material-icons">photo_camera</span>
-                            </div>
+            <div class="profile-container">
+                <div class="profile-card">
+                    <!-- ============ BANNER ============ -->
+                    <div class="profile-banner animated" id="bannerContainer">
+                        <img id="bannerImage" src="" alt="Banner" style="display:none; width:100%; height:100%; object-fit:cover;">
+                        <div class="banner-overlay">
+                            <span class="material-icons">photo_camera</span> Cambiar Banner
                         </div>
-                        <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
-
-                        <!-- INFO -->
-                        <div class="profile-discord-info">
-                            <div class="profile-discord-name-row">
-                                <h1 id="profileDisplayName">Usuario</h1>
-                                <span class="discord-tag">@<span id="profileUsername">usuario</span></span>
-                                <span class="discord-pronoun" onclick="changePronoun()" id="pronounDisplay">
-                                    <span class="material-icons" style="font-size:14px;">person</span>
-                                    <span id="pronounText">él</span>
-                                </span>
-                            </div>
-
-                            <!-- INSIGNIAS -->
-                            <div class="profile-discord-insignias" id="profileInsignias">
-                                <!-- Renderizado por JavaScript -->
-                            </div>
-
-                            <!-- BIO -->
-                            <div class="profile-discord-bio" id="bioDisplay">Sin biografía</div>
-                            <textarea class="profile-discord-bio-input" id="bioInput" placeholder="Escribe tu biografía..."></textarea>
+                        <div class="banner-actions">
+                            <button onclick="uploadBanner()">
+                                <span class="material-icons">upload</span> Subir
+                            </button>
+                            <button onclick="removeBanner()">
+                                <span class="material-icons">delete</span> Eliminar
+                            </button>
+                            <button onclick="toggleBannerAnimation()" id="bannerAnimBtn">
+                                <span class="material-icons">animation</span> Animación
+                            </button>
                         </div>
                     </div>
-                </div>
 
-                <!-- ============ MAIN CONTENT ============ -->
-                <div class="profile-discord-main">
-                    <!-- COLUMNA IZQUIERDA -->
-                    <div class="profile-discord-left">
-                        <!-- ACTIVIDAD RECIENTE -->
-                        <div class="profile-discord-activity">
-                            <div class="activity-header">
-                                <h3>📋 Actividad Reciente</h3>
-                                <span>Últimos 30 días</span>
+                    <!-- ============ HEADER ============ -->
+                    <div class="profile-header">
+                        <div class="profile-avatar-section">
+                            <!-- AVATAR -->
+                            <div class="profile-avatar-wrapper" onclick="document.getElementById('avatarInput').click()">
+                                <div class="avatar-placeholder" id="avatarPlaceholder">
+                                    <span class="material-icons-outlined">person</span>
+                                </div>
+                                <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                                <div class="avatar-edit">
+                                    <span class="material-icons">photo_camera</span>
+                                </div>
                             </div>
-                            <div id="activityList">
-                                <div style="text-align:center; padding:20px 0; color:var(--text-muted); font-size:14px;">
-                                    No hay actividad reciente
+                            <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+
+                            <!-- INFO -->
+                            <div class="profile-info">
+                                <div class="profile-name-row">
+                                    <h1 id="profileDisplayName">Usuario</h1>
+                                    <span class="profile-tag">@<span id="profileUsername">usuario</span></span>
+                                    <span class="pronoun-selector" onclick="changePronoun()" id="pronounDisplay">
+                                        <span class="material-icons" style="font-size:14px;">person</span>
+                                        <span id="pronounText">él</span>
+                                    </span>
+                                </div>
+
+                                <!-- INSIGNIAS -->
+                                <div class="profile-insignias" id="profileInsignias">
+                                    <!-- Renderizado por JavaScript -->
+                                </div>
+
+                                <!-- BIO -->
+                                <div class="profile-bio" id="bioDisplay" onclick="editBio()">Sin biografía</div>
+                                <textarea class="profile-bio-input" id="bioInput" placeholder="Escribe tu biografía..." onblur="saveBio()"></textarea>
+
+                                <!-- STATS ROW -->
+                                <div class="profile-stats-row">
+                                    <div class="profile-stat">
+                                        <div class="stat-value" id="profileEmail">-</div>
+                                        <div class="stat-label">Correo</div>
+                                    </div>
+                                    <div class="profile-stat">
+                                        <div class="stat-value" id="profileBalance">$0.00</div>
+                                        <div class="stat-label">Saldo</div>
+                                    </div>
+                                    <div class="profile-stat">
+                                        <div class="stat-value" id="profilePurchases">0</div>
+                                        <div class="stat-label">Tarjetas</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- ACCIONES -->
-                        <div class="profile-discord-actions">
-                            <button class="btn-action btn-action-primary" onclick="saveProfile()">
-                                <span class="material-icons">save</span> Guardar Cambios
-                            </button>
-                            <button class="btn-action btn-action-settings" onclick="openSettings()">
-                                <span class="material-icons">settings</span> Ajustes
-                            </button>
-                        </div>
                     </div>
 
-                    <!-- COLUMNA DERECHA -->
-                    <div class="profile-discord-right">
-                        <!-- MIEMBRO DESDE -->
-                        <div class="profile-discord-member">
-                            <div class="member-label">📅 Miembro desde</div>
-                            <div class="member-date" id="profileSince">-</div>
+                    <!-- ============ MAIN CONTENT ============ -->
+                    <div class="profile-main">
+                        <!-- COLUMNA IZQUIERDA -->
+                        <div class="profile-left-col">
+                            <!-- ACTIVIDAD RECIENTE -->
+                            <div class="profile-activity">
+                                <div class="activity-header">
+                                    <h3>📋 Actividad Reciente</h3>
+                                    <span>Últimos 30 días</span>
+                                </div>
+                                <div id="activityList">
+                                    <div style="text-align:center; padding:20px 0; color:var(--text-muted); font-size:14px;">
+                                        No hay actividad reciente
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ACCIONES -->
+                            <div class="profile-actions">
+                                <button class="btn-action btn-action-primary" onclick="saveProfile()">
+                                    <span class="material-icons">save</span> Guardar Cambios
+                                </button>
+                                <button class="btn-action btn-action-settings" onclick="openSettings()">
+                                    <span class="material-icons">settings</span> Ajustes
+                                </button>
+                            </div>
                         </div>
 
-                        <!-- CONEXIONES -->
-                        <div class="profile-discord-connections">
-                            <div class="connections-header">
-                                <h3>🔗 Conexiones</h3>
-                                <span class="add-connection" onclick="addConnection()">
-                                    <span class="material-icons" style="font-size:16px;">add_circle</span> Añadir conexión
-                                </span>
+                        <!-- COLUMNA DERECHA -->
+                        <div class="profile-right-col">
+                            <!-- MIEMBRO DESDE -->
+                            <div class="profile-member">
+                                <div class="member-label">📅 Miembro desde</div>
+                                <div class="member-date" id="profileSince">-</div>
                             </div>
-                            <div id="connectionsList">
-                                <!-- Renderizado por JavaScript -->
-                            </div>
-                        </div>
 
-                        <!-- NOTA PERSONAL -->
-                        <div class="profile-discord-note">
-                            <div class="note-label">
-                                <span class="material-icons">note</span> Nota (solo visible para ti)
+                            <!-- CONEXIONES -->
+                            <div class="profile-connections">
+                                <div class="connections-header">
+                                    <h3>🔗 Conexiones</h3>
+                                    <span class="add-connection" onclick="addConnection()">
+                                        <span class="material-icons" style="font-size:16px;">add_circle</span> Añadir
+                                    </span>
+                                </div>
+                                <div id="connectionsList">
+                                    <div style="text-align:center; padding:12px 0; color:var(--text-muted); font-size:13px;">
+                                        No hay conexiones añadidas
+                                    </div>
+                                </div>
                             </div>
-                            <div class="note-content" id="noteDisplay" onclick="editNote()">Haz clic para añadir una nota</div>
-                            <textarea class="note-input" id="noteInput" placeholder="Escribe una nota personal..." onblur="saveNote()"></textarea>
+
+                            <!-- NOTA PERSONAL -->
+                            <div class="profile-note">
+                                <div class="note-label">
+                                    <span class="material-icons">note</span> Nota (solo visible para ti)
+                                </div>
+                                <div class="note-content" id="noteDisplay" onclick="editNote()">Haz clic para añadir una nota</div>
+                                <textarea class="note-input" id="noteInput" placeholder="Escribe una nota personal..." onblur="saveNote()"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -896,18 +1150,80 @@
         </main>
     </div>
 
+    <!-- ==========================================
+    MODAL DE AJUSTES
+    ========================================== -->
+    <div class="settings-modal-overlay" id="settingsModal">
+        <div class="settings-modal-box">
+            <button class="close-modal" onclick="closeSettings()">
+                <span class="material-icons">close</span>
+            </button>
+
+            <h2>
+                <span class="material-icons" style="color:var(--primary);">settings</span>
+                Ajustes de Cuenta
+            </h2>
+            <p class="subtitle">Gestiona tu información de acceso</p>
+
+            <!-- CAMBIAR NOMBRE DE USUARIO -->
+            <div class="settings-group">
+                <label>👤 Nombre de Usuario</label>
+                <p class="helper-text">Este es tu identificador único en la plataforma</p>
+                <input type="text" id="settingsUsername" placeholder="Nuevo nombre de usuario">
+                <button class="btn-save-setting" onclick="changeUsername()">Actualizar</button>
+            </div>
+
+            <!-- CAMBIAR APODO -->
+            <div class="settings-group">
+                <label>🏷️ Apodo</label>
+                <p class="helper-text">Cómo te mostrarás en el perfil</p>
+                <input type="text" id="settingsDisplayName" placeholder="Nuevo apodo">
+                <button class="btn-save-setting" onclick="changeDisplayName()">Actualizar</button>
+            </div>
+
+            <!-- CAMBIAR CONTRASEÑA -->
+            <div class="settings-group">
+                <label>🔐 Cambiar Contraseña</label>
+                <p class="helper-text">Mínimo 6 caracteres</p>
+                <div class="input-with-toggle">
+                    <input type="password" id="settingsNewPassword" placeholder="Nueva contraseña">
+                    <button class="toggle-password-btn" onclick="togglePasswordVisibility('settingsNewPassword')">
+                        <span class="material-icons">visibility</span>
+                    </button>
+                </div>
+                <div style="margin-top:8px;">
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="bar" id="strength1"></div>
+                        <div class="bar" id="strength2"></div>
+                        <div class="bar" id="strength3"></div>
+                        <div class="bar" id="strength4"></div>
+                    </div>
+                    <div class="password-strength-text" id="strengthText">Ingresa una contraseña</div>
+                </div>
+                <div class="input-with-toggle" style="margin-top:8px;">
+                    <input type="password" id="settingsConfirmPassword" placeholder="Confirmar nueva contraseña">
+                    <button class="toggle-password-btn" onclick="togglePasswordVisibility('settingsConfirmPassword')">
+                        <span class="material-icons">visibility</span>
+                    </button>
+                </div>
+                <button class="btn-save-setting" onclick="changePassword()">Actualizar Contraseña</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // PROFILE.JS - ESTILO DISCORD
+        // PROFILE.JS - VERSIÓN COMPLETA Y CORREGIDA
         // ============================================
 
         let tempAvatarData = null;
         let tempBannerData = null;
         let isBannerAnimated = true;
-        const PRONOUNS = ['él', 'ella', 'elle'];
+        let isEditingBio = false;
         let isEditingNote = false;
+        const PRONOUNS = ['él', 'ella', 'elle', 'ellos', 'ellas'];
 
         // ============ CARGAR PERFIL ============
         document.addEventListener('DOMContentLoaded', function() {
@@ -921,18 +1237,27 @@
             const fullUser = users.find(u => u.id === user.id);
 
             if (fullUser) {
+                // Datos básicos
                 document.getElementById('profileDisplayName').textContent = fullUser.displayName || fullUser.username || 'Usuario';
                 document.getElementById('profileUsername').textContent = fullUser.username || 'usuario';
+                document.getElementById('profileEmail').textContent = fullUser.email || '-';
                 document.getElementById('profileBalance').textContent = `$${(fullUser.balance || 0).toFixed(2)}`;
                 document.getElementById('userBalance').textContent = `$${(fullUser.balance || 0).toFixed(2)}`;
+                document.getElementById('profilePurchases').textContent = (fullUser.purchases || []).length;
 
+                // Fecha de registro
                 if (fullUser.createdAt) {
-                    document.getElementById('profileSince').textContent = new Date(fullUser.createdAt).toLocaleDateString('es-ES', {
+                    const date = new Date(fullUser.createdAt);
+                    document.getElementById('profileSince').textContent = date.toLocaleDateString('es-ES', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
                     });
                 }
+
+                // Cargar ajustes
+                document.getElementById('settingsUsername').value = fullUser.username || '';
+                document.getElementById('settingsDisplayName').value = fullUser.displayName || fullUser.username || '';
 
                 // Cargar perfil
                 const profile = fullUser.profile || {};
@@ -978,6 +1303,9 @@
                 document.getElementById('adminPanelBtn').style.display = 'inline-flex';
                 document.getElementById('adminSidebarBtn').style.display = 'flex';
             }
+
+            // Listener para fuerza de contraseña
+            document.getElementById('settingsNewPassword').addEventListener('input', checkPasswordStrength);
         });
 
         // ============ INSIGNIAS ============
@@ -1017,8 +1345,40 @@
             const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
             const fullUser = users.find(u => u.id === user.id);
             const purchases = fullUser?.purchases || [];
+            const transactions = fullUser?.transactions || [];
 
-            if (purchases.length === 0) {
+            // Combinar compras y transacciones
+            let activities = [];
+
+            // Compras
+            purchases.forEach(p => {
+                activities.push({
+                    type: 'compra',
+                    date: new Date(p.purchaseDate || Date.now()),
+                    description: `Compraste ${p.network || 'tarjeta'} ${p.bin || ''}`,
+                    amount: -((p.price || 0) * (p.quantity || 1)),
+                    icon: 'credit_card'
+                });
+            });
+
+            // Transacciones (depósitos, etc.)
+            transactions.forEach(t => {
+                activities.push({
+                    type: t.type || 'transacción',
+                    date: new Date(t.date || Date.now()),
+                    description: t.concept || t.type || 'Movimiento',
+                    amount: t.amount || 0,
+                    icon: t.amount >= 0 ? 'add_circle' : 'remove_circle'
+                });
+            });
+
+            // Ordenar por fecha (más reciente primero)
+            activities.sort((a, b) => b.date - a.date);
+
+            // Tomar las 5 más recientes
+            const recent = activities.slice(0, 5);
+
+            if (recent.length === 0) {
                 container.innerHTML = `
                     <div style="text-align:center; padding:20px 0; color:var(--text-muted); font-size:14px;">
                         No hay actividad reciente
@@ -1027,18 +1387,24 @@
                 return;
             }
 
-            const recent = purchases.slice(-3).reverse();
-            container.innerHTML = recent.map(p => `
-                <div class="activity-item">
-                    <div class="activity-icon">
-                        <span class="material-icons">credit_card</span>
+            container.innerHTML = recent.map(a => {
+                const isPositive = a.amount > 0;
+                const amountClass = isPositive ? 'positive' : 'negative';
+                const amountText = isPositive ? `+$${a.amount.toFixed(2)}` : `-$${Math.abs(a.amount).toFixed(2)}`;
+                
+                return `
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <span class="material-icons">${a.icon}</span>
+                        </div>
+                        <div class="activity-content">
+                            <p>${a.description}</p>
+                            <span class="activity-time">${timeAgo(a.date)}</span>
+                        </div>
+                        <div class="activity-amount ${amountClass}">${amountText}</div>
                     </div>
-                    <div class="activity-content">
-                        <p>Compraste ${p.network || 'tarjeta'} ${p.bin || ''}</p>
-                        <span class="activity-time">${p.purchaseDate ? timeAgo(new Date(p.purchaseDate)) : 'recientemente'}</span>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         // ============ CONEXIONES ============
@@ -1075,7 +1441,7 @@
                             <i class="fab fa-${data.icon}"></i>
                         </div>
                         <span class="connection-name">${data.label}</span>
-                        <span class="connection-status connected">
+                        <span class="connection-status">
                             <span class="material-icons">check_circle</span> Conectado
                         </span>
                     </a>
@@ -1092,14 +1458,58 @@
             showToast(`Pronombre cambiado a "${PRONOUNS[idx]}"`, 'info');
         }
 
-        // ============ AÑADIR CONEXIÓN ============
+        // ============ BIO ============
+        function editBio() {
+            if (isEditingBio) return;
+            isEditingBio = true;
+            const display = document.getElementById('bioDisplay');
+            const input = document.getElementById('bioInput');
+            display.style.display = 'none';
+            input.style.display = 'block';
+            input.value = display.textContent !== 'Sin biografía' ? display.textContent : '';
+            input.focus();
+        }
+
+        function saveBio() {
+            const display = document.getElementById('bioDisplay');
+            const input = document.getElementById('bioInput');
+            const bio = input.value.trim() || 'Sin biografía';
+            display.textContent = bio;
+            display.style.display = 'block';
+            input.style.display = 'none';
+            isEditingBio = false;
+        }
+
+        // ============ NOTA ============
+        function editNote() {
+            if (isEditingNote) return;
+            isEditingNote = true;
+            const display = document.getElementById('noteDisplay');
+            const input = document.getElementById('noteInput');
+            display.style.display = 'none';
+            input.style.display = 'block';
+            input.value = display.textContent !== 'Haz clic para añadir una nota' ? display.textContent : '';
+            input.focus();
+        }
+
+        function saveNote() {
+            const display = document.getElementById('noteDisplay');
+            const input = document.getElementById('noteInput');
+            const note = input.value.trim() || 'Haz clic para añadir una nota';
+            display.textContent = note;
+            display.style.display = 'block';
+            input.style.display = 'none';
+            isEditingNote = false;
+        }
+
+        // ============ CONEXIONES ============
         function addConnection() {
-            const platform = prompt('📱 ¿Qué plataforma quieres añadir?\n\nOpciones: instagram, twitter, discord, telegram, github\n\nEscribe el nombre de la plataforma:');
+            const platform = prompt('📱 ¿Qué plataforma quieres añadir?\n\nOpciones: instagram, twitter, discord, telegram, github');
             if (!platform) return;
 
             const platforms = ['instagram', 'twitter', 'discord', 'telegram', 'github'];
             if (!platforms.includes(platform.toLowerCase())) {
-                showToast('❌ Plataforma no válida. Opciones: ' + platforms.join(', '), 'error');
+                showToast('❌ Plataforma no válida', 'error');
                 return;
             }
 
@@ -1121,47 +1531,6 @@
 
             renderConnections(users[userIndex].profile.connections);
             showToast(`✅ Conexión a ${platform} añadida`, 'success');
-        }
-
-        // ============ NOTA ============
-        function editNote() {
-            const display = document.getElementById('noteDisplay');
-            const input = document.getElementById('noteInput');
-
-            if (isEditingNote) return;
-
-            isEditingNote = true;
-            display.style.display = 'none';
-            input.style.display = 'block';
-            input.value = display.textContent !== 'Haz clic para añadir una nota' ? display.textContent : '';
-            input.focus();
-        }
-
-        function saveNote() {
-            const display = document.getElementById('noteDisplay');
-            const input = document.getElementById('noteInput');
-
-            const user = getCurrentUser();
-            if (!user) return;
-
-            const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
-            const userIndex = users.findIndex(u => u.id === user.id);
-            if (userIndex === -1) return;
-
-            if (!users[userIndex].profile) users[userIndex].profile = {};
-
-            const note = input.value.trim() || 'Haz clic para añadir una nota';
-            users[userIndex].profile.note = note;
-            localStorage.setItem('yx_users', JSON.stringify(users));
-
-            display.textContent = note;
-            display.style.display = 'block';
-            input.style.display = 'none';
-            isEditingNote = false;
-
-            if (note !== 'Haz clic para añadir una nota') {
-                showToast('✅ Nota guardada', 'success');
-            }
         }
 
         // ============ BANNER ============
@@ -1286,8 +1655,6 @@
             users[userIndex].profile.pronoun = pronoun;
             users[userIndex].profile.note = note;
 
-            // Conexiones ya se guardan al añadir
-
             localStorage.setItem('yx_users', JSON.stringify(users));
 
             const session = JSON.parse(localStorage.getItem('yx_token'));
@@ -1301,6 +1668,120 @@
             showToast('✅ Perfil actualizado correctamente', 'success');
         }
 
+        // ============ MODAL AJUSTES ============
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('settingsNewPassword').value = '';
+            document.getElementById('settingsConfirmPassword').value = '';
+            resetPasswordStrength();
+        }
+
+        function changeUsername() {
+            const user = getCurrentUser();
+            if (!user) { showToast('❌ Usuario no autenticado', 'error'); return; }
+            const newUsername = document.getElementById('settingsUsername').value.trim();
+            if (!newUsername) { showToast('❌ Ingresa un nombre de usuario válido', 'error'); return; }
+            const users = getUsers();
+            if (users.some(u => u.username === newUsername && u.id !== user.id)) {
+                showToast('❌ El nombre de usuario ya está en uso', 'error');
+                return;
+            }
+            const userIndex = users.findIndex(u => u.id === user.id);
+            if (userIndex === -1) { showToast('❌ Usuario no encontrado', 'error'); return; }
+            users[userIndex].username = newUsername;
+            localStorage.setItem('yx_users', JSON.stringify(users));
+            const session = JSON.parse(localStorage.getItem('yx_token'));
+            if (session) { session.user.username = newUsername; localStorage.setItem('yx_token', JSON.stringify(session)); }
+            document.getElementById('profileDisplayName').textContent = newUsername;
+            document.getElementById('profileUsername').textContent = newUsername;
+            document.getElementById('userDisplayName').textContent = newUsername;
+            showToast('✅ Nombre de usuario actualizado', 'success');
+        }
+
+        function changeDisplayName() {
+            const user = getCurrentUser();
+            if (!user) { showToast('❌ Usuario no autenticado', 'error'); return; }
+            const newDisplayName = document.getElementById('settingsDisplayName').value.trim() || user.username;
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.id === user.id);
+            if (userIndex === -1) { showToast('❌ Usuario no encontrado', 'error'); return; }
+            users[userIndex].displayName = newDisplayName;
+            localStorage.setItem('yx_users', JSON.stringify(users));
+            const session = JSON.parse(localStorage.getItem('yx_token'));
+            if (session) { session.user.displayName = newDisplayName; localStorage.setItem('yx_token', JSON.stringify(session)); }
+            document.getElementById('profileDisplayName').textContent = newDisplayName;
+            showToast('✅ Apodo actualizado', 'success');
+        }
+
+        function changePassword() {
+            const user = getCurrentUser();
+            if (!user) { showToast('❌ Usuario no autenticado', 'error'); return; }
+            const newPassword = document.getElementById('settingsNewPassword').value;
+            const confirmPassword = document.getElementById('settingsConfirmPassword').value;
+            if (!newPassword || newPassword.length < 6) {
+                showToast('❌ Mínimo 6 caracteres', 'error');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showToast('❌ Las contraseñas no coinciden', 'error');
+                return;
+            }
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.id === user.id);
+            if (userIndex === -1) { showToast('❌ Usuario no encontrado', 'error'); return; }
+            users[userIndex].password = hashPassword(newPassword);
+            localStorage.setItem('yx_users', JSON.stringify(users));
+            showToast('✅ Contraseña actualizada', 'success');
+            document.getElementById('settingsNewPassword').value = '';
+            document.getElementById('settingsConfirmPassword').value = '';
+            resetPasswordStrength();
+        }
+
+        // ============ FUERZA DE CONTRASEÑA ============
+        function checkPasswordStrength() {
+            const password = document.getElementById('settingsNewPassword').value;
+            const bars = [
+                document.getElementById('strength1'),
+                document.getElementById('strength2'),
+                document.getElementById('strength3'),
+                document.getElementById('strength4')
+            ];
+            const textEl = document.getElementById('strengthText');
+            bars.forEach(bar => { bar.className = 'bar'; });
+            if (!password) { textEl.textContent = 'Ingresa una contraseña'; return; }
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password) && /[^a-zA-Z0-9]/.test(password)) strength++;
+            const levels = ['Muy débil', 'Débil', 'Media', 'Fuerte', 'Muy fuerte'];
+            const classes = ['weak', 'weak', 'medium', 'strong', 'strong'];
+            for (let i = 0; i < Math.min(strength + 1, 4); i++) {
+                bars[i].className = `bar active ${classes[Math.min(strength, 4)]}`;
+            }
+            textEl.textContent = `🔒 ${levels[Math.min(strength, 4)]}`;
+            textEl.style.color = strength >= 3 ? '#2ecc71' : strength >= 2 ? '#f39c12' : '#e74c3c';
+        }
+
+        function resetPasswordStrength() {
+            document.querySelectorAll('.password-strength .bar').forEach(bar => { bar.className = 'bar'; });
+            document.getElementById('strengthText').textContent = 'Ingresa una contraseña';
+            document.getElementById('strengthText').style.color = '#5a6575';
+        }
+
+        function togglePasswordVisibility(id) {
+            const input = document.getElementById(id);
+            const icon = input.nextElementSibling.querySelector('.material-icons');
+            if (input.type === 'password') { input.type = 'text'; icon.textContent = 'visibility_off'; } 
+            else { input.type = 'password'; icon.textContent = 'visibility'; }
+        }
+
         // ============ UTILIDADES ============
         function timeAgo(date) {
             const seconds = Math.floor((new Date() - date) / 1000);
@@ -1310,7 +1791,11 @@
             const hours = Math.floor(minutes / 60);
             if (hours < 24) return 'hace ' + hours + 'h';
             const days = Math.floor(hours / 24);
-            return 'hace ' + days + 'd';
+            if (days < 7) return 'hace ' + days + 'd';
+            const weeks = Math.floor(days / 7);
+            if (weeks < 4) return 'hace ' + weeks + ' sem.';
+            const months = Math.floor(days / 30);
+            return 'hace ' + months + ' mes.';
         }
 
         // ============ TOAST ============
@@ -1331,7 +1816,7 @@
             }, 3000);
         }
 
-        console.log('✅ Profile.js estilo Discord cargado correctamente');
+        console.log('✅ Profile.js cargado correctamente');
     </script>
 </body>
 </html>
