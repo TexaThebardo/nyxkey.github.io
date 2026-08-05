@@ -107,7 +107,6 @@ function updateDateTime() {
     if (el) el.textContent = date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-// ============ CHECKER ============
 function runChecker() {
     const input = document.getElementById('checkerInput');
     const lines = input.value.split('\n').filter(line => line.trim());
@@ -156,7 +155,6 @@ function clearChecker() {
     document.getElementById('processedCount').textContent = '0';
 }
 
-// ============ BOT OTP ============
 let otpInterval = null;
 
 function startOTPBot() {
@@ -200,7 +198,6 @@ function addOTPLog(message, type = 'info') {
     logsContainer.scrollTop = logsContainer.scrollHeight;
 }
 
-// ============ MODAL DEPÓSITO ============
 function openDepositModal() {
     document.getElementById('depositModal').classList.add('active');
 }
@@ -221,38 +218,6 @@ function copyAddress() {
     navigator.clipboard.writeText(address).then(() => showToast('Dirección copiada al portapapeles', 'success'));
 }
 
-// ============ TOAST ============
-function showToast(message, type = 'info') {
-    const existing = document.querySelector('.toast-container');
-    if (!existing) {
-        const container = document.createElement('div');
-        container.className = 'toast-container';
-        container.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;';
-        document.body.appendChild(container);
-    }
-    const toast = document.createElement('div');
-    const colors = { success: '#2ecc71', error: '#e74c3c', info: '#3498db', warning: '#f39c12' };
-    toast.style.cssText = `background:#1a232e;color:#e8edf2;padding:12px 24px;border-radius:12px;border-left:4px solid ${colors[type] || colors.info};box-shadow:0 8px 32px rgba(0,0,0,0.5);font-size:14px;font-weight:500;pointer-events:auto;animation:slideUp 0.3s ease;min-width:200px;text-align:center;border:1px solid #2a313c;`;
-    toast.textContent = message;
-    document.querySelector('.toast-container').appendChild(toast);
-    setTimeout(() => {
-        toast.style.animation = 'slideDown 0.3s ease';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
-
-// Estilos de animación
-const styleSheet = document.createElement("style");
-styleSheet.textContent = `
-    @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes slideDown { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(20px); } }
-    .rotating { animation: rotate 0.8s ease-in-out; }
-    @keyframes rotate { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
-    .spinning { animation: spin 1s linear infinite; }
-    @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
-`;
-document.head.appendChild(styleSheet);
-
 window.showSection = showSection;
 window.applyFilters = applyFilters;
 window.changePage = changePage;
@@ -265,4 +230,3 @@ window.openDepositModal = openDepositModal;
 window.closeDepositModal = closeDepositModal;
 window.selectMethod = selectMethod;
 window.copyAddress = copyAddress;
-window.showToast = showToast;
