@@ -2,16 +2,23 @@
 // APP.JS - Lógica Principal
 // ============================================
 
+console.log('🚀 App.js cargado');
+
 let currentPage = 1;
 const itemsPerPage = 8;
 let currentFilter = { country: '', search: '' };
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 DOM cargado - iniciando app');
+    
     loadProductsFromJSON();
     
     // Verificar si loadCart existe antes de llamarla
     if (typeof loadCart === 'function') {
+        console.log('🔄 loadCart encontrada, ejecutando...');
         loadCart();
+    } else {
+        console.warn('⚠️ loadCart no está definida - asegúrate de cargar cart.js');
     }
     
     updateUserUI();
@@ -20,10 +27,15 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDateTime();
     updateCartBadge();
     
-    document.getElementById('cartOverlay').addEventListener('click', toggleCart);
-    document.querySelector('.modal-overlay').addEventListener('click', function(e) {
-        if (e.target === this) closeDepositModal();
-    });
+    const overlay = document.getElementById('cartOverlay');
+    if (overlay) overlay.addEventListener('click', toggleCart);
+    
+    const modal = document.querySelector('.modal-overlay');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) closeDepositModal();
+        });
+    }
 });
 
 function showSection(sectionId) {
@@ -36,6 +48,10 @@ function showSection(sectionId) {
 
 function renderCatalog() {
     const tbody = document.getElementById('catalogBody');
+    if (!tbody) {
+        console.warn('⚠️ catalogBody no encontrado');
+        return;
+    }
     const products = getProducts();
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
@@ -63,14 +79,19 @@ function renderCatalog() {
             </tr>`;
         }).join('');
     }
-    document.getElementById('showingCount').textContent = products.length;
-    document.getElementById('currentPage').textContent = currentPage;
+    const showingCount = document.getElementById('showingCount');
+    if (showingCount) showingCount.textContent = products.length;
+    const currentPageEl = document.getElementById('currentPage');
+    if (currentPageEl) currentPageEl.textContent = currentPage;
 }
 
 function applyFilters() {
-    const country = document.getElementById('filterCountry').value;
-    const search = document.getElementById('filterSearch').value;
-    currentFilter = { country, search };
+    const country = document.getElementById('filterCountry');
+    const search = document.getElementById('filterSearch');
+    currentFilter = { 
+        country: country ? country.value : '', 
+        search: search ? search.value : '' 
+    };
     filteredProducts = filterProducts(currentFilter);
     currentPage = 1;
     renderCatalog();
@@ -83,14 +104,14 @@ function changePage(direction) {
     if (newPage < 1 || newPage > totalPages) return;
     currentPage = newPage;
     renderCatalog();
-    document.getElementById('catalogBody').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('catalogBody')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function refreshCatalog() {
     const btn = document.querySelector('.btn-refresh');
-    btn.classList.add('rotating');
+    if (btn) btn.classList.add('rotating');
     setTimeout(() => {
-        btn.classList.remove('rotating');
+        if (btn) btn.classList.remove('rotating');
         loadProductsFromJSON();
         applyFilters();
         updateStats();
@@ -100,14 +121,14 @@ function refreshCatalog() {
 
 function updateStats() {
     const stats = getProductStats();
-    document.getElementById('totalCards').textContent = stats.total || 0;
+    const totalCards = document.getElementById('totalCards');
+    if (totalCards) totalCards.textContent = stats.total || 0;
     
-    // Usuarios Registrados
     const users = getUsers();
     const totalUsers = users.length || 0;
-    document.getElementById('totalUsers').textContent = totalUsers;
+    const totalUsersEl = document.getElementById('totalUsers');
+    if (totalUsersEl) totalUsersEl.textContent = totalUsers;
     
-    // Administradores
     let totalAdmins = 0;
     try {
         const stored = localStorage.getItem('admin_whitelist');
@@ -116,7 +137,8 @@ function updateStats() {
             totalAdmins = data.admins ? data.admins.length : 0;
         }
     } catch (e) {}
-    document.getElementById('totalAdmins').textContent = totalAdmins;
+    const totalAdminsEl = document.getElementById('totalAdmins');
+    if (totalAdminsEl) totalAdminsEl.textContent = totalAdmins;
 }
 
 function updateDateTime() {
@@ -127,9 +149,11 @@ function updateDateTime() {
 
 function runChecker() {
     const input = document.getElementById('checkerInput');
+    if (!input) return;
     const lines = input.value.split('\n').filter(line => line.trim());
     if (lines.length === 0) { showToast('Por favor, ingresa al menos una tarjeta', 'error'); return; }
     const btn = document.querySelector('.btn-checker');
+    if (!btn) return;
     btn.disabled = true;
     btn.innerHTML = '<span class="material-icons spinning">sync</span> Verificando...';
     let approved = 0, declined = 0;
@@ -137,9 +161,12 @@ function runChecker() {
     const interval = setInterval(() => {
         const status = Math.random() > 0.3 ? 'approved' : 'declined';
         if (status === 'approved') approved++; else declined++;
-        document.getElementById('approvedCount').textContent = approved;
-        document.getElementById('declinedCount').textContent = declined;
-        document.getElementById('processedCount').textContent = approved + declined;
+        const approvedEl = document.getElementById('approvedCount');
+        const declinedEl = document.getElementById('declinedCount');
+        const processedEl = document.getElementById('processedCount');
+        if (approvedEl) approvedEl.textContent = approved;
+        if (declinedEl) declinedEl.textContent = declined;
+        if (processedEl) processedEl.textContent = approved + declined;
         if (approved + declined >= total) {
             clearInterval(interval);
             btn.disabled = false;
@@ -158,7 +185,8 @@ function uploadFile() {
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (event) => {
-            document.getElementById('checkerInput').value = event.target.result;
+            const checkerInput = document.getElementById('checkerInput');
+            if (checkerInput) checkerInput.value = event.target.result;
             showToast(`Archivo cargado: ${file.name}`, 'success');
         };
         reader.readAsText(file);
@@ -167,19 +195,27 @@ function uploadFile() {
 }
 
 function clearChecker() {
-    document.getElementById('checkerInput').value = '';
-    document.getElementById('approvedCount').textContent = '0';
-    document.getElementById('declinedCount').textContent = '0';
-    document.getElementById('processedCount').textContent = '0';
+    const checkerInput = document.getElementById('checkerInput');
+    if (checkerInput) checkerInput.value = '';
+    const approvedEl = document.getElementById('approvedCount');
+    const declinedEl = document.getElementById('declinedCount');
+    const processedEl = document.getElementById('processedCount');
+    if (approvedEl) approvedEl.textContent = '0';
+    if (declinedEl) declinedEl.textContent = '0';
+    if (processedEl) processedEl.textContent = '0';
 }
 
 let otpInterval = null;
 
 function startOTPBot() {
     const btn = document.querySelector('.btn-otp');
-    const target = document.getElementById('otpTarget').value || 'Desconocido';
-    const phone = document.getElementById('otpPhone').value || 'Sin número';
-    const service = document.getElementById('otpService').value;
+    if (!btn) return;
+    const target = document.getElementById('otpTarget');
+    const phone = document.getElementById('otpPhone');
+    const service = document.getElementById('otpService');
+    const targetVal = target ? target.value : 'Desconocido';
+    const phoneVal = phone ? phone.value : 'Sin número';
+    const serviceVal = service ? service.value : 'unknown';
     if (otpInterval) {
         clearInterval(otpInterval);
         otpInterval = null;
@@ -190,7 +226,7 @@ function startOTPBot() {
     }
     btn.innerHTML = '<span class="material-icons spinning">sync</span> Detener Bot';
     btn.style.background = '#6a2a2a';
-    addOTPLog(`Iniciando bot para ${target} (${phone}) - Servicio: ${service}`, 'info');
+    addOTPLog(`Iniciando bot para ${targetVal} (${phoneVal}) - Servicio: ${serviceVal}`, 'info');
     const stages = ['Llamando al número...', 'Estableciendo conexión...', 'Bienvenida: "Esta es una llamada automática..."', 'La víctima está en otra llamada...', 'Esperando código OTP...', 'La víctima está ingresando datos...'];
     let stageIndex = 0;
     otpInterval = setInterval(() => {
@@ -207,6 +243,7 @@ function startOTPBot() {
 
 function addOTPLog(message, type = 'info') {
     const logsContainer = document.getElementById('otpLogs');
+    if (!logsContainer) return;
     const time = new Date().toLocaleTimeString();
     const entry = document.createElement('div');
     entry.className = `log-entry ${type === 'success' ? 'highlight' : ''}`;
@@ -217,23 +254,27 @@ function addOTPLog(message, type = 'info') {
 }
 
 function openDepositModal() {
-    document.getElementById('depositModal').classList.add('active');
+    const modal = document.getElementById('depositModal');
+    if (modal) modal.classList.add('active');
 }
 
 function closeDepositModal() {
-    document.getElementById('depositModal').classList.remove('active');
+    const modal = document.getElementById('depositModal');
+    if (modal) modal.classList.remove('active');
 }
 
 function selectMethod(method, btn) {
     document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const addresses = { btc: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', eth: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', usdt: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e' };
-    document.getElementById('depositAddress').textContent = addresses[method] || addresses.btc;
+    const addressEl = document.getElementById('depositAddress');
+    if (addressEl) addressEl.textContent = addresses[method] || addresses.btc;
 }
 
 function copyAddress() {
-    const address = document.getElementById('depositAddress').textContent;
-    navigator.clipboard.writeText(address).then(() => showToast('Dirección copiada al portapapeles', 'success'));
+    const addressEl = document.getElementById('depositAddress');
+    if (!addressEl) return;
+    navigator.clipboard.writeText(addressEl.textContent).then(() => showToast('Dirección copiada al portapapeles', 'success'));
 }
 
 window.showSection = showSection;
@@ -249,3 +290,5 @@ window.closeDepositModal = closeDepositModal;
 window.selectMethod = selectMethod;
 window.copyAddress = copyAddress;
 window.updateStats = updateStats;
+
+console.log('✅ App.js cargado correctamente');
