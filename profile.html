@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
         /* ============================================
-           PERFIL - ESTRUCTURA DIVIDIDA
+           PERFIL - ALINEADO A LA IZQUIERDA
            ============================================ */
 
         .profile-container {
@@ -31,7 +31,7 @@
         /* ============ BANNER ============ */
         .profile-banner {
             width: 100%;
-            height: 180px;
+            height: 160px;
             background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
             background-size: 400% 400%;
             position: relative;
@@ -108,30 +108,23 @@
             pointer-events: none;
         }
 
-        /* ============ GRID PRINCIPAL ============ */
-        .profile-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        /* ============ CONTENEDOR PERFIL (Avatar + Info) ============ */
+        .profile-top-section {
+            display: flex;
+            align-items: flex-start;
             gap: 24px;
-            padding: 16px 28px 28px;
-            margin-top: -40px;
+            padding: 16px 28px 0;
+            margin-top: -50px;
             position: relative;
             z-index: 2;
         }
 
-        @media (max-width: 900px) {
-            .profile-grid {
-                grid-template-columns: 1fr;
-                padding: 12px 16px 16px;
-                margin-top: -30px;
-                gap: 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .profile-grid {
-                padding: 8px 12px 12px;
-                margin-top: -20px;
+        @media (max-width: 768px) {
+            .profile-top-section {
+                flex-direction: column;
+                align-items: center;
+                padding: 12px 16px 0;
+                margin-top: -40px;
                 gap: 16px;
             }
             .profile-banner {
@@ -139,13 +132,15 @@
             }
         }
 
-        /* ============================================
-           COLUMNA IZQUIERDA - PERFIL
-           ============================================ */
-        .profile-left-col {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+        @media (max-width: 480px) {
+            .profile-top-section {
+                padding: 8px 12px 0;
+                margin-top: -30px;
+                gap: 12px;
+            }
+            .profile-banner {
+                height: 100px;
+            }
         }
 
         /* ============ AVATAR ============ */
@@ -161,7 +156,6 @@
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             flex-shrink: 0;
-            margin: 0 auto;
         }
 
         .profile-avatar-wrapper:hover {
@@ -215,16 +209,16 @@
             display: none;
         }
 
-        /* ============ NOMBRE Y APODO ============ */
-        .profile-name-section {
-            text-align: center;
+        /* ============ INFO USUARIO ============ */
+        .profile-info {
+            flex: 1;
+            padding-top: 10px;
         }
 
         .profile-name-row {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
@@ -270,7 +264,6 @@
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            justify-content: center;
             margin-top: 6px;
         }
 
@@ -301,15 +294,15 @@
         .profile-bio {
             color: var(--text-secondary);
             font-size: 14px;
-            padding: 10px 14px;
+            padding: 8px 14px;
             background: var(--bg-primary);
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid var(--border-light);
-            min-height: 44px;
+            min-height: 40px;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-align: center;
-            word-wrap: break-word;
+            max-width: 450px;
+            margin-top: 8px;
         }
 
         .profile-bio:hover {
@@ -318,24 +311,58 @@
 
         .profile-bio-input {
             width: 100%;
+            max-width: 450px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 10px 14px;
-            border-radius: 12px;
+            padding: 8px 14px;
+            border-radius: 10px;
             font-family: var(--font);
             font-size: 14px;
             resize: vertical;
-            min-height: 60px;
+            min-height: 50px;
             transition: all 0.3s ease;
             display: none;
-            text-align: center;
+            margin-top: 8px;
         }
 
         .profile-bio-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
+        }
+
+        /* ============ GRID PRINCIPAL ============ */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 20px 28px 28px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 900px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+                padding: 12px 16px 16px;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-grid {
+                padding: 8px 12px 12px;
+                gap: 16px;
+            }
+        }
+
+        /* ============================================
+           COLUMNA IZQUIERDA - PERFIL
+           ============================================ */
+        .profile-left-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         /* ============ MIEMBRO DESDE ============ */
@@ -349,12 +376,9 @@
             border: 1px solid var(--border-light);
         }
 
-        .profile-member .member-icon {
-            color: var(--text-muted);
-        }
-
         .profile-member .member-icon .material-icons {
             font-size: 18px;
+            color: var(--text-muted);
         }
 
         .profile-member .member-label {
@@ -421,7 +445,6 @@
             transition: all 0.3s ease;
             text-decoration: none;
             color: var(--text-primary);
-            position: relative;
         }
 
         .connection-item:hover {
@@ -511,7 +534,6 @@
             cursor: pointer;
             padding: 4px 0;
             min-height: 20px;
-            word-wrap: break-word;
         }
 
         .profile-note .note-content:hover {
@@ -541,7 +563,7 @@
         }
 
         /* ============================================
-           COLUMNA DERECHA - ACTIVIDAD Y ESTADÍSTICAS
+           COLUMNA DERECHA - ACTIVIDAD
            ============================================ */
         .profile-right-col {
             display: flex;
@@ -555,6 +577,7 @@
             border-radius: 12px;
             border: 1px solid var(--border-light);
             padding: 14px 16px;
+            margin-top: 4px;
         }
 
         .profile-activity .activity-header {
@@ -696,18 +719,16 @@
             }
         }
 
-        /* ============================================
-           BOTONES DE ACCIÓN
-           ============================================ */
+        /* ============ BOTONES DE ACCIÓN ============ */
         .profile-actions {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            margin-top: 4px;
+            margin-top: 8px;
         }
 
         .profile-actions .btn-action {
-            padding: 8px 18px;
+            padding: 8px 20px;
             border-radius: 30px;
             font-weight: 600;
             font-size: 13px;
@@ -1064,43 +1085,46 @@
                         </div>
                     </div>
 
-                    <!-- ============ GRID PRINCIPAL ============ -->
-                    <div class="profile-grid">
-                        <!-- ============ COLUMNA IZQUIERDA - PERFIL ============ -->
-                        <div class="profile-left-col">
-                            <!-- AVATAR -->
-                            <div class="profile-avatar-wrapper" onclick="document.getElementById('avatarInput').click()">
-                                <div class="avatar-placeholder" id="avatarPlaceholder">
-                                    <span class="material-icons-outlined">person</span>
-                                </div>
-                                <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
-                                <div class="avatar-edit">
-                                    <span class="material-icons">photo_camera</span>
-                                </div>
+                    <!-- ============ TOP SECTION (Avatar + Info) ============ -->
+                    <div class="profile-top-section">
+                        <!-- AVATAR -->
+                        <div class="profile-avatar-wrapper" onclick="document.getElementById('avatarInput').click()">
+                            <div class="avatar-placeholder" id="avatarPlaceholder">
+                                <span class="material-icons-outlined">person</span>
                             </div>
-                            <input type="file" id="avatarInput" accept="image/*" onchange="handleAvatarUpload(event)">
+                            <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                            <div class="avatar-edit">
+                                <span class="material-icons">photo_camera</span>
+                            </div>
+                        </div>
+                        <input type="file" id="avatarInput" accept="image/*" onchange="handleAvatarUpload(event)">
 
-                            <!-- NOMBRE Y APODO -->
-                            <div class="profile-name-section">
-                                <div class="profile-name-row">
-                                    <h1 id="profileDisplayName">Usuario</h1>
-                                    <span class="profile-tag">@<span id="profileUsername">usuario</span></span>
-                                    <span class="pronoun-selector" onclick="changePronoun()" id="pronounDisplay">
-                                        <span class="material-icons" style="font-size:14px;">person</span>
-                                        <span id="pronounText">él</span>
-                                    </span>
-                                </div>
+                        <!-- INFO -->
+                        <div class="profile-info">
+                            <div class="profile-name-row">
+                                <h1 id="profileDisplayName">Usuario</h1>
+                                <span class="profile-tag">@<span id="profileUsername">usuario</span></span>
+                                <span class="pronoun-selector" onclick="changePronoun()" id="pronounDisplay">
+                                    <span class="material-icons" style="font-size:14px;">person</span>
+                                    <span id="pronounText">él</span>
+                                </span>
+                            </div>
 
-                                <!-- INSIGNIAS -->
-                                <div class="profile-insignias" id="profileInsignias">
-                                    <!-- Renderizado por JavaScript -->
-                                </div>
+                            <!-- INSIGNIAS -->
+                            <div class="profile-insignias" id="profileInsignias">
+                                <!-- Renderizado por JavaScript -->
                             </div>
 
                             <!-- BIO -->
                             <div class="profile-bio" id="bioDisplay" onclick="editBio()">Sin biografía</div>
                             <textarea class="profile-bio-input" id="bioInput" placeholder="Escribe tu biografía..." onblur="saveBio()"></textarea>
+                        </div>
+                    </div>
 
+                    <!-- ============ GRID PRINCIPAL ============ -->
+                    <div class="profile-grid">
+                        <!-- COLUMNA IZQUIERDA -->
+                        <div class="profile-left-col">
                             <!-- MIEMBRO DESDE -->
                             <div class="profile-member">
                                 <span class="member-icon">
@@ -1127,7 +1151,7 @@
                                 </div>
                             </div>
 
-                            <!-- NOTA PERSONAL -->
+                            <!-- NOTA -->
                             <div class="profile-note">
                                 <div class="note-label">
                                     <span class="material-icons">note</span> Nota (solo visible para ti)
@@ -1137,9 +1161,9 @@
                             </div>
                         </div>
 
-                        <!-- ============ COLUMNA DERECHA - ACTIVIDAD ============ -->
+                        <!-- COLUMNA DERECHA -->
                         <div class="profile-right-col">
-                            <!-- ACTIVIDAD RECIENTE -->
+                            <!-- ACTIVIDAD -->
                             <div class="profile-activity">
                                 <div class="activity-header">
                                     <h3>
@@ -1204,7 +1228,6 @@
             </h2>
             <p class="subtitle">Gestiona tu información de acceso</p>
 
-            <!-- CAMBIAR NOMBRE DE USUARIO -->
             <div class="settings-group">
                 <label>
                     <span class="material-icons" style="font-size:16px; vertical-align:middle;">person</span> Nombre de Usuario
@@ -1214,7 +1237,6 @@
                 <button class="btn-save-setting" onclick="changeUsername()">Actualizar</button>
             </div>
 
-            <!-- CAMBIAR APODO -->
             <div class="settings-group">
                 <label>
                     <span class="material-icons" style="font-size:16px; vertical-align:middle;">badge</span> Apodo
@@ -1224,7 +1246,6 @@
                 <button class="btn-save-setting" onclick="changeDisplayName()">Actualizar</button>
             </div>
 
-            <!-- CAMBIAR CONTRASEÑA -->
             <div class="settings-group">
                 <label>
                     <span class="material-icons" style="font-size:16px; vertical-align:middle;">lock</span> Cambiar Contraseña
@@ -1260,7 +1281,7 @@
     <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // PROFILE.JS - ESTRUCTURA DIVIDIDA
+        // PROFILE.JS - ALINEADO A LA IZQUIERDA
         // ============================================
 
         let tempAvatarData = null;
@@ -1846,7 +1867,7 @@
             }, 3000);
         }
 
-        console.log('✅ Profile.js - Estructura dividida cargada correctamente');
+        console.log('✅ Profile.js - Alineado a la izquierda cargado correctamente');
     </script>
 </body>
 </html>
