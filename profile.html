@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
         /* ============================================
-           PERFIL MEJORADO
+           PERFIL REDISEÑADO
            ============================================ */
 
         .profile-container {
@@ -108,34 +108,28 @@
             pointer-events: none;
         }
 
-        /* ============ HEADER ============ */
-        .profile-header {
-            padding: 0 28px 28px;
+        /* ============ CONTENEDOR AVATAR ============ */
+        .profile-avatar-container {
+            display: flex;
+            justify-content: center;
             margin-top: -55px;
             position: relative;
             z-index: 2;
+            padding: 0 20px;
         }
 
-        .profile-avatar-section {
-            display: flex;
-            align-items: flex-end;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        /* ============ AVATAR ============ */
         .profile-avatar-wrapper {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
             border: 4px solid var(--bg-secondary);
             background: var(--bg-card);
             cursor: pointer;
             transition: all 0.3s ease;
-            flex-shrink: 0;
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            flex-shrink: 0;
         }
 
         .profile-avatar-wrapper:hover {
@@ -156,7 +150,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 52px;
+            font-size: 56px;
             color: var(--text-muted);
             background: var(--bg-card);
             border-radius: 50%;
@@ -185,21 +179,22 @@
             background: var(--primary-dark);
         }
 
-        /* ============ INFO USUARIO ============ */
-        .profile-info {
-            flex: 1;
-            padding-top: 10px;
+        /* ============ INFO USUARIO (DEBAJO DEL AVATAR) ============ */
+        .profile-info-center {
+            text-align: center;
+            padding: 12px 20px 16px;
         }
 
         .profile-name-row {
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
         .profile-name-row h1 {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 800;
             color: var(--text-primary);
             margin: 0;
@@ -240,7 +235,8 @@
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            margin-top: 6px;
+            justify-content: center;
+            margin-top: 8px;
         }
 
         .profile-insignias .insignia-badge {
@@ -268,10 +264,10 @@
 
         /* ============ BIO ============ */
         .profile-bio {
-            margin-top: 10px;
+            margin: 10px auto 0;
             color: var(--text-secondary);
             font-size: 14px;
-            max-width: 550px;
+            max-width: 500px;
             padding: 8px 14px;
             background: var(--bg-primary);
             border-radius: 8px;
@@ -279,6 +275,7 @@
             min-height: 40px;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-align: center;
         }
 
         .profile-bio:hover {
@@ -287,7 +284,7 @@
 
         .profile-bio-input {
             width: 100%;
-            max-width: 550px;
+            max-width: 500px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
@@ -299,7 +296,8 @@
             min-height: 60px;
             transition: all 0.3s ease;
             display: none;
-            margin-top: 10px;
+            margin: 10px auto 0;
+            text-align: center;
         }
 
         .profile-bio-input:focus {
@@ -311,9 +309,12 @@
         /* ============ STATS ROW ============ */
         .profile-stats-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 12px;
             margin-top: 14px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .profile-stat {
@@ -335,6 +336,14 @@
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .profile-stat .stat-label .material-icons {
+            font-size: 14px;
         }
 
         /* ============ MAIN CONTENT ============ */
@@ -350,22 +359,15 @@
                 grid-template-columns: 1fr;
                 padding: 0 16px 16px;
             }
-            .profile-header {
-                padding: 0 16px 20px;
-                margin-top: -40px;
+            .profile-banner {
+                height: 150px;
             }
             .profile-avatar-wrapper {
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
             }
             .profile-name-row h1 {
                 font-size: 20px;
-            }
-            .profile-avatar-section {
-                gap: 12px;
-            }
-            .profile-banner {
-                height: 150px;
             }
             .profile-stats-row {
                 grid-template-columns: 1fr 1fr;
@@ -377,12 +379,11 @@
                 height: 120px;
             }
             .profile-avatar-wrapper {
-                width: 64px;
-                height: 64px;
+                width: 80px;
+                height: 80px;
             }
-            .profile-header {
-                padding: 0 12px 16px;
-                margin-top: -32px;
+            .profile-avatar-container {
+                margin-top: -40px;
             }
             .profile-name-row h1 {
                 font-size: 17px;
@@ -424,6 +425,13 @@
             font-size: 14px;
             font-weight: 600;
             color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .profile-activity .activity-header h3 .material-icons {
+            font-size: 18px;
         }
 
         .profile-activity .activity-header span {
@@ -508,6 +516,13 @@
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .profile-member .member-label .material-icons {
+            font-size: 14px;
         }
 
         .profile-member .member-date {
@@ -536,6 +551,13 @@
             font-size: 14px;
             font-weight: 600;
             color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .profile-connections .connections-header h3 .material-icons {
+            font-size: 18px;
         }
 
         .profile-connections .connections-header .add-connection {
@@ -784,6 +806,10 @@
             gap: 10px;
         }
 
+        .settings-modal-box h2 .material-icons {
+            color: var(--primary);
+        }
+
         .settings-modal-box .subtitle {
             color: var(--text-secondary);
             font-size: 14px;
@@ -1030,55 +1056,58 @@
                         </div>
                     </div>
 
-                    <!-- ============ HEADER ============ -->
-                    <div class="profile-header">
-                        <div class="profile-avatar-section">
-                            <!-- AVATAR -->
-                            <div class="profile-avatar-wrapper" onclick="document.getElementById('avatarInput').click()">
-                                <div class="avatar-placeholder" id="avatarPlaceholder">
-                                    <span class="material-icons-outlined">person</span>
-                                </div>
-                                <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
-                                <div class="avatar-edit">
-                                    <span class="material-icons">photo_camera</span>
+                    <!-- ============ AVATAR ============ -->
+                    <div class="profile-avatar-container">
+                        <div class="profile-avatar-wrapper" onclick="document.getElementById('avatarInput').click()">
+                            <div class="avatar-placeholder" id="avatarPlaceholder">
+                                <span class="material-icons-outlined">person</span>
+                            </div>
+                            <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                            <div class="avatar-edit">
+                                <span class="material-icons">photo_camera</span>
+                            </div>
+                        </div>
+                        <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+                    </div>
+
+                    <!-- ============ INFO USUARIO (DEBAJO DEL AVATAR) ============ -->
+                    <div class="profile-info-center">
+                        <div class="profile-name-row">
+                            <h1 id="profileDisplayName">Usuario</h1>
+                            <span class="profile-tag">@<span id="profileUsername">usuario</span></span>
+                            <span class="pronoun-selector" onclick="changePronoun()" id="pronounDisplay">
+                                <span class="material-icons" style="font-size:14px;">person</span>
+                                <span id="pronounText">él</span>
+                            </span>
+                        </div>
+
+                        <!-- INSIGNIAS -->
+                        <div class="profile-insignias" id="profileInsignias">
+                            <!-- Renderizado por JavaScript -->
+                        </div>
+
+                        <!-- BIO -->
+                        <div class="profile-bio" id="bioDisplay" onclick="editBio()">Sin biografía</div>
+                        <textarea class="profile-bio-input" id="bioInput" placeholder="Escribe tu biografía..." onblur="saveBio()"></textarea>
+
+                        <!-- STATS ROW -->
+                        <div class="profile-stats-row">
+                            <div class="profile-stat">
+                                <div class="stat-value" id="profileEmail">-</div>
+                                <div class="stat-label">
+                                    <span class="material-icons">email</span> Correo
                                 </div>
                             </div>
-                            <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
-
-                            <!-- INFO -->
-                            <div class="profile-info">
-                                <div class="profile-name-row">
-                                    <h1 id="profileDisplayName">Usuario</h1>
-                                    <span class="profile-tag">@<span id="profileUsername">usuario</span></span>
-                                    <span class="pronoun-selector" onclick="changePronoun()" id="pronounDisplay">
-                                        <span class="material-icons" style="font-size:14px;">person</span>
-                                        <span id="pronounText">él</span>
-                                    </span>
+                            <div class="profile-stat">
+                                <div class="stat-value" id="profileBalance">$0.00</div>
+                                <div class="stat-label">
+                                    <span class="material-icons">account_balance_wallet</span> Saldo
                                 </div>
-
-                                <!-- INSIGNIAS -->
-                                <div class="profile-insignias" id="profileInsignias">
-                                    <!-- Renderizado por JavaScript -->
-                                </div>
-
-                                <!-- BIO -->
-                                <div class="profile-bio" id="bioDisplay" onclick="editBio()">Sin biografía</div>
-                                <textarea class="profile-bio-input" id="bioInput" placeholder="Escribe tu biografía..." onblur="saveBio()"></textarea>
-
-                                <!-- STATS ROW -->
-                                <div class="profile-stats-row">
-                                    <div class="profile-stat">
-                                        <div class="stat-value" id="profileEmail">-</div>
-                                        <div class="stat-label">Correo</div>
-                                    </div>
-                                    <div class="profile-stat">
-                                        <div class="stat-value" id="profileBalance">$0.00</div>
-                                        <div class="stat-label">Saldo</div>
-                                    </div>
-                                    <div class="profile-stat">
-                                        <div class="stat-value" id="profilePurchases">0</div>
-                                        <div class="stat-label">Tarjetas</div>
-                                    </div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="stat-value" id="profilePurchases">0</div>
+                                <div class="stat-label">
+                                    <span class="material-icons">credit_card</span> Tarjetas
                                 </div>
                             </div>
                         </div>
@@ -1091,7 +1120,9 @@
                             <!-- ACTIVIDAD RECIENTE -->
                             <div class="profile-activity">
                                 <div class="activity-header">
-                                    <h3>📋 Actividad Reciente</h3>
+                                    <h3>
+                                        <span class="material-icons">history</span> Actividad Reciente
+                                    </h3>
                                     <span>Últimos 30 días</span>
                                 </div>
                                 <div id="activityList">
@@ -1116,14 +1147,18 @@
                         <div class="profile-right-col">
                             <!-- MIEMBRO DESDE -->
                             <div class="profile-member">
-                                <div class="member-label">📅 Miembro desde</div>
+                                <div class="member-label">
+                                    <span class="material-icons">event</span> Miembro desde
+                                </div>
                                 <div class="member-date" id="profileSince">-</div>
                             </div>
 
                             <!-- CONEXIONES -->
                             <div class="profile-connections">
                                 <div class="connections-header">
-                                    <h3>🔗 Conexiones</h3>
+                                    <h3>
+                                        <span class="material-icons">link</span> Conexiones
+                                    </h3>
                                     <span class="add-connection" onclick="addConnection()">
                                         <span class="material-icons" style="font-size:16px;">add_circle</span> Añadir
                                     </span>
@@ -1160,14 +1195,15 @@
             </button>
 
             <h2>
-                <span class="material-icons" style="color:var(--primary);">settings</span>
-                Ajustes de Cuenta
+                <span class="material-icons">settings</span> Ajustes de Cuenta
             </h2>
             <p class="subtitle">Gestiona tu información de acceso</p>
 
             <!-- CAMBIAR NOMBRE DE USUARIO -->
             <div class="settings-group">
-                <label>👤 Nombre de Usuario</label>
+                <label>
+                    <span class="material-icons" style="font-size:16px; vertical-align:middle;">person</span> Nombre de Usuario
+                </label>
                 <p class="helper-text">Este es tu identificador único en la plataforma</p>
                 <input type="text" id="settingsUsername" placeholder="Nuevo nombre de usuario">
                 <button class="btn-save-setting" onclick="changeUsername()">Actualizar</button>
@@ -1175,7 +1211,9 @@
 
             <!-- CAMBIAR APODO -->
             <div class="settings-group">
-                <label>🏷️ Apodo</label>
+                <label>
+                    <span class="material-icons" style="font-size:16px; vertical-align:middle;">badge</span> Apodo
+                </label>
                 <p class="helper-text">Cómo te mostrarás en el perfil</p>
                 <input type="text" id="settingsDisplayName" placeholder="Nuevo apodo">
                 <button class="btn-save-setting" onclick="changeDisplayName()">Actualizar</button>
@@ -1183,7 +1221,9 @@
 
             <!-- CAMBIAR CONTRASEÑA -->
             <div class="settings-group">
-                <label>🔐 Cambiar Contraseña</label>
+                <label>
+                    <span class="material-icons" style="font-size:16px; vertical-align:middle;">lock</span> Cambiar Contraseña
+                </label>
                 <p class="helper-text">Mínimo 6 caracteres</p>
                 <div class="input-with-toggle">
                     <input type="password" id="settingsNewPassword" placeholder="Nueva contraseña">
@@ -1215,7 +1255,7 @@
     <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // PROFILE.JS - VERSIÓN COMPLETA Y CORREGIDA
+        // PROFILE.JS - VERSIÓN REDISEÑADA
         // ============================================
 
         let tempAvatarData = null;
@@ -1304,7 +1344,6 @@
                 document.getElementById('adminSidebarBtn').style.display = 'flex';
             }
 
-            // Listener para fuerza de contraseña
             document.getElementById('settingsNewPassword').addEventListener('input', checkPasswordStrength);
         });
 
@@ -1347,10 +1386,8 @@
             const purchases = fullUser?.purchases || [];
             const transactions = fullUser?.transactions || [];
 
-            // Combinar compras y transacciones
             let activities = [];
 
-            // Compras
             purchases.forEach(p => {
                 activities.push({
                     type: 'compra',
@@ -1361,7 +1398,6 @@
                 });
             });
 
-            // Transacciones (depósitos, etc.)
             transactions.forEach(t => {
                 activities.push({
                     type: t.type || 'transacción',
@@ -1372,10 +1408,7 @@
                 });
             });
 
-            // Ordenar por fecha (más reciente primero)
             activities.sort((a, b) => b.date - a.date);
-
-            // Tomar las 5 más recientes
             const recent = activities.slice(0, 5);
 
             if (recent.length === 0) {
@@ -1816,7 +1849,7 @@
             }, 3000);
         }
 
-        console.log('✅ Profile.js cargado correctamente');
+        console.log('✅ Profile.js rediseñado cargado correctamente');
     </script>
 </body>
 </html>
