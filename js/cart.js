@@ -2,9 +2,12 @@
 // CART.JS - Carrito de Compras
 // ============================================
 
+console.log('🛒 Cart.js cargado');
+
 let cartItems = [];
 
 function loadCart() {
+    console.log('🔄 loadCart ejecutado');
     try {
         const saved = localStorage.getItem('yx_cart');
         if (saved) {
@@ -252,16 +255,20 @@ function checkout() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    loadCart();
-});
-
+// ============ EXPORTAR PARA QUE ESTÉ DISPONIBLE ============
+window.loadCart = loadCart;
 window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;
 window.updateCartQuantity = updateCartQuantity;
 window.clearCart = clearCart;
 window.toggleCart = toggleCart;
 window.checkout = checkout;
-window.loadCart = loadCart;
 window.updateCartUI = updateCartUI;
 window.updateCartBadge = updateCartBadge;
+
+// Cargar carrito al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    loadCart();
+});
+
+console.log('✅ Cart.js cargado correctamente - loadCart disponible');
