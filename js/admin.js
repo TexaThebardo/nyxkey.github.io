@@ -20,8 +20,11 @@ function loadWhitelist() {
         }
     } catch (e) {}
 
+    // ============ WHITELIST POR DEFECTO ============
+    // ⚠️ CAMBIA ESTOS EMAILS POR LOS QUE QUIERAS QUE SEAN ADMIN
+    // O USA EL BOTÓN "AÑADIR ADMIN" EN EL PANEL DE ADMIN
     const defaultWhitelist = {
-        admins: ['zgxbrielb@gmail.com', 'admin@yxcards.com'],
+        admins: [], // ⚠️ VACÍO POR DEFECTO - TÚ DECIDES QUIÉNES SON ADMINS
         insignias: {
             'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
             'Dev': { icon: 'code', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.15)', description: 'Desarrollador de la plataforma' },
@@ -92,7 +95,7 @@ function updateUserBalanceByEmail(email, amount, concept = 'Ajuste manual') {
     const userIndex = users.findIndex(u => u.email === email);
 
     if (userIndex === -1) {
-        return { success: false, message: 'Usuario no encontrado' };
+        return { success: false, message: '❌ Usuario no encontrado' };
     }
 
     users[userIndex].balance = (users[userIndex].balance || 0) + amount;
@@ -191,6 +194,40 @@ function removeInsigniaFromUser(email, insigniaName) {
     return { success: false, message: `❌ El usuario no tiene "${insigniaName}"` };
 }
 
+// ============ AÑADIR ADMIN A LA WHITELIST ============
+function addAdminToWhitelist(email) {
+    const whitelist = loadWhitelist();
+    if (!whitelist.admins) {
+        whitelist.admins = [];
+    }
+    if (!whitelist.admins.includes(email)) {
+        whitelist.admins.push(email);
+        saveWhitelist(whitelist);
+        return { success: true, message: `✅ ${email} ahora es administrador` };
+    }
+    return { success: false, message: `❌ ${email} ya es administrador` };
+}
+
+// ============ QUITAR ADMIN DE LA WHITELIST ============
+function removeAdminFromWhitelist(email) {
+    const whitelist = loadWhitelist();
+    if (whitelist.admins) {
+        const filtered = whitelist.admins.filter(e => e !== email);
+        if (filtered.length < whitelist.admins.length) {
+            whitelist.admins = filtered;
+            saveWhitelist(whitelist);
+            return { success: true, message: `✅ ${email} ya no es administrador` };
+        }
+    }
+    return { success: false, message: `❌ ${email} no es administrador` };
+}
+
+// ============ OBTENER LISTA DE ADMINS ============
+function getAdminList() {
+    const whitelist = loadWhitelist();
+    return whitelist.admins || [];
+}
+
 // ============ EXPORTAR ============
 window.isAdmin = isAdmin;
 window.loadWhitelist = loadWhitelist;
@@ -203,5 +240,8 @@ window.getAllInsignias = getAllInsignias;
 window.addInsigniaToUser = addInsigniaToUser;
 window.removeInsigniaFromUser = removeInsigniaFromUser;
 window.saveUserInsignias = saveUserInsignias;
+window.addAdminToWhitelist = addAdminToWhitelist;
+window.removeAdminFromWhitelist = removeAdminFromWhitelist;
+window.getAdminList = getAdminList;
 
 console.log('✅ Admin.js cargado');
