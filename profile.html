@@ -8,11 +8,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- RUTAS RELATIVAS - CORRECTAS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -32,22 +32,30 @@
         </div>
     </nav>
     
+    <!-- DASHBOARD CONTAINER -->
     <div class="dashboard-container">
+        <!-- SIDEBAR - MENÚ LATERAL -->
         <aside class="sidebar">
             <nav class="sidebar-nav">
+                <span class="sidebar-title">Navegación</span>
+                
                 <a href="dashboard.html" class="sidebar-link">
                     <span class="material-icons-outlined">dashboard</span>
                     <span>Dashboard</span>
                 </a>
+                
                 <a href="profile.html" class="sidebar-link active">
                     <span class="material-icons-outlined">person</span>
                     <span>Mi Perfil</span>
                 </a>
+                
                 <a href="index.html" class="sidebar-link">
                     <span class="material-icons-outlined">storefront</span>
                     <span>Tienda</span>
                 </a>
+                
                 <div class="sidebar-divider"></div>
+                
                 <a href="#" class="sidebar-link logout" onclick="logoutUser()">
                     <span class="material-icons-outlined">logout</span>
                     <span>Cerrar Sesión</span>
@@ -55,6 +63,7 @@
             </nav>
         </aside>
         
+        <!-- MAIN CONTENT -->
         <main class="dashboard-main">
             <div class="section-header">
                 <h2>Mi Perfil</h2>
@@ -63,7 +72,7 @@
             <div class="profile-container">
                 <div class="profile-card">
                     <div class="profile-avatar">
-                        <span class="material-icons-outlined" style="font-size:80px;color:var(--primary);">account_circle</span>
+                        <span class="material-icons-outlined">account_circle</span>
                         <button class="btn-secondary" onclick="changeAvatar()">Cambiar Avatar</button>
                     </div>
                     <div class="profile-info">
