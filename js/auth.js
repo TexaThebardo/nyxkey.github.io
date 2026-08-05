@@ -327,3 +327,54 @@ window.toggleUserMenu = toggleUserMenu;
 window.showToast = showToast;
 window.addPurchaseToHistory = addPurchaseToHistory;
 window.updateUserProfile = updateUserProfile;
+
+// ============ FUNCIONES DE AUTENTICACIÓN EXISTENTES ============
+// (mantén tu código existente de registerUser, loginUser, etc.)
+
+// ============ ACTUALIZAR UI DEL USUARIO CON INSIGNIAS ============
+function updateUserUIWithInsignias() {
+    const user = getCurrentUser();
+    updateUserUI();
+    
+    if (user) {
+        // Renderizar insignias en el navbar si existe el contenedor
+        const insigniaContainer = document.getElementById('userInsignias');
+        if (insigniaContainer) {
+            renderInsignias(user.email, 'userInsignias');
+        }
+    }
+}
+
+// ============ ACTUALIZAR LA FUNCIÓN updateUserUI ============
+// Reemplaza la función updateUserUI existente con esta:
+function updateUserUI() {
+    const user = getCurrentUser();
+    const balanceEl = document.getElementById('userBalance');
+    const avatarEl = document.getElementById('userAvatarIcon');
+    const nameEl = document.getElementById('userDisplayName');
+    
+    if (user) {
+        if (balanceEl) balanceEl.textContent = `$${user.balance.toFixed(2)}`;
+        if (avatarEl) avatarEl.textContent = 'account_circle';
+        if (nameEl) nameEl.textContent = user.username || 'Usuario';
+        
+        // Verificar si es admin para mostrar botón
+        const adminBtn = document.getElementById('adminPanelBtn');
+        if (adminBtn) {
+            if (isAdmin(user.email)) {
+                adminBtn.style.display = 'flex';
+            } else {
+                adminBtn.style.display = 'none';
+            }
+        }
+    } else {
+        if (balanceEl) balanceEl.textContent = '$0.00';
+        if (avatarEl) avatarEl.textContent = 'person';
+        if (nameEl) nameEl.textContent = 'Invitado';
+    }
+}
+
+// ============ SOBRESCRIBIR FUNCIONES EXISTENTES ============
+// Asegúrate de que estas funciones estén disponibles globalmente
+window.updateUserUI = updateUserUI;
+window.updateUserUIWithInsignias = updateUserUIWithInsignias;
