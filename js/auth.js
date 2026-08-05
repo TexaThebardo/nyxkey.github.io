@@ -10,7 +10,55 @@ const AUTH_CONFIG = {
     sessionTimeout: 3600000
 };
 
-// ============ FUNCIONES INTERNAS ============
+// ============ CARGAR WHITELIST ============
+function loadWhitelistData() {
+    try {
+        const stored = localStorage.getItem('admin_whitelist');
+        if (stored) {
+            const data = JSON.parse(stored);
+            if (data.admins && data.insignias) {
+                return data;
+            }
+        }
+    } catch (e) {}
+
+    // WHITELIST POR DEFECTO
+    const defaultWhitelist = {
+        admins: [
+            { email: 'admin@yxcards.com', key: 'admin123', insignia: 'Owner' }
+        ],
+        insignias: {
+            'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
+            'Dev': { icon: 'code', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.15)', description: 'Desarrollador de la plataforma' },
+            'Verificado': { icon: 'verified_user', color: '#2ecc71', bgColor: 'rgba(46, 204, 113, 0.15)', description: 'Usuario verificado' },
+            'Guest': { icon: 'person_outline', color: '#95a5a6', bgColor: 'rgba(149, 165, 166, 0.15)', description: 'Usuario invitado' },
+            'VIP': { icon: 'stars', color: '#e67e22', bgColor: 'rgba(230, 126, 34, 0.15)', description: 'Usuario VIP' },
+            'Moderador': { icon: 'shield', color: '#9b59b6', bgColor: 'rgba(155, 89, 182, 0.15)', description: 'Moderador de la comunidad' },
+            'Colaborador': { icon: 'group', color: '#1abc9c', bgColor: 'rgba(26, 188, 156, 0.15)', description: 'Colaborador activo' },
+            'Fundador': { icon: 'emoji_events', color: '#e74c3c', bgColor: 'rgba(231, 76, 60, 0.15)', description: 'Fundador de la plataforma' }
+        }
+    };
+    localStorage.setItem('admin_whitelist', JSON.stringify(defaultWhitelist));
+    return defaultWhitelist;
+}
+
+// ============ VERIFICAR ADMIN ============
+function isUserAdmin(email) {
+    if (!email) return false;
+    const whitelist = loadWhitelistData();
+    if (!whitelist.admins) return false;
+    return whitelist.admins.some(a => a.email === email);
+}
+
+function getUserAdminInsignia(email) {
+    if (!email) return null;
+    const whitelist = loadWhitelistData();
+    if (!whitelist.admins) return null;
+    const admin = whitelist.admins.find(a => a.email === email);
+    return admin ? admin.insignia : null;
+}
+
+// ============ INSIGNIAS ============
 function getInsigniasFromStorage(email) {
     try {
         const stored = localStorage.getItem('user_insignias');
@@ -34,63 +82,29 @@ function saveInsigniasToStorage(email, insignias) {
     localStorage.setItem('user_insignias', JSON.stringify(data));
 }
 
-function isUserAdmin(email) {
-    if (!email) return false;
-    try {
-        const stored = localStorage.getItem('admin_whitelist');
-        if (stored) {
-            const data = JSON.parse(stored);
-            if (data.admins) {
-                return data.admins.some(a => a.email === email);
-            }
-        }
-    } catch (e) {}
-    return false;
-}
+function renderUserInsignias(email, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-function getUserAdminInsignia(email) {
-    if (!email) return null;
-    try {
-        const stored = localStorage.getItem('admin_whitelist');
-        if (stored) {
-            const data = JSON.parse(stored);
-            if (data.admins) {
-                const admin = data.admins.find(a => a.email === email);
-                return admin ? admin.insignia : null;
-            }
-        }
-    } catch (e) {}
-    return null;
-}
+    const insignias = getInsigniasFromStorage(email);
+    const whitelist = loadWhitelistData();
+    const allInsignias = whitelist.insignias || {};
 
-function loadWhitelistData() {
-    try {
-        const stored = localStorage.getItem('admin_whitelist');
-        if (stored) {
-            const data = JSON.parse(stored);
-            if (data.admins && data.insignias) {
-                return data;
-            }
-        }
-    } catch (e) {}
+    if (!insignias || insignias.length === 0) {
+        container.innerHTML = `<span class="insignia-guest"><span class="material-icons" style="font-size:14px;">person_outline</span> Guest</span>`;
+        return;
+    }
 
-    const defaultWhitelist = {
-        admins: [
-            { email: 'admin@yxcards.com', key: 'admin123', insignia: 'Owner' }
-        ],
-        insignias: {
-            'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
-            'Dev': { icon: 'code', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.15)', description: 'Desarrollador de la plataforma' },
-            'Verificado': { icon: 'verified_user', color: '#2ecc71', bgColor: 'rgba(46, 204, 113, 0.15)', description: 'Usuario verificado' },
-            'Guest': { icon: 'person_outline', color: '#95a5a6', bgColor: 'rgba(149, 165, 166, 0.15)', description: 'Usuario invitado' },
-            'VIP': { icon: 'stars', color: '#e67e22', bgColor: 'rgba(230, 126, 34, 0.15)', description: 'Usuario VIP' },
-            'Moderador': { icon: 'shield', color: '#9b59b6', bgColor: 'rgba(155, 89, 182, 0.15)', description: 'Moderador de la comunidad' },
-            'Colaborador': { icon: 'group', color: '#1abc9c', bgColor: 'rgba(26, 188, 156, 0.15)', description: 'Colaborador activo' },
-            'Fundador': { icon: 'emoji_events', color: '#e74c3c', bgColor: 'rgba(231, 76, 60, 0.15)', description: 'Fundador de la plataforma' }
-        }
-    };
-    localStorage.setItem('admin_whitelist', JSON.stringify(defaultWhitelist));
-    return defaultWhitelist;
+    container.innerHTML = insignias.map(name => {
+        const ins = allInsignias[name];
+        if (!ins) return '';
+        return `
+            <span class="insignia-badge" style="background:${ins.bgColor || 'rgba(149,165,166,0.15)'}; color:${ins.color || '#95a5a6'};">
+                <span class="material-icons" style="font-size:14px;">${ins.icon || 'person_outline'}</span>
+                ${name}
+            </span>
+        `;
+    }).join('');
 }
 
 // ============ REGISTRO ============
@@ -187,21 +201,20 @@ function loginUser(email, password) {
     let updatedInsignias = [...userInsignias];
     
     if (isAdmin && adminInsignia) {
-        // Si es admin, asegurar que tenga su insignia asignada
         if (!updatedInsignias.includes(adminInsignia)) {
             updatedInsignias.push(adminInsignia);
         }
-        // También asegurar Owner si es admin
         if (adminInsignia !== 'Owner' && !updatedInsignias.includes('Owner')) {
             updatedInsignias.push('Owner');
         }
     }
     
     if (!isAdmin) {
-        // Si no es admin, quitar Owner y cualquier insignia de admin
-        updatedInsignias = updatedInsignias.filter(i => i !== 'Owner');
-        // También quitar Moderador si no es admin (opcional)
-        updatedInsignias = updatedInsignias.filter(i => i !== 'Moderador');
+        updatedInsignias = updatedInsignias.filter(i => i !== 'Owner' && i !== 'Moderador');
+    }
+    
+    if (!updatedInsignias.includes('Guest')) {
+        updatedInsignias.push('Guest');
     }
     
     saveInsigniasToStorage(email, updatedInsignias);
@@ -229,7 +242,6 @@ function loginUser(email, password) {
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
 
-    // ACTUALIZAR UI
     updateUserUI();
     showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
@@ -238,13 +250,10 @@ function loginUser(email, password) {
 // ============ CERRAR SESIÓN ============
 function logoutUser() {
     localStorage.removeItem(AUTH_CONFIG.tokenKey);
-    
     if (localStorage.getItem('admin_session')) {
         localStorage.removeItem('admin_session');
     }
-    
     showToast('Sesión cerrada', 'info');
-    
     setTimeout(() => {
         window.location.href = 'login.html';
     }, 500);
@@ -268,7 +277,6 @@ function checkSession() {
     }
 }
 
-// ============ OBTENER USUARIO ACTUAL ============
 function getCurrentUser() {
     const session = checkSession();
     return session ? session.user : null;
@@ -286,7 +294,6 @@ function updateUserUI() {
         if (avatarEl) avatarEl.textContent = 'account_circle';
         if (nameEl) nameEl.textContent = user.username || 'Usuario';
 
-        // Verificar admin
         const isAdmin = isUserAdmin(user.email);
 
         const adminBtn = document.getElementById('adminPanelBtn');
@@ -303,7 +310,6 @@ function updateUserUI() {
             if (adminDropdownBtn) adminDropdownBtn.style.display = 'none';
         }
 
-        // Renderizar insignias
         renderUserInsignias(user.email, 'userInsignias');
     } else {
         if (balanceEl) balanceEl.textContent = '$0.00';
@@ -312,33 +318,6 @@ function updateUserUI() {
     }
 }
 
-// ============ RENDERIZAR INSIGNIAS ============
-function renderUserInsignias(email, containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    const insignias = getInsigniasFromStorage(email);
-    const whitelist = loadWhitelistData();
-    const allInsignias = whitelist.insignias || {};
-
-    if (!insignias || insignias.length === 0) {
-        container.innerHTML = `<span class="insignia-guest"><span class="material-icons" style="font-size:14px;">person_outline</span> Guest</span>`;
-        return;
-    }
-
-    container.innerHTML = insignias.map(name => {
-        const ins = allInsignias[name];
-        if (!ins) return '';
-        return `
-            <span class="insignia-badge" style="background:${ins.bgColor || 'rgba(149,165,166,0.15)'}; color:${ins.color || '#95a5a6'};">
-                <span class="material-icons" style="font-size:14px;">${ins.icon || 'person_outline'}</span>
-                ${name}
-            </span>
-        `;
-    }).join('');
-}
-
-// ============ TOGGLE MENÚ ============
 function toggleUserMenu() {
     const dropdown = document.getElementById('userDropdown');
     if (dropdown) dropdown.classList.toggle('active');
@@ -352,7 +331,6 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// ============ FUNCIONES DE USUARIO ============
 function getUsers() {
     try {
         return JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]');
@@ -407,7 +385,6 @@ function addPurchaseToHistory(userId, purchaseData) {
     return false;
 }
 
-// ============ UTILIDADES ============
 function hashPassword(password) {
     let hash = 0;
     for (let i = 0; i < password.length; i++) {
@@ -422,7 +399,6 @@ function generateToken(userId) {
     return btoa(`${userId}:${Date.now()}:${Math.random()}`);
 }
 
-// ============ TOAST ============
 function showToast(message, type = 'info') {
     let container = document.querySelector('.toast-container');
     if (!container) {
@@ -464,7 +440,6 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// ============ INICIALIZAR ============
 document.addEventListener('DOMContentLoaded', function() {
     if (!localStorage.getItem('admin_whitelist')) {
         loadWhitelistData();
@@ -472,7 +447,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateUserUI();
 });
 
-// ============ EXPORTAR ============
 window.registerUser = registerUser;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
