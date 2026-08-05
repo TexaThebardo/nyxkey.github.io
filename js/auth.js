@@ -13,17 +13,17 @@ const AUTH_CONFIG = {
 // ============ REGISTRO ============
 function registerUser(email, password, username) {
     console.log('🔍 registerUser() ejecutado');
-    
+
     if (!email || !password || !username) {
         showToast('Todos los campos son obligatorios', 'error');
         return false;
     }
-    
+
     if (password.length < 6) {
         showToast('La contraseña debe tener al menos 6 caracteres', 'error');
         return false;
     }
-    
+
     let users = [];
     try {
         const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
@@ -31,17 +31,17 @@ function registerUser(email, password, username) {
     } catch (e) {
         users = [];
     }
-    
+
     if (users.find(u => u.email === email)) {
         showToast('El email ya está registrado', 'error');
         return false;
     }
-    
+
     if (users.find(u => u.username === username)) {
         showToast('El nombre de usuario ya está en uso', 'error');
         return false;
     }
-    
+
     const newUser = {
         id: 'user_' + Date.now(),
         email: email,
@@ -55,13 +55,14 @@ function registerUser(email, password, username) {
         profile: {
             banner: '',
             avatar: '',
-            bio: ''
+            bio: '',
+            pronoun: 'él'
         }
     };
-    
+
     users.push(newUser);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
-    
+
     console.log('✅ Usuario registrado:', username);
     showToast('✅ Registro exitoso. Inicia sesión.', 'success');
     return true;
@@ -70,12 +71,12 @@ function registerUser(email, password, username) {
 // ============ LOGIN ============
 function loginUser(email, password) {
     console.log('🔍 loginUser() ejecutado');
-    
+
     if (!email || !password) {
         showToast('Email y contraseña son obligatorios', 'error');
         return false;
     }
-    
+
     let users = [];
     try {
         const stored = localStorage.getItem(AUTH_CONFIG.usersKey);
@@ -83,18 +84,18 @@ function loginUser(email, password) {
     } catch (e) {
         users = [];
     }
-    
+
     const user = users.find(u => u.email === email);
     if (!user) {
         showToast('Usuario no encontrado', 'error');
         return false;
     }
-    
+
     if (hashPassword(password) !== user.password) {
         showToast('Contraseña incorrecta', 'error');
         return false;
     }
-    
+
     const session = {
         user: {
             id: user.id,
@@ -103,19 +104,19 @@ function loginUser(email, password) {
             balance: user.balance,
             role: user.role,
             purchases: user.purchases || [],
-            profile: user.profile || { banner: '', avatar: '', bio: '' }
+            profile: user.profile || { banner: '', avatar: '', bio: '', pronoun: 'él' }
         },
         token: generateToken(user.id),
         expiresAt: Date.now() + AUTH_CONFIG.sessionTimeout
     };
-    
+
     localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
     console.log('✅ Sesión creada para:', user.username);
-    
+
     user.lastLogin = new Date().toISOString();
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
-    
+
     updateUserUI();
     return true;
 }
@@ -131,7 +132,7 @@ function logoutUser() {
 function checkSession() {
     const sessionData = localStorage.getItem(AUTH_CONFIG.tokenKey);
     if (!sessionData) return null;
-    
+
     try {
         const session = JSON.parse(sessionData);
         if (Date.now() > session.expiresAt) {
@@ -151,20 +152,19 @@ function getCurrentUser() {
     return session ? session.user : null;
 }
 
-// ============ ACTUALIZAR UI DEL USUARIO ============
+// ============ ACTUALIZAR UI ============
 function updateUserUI() {
     const user = getCurrentUser();
     const balanceEl = document.getElementById('userBalance');
     const avatarEl = document.getElementById('userAvatarIcon');
     const nameEl = document.getElementById('userDisplayName');
-    
+
     if (user) {
         if (balanceEl) balanceEl.textContent = `$${user.balance.toFixed(2)}`;
         if (avatarEl) avatarEl.textContent = 'account_circle';
         if (nameEl) nameEl.textContent = user.username || 'Usuario';
-        
-        // ============ VERIFICAR SI ES ADMIN ============
-        // Cargar whitelist y verificar si el email está en la lista
+
+        // ============ VERIFICAR ADMIN ============
         let isUserAdmin = false;
         try {
             const whitelistData = localStorage.getItem('admin_whitelist');
@@ -174,23 +174,23 @@ function updateUserUI() {
                     isUserAdmin = true;
                 }
             }
-        } catch (e) {
-            console.log('Error al verificar whitelist:', e);
-        }
-        
-        // Mostrar/ocultar botón de Admin Manager
+        } catch (e) {}
+
+        // Mostrar/ocultar botones admin
         const adminBtn = document.getElementById('adminPanelBtn');
         const adminSidebarBtn = document.getElementById('adminSidebarBtn');
-        
+        const adminDropdownBtn = document.getElementById('adminDropdownBtn');
+
         if (isUserAdmin) {
-            console.log('👑 Usuario ADMIN detectado:', user.email);
-            if (adminBtn) adminBtn.style.display = 'flex';
+            if (adminBtn) adminBtn.style.display = 'inline-flex';
             if (adminSidebarBtn) adminSidebarBtn.style.display = 'flex';
+            if (adminDropdownBtn) adminDropdownBtn.style.display = 'flex';
         } else {
             if (adminBtn) adminBtn.style.display = 'none';
             if (adminSidebarBtn) adminSidebarBtn.style.display = 'none';
+            if (adminDropdownBtn) adminDropdownBtn.style.display = 'none';
         }
-        
+
         // Renderizar insignias
         if (typeof renderInsignias === 'function') {
             renderInsignias(user.email, 'userInsignias');
@@ -231,7 +231,7 @@ function updateUserBalance(userId, amount) {
     if (user) {
         user.balance = (user.balance || 0) + amount;
         localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
-        
+
         const currentUser = getCurrentUser();
         if (currentUser && currentUser.id === userId) {
             const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
@@ -257,7 +257,7 @@ function addPurchaseToHistory(userId, purchaseData) {
             id: 'purchase_' + Date.now()
         });
         localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
-        
+
         const currentUser = getCurrentUser();
         if (currentUser && currentUser.id === userId) {
             const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
@@ -295,7 +295,7 @@ function showToast(message, type = 'info') {
         container.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;max-width:90%;';
         document.body.appendChild(container);
     }
-    
+
     const toast = document.createElement('div');
     const colors = {
         success: '#2ecc71',
@@ -303,7 +303,7 @@ function showToast(message, type = 'info') {
         info: '#3498db',
         warning: '#f39c12'
     };
-    
+
     toast.style.cssText = `
         background: #1a232e;
         color: #e8edf2;
@@ -321,7 +321,7 @@ function showToast(message, type = 'info') {
     `;
     toast.textContent = message;
     container.appendChild(toast);
-    
+
     setTimeout(() => {
         toast.style.animation = 'slideDown 0.3s ease';
         setTimeout(() => toast.remove(), 300);
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         localStorage.setItem('admin_whitelist', JSON.stringify(defaultWhitelist));
     }
-    
+
     updateUserUI();
 });
 
