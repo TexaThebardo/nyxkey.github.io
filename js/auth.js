@@ -10,6 +10,7 @@ const AUTH_CONFIG = {
     sessionTimeout: 3600000
 };
 
+// ============ REGISTRO ============
 function registerUser(email, password, username) {
     console.log('🔍 registerUser() ejecutado');
     
@@ -66,6 +67,7 @@ function registerUser(email, password, username) {
     return true;
 }
 
+// ============ LOGIN ============
 function loginUser(email, password) {
     console.log('🔍 loginUser() ejecutado');
     
@@ -118,12 +120,14 @@ function loginUser(email, password) {
     return true;
 }
 
+// ============ CERRAR SESIÓN ============
 function logoutUser() {
     localStorage.removeItem(AUTH_CONFIG.tokenKey);
     showToast('Sesión cerrada', 'info');
     window.location.href = 'login.html';
 }
 
+// ============ VERIFICAR SESIÓN ============
 function checkSession() {
     const sessionData = localStorage.getItem(AUTH_CONFIG.tokenKey);
     if (!sessionData) return null;
@@ -141,11 +145,13 @@ function checkSession() {
     }
 }
 
+// ============ OBTENER USUARIO ACTUAL ============
 function getCurrentUser() {
     const session = checkSession();
     return session ? session.user : null;
 }
 
+// ============ ACTUALIZAR UI DEL USUARIO ============
 function updateUserUI() {
     const user = getCurrentUser();
     const balanceEl = document.getElementById('userBalance');
@@ -157,15 +163,35 @@ function updateUserUI() {
         if (avatarEl) avatarEl.textContent = 'account_circle';
         if (nameEl) nameEl.textContent = user.username || 'Usuario';
         
-        const adminBtn = document.getElementById('adminPanelBtn');
-        if (adminBtn) {
-            if (isAdmin && isAdmin(user.email)) {
-                adminBtn.style.display = 'flex';
-            } else {
-                adminBtn.style.display = 'none';
+        // ============ VERIFICAR SI ES ADMIN ============
+        // Cargar whitelist y verificar si el email está en la lista
+        let isUserAdmin = false;
+        try {
+            const whitelistData = localStorage.getItem('admin_whitelist');
+            if (whitelistData) {
+                const whitelist = JSON.parse(whitelistData);
+                if (whitelist.admins && whitelist.admins.includes(user.email)) {
+                    isUserAdmin = true;
+                }
             }
+        } catch (e) {
+            console.log('Error al verificar whitelist:', e);
         }
         
+        // Mostrar/ocultar botón de Admin Manager
+        const adminBtn = document.getElementById('adminPanelBtn');
+        const adminSidebarBtn = document.getElementById('adminSidebarBtn');
+        
+        if (isUserAdmin) {
+            console.log('👑 Usuario ADMIN detectado:', user.email);
+            if (adminBtn) adminBtn.style.display = 'flex';
+            if (adminSidebarBtn) adminSidebarBtn.style.display = 'flex';
+        } else {
+            if (adminBtn) adminBtn.style.display = 'none';
+            if (adminSidebarBtn) adminSidebarBtn.style.display = 'none';
+        }
+        
+        // Renderizar insignias
         if (typeof renderInsignias === 'function') {
             renderInsignias(user.email, 'userInsignias');
         }
@@ -176,6 +202,7 @@ function updateUserUI() {
     }
 }
 
+// ============ TOGGLE MENÚ ============
 function toggleUserMenu() {
     const dropdown = document.getElementById('userDropdown');
     if (dropdown) dropdown.classList.toggle('active');
@@ -189,6 +216,7 @@ document.addEventListener('click', function(e) {
     }
 });
 
+// ============ FUNCIONES DE USUARIO ============
 function getUsers() {
     try {
         return JSON.parse(localStorage.getItem(AUTH_CONFIG.usersKey) || '[]');
@@ -243,6 +271,7 @@ function addPurchaseToHistory(userId, purchaseData) {
     return false;
 }
 
+// ============ UTILIDADES ============
 function hashPassword(password) {
     let hash = 0;
     for (let i = 0; i < password.length; i++) {
@@ -257,6 +286,7 @@ function generateToken(userId) {
     return btoa(`${userId}:${Date.now()}:${Math.random()}`);
 }
 
+// ============ TOAST ============
 function showToast(message, type = 'info') {
     let container = document.querySelector('.toast-container');
     if (!container) {
@@ -298,10 +328,30 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
+// ============ INICIALIZAR ============
 document.addEventListener('DOMContentLoaded', function() {
+    // Cargar whitelist por defecto si no existe
+    if (!localStorage.getItem('admin_whitelist')) {
+        const defaultWhitelist = {
+            admins: ['zgxbrielb@gmail.com', 'admin@yxcards.com'],
+            insignias: {
+                'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
+                'Dev': { icon: 'code', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.15)', description: 'Desarrollador de la plataforma' },
+                'Verificado': { icon: 'verified_user', color: '#2ecc71', bgColor: 'rgba(46, 204, 113, 0.15)', description: 'Usuario verificado' },
+                'Guest': { icon: 'person_outline', color: '#95a5a6', bgColor: 'rgba(149, 165, 166, 0.15)', description: 'Usuario invitado' },
+                'VIP': { icon: 'stars', color: '#e67e22', bgColor: 'rgba(230, 126, 34, 0.15)', description: 'Usuario VIP' },
+                'Moderador': { icon: 'shield', color: '#9b59b6', bgColor: 'rgba(155, 89, 182, 0.15)', description: 'Moderador de la comunidad' },
+                'Colaborador': { icon: 'group', color: '#1abc9c', bgColor: 'rgba(26, 188, 156, 0.15)', description: 'Colaborador activo' },
+                'Fundador': { icon: 'emoji_events', color: '#e74c3c', bgColor: 'rgba(231, 76, 60, 0.15)', description: 'Fundador de la plataforma' }
+            }
+        };
+        localStorage.setItem('admin_whitelist', JSON.stringify(defaultWhitelist));
+    }
+    
     updateUserUI();
 });
 
+// ============ EXPORTAR ============
 window.registerUser = registerUser;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
