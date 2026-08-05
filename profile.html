@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
         /* ============================================
-           PERFIL - COMPLETO CON SOPORTE VIDEO
+           PERFIL - COMPLETO
            ============================================ */
 
         .profile-container {
@@ -28,7 +28,7 @@
             box-shadow: var(--shadow);
         }
 
-        /* ============ BANNER CON SOPORTE VIDEO ============ */
+        /* ============ BANNER ============ */
         .profile-banner {
             width: 100%;
             height: 200px;
@@ -63,26 +63,24 @@
             display: none;
         }
 
-        .profile-banner .banner-media {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         /* ============ YOUTUBE EMBED ============ */
         .profile-banner .youtube-embed {
             width: 100%;
             height: 100%;
             display: none;
-            border: none;
+            position: relative;
         }
 
         .profile-banner .youtube-embed iframe {
             width: 100%;
             height: 100%;
             border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
+        /* ============ CONTROLES ============ */
         .profile-banner .banner-actions {
             position: absolute;
             top: 12px;
@@ -143,7 +141,6 @@
             z-index: 5;
         }
 
-        /* ============ CONTROLES DE AUDIO ============ */
         .banner-audio-controls {
             position: absolute;
             bottom: 12px;
@@ -182,10 +179,6 @@
             border-color: var(--primary);
         }
 
-        .banner-audio-controls button .material-icons {
-            font-size: 16px;
-        }
-
         .banner-audio-controls .volume-slider {
             width: 80px;
             accent-color: var(--primary);
@@ -195,25 +188,7 @@
             cursor: pointer;
         }
 
-        .banner-audio-controls .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-        }
-
-        .banner-audio-controls .volume-slider::-moz-range-thumb {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--primary);
-            cursor: pointer;
-        }
-
-        /* ============ MODAL PARA URL ============ */
+        /* ============ MODAL URL ============ */
         .url-modal-overlay {
             position: fixed;
             top: 0;
@@ -497,11 +472,6 @@
             color: var(--primary);
         }
 
-        .profile-name-row .pronoun-selector .material-icons {
-            font-size: 14px;
-        }
-
-        /* ============ INSIGNIAS ============ */
         .profile-insignias {
             display: flex;
             gap: 6px;
@@ -532,7 +502,6 @@
             gap: 4px;
         }
 
-        /* ============ BIO ============ */
         .profile-bio {
             color: var(--text-secondary);
             font-size: 14px;
@@ -598,9 +567,7 @@
             }
         }
 
-        /* ============================================
-           COLUMNA IZQUIERDA - PERFIL
-           ============================================ */
+        /* ============ COLUMNA IZQUIERDA ============ */
         .profile-left-col {
             display: flex;
             flex-direction: column;
@@ -634,7 +601,6 @@
             margin-left: auto;
         }
 
-        /* ============ CONEXIONES ============ */
         .profile-connections {
             background: var(--bg-primary);
             border-radius: 12px;
@@ -659,10 +625,6 @@
             margin: 0;
         }
 
-        .profile-connections .connections-header h4 .material-icons {
-            font-size: 16px;
-        }
-
         .profile-connections .connections-header .add-connection {
             font-size: 12px;
             color: var(--primary);
@@ -671,10 +633,6 @@
             display: flex;
             align-items: center;
             gap: 4px;
-        }
-
-        .profile-connections .connections-header .add-connection:hover {
-            color: var(--primary-dark);
         }
 
         .connection-item {
@@ -723,10 +681,6 @@
             gap: 4px;
         }
 
-        .connection-item .connection-status .material-icons {
-            font-size: 14px;
-        }
-
         .connection-item .connection-remove {
             color: var(--text-muted);
             cursor: pointer;
@@ -742,11 +696,6 @@
             color: #e74c3c;
         }
 
-        .connection-item .connection-remove .material-icons {
-            font-size: 16px;
-        }
-
-        /* ============ NOTA ============ */
         .profile-note {
             background: var(--bg-primary);
             border-radius: 12px;
@@ -762,10 +711,6 @@
             display: flex;
             align-items: center;
             gap: 6px;
-        }
-
-        .profile-note .note-label .material-icons {
-            font-size: 14px;
         }
 
         .profile-note .note-content {
@@ -797,15 +742,7 @@
             margin-top: 4px;
         }
 
-        .profile-note .note-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
-        }
-
-        /* ============================================
-           COLUMNA DERECHA - ACTIVIDAD
-           ============================================ */
+        /* ============ COLUMNA DERECHA ============ */
         .profile-right-col {
             display: flex;
             flex-direction: column;
@@ -835,15 +772,6 @@
             align-items: center;
             gap: 6px;
             margin: 0;
-        }
-
-        .profile-activity .activity-header h3 .material-icons {
-            font-size: 18px;
-        }
-
-        .profile-activity .activity-header span {
-            font-size: 11px;
-            color: var(--text-muted);
         }
 
         .activity-item {
@@ -910,7 +838,6 @@
             font-size: 13px;
         }
 
-        /* ============ ESTADÍSTICAS ============ */
         .profile-stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -943,10 +870,6 @@
             margin-top: 2px;
         }
 
-        .profile-stat .stat-label .material-icons {
-            font-size: 13px;
-        }
-
         @media (max-width: 600px) {
             .profile-stats {
                 grid-template-columns: 1fr 1fr;
@@ -959,7 +882,6 @@
             }
         }
 
-        /* ============ BOTONES ============ */
         .profile-actions {
             display: flex;
             gap: 10px;
@@ -1075,10 +997,6 @@
             gap: 10px;
         }
 
-        .settings-modal-box h2 .material-icons {
-            color: var(--primary);
-        }
-
         .settings-modal-box .subtitle {
             color: var(--text-secondary);
             font-size: 13px;
@@ -1103,12 +1021,6 @@
             font-weight: 500;
             color: var(--text-primary);
             margin-bottom: 4px;
-        }
-
-        .settings-group .helper-text {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
         }
 
         .settings-group input {
@@ -1314,7 +1226,7 @@
                         <video id="bannerVideo" src="" muted loop playsinline style="display:none; width:100%; height:100%; object-fit:cover;"></video>
                         <!-- YouTube Embed -->
                         <div class="youtube-embed" id="youtubeEmbed" style="display:none;">
-                            <iframe id="youtubeIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                            <iframe id="youtubeIframe" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
                         </div>
 
                         <div class="banner-overlay">
@@ -1547,12 +1459,12 @@
     <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // PROFILE.JS - COMPLETO CON VIDEO LOCAL Y URL
+        // PROFILE.JS - CORREGIDO
         // ============================================
 
         let tempAvatarData = null;
         let tempBannerData = null;
-        let tempBannerType = 'image'; // 'image', 'video', 'youtube'
+        let tempBannerType = 'image';
         let isBannerAnimated = true;
         let isEditingBio = false;
         let isEditingNote = false;
@@ -1560,15 +1472,13 @@
         let isLooping = false;
         const PRONOUNS = ['él', 'ella', 'elle', 'ellos', 'ellas'];
 
-        // ============ REFERENCIAS AL BANNER ============
+        // ============ REFERENCIAS ============
         const bannerContainer = document.getElementById('bannerContainer');
         const bannerImage = document.getElementById('bannerImage');
         const bannerVideo = document.getElementById('bannerVideo');
         const youtubeEmbed = document.getElementById('youtubeEmbed');
         const youtubeIframe = document.getElementById('youtubeIframe');
-        const muteBtn = document.getElementById('muteBtn');
         const muteIcon = document.getElementById('muteIcon');
-        const loopBtn = document.getElementById('loopBtn');
         const loopIcon = document.getElementById('loopIcon');
         const volumeSlider = document.getElementById('volumeSlider');
 
@@ -1651,7 +1561,7 @@
             const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
             if (youtubeMatch) {
                 const videoId = youtubeMatch[1];
-                const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}`;
+                const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1`;
                 tempBannerType = 'youtube';
                 tempBannerData = embedUrl;
                 
@@ -1670,7 +1580,7 @@
             const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
             if (vimeoMatch) {
                 const videoId = vimeoMatch[1];
-                const embedUrl = `https://player.vimeo.com/video/${videoID}?autoplay=1&muted=1&loop=1`;
+                const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1`;
                 tempBannerType = 'youtube';
                 tempBannerData = embedUrl;
                 
@@ -1729,7 +1639,6 @@
         function toggleMute() {
             isMuted = !isMuted;
             bannerVideo.muted = isMuted;
-            // Para YouTube, no podemos controlar el mute directamente
             if (isMuted) {
                 muteIcon.textContent = 'volume_off';
                 showToast('🔇 Sonido desactivado', 'info');
@@ -1779,7 +1688,6 @@
             }
         });
 
-        // Cerrar modal URL al hacer clic fuera
         document.getElementById('urlModal').addEventListener('click', function(e) {
             if (e.target === this) closeUrlModal();
         });
@@ -1817,14 +1725,13 @@
 
                 const profile = fullUser.profile || {};
 
-                // Avatar
                 if (profile.avatar) {
                     document.getElementById('avatarImage').src = profile.avatar;
                     document.getElementById('avatarImage').style.display = 'block';
                     document.getElementById('avatarPlaceholder').style.display = 'none';
                 }
 
-                // Banner (imagen, video o youtube)
+                // Cargar banner
                 if (profile.banner) {
                     if (profile.bannerType === 'youtube') {
                         tempBannerType = 'youtube';
@@ -1883,6 +1790,7 @@
 
         // ============ GUARDAR PERFIL ============
         function saveProfile() {
+            console.log('📝 Guardando perfil...');
             const user = getCurrentUser();
             if (!user) {
                 showToast('❌ Usuario no autenticado', 'error');
@@ -1902,32 +1810,48 @@
             // Avatar
             if (tempAvatarData) {
                 users[userIndex].profile.avatar = tempAvatarData;
+                console.log('✅ Avatar guardado');
             } else if (!currentAvatar || currentAvatar === '') {
                 users[userIndex].profile.avatar = '';
+                console.log('✅ Avatar eliminado');
             }
 
             // Banner
             if (tempBannerData) {
                 users[userIndex].profile.banner = tempBannerData;
                 users[userIndex].profile.bannerType = tempBannerType;
+                console.log('✅ Banner guardado');
             }
 
+            // Bio
             const bio = document.getElementById('bioInput').value || document.getElementById('bioDisplay').textContent;
             users[userIndex].profile.bio = bio !== 'Sin biografía' ? bio : '';
+            console.log('✅ Bio guardada');
+
+            // Pronombre
             users[userIndex].profile.pronoun = document.getElementById('pronounText').textContent;
+            console.log('✅ Pronombre guardado');
+
+            // Nota
             users[userIndex].profile.note = document.getElementById('noteDisplay').textContent;
+            console.log('✅ Nota guardada');
+
+            // Conexiones (ya se guardan al añadir/eliminar)
 
             localStorage.setItem('yx_users', JSON.stringify(users));
 
+            // Actualizar sesión
             const session = JSON.parse(localStorage.getItem('yx_token'));
             if (session) {
                 session.user.profile = users[userIndex].profile;
                 localStorage.setItem('yx_token', JSON.stringify(session));
+                console.log('✅ Sesión actualizada');
             }
 
             tempAvatarData = null;
             tempBannerData = null;
             showToast('✅ Perfil actualizado correctamente', 'success');
+            console.log('✅ Perfil guardado correctamente');
         }
 
         // ============ INSIGNIAS ============
@@ -2251,7 +2175,6 @@
             resetPasswordStrength();
         }
 
-        // ============ FUERZA DE CONTRASEÑA ============
         function checkPasswordStrength() {
             const password = document.getElementById('settingsNewPassword').value;
             const bars = [
@@ -2290,7 +2213,6 @@
             else { input.type = 'password'; icon.textContent = 'visibility'; }
         }
 
-        // ============ UTILIDADES ============
         function timeAgo(date) {
             const seconds = Math.floor((new Date() - date) / 1000);
             if (seconds < 60) return 'hace ' + seconds + 's';
@@ -2306,7 +2228,6 @@
             return 'hace ' + months + ' mes.';
         }
 
-        // ============ TOAST ============
         function showToast(message, type = 'info') {
             let container = document.querySelector('.toast-container');
             if (!container) {
@@ -2324,7 +2245,7 @@
             }, 3000);
         }
 
-        console.log('✅ Profile.js con soporte video local y URL cargado correctamente');
+        console.log('✅ Profile.js cargado correctamente');
     </script>
 </body>
 </html>
