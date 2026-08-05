@@ -9,13 +9,103 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ============ LOGO ANIMADO EN NAVBAR ============ */
+        .nav-logo .logo-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            animation: pulseLogo 3s ease-in-out infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .nav-logo .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 8px rgba(240, 185, 11, 0.2));
+            }
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 20px rgba(240, 185, 11, 0.4));
+            }
+        }
+
+        /* ============ LOGO EN HERO ============ */
+        .hero-logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .hero-logo .hero-logo-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            overflow: hidden;
+            animation: pulseLogo 3s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        .hero-logo .hero-logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-logo .hero-brand {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .hero-logo .hero-brand span {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .hero-logo .hero-brand {
+                font-size: 24px;
+            }
+            .hero-logo .hero-logo-img {
+                width: 48px;
+                height: 48px;
+            }
+            .nav-logo .logo-img {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-logo .hero-brand {
+                font-size: 20px;
+            }
+            .hero-logo .hero-logo-img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- ============ NAVEGACIÓN ============ -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <span class="material-icons-outlined">flash_on</span>
+                <!-- LOGO CON ANIMACIÓN -->
+                <span class="logo-img">
+                    <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards">
+                </span>
                 <span class="logo-text">Yx</span>
                 <span class="logo-text-full">Cards</span>
                 <span class="logo-badge">PRO</span>
@@ -49,7 +139,7 @@
                     <div id="userInsignias" class="user-insignias"></div>
                 </div>
                 
-                <!-- ===== BOTÓN ADMIN (SOLO VISIBLE PARA ADMINS) ===== -->
+                <!-- BOTÓN ADMIN -->
                 <button id="adminPanelBtn" class="btn-admin-link" onclick="window.location.href='admin.html'" style="display:none;">
                     <span class="material-icons">admin_panel_settings</span>
                     Admin
@@ -69,7 +159,6 @@
                     <div class="user-dropdown" id="userDropdown">
                         <a href="profile.html"><span class="material-icons-outlined">person</span> Mi Perfil</a>
                         <a href="dashboard.html"><span class="material-icons-outlined">dashboard</span> Dashboard</a>
-                        <!-- ===== ADMIN MANAGER EN DROPDOWN ===== -->
                         <a href="admin.html" id="adminDropdownBtn" style="display:none;">
                             <span class="material-icons-outlined">admin_panel_settings</span> Admin Manager
                         </a>
@@ -80,10 +169,19 @@
         </div>
     </nav>
 
-    <!-- ============ HERO ============ -->
+    <!-- ============ HERO CON LOGO ============ -->
     <section class="hero-section">
         <div class="hero-container">
             <div class="hero-content">
+                <!-- LOGO EN HERO -->
+                <div class="hero-logo">
+                    <div class="hero-logo-img">
+                        <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards">
+                    </div>
+                    <div class="hero-brand">
+                        Yx <span>Cards</span>
+                    </div>
+                </div>
                 <h1><span class="hero-highlight">Tarjetas</span> en Tiempo Real <span class="hero-badge">LIVE</span></h1>
                 <p>Inventario verificado al instante con más del 99% de precisión</p>
                 <div class="hero-stats">
@@ -283,7 +381,11 @@
     <!-- ============ FOOTER ============ -->
     <footer class="footer">
         <div class="footer-container">
-            <div class="footer-brand"><span class="material-icons-outlined">flash_on</span><span>Yx Cards</span><span class="footer-version">v2.0</span></div>
+            <div class="footer-brand">
+                <span class="material-icons-outlined">flash_on</span>
+                <span>Yx Cards</span>
+                <span class="footer-version">v2.0</span>
+            </div>
             <div class="footer-links"><a href="#">Términos</a><a href="#">Privacidad</a><a href="#">Soporte</a><a href="#">API</a></div>
             <div class="footer-social"><a href="#"><i class="fab fa-telegram"></i></a><a href="#"><i class="fab fa-discord"></i></a><a href="#"><i class="fab fa-github"></i></a></div>
         </div>
@@ -292,6 +394,7 @@
 
     <!-- ============ SCRIPTS ============ -->
     <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
     <script src="js/products.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/app.js"></script>
