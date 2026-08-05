@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
-        /* ============ MODAL PARA MOSTRAR DATOS DE TARJETA ============ */
+        /* ============================================
+           MODAL PARA MOSTRAR DATOS DE TARJETA
+           ============================================ */
         .card-data-modal {
             position: fixed;
             top: 0;
@@ -62,7 +64,9 @@
             color: #e74c3c;
             transform: rotate(90deg);
         }
-        .card-data-box .card-number-display {
+
+        /* ============ NÚMERO DE TARJETA CON BLUR ============ */
+        .card-number-display {
             font-family: 'Courier New', monospace;
             font-size: 28px;
             font-weight: 700;
@@ -75,47 +79,73 @@
             border: 1px solid #2a313c;
             margin: 12px 0;
             word-break: break-all;
+            position: relative;
+            transition: all 0.3s ease;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
         }
-        .card-data-box .card-detail-row {
+
+        .card-number-display.blurred .number-text {
+            filter: blur(8px);
+            user-select: none;
+            transition: filter 0.3s ease;
+        }
+
+        .card-number-display .number-text {
+            transition: filter 0.3s ease;
+        }
+
+        .card-number-display .reveal-btn {
+            background: rgba(240, 185, 11, 0.15);
+            border: 1px solid rgba(240, 185, 11, 0.3);
+            color: #f0b90b;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-number-display .reveal-btn:hover {
+            background: rgba(240, 185, 11, 0.25);
+            transform: scale(1.05);
+        }
+
+        .card-number-display .reveal-btn .material-icons {
+            font-size: 16px;
+        }
+
+        /* ============ DETALLES DE LA TARJETA ============ */
+        .card-detail-row {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px solid #1e2630;
             font-size: 14px;
         }
-        .card-data-box .card-detail-row .label {
+        .card-detail-row .label {
             color: #a0aab8;
         }
-        .card-data-box .card-detail-row .value {
-            color: #f0b90b;
+        .card-detail-row .value {
+            color: #e8edf2;
             font-weight: 600;
             font-family: 'Courier New', monospace;
         }
-        .card-data-box .copy-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #f0b90b;
-            color: #0b0e14;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            justify-content: center;
-            margin-top: 16px;
+        .card-detail-row .value.gold {
+            color: #f0b90b;
         }
-        .card-data-box .copy-btn:hover {
-            background: #d4a40a;
-            transform: scale(1.02);
-        }
-        .card-data-box .copy-btn .material-icons {
-            font-size: 18px;
-        }
-        .card-data-box .card-type-badge {
+
+        /* ============ TARJETA TIPO BADGE ============ */
+        .card-type-badge {
             display: inline-block;
             padding: 4px 16px;
             border-radius: 20px;
@@ -124,12 +154,56 @@
             text-align: center;
             margin-bottom: 12px;
         }
-        .card-data-box .card-type-badge.visa { background: rgba(26, 83, 154, 0.2); color: #1a539a; }
-        .card-data-box .card-type-badge.mastercard { background: rgba(235, 10, 30, 0.2); color: #eb0a1e; }
-        .card-data-box .card-type-badge.amex { background: rgba(0, 102, 204, 0.2); color: #0066cc; }
-        .card-data-box .card-type-badge.discover { background: rgba(255, 102, 0, 0.2); color: #ff6600; }
+        .card-type-badge.visa { background: rgba(26, 83, 154, 0.2); color: #1a539a; }
+        .card-type-badge.mastercard { background: rgba(235, 10, 30, 0.2); color: #eb0a1e; }
+        .card-type-badge.amex { background: rgba(0, 102, 204, 0.2); color: #0066cc; }
+        .card-type-badge.discover { background: rgba(255, 102, 0, 0.2); color: #ff6600; }
 
-        /* Botón "Mostrar Datos" en la tarjeta de compra */
+        /* ============ BOTONES DE ACCIÓN ============ */
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .card-actions .btn-action-modal {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card-actions .btn-copy {
+            background: #f0b90b;
+            color: #0b0e14;
+        }
+        .card-actions .btn-copy:hover {
+            background: #d4a40a;
+            transform: scale(1.02);
+        }
+
+        .card-actions .btn-close-modal {
+            background: #1a232e;
+            border: 1px solid #2a313c;
+            color: #a0aab8;
+        }
+        .card-actions .btn-close-modal:hover {
+            background: #1e2a38;
+            color: #e8edf2;
+        }
+
+        /* ============================================
+           BOTÓN "MOSTRAR DATOS" EN TARJETA DE COMPRA
+           ============================================ */
         .btn-show-data {
             background: #2a4a6a;
             color: white;
@@ -153,7 +227,7 @@
             font-size: 14px;
         }
 
-        /* Estado "Comprada" con Material Icon */
+        /* ============ ESTADO COMPRADA ============ */
         .purchase-status.completed {
             display: inline-flex;
             align-items: center;
@@ -169,7 +243,6 @@
             font-size: 16px;
         }
 
-        /* Ajustes en la tarjeta de compra */
         .purchase-card .purchase-footer {
             display: flex;
             justify-content: space-between;
@@ -178,6 +251,9 @@
             gap: 8px;
         }
 
+        /* ============================================
+           ANIMACIONES
+           ============================================ */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -194,6 +270,7 @@
             from { opacity: 1; transform: translateY(0); }
             to { opacity: 0; transform: translateY(20px); }
         }
+
         .toast-container {
             position: fixed;
             bottom: 20px;
@@ -207,10 +284,39 @@
             pointer-events: none;
             max-width: 90%;
         }
+
+        .toast-container .toast {
+            background: #1a232e;
+            color: #e8edf2;
+            padding: 10px 22px;
+            border-radius: 12px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            font-size: 14px;
+            font-weight: 500;
+            pointer-events: auto;
+            animation: slideUpToast 0.3s ease;
+            min-width: 200px;
+            text-align: center;
+            border: 1px solid #2a313c;
+        }
+        .toast-container .toast.success { border-left-color: #2ecc71; }
+        .toast-container .toast.error { border-left-color: #e74c3c; }
+        .toast-container .toast.info { border-left-color: #3498db; }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 480px) {
+            .card-data-box { padding: 20px; }
+            .card-number-display { font-size: 20px; padding: 12px 0; min-height: 60px; }
+            .card-actions { flex-direction: column; }
+            .card-actions .btn-action-modal { flex: none; width: 100%; }
+        }
     </style>
 </head>
 <body>
-    <!-- NAVBAR -->
+    <!-- ============ NAVBAR ============ -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -236,7 +342,7 @@
         </div>
     </nav>
 
-    <!-- DASHBOARD -->
+    <!-- ============ DASHBOARD ============ -->
     <div class="dashboard-container">
         <aside class="sidebar">
             <nav class="sidebar-nav">
@@ -323,38 +429,62 @@
         </main>
     </div>
 
-    <!-- MODAL PARA MOSTRAR DATOS DE LA TARJETA -->
+    <!-- ==========================================
+    MODAL PARA MOSTRAR DATOS DE LA TARJETA
+    ========================================== -->
     <div class="card-data-modal" id="cardDataModal">
         <div class="card-data-box">
             <button class="close-modal" onclick="closeCardDataModal()">
                 <span class="material-icons">close</span>
             </button>
+            
             <div style="text-align:center;">
                 <span class="card-type-badge" id="modalCardType">VISA</span>
             </div>
-            <div class="card-number-display" id="modalCardNumber">**** **** **** ****</div>
+
+            <!-- NÚMERO DE TARJETA CON BLUR -->
+            <div class="card-number-display blurred" id="cardNumberDisplay">
+                <span class="number-text" id="modalCardNumber">**** **** **** ****</span>
+                <button class="reveal-btn" onclick="toggleCardNumberReveal()">
+                    <span class="material-icons" id="revealIcon">visibility</span>
+                    <span id="revealText">Mostrar Número</span>
+                </button>
+            </div>
+
+            <!-- DETALLES DE LA TARJETA -->
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
-                <div class="card-detail-row" style="flex-direction:column; align-items:flex-start; border-bottom:none; background:#0b0e14; padding:10px 14px; border-radius:10px;">
-                    <span class="label" style="font-size:11px;">Fecha Exp.</span>
-                    <span class="value" id="modalCardExpiry">**/**</span>
+                <div style="background:#0b0e14; padding:10px 14px; border-radius:10px; border:1px solid #1e2630;">
+                    <div style="font-size:11px; color:#5a6575;">Fecha Exp.</div>
+                    <div style="font-size:16px; font-weight:600; color:#e8edf2; font-family:'Courier New',monospace;" id="modalCardExpiry">**/**</div>
                 </div>
-                <div class="card-detail-row" style="flex-direction:column; align-items:flex-start; border-bottom:none; background:#0b0e14; padding:10px 14px; border-radius:10px;">
-                    <span class="label" style="font-size:11px;">CVV</span>
-                    <span class="value" id="modalCardCvv">***</span>
+                <div style="background:#0b0e14; padding:10px 14px; border-radius:10px; border:1px solid #1e2630;">
+                    <div style="font-size:11px; color:#5a6575;">CVV</div>
+                    <div style="font-size:16px; font-weight:600; color:#e8edf2; font-family:'Courier New',monospace;" id="modalCardCvv">***</div>
                 </div>
             </div>
-            <div class="card-detail-row" style="border-bottom:none; padding-top:12px;">
-                <span class="label">Banco</span>
-                <span class="value" id="modalCardBank" style="color:#e8edf2; font-family:inherit;">-</span>
+
+            <div style="margin-top:8px;">
+                <div class="card-detail-row" style="border-bottom:none; padding-top:4px;">
+                    <span class="label">Banco</span>
+                    <span class="value" id="modalCardBank" style="color:#e8edf2; font-family:inherit;">-</span>
+                </div>
+                <div class="card-detail-row" style="border-bottom:none; padding-bottom:4px;">
+                    <span class="label">País</span>
+                    <span class="value" id="modalCardCountry" style="color:#e8edf2; font-family:inherit;">-</span>
+                </div>
             </div>
-            <div class="card-detail-row" style="border-bottom:none; padding-bottom:12px;">
-                <span class="label">País</span>
-                <span class="value" id="modalCardCountry" style="color:#e8edf2; font-family:inherit;">-</span>
+
+            <!-- BOTONES DE ACCIÓN -->
+            <div class="card-actions">
+                <button class="btn-action-modal btn-copy" onclick="copyCardData()">
+                    <span class="material-icons">content_copy</span>
+                    Copiar Datos
+                </button>
+                <button class="btn-action-modal btn-close-modal" onclick="closeCardDataModal()">
+                    <span class="material-icons">close</span>
+                    Cerrar
+                </button>
             </div>
-            <button class="copy-btn" onclick="copyCardData()">
-                <span class="material-icons">content_copy</span>
-                Copiar Datos Completos
-            </button>
         </div>
     </div>
 
