@@ -24,7 +24,7 @@ function loadWhitelist() {
 
     const defaultWhitelist = {
         admins: [
-            { email: 'admin@yxcards.com', key: 'admin123' }
+            { email: 'personalbusiness2626@gmail.com', key: 'admin123' }
         ]
     };
     localStorage.setItem('admin_whitelist', JSON.stringify(defaultWhitelist));
