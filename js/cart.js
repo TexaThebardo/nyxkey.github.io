@@ -209,8 +209,10 @@ function checkout() {
     }
     
     if (confirm(`💰 Total a pagar: $${total.toFixed(2)} USD\n¿Procesar pago?`)) {
+        // Actualizar saldo
         updateUserBalance(user.id, -total);
         
+        // Guardar compras
         cartItems.forEach(item => {
             const purchaseData = {
                 network: item.network,
@@ -227,6 +229,7 @@ function checkout() {
             }
         });
         
+        // Guardar transacción
         const transaction = {
             id: 'TX-' + Date.now(),
             type: 'compra',
@@ -248,14 +251,18 @@ function checkout() {
         saveCart();
         updateCartUI();
         updateCartBadge();
-        updateUserUI();
+        
+        // ============ ACTUALIZAR UI ============
+        if (typeof updateUserUI === 'function') {
+            updateUserUI();
+        }
         
         showToast('✅ Compra realizada con éxito. Revisa tu historial.', 'success');
         toggleCart();
     }
 }
 
-// ============ EXPORTAR PARA QUE ESTÉ DISPONIBLE ============
+// ============ EXPORTAR ============
 window.loadCart = loadCart;
 window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;
@@ -271,4 +278,4 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCart();
 });
 
-console.log('✅ Cart.js cargado correctamente - loadCart disponible');
+console.log('✅ Cart.js cargado correctamente');
