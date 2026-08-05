@@ -12,135 +12,135 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
         /* ============================================
-           TEMAS PERSONALIZABLES
+           SOLO ESTILOS ESPECÍFICOS DEL PERFIL
            ============================================ */
-        :root {
-            --profile-bg: #131a22;
-            --profile-text: #e8edf2;
-            --profile-card: #1a232e;
-            --profile-border: #2a313c;
-            --profile-input-bg: #0b0e14;
-            --profile-shadow: 0 8px 32px rgba(0,0,0,0.6);
-        }
 
-        [data-theme="light"] {
-            --profile-bg: #f0f2f5;
-            --profile-text: #1a1a2e;
-            --profile-card: #ffffff;
-            --profile-border: #d0d5dc;
-            --profile-input-bg: #f8f9fa;
-            --profile-shadow: 0 8px 32px rgba(0,0,0,0.1);
-        }
-
-        [data-theme="neon"] {
-            --profile-bg: #0a0a1a;
-            --profile-text: #00ffcc;
-            --profile-card: #111128;
-            --profile-border: #00ffcc44;
-            --profile-input-bg: #0a0a1a;
-            --profile-shadow: 0 8px 32px rgba(0,255,204,0.15);
-        }
-
-        body {
-            background: var(--profile-bg);
-            color: var(--profile-text);
-            transition: all 0.4s ease;
-        }
-
-        /* ============================================
-           PERFIL - CENTRADO
-           ============================================ */
-        .dashboard-container {
-            display: flex;
-            max-width: 1200px;
-            margin: 0 auto;
-            gap: 24px;
-            padding: 24px 20px;
-            justify-content: center;
-        }
-
-        .dashboard-main {
-            flex: 1;
-            max-width: 800px;
-            min-width: 0;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .section-header h2 {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--profile-text);
-        }
-
-        /* ============================================
-           TARJETA DE PERFIL
-           ============================================ */
-        .profile-container {
-            max-width: 100%;
-            margin: 0;
-        }
-
-        .profile-card {
-            background: var(--profile-card);
-            border: 1px solid var(--profile-border);
-            border-radius: 16px;
-            padding: 32px;
-            display: flex;
-            gap: 32px;
-            flex-wrap: wrap;
-            box-shadow: var(--profile-shadow);
-            transition: all 0.4s ease;
-        }
-
-        .profile-left {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            flex: 1;
-            min-width: 180px;
-        }
-
-        .profile-right {
-            flex: 2;
-            min-width: 280px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        /* ============================================
-           AVATAR
-           ============================================ */
-        .profile-avatar-wrapper {
+        /* ============ BANNER ============ */
+        .profile-banner {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            background-size: 400% 400%;
+            border-radius: var(--radius) var(--radius) 0 0;
             position: relative;
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            border: 4px solid var(--profile-border);
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s ease;
+        }
+
+        .profile-banner.animated {
+            animation: gradientMove 10s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .profile-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-banner .banner-overlay {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255,255,255,0.05);
+            pointer-events: none;
+        }
+
+        .profile-banner .banner-overlay .material-icons {
+            font-size: 16px;
+        }
+
+        .profile-banner .banner-actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .profile-banner:hover .banner-actions {
+            opacity: 1;
+        }
+
+        .profile-banner .banner-actions button {
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+            font-family: var(--font);
+        }
+
+        .profile-banner .banner-actions button:hover {
+            background: rgba(240, 185, 11, 0.3);
+            border-color: var(--primary);
+        }
+
+        /* ============ HEADER PERFIL ============ */
+        .profile-header {
+            background: var(--bg-secondary);
+            border-radius: 0 0 var(--radius) var(--radius);
+            padding: 0 30px 30px;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            position: relative;
+            margin-top: -60px;
+        }
+
+        /* ============ AVATAR ============ */
+        .profile-avatar-section {
+            display: flex;
+            align-items: flex-end;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .profile-avatar-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--bg-secondary);
+            background: var(--bg-card);
+            cursor: pointer;
+            transition: all 0.3s ease;
             flex-shrink: 0;
-            background: var(--profile-input-bg);
+            overflow: hidden;
         }
 
         .profile-avatar-wrapper:hover {
-            border-color: #f0b90b;
-            transform: scale(1.03);
+            border-color: var(--primary);
+            transform: scale(1.02);
         }
 
         .profile-avatar-wrapper img {
             width: 100%;
             height: 100%;
+            border-radius: 50%;
             object-fit: cover;
         }
 
@@ -150,8 +150,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 64px;
-            color: #5a6575;
+            font-size: 56px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border-radius: 50%;
         }
 
         .profile-avatar-wrapper .avatar-edit-overlay {
@@ -160,10 +162,10 @@
             left: 0;
             right: 0;
             background: rgba(0,0,0,0.7);
-            padding: 8px;
+            padding: 6px;
             text-align: center;
-            font-size: 12px;
-            color: #e8edf2;
+            font-size: 11px;
+            color: var(--text-primary);
             opacity: 0;
             transition: all 0.3s ease;
             backdrop-filter: blur(4px);
@@ -173,8 +175,13 @@
             opacity: 1;
         }
 
+        .profile-avatar-wrapper .avatar-edit-overlay .material-icons {
+            font-size: 16px;
+            vertical-align: middle;
+        }
+
         .btn-avatar-remove {
-            background: rgba(231, 76, 60, 0.2);
+            background: rgba(231, 76, 60, 0.15);
             border: 1px solid #e74c3c;
             color: #e74c3c;
             padding: 4px 12px;
@@ -182,16 +189,33 @@
             font-size: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font);
+            margin-top: 8px;
         }
 
         .btn-avatar-remove:hover {
-            background: rgba(231, 76, 60, 0.4);
+            background: rgba(231, 76, 60, 0.3);
         }
 
-        /* ============================================
-           TEMAS
-           ============================================ */
+        /* ============ INFO USUARIO ============ */
+        .profile-name-section {
+            flex: 1;
+            padding-top: 20px;
+        }
+
+        .profile-name-section h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .profile-name-section .profile-username {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* ============ TEMAS ============ */
         .theme-selector {
             display: flex;
             gap: 8px;
@@ -200,58 +224,68 @@
         }
 
         .theme-btn {
-            padding: 6px 16px;
+            padding: 4px 14px;
             border-radius: 30px;
-            border: 2px solid var(--profile-border);
+            border: 2px solid var(--border-color);
             background: transparent;
-            color: var(--profile-text);
+            color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
+            font-family: var(--font);
+            font-size: 12px;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
 
-        .theme-btn:hover { transform: scale(1.05); }
-        .theme-btn.active { border-color: #f0b90b; background: rgba(240,185,11,0.15); color: #f0b90b; }
-        .theme-btn.dark { border-color: #2a313c; }
-        .theme-btn.light { border-color: #d0d5dc; color: #1a1a2e; }
-        .theme-btn.neon { border-color: #00ffcc; color: #00ffcc; }
+        .theme-btn:hover {
+            transform: scale(1.05);
+            color: var(--text-primary);
+        }
 
-        /* ============================================
-           ENLACES SOCIALES
-           ============================================ */
+        .theme-btn.active {
+            border-color: var(--primary);
+            background: rgba(240, 185, 11, 0.1);
+            color: var(--primary);
+        }
+
+        /* ============ ENLACES SOCIALES ============ */
         .social-links-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
             margin-top: 4px;
         }
 
         @media (max-width: 600px) {
-            .social-links-grid { grid-template-columns: 1fr; }
+            .social-links-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .social-input-group {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: var(--profile-input-bg);
-            border: 1px solid var(--profile-border);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 0 14px;
+            padding: 0 12px;
             transition: all 0.3s ease;
         }
 
         .social-input-group:focus-within {
-            border-color: #f0b90b;
-            box-shadow: 0 0 0 3px rgba(240,185,11,0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
         }
 
-        .social-input-group .social-icon { font-size: 20px; color: #5a6575; flex-shrink: 0; }
+        .social-input-group .social-icon {
+            font-size: 18px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
         .social-input-group .social-icon.instagram { color: #e4405f; }
         .social-input-group .social-icon.twitter { color: #1da1f2; }
         .social-input-group .social-icon.discord { color: #5865f2; }
@@ -261,18 +295,18 @@
             background: transparent;
             border: none;
             padding: 10px 0;
-            color: var(--profile-text);
-            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            font-family: var(--font);
             font-size: 14px;
             outline: none;
             width: 100%;
         }
 
-        .social-input-group input::placeholder { color: #5a6575; }
+        .social-input-group input::placeholder {
+            color: var(--text-muted);
+        }
 
-        /* ============================================
-           INFO GRID
-           ============================================ */
+        /* ============ INFO GRID ============ */
         .profile-info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -281,20 +315,22 @@
         }
 
         @media (max-width: 600px) {
-            .profile-info-grid { grid-template-columns: 1fr; }
+            .profile-info-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .info-card {
-            background: var(--profile-input-bg);
-            padding: 12px 16px;
+            background: var(--bg-primary);
+            padding: 10px 14px;
             border-radius: 10px;
-            border: 1px solid var(--profile-border);
+            border: 1px solid var(--border-light);
         }
 
         .info-card label {
             display: block;
             font-size: 11px;
-            color: #5a6575;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 2px;
@@ -303,12 +339,10 @@
         .info-card .info-value {
             font-size: 15px;
             font-weight: 600;
-            color: var(--profile-text);
+            color: var(--text-primary);
         }
 
-        /* ============================================
-           BOTONES DE ACCIÓN
-           ============================================ */
+        /* ============ BOTONES DE ACCIÓN ============ */
         .profile-actions {
             display: flex;
             gap: 10px;
@@ -317,7 +351,7 @@
         }
 
         .btn-action {
-            padding: 10px 24px;
+            padding: 10px 20px;
             border-radius: 30px;
             font-weight: 600;
             font-size: 14px;
@@ -326,43 +360,46 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font);
             border: none;
             flex: 1;
             justify-content: center;
         }
 
         .btn-action-primary {
-            background: #f0b90b;
-            color: #0b0e14;
+            background: var(--primary);
+            color: var(--bg-primary);
         }
+
         .btn-action-primary:hover {
-            background: #d4a40a;
+            background: var(--primary-dark);
             transform: scale(1.02);
         }
 
         .btn-action-secondary {
-            background: var(--profile-input-bg);
-            border: 1px solid var(--profile-border);
-            color: var(--profile-text);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
         }
+
         .btn-action-secondary:hover {
-            background: var(--profile-card);
-            border-color: #f0b90b;
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: var(--primary);
         }
 
         .btn-action-settings {
-            background: #2a4a6a;
-            color: white;
+            background: rgba(52, 152, 219, 0.15);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            color: #3498db;
         }
+
         .btn-action-settings:hover {
-            background: #3a5a8a;
+            background: rgba(52, 152, 219, 0.25);
             transform: scale(1.02);
         }
 
-        /* ============================================
-           MODAL DE AJUSTES
-           ============================================ */
+        /* ============ MODAL AJUSTES ============ */
         .settings-modal-overlay {
             position: fixed;
             top: 0;
@@ -383,14 +420,14 @@
         }
 
         .settings-modal-box {
-            background: var(--profile-card);
-            border: 1px solid var(--profile-border);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
             padding: 32px;
             max-width: 480px;
             width: 90%;
             animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            box-shadow: var(--shadow);
             position: relative;
             max-height: 90vh;
             overflow-y: auto;
@@ -402,7 +439,7 @@
             right: 16px;
             background: rgba(255,255,255,0.05);
             border: none;
-            color: #5a6575;
+            color: var(--text-muted);
             width: 34px;
             height: 34px;
             border-radius: 50%;
@@ -423,7 +460,7 @@
         .settings-modal-box h2 {
             font-size: 22px;
             font-weight: 700;
-            color: var(--profile-text);
+            color: var(--text-primary);
             margin-bottom: 8px;
             display: flex;
             align-items: center;
@@ -431,7 +468,7 @@
         }
 
         .settings-modal-box .subtitle {
-            color: #a0aab8;
+            color: var(--text-secondary);
             font-size: 14px;
             margin-bottom: 24px;
         }
@@ -439,7 +476,7 @@
         .settings-group {
             margin-bottom: 20px;
             padding-bottom: 20px;
-            border-bottom: 1px solid var(--profile-border);
+            border-bottom: 1px solid var(--border-light);
         }
 
         .settings-group:last-child {
@@ -452,32 +489,32 @@
             display: block;
             font-size: 13px;
             font-weight: 500;
-            color: var(--profile-text);
+            color: var(--text-primary);
             margin-bottom: 4px;
         }
 
         .settings-group .helper-text {
             font-size: 12px;
-            color: #5a6575;
+            color: var(--text-muted);
             margin-bottom: 8px;
         }
 
         .settings-group input {
             width: 100%;
-            background: var(--profile-input-bg);
-            border: 1px solid var(--profile-border);
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 10px 14px;
-            color: var(--profile-text);
-            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            font-family: var(--font);
             font-size: 14px;
             transition: all 0.3s ease;
         }
 
         .settings-group input:focus {
             outline: none;
-            border-color: #f0b90b;
-            box-shadow: 0 0 0 3px rgba(240,185,11,0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
         }
 
         .settings-group .input-with-toggle {
@@ -495,14 +532,14 @@
             right: 12px;
             background: none;
             border: none;
-            color: #5a6575;
+            color: var(--text-muted);
             cursor: pointer;
             transition: all 0.3s ease;
             padding: 4px;
         }
 
         .settings-group .toggle-password-btn:hover {
-            color: var(--profile-text);
+            color: var(--text-primary);
         }
 
         .settings-group .btn-save-setting {
@@ -514,13 +551,13 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: none;
-            font-family: 'Inter', sans-serif;
-            background: #f0b90b;
-            color: #0b0e14;
+            font-family: var(--font);
+            background: var(--primary);
+            color: var(--bg-primary);
         }
 
         .settings-group .btn-save-setting:hover {
-            background: #d4a40a;
+            background: var(--primary-dark);
             transform: scale(1.02);
         }
 
@@ -534,7 +571,7 @@
             flex: 1;
             height: 4px;
             border-radius: 4px;
-            background: #2a313c;
+            background: var(--border-color);
             transition: all 0.3s ease;
         }
 
@@ -544,7 +581,7 @@
 
         .password-strength-text {
             font-size: 12px;
-            color: #5a6575;
+            color: var(--text-muted);
             margin-top: 4px;
         }
 
@@ -566,19 +603,19 @@
         }
 
         .toast-container .toast {
-            background: #1a232e;
-            color: #e8edf2;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             padding: 10px 22px;
             border-radius: 12px;
             border-left: 4px solid #3498db;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            box-shadow: var(--shadow);
             font-size: 14px;
             font-weight: 500;
             pointer-events: auto;
             animation: slideUpToast 0.3s ease;
             min-width: 200px;
             text-align: center;
-            border: 1px solid #2a313c;
+            border: 1px solid var(--border-color);
         }
 
         .toast-container .toast.success { border-left-color: #2ecc71; }
@@ -606,23 +643,63 @@
            RESPONSIVE
            ============================================ */
         @media (max-width: 768px) {
-            .dashboard-container { padding: 16px 12px; }
-            .profile-card { padding: 20px; flex-direction: column; align-items: center; text-align: center; }
-            .profile-left { min-width: auto; }
-            .profile-right { min-width: auto; width: 100%; }
-            .profile-avatar-wrapper { width: 120px; height: 120px; }
-            .theme-selector { justify-content: center; }
-            .profile-actions { flex-direction: column; }
-            .btn-action { flex: none; width: 100%; }
-            .settings-modal-box { padding: 24px; margin: 16px; }
+            .profile-banner {
+                height: 150px;
+            }
+            .profile-header {
+                padding: 0 16px 20px;
+                margin-top: -40px;
+            }
+            .profile-avatar-wrapper {
+                width: 80px;
+                height: 80px;
+            }
+            .profile-avatar-wrapper .avatar-placeholder {
+                font-size: 36px;
+            }
+            .profile-name-section h1 {
+                font-size: 22px;
+            }
+            .profile-avatar-section {
+                gap: 16px;
+            }
+            .profile-actions {
+                flex-direction: column;
+            }
+            .btn-action {
+                flex: none;
+                width: 100%;
+            }
+            .settings-modal-box {
+                padding: 24px;
+                margin: 16px;
+            }
         }
 
         @media (max-width: 480px) {
-            .profile-avatar-wrapper { width: 100px; height: 100px; }
-            .profile-card { padding: 16px; }
-            .social-links-grid { grid-template-columns: 1fr; }
-            .profile-info-grid { grid-template-columns: 1fr; }
-            .settings-modal-box { padding: 20px; }
+            .profile-banner {
+                height: 120px;
+            }
+            .profile-avatar-wrapper {
+                width: 64px;
+                height: 64px;
+            }
+            .profile-header {
+                padding: 0 12px 16px;
+                margin-top: -32px;
+            }
+            .profile-name-section h1 {
+                font-size: 18px;
+            }
+            .social-links-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-info-grid {
+                grid-template-columns: 1fr;
+            }
+            .settings-modal-box {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -678,108 +755,118 @@
 
         <!-- ============ MAIN CONTENT ============ -->
         <main class="dashboard-main">
-            <div class="section-header">
-                <h2>Mi Perfil</h2>
-            </div>
+            <div class="profile-premium-container">
+                <!-- ============ BANNER ============ -->
+                <div class="profile-banner animated" id="bannerContainer">
+                    <img id="bannerImage" src="" alt="Banner" style="display:none; width:100%; height:100%; object-fit:cover;">
+                    <div class="banner-overlay">
+                        <span class="material-icons">photo_camera</span>
+                        Cambiar Banner
+                    </div>
+                    <div class="banner-actions">
+                        <button onclick="uploadBanner()">
+                            <span class="material-icons">upload</span> Subir
+                        </button>
+                        <button onclick="removeBanner()">
+                            <span class="material-icons">delete</span> Eliminar
+                        </button>
+                        <button onclick="toggleBannerAnimation()" id="bannerAnimBtn">
+                            <span class="material-icons">animation</span> Animación
+                        </button>
+                    </div>
+                </div>
 
-            <div class="profile-container">
-                <div class="profile-card">
-                    <!-- LADO IZQUIERDO - AVATAR -->
-                    <div class="profile-left">
+                <!-- ============ HEADER PERFIL ============ -->
+                <div class="profile-header">
+                    <div class="profile-avatar-section">
+                        <!-- AVATAR -->
                         <div class="profile-avatar-wrapper" onclick="document.getElementById('avatarInput').click()">
                             <div class="avatar-placeholder" id="avatarPlaceholder">
                                 <span class="material-icons-outlined">person</span>
                             </div>
-                            <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                            <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
                             <div class="avatar-edit-overlay">
                                 <span class="material-icons">photo_camera</span> Cambiar
                             </div>
                         </div>
                         <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
-                        <button class="btn-avatar-remove" onclick="removeAvatar()">
-                            <span class="material-icons" style="font-size:14px;">delete</span> Eliminar Avatar
-                        </button>
-                    </div>
+                        
+                        <div class="profile-name-section">
+                            <h1 id="profileDisplayName">Usuario</h1>
+                            <span class="profile-username">@<span id="profileUsername">usuario</span></span>
 
-                    <!-- LADO DERECHO - INFO -->
-                    <div class="profile-right">
-                        <!-- Nombre y Usuario -->
-                        <div>
-                            <h1 style="font-size:24px; font-weight:800; color:var(--profile-text); margin:0;" id="profileDisplayName">Usuario</h1>
-                            <span style="color:#a0aab8; font-size:14px;">@<span id="profileUsername">usuario</span></span>
-                        </div>
+                            <!-- ============ TEMAS ============ -->
+                            <div style="margin-top:8px;">
+                                <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:4px;">
+                                    <span class="material-icons" style="font-size:14px; vertical-align:middle;">palette</span> Tema
+                                </label>
+                                <div class="theme-selector" id="themeSelector">
+                                    <button class="theme-btn dark active" data-theme="dark" onclick="setTheme('dark')">
+                                        <span class="material-icons" style="font-size:14px;">dark_mode</span> Oscuro
+                                    </button>
+                                    <button class="theme-btn light" data-theme="light" onclick="setTheme('light')">
+                                        <span class="material-icons" style="font-size:14px;">light_mode</span> Claro
+                                    </button>
+                                    <button class="theme-btn neon" data-theme="neon" onclick="setTheme('neon')">
+                                        <span class="material-icons" style="font-size:14px;">bolt</span> Neón
+                                    </button>
+                                </div>
+                            </div>
 
-                        <!-- TEMAS -->
-                        <div>
-                            <label style="font-size:13px; color:#5a6575; font-weight:500; display:block; margin-bottom:6px;">
-                                <span class="material-icons" style="font-size:16px; vertical-align:middle;">palette</span> Tema
-                            </label>
-                            <div class="theme-selector" id="themeSelector">
-                                <button class="theme-btn dark active" data-theme="dark" onclick="setTheme('dark')">
-                                    <span class="material-icons" style="font-size:16px;">dark_mode</span> Oscuro
+                            <!-- ============ ENLACES SOCIALES ============ -->
+                            <div style="margin-top:8px;">
+                                <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:4px;">
+                                    <span class="material-icons" style="font-size:14px; vertical-align:middle;">share</span> Enlaces Sociales
+                                </label>
+                                <div class="social-links-grid">
+                                    <div class="social-input-group">
+                                        <span class="social-icon instagram"><i class="fab fa-instagram"></i></span>
+                                        <input type="text" id="socialInstagram" placeholder="Instagram @usuario">
+                                    </div>
+                                    <div class="social-input-group">
+                                        <span class="social-icon twitter"><i class="fab fa-twitter"></i></span>
+                                        <input type="text" id="socialTwitter" placeholder="Twitter @usuario">
+                                    </div>
+                                    <div class="social-input-group">
+                                        <span class="social-icon discord"><i class="fab fa-discord"></i></span>
+                                        <input type="text" id="socialDiscord" placeholder="Discord usuario#0000">
+                                    </div>
+                                    <div class="social-input-group">
+                                        <span class="social-icon telegram"><i class="fab fa-telegram"></i></span>
+                                        <input type="text" id="socialTelegram" placeholder="Telegram @usuario">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ============ INFO GRID ============ -->
+                            <div class="profile-info-grid">
+                                <div class="info-card">
+                                    <label>Correo Electrónico</label>
+                                    <div class="info-value" id="profileEmail">-</div>
+                                </div>
+                                <div class="info-card">
+                                    <label>Saldo Disponible</label>
+                                    <div class="info-value" id="profileBalance">$0.00</div>
+                                </div>
+                                <div class="info-card">
+                                    <label>Miembro desde</label>
+                                    <div class="info-value" id="profileSince">-</div>
+                                </div>
+                                <div class="info-card">
+                                    <label>Tarjetas Compradas</label>
+                                    <div class="info-value" id="profilePurchases">0</div>
+                                </div>
+                            </div>
+
+                            <!-- ============ ACCIONES ============ -->
+                            <div class="profile-actions">
+                                <button class="btn-action btn-action-primary" onclick="saveProfile()">
+                                    <span class="material-icons">save</span> Guardar Cambios
                                 </button>
-                                <button class="theme-btn light" data-theme="light" onclick="setTheme('light')">
-                                    <span class="material-icons" style="font-size:16px;">light_mode</span> Claro
-                                </button>
-                                <button class="theme-btn neon" data-theme="neon" onclick="setTheme('neon')">
-                                    <span class="material-icons" style="font-size:16px;">bolt</span> Neón
+                                <button class="btn-action btn-action-settings" onclick="openSettings()">
+                                    <span class="material-icons">settings</span> Ajustes
                                 </button>
                             </div>
-                        </div>
-
-                        <!-- ENLACES SOCIALES -->
-                        <div>
-                            <label style="font-size:13px; color:#5a6575; font-weight:500; display:block; margin-bottom:6px;">
-                                <span class="material-icons" style="font-size:16px; vertical-align:middle;">share</span> Enlaces Sociales
-                            </label>
-                            <div class="social-links-grid">
-                                <div class="social-input-group">
-                                    <span class="social-icon instagram"><i class="fab fa-instagram"></i></span>
-                                    <input type="text" id="socialInstagram" placeholder="Instagram @usuario">
-                                </div>
-                                <div class="social-input-group">
-                                    <span class="social-icon twitter"><i class="fab fa-twitter"></i></span>
-                                    <input type="text" id="socialTwitter" placeholder="Twitter @usuario">
-                                </div>
-                                <div class="social-input-group">
-                                    <span class="social-icon discord"><i class="fab fa-discord"></i></span>
-                                    <input type="text" id="socialDiscord" placeholder="Discord usuario#0000">
-                                </div>
-                                <div class="social-input-group">
-                                    <span class="social-icon telegram"><i class="fab fa-telegram"></i></span>
-                                    <input type="text" id="socialTelegram" placeholder="Telegram @usuario">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- INFO GRID -->
-                        <div class="profile-info-grid">
-                            <div class="info-card">
-                                <label>Correo Electrónico</label>
-                                <div class="info-value" id="profileEmail">-</div>
-                            </div>
-                            <div class="info-card">
-                                <label>Saldo Disponible</label>
-                                <div class="info-value" id="profileBalance">$0.00</div>
-                            </div>
-                            <div class="info-card">
-                                <label>Miembro desde</label>
-                                <div class="info-value" id="profileSince">-</div>
-                            </div>
-                            <div class="info-card">
-                                <label>Tarjetas Compradas</label>
-                                <div class="info-value" id="profilePurchases">0</div>
-                            </div>
-                        </div>
-
-                        <!-- ACCIONES -->
-                        <div class="profile-actions">
-                            <button class="btn-action btn-action-primary" onclick="saveProfile()">
-                                <span class="material-icons">save</span> Guardar Cambios
-                            </button>
-                            <button class="btn-action btn-action-settings" onclick="openSettings()">
-                                <span class="material-icons">settings</span> Ajustes
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -797,7 +884,7 @@
             </button>
 
             <h2>
-                <span class="material-icons" style="color:#f0b90b;">settings</span>
+                <span class="material-icons" style="color:var(--primary);">settings</span>
                 Ajustes de Cuenta
             </h2>
             <p class="subtitle">Gestiona tu información de acceso y seguridad</p>
@@ -810,7 +897,7 @@
                 <button class="btn-save-setting" onclick="changeUsername()">Actualizar Usuario</button>
             </div>
 
-            <!-- CAMBIAR APODO / DISPLAY NAME -->
+            <!-- CAMBIAR APODO -->
             <div class="settings-group">
                 <label>🏷️ Apodo</label>
                 <p class="helper-text">Cómo te mostrarás en el perfil</p>
@@ -822,10 +909,10 @@
             <div class="settings-group">
                 <label>🔐 Contraseña Actual</label>
                 <p class="helper-text">Tu contraseña actual encriptada (no se muestra por seguridad)</p>
-                <div style="background:var(--profile-input-bg); padding:10px 14px; border-radius:10px; border:1px solid var(--profile-border); color:#5a6575; font-family:monospace; font-size:13px; word-break:break-all;">
+                <div style="background:var(--bg-primary); padding:10px 14px; border-radius:10px; border:1px solid var(--border-color); color:var(--text-muted); font-family:monospace; font-size:13px; word-break:break-all;">
                     •••••••••••••••• (encriptada)
                 </div>
-                <button class="btn-save-setting" onclick="showCurrentPassword()" style="background:#2a4a6a; color:white;">Mostrar Hash</button>
+                <button class="btn-save-setting" onclick="showCurrentPassword()" style="background:rgba(52,152,219,0.15); color:#3498db;">Mostrar Hash</button>
             </div>
 
             <!-- CAMBIAR CONTRASEÑA -->
@@ -862,10 +949,12 @@
     <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // PROFILE.JS - COMPLETO CON AJUSTES
+        // PROFILE.JS - COMPLETO CON BANNER
         // ============================================
 
         let tempAvatarData = null;
+        let tempBannerData = null;
+        let isBannerAnimated = true;
 
         // ============ CARGAR PERFIL ============
         document.addEventListener('DOMContentLoaded', function() {
@@ -879,31 +968,37 @@
             const fullUser = users.find(u => u.id === user.id);
 
             if (fullUser) {
-                document.getElementById('profileDisplayName').textContent = fullUser.username || 'Usuario';
+                document.getElementById('profileDisplayName').textContent = fullUser.displayName || fullUser.username || 'Usuario';
                 document.getElementById('profileUsername').textContent = fullUser.username || 'usuario';
                 document.getElementById('profileEmail').textContent = fullUser.email || '-';
                 document.getElementById('profileBalance').textContent = `$${(fullUser.balance || 0).toFixed(2)}`;
                 document.getElementById('userBalance').textContent = `$${(fullUser.balance || 0).toFixed(2)}`;
                 document.getElementById('profilePurchases').textContent = (fullUser.purchases || []).length;
 
-                // Cargar datos en ajustes
                 document.getElementById('settingsUsername').value = fullUser.username || '';
                 document.getElementById('settingsDisplayName').value = fullUser.displayName || fullUser.username || '';
 
                 if (fullUser.createdAt) {
                     document.getElementById('profileSince').textContent = new Date(fullUser.createdAt).toLocaleDateString('es-ES', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
+                        year: 'numeric', month: 'long', day: 'numeric'
                     });
                 }
 
+                // Cargar avatar
                 if (fullUser.profile?.avatar) {
                     document.getElementById('avatarImage').src = fullUser.profile.avatar;
                     document.getElementById('avatarImage').style.display = 'block';
                     document.getElementById('avatarPlaceholder').style.display = 'none';
                 }
 
+                // Cargar banner
+                if (fullUser.profile?.banner) {
+                    document.getElementById('bannerImage').src = fullUser.profile.banner;
+                    document.getElementById('bannerImage').style.display = 'block';
+                    document.getElementById('bannerContainer').style.background = 'none';
+                }
+
+                // Cargar enlaces sociales
                 if (fullUser.profile?.social) {
                     const social = fullUser.profile.social;
                     if (social.instagram) document.getElementById('socialInstagram').value = social.instagram;
@@ -921,7 +1016,6 @@
                 document.getElementById('adminSidebarBtn').style.display = 'flex';
             }
 
-            // Escuchar cambios en contraseña para medir fuerza
             document.getElementById('settingsNewPassword').addEventListener('input', checkPasswordStrength);
         });
 
@@ -933,6 +1027,63 @@
                 btn.classList.remove('active');
                 if (btn.dataset.theme === theme) btn.classList.add('active');
             });
+        }
+
+        // ============ BANNER ============
+        function uploadBanner() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('❌ El banner no puede superar los 5MB', 'error');
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    showToast('❌ Solo se permiten imágenes', 'error');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    tempBannerData = event.target.result;
+                    document.getElementById('bannerImage').src = tempBannerData;
+                    document.getElementById('bannerImage').style.display = 'block';
+                    document.getElementById('bannerContainer').style.background = 'none';
+                    showToast('✅ Banner seleccionado. Guarda los cambios.', 'success');
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+
+        function removeBanner() {
+            if (confirm('¿Eliminar el banner actual?')) {
+                tempBannerData = null;
+                document.getElementById('bannerImage').src = '';
+                document.getElementById('bannerImage').style.display = 'none';
+                document.getElementById('bannerContainer').style.background = 'linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)';
+                document.getElementById('bannerContainer').style.backgroundSize = '400% 400%';
+                if (isBannerAnimated) {
+                    document.getElementById('bannerContainer').classList.add('animated');
+                }
+                showToast('🗑️ Banner eliminado', 'info');
+            }
+        }
+
+        function toggleBannerAnimation() {
+            const banner = document.getElementById('bannerContainer');
+            isBannerAnimated = !isBannerAnimated;
+            if (isBannerAnimated) {
+                banner.classList.add('animated');
+                document.getElementById('bannerAnimBtn').innerHTML = '<span class="material-icons">animation</span> Animación';
+                showToast('🎨 Animación activada', 'info');
+            } else {
+                banner.classList.remove('animated');
+                document.getElementById('bannerAnimBtn').innerHTML = '<span class="material-icons">pause</span> Pausada';
+                showToast('⏸️ Animación pausada', 'info');
+            }
         }
 
         // ============ AVATAR ============
@@ -978,6 +1129,7 @@
             }
 
             const currentAvatar = document.getElementById('avatarImage').src;
+            const currentBanner = document.getElementById('bannerImage').src;
             const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
             const userIndex = users.findIndex(u => u.id === user.id);
 
@@ -988,12 +1140,21 @@
 
             if (!users[userIndex].profile) users[userIndex].profile = {};
 
+            // Avatar
             if (tempAvatarData) {
                 users[userIndex].profile.avatar = tempAvatarData;
             } else if (!currentAvatar || currentAvatar === '') {
                 users[userIndex].profile.avatar = '';
             }
 
+            // Banner
+            if (tempBannerData) {
+                users[userIndex].profile.banner = tempBannerData;
+            } else if (!currentBanner || currentBanner === '') {
+                users[userIndex].profile.banner = '';
+            }
+
+            // Social
             users[userIndex].profile.social = {
                 instagram: document.getElementById('socialInstagram').value.trim(),
                 twitter: document.getElementById('socialTwitter').value.trim(),
@@ -1010,18 +1171,12 @@
             }
 
             tempAvatarData = null;
+            tempBannerData = null;
             showToast('✅ Perfil actualizado correctamente', 'success');
         }
 
         // ============ MODAL AJUSTES ============
         function openSettings() {
-            const user = getCurrentUser();
-            if (!user) return;
-            
-            // Cargar datos actuales en el modal
-            document.getElementById('settingsUsername').value = user.username || '';
-            document.getElementById('settingsDisplayName').value = user.displayName || user.username || '';
-            
             document.getElementById('settingsModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -1029,136 +1184,75 @@
         function closeSettings() {
             document.getElementById('settingsModal').classList.remove('active');
             document.body.style.overflow = '';
-            // Resetear campos de contraseña
             document.getElementById('settingsNewPassword').value = '';
             document.getElementById('settingsConfirmPassword').value = '';
             resetPasswordStrength();
         }
 
-        // ============ CAMBIAR NOMBRE DE USUARIO ============
         function changeUsername() {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('❌ Usuario no autenticado', 'error');
-                return;
-            }
-
+            if (!user) { showToast('❌ Usuario no autenticado', 'error'); return; }
             const newUsername = document.getElementById('settingsUsername').value.trim();
-            if (!newUsername) {
-                showToast('❌ Ingresa un nombre de usuario válido', 'error');
-                return;
-            }
-
+            if (!newUsername) { showToast('❌ Ingresa un nombre de usuario válido', 'error'); return; }
             const users = getUsers();
-            // Verificar si el username ya existe (excepto el del usuario actual)
             if (users.some(u => u.username === newUsername && u.id !== user.id)) {
                 showToast('❌ El nombre de usuario ya está en uso', 'error');
                 return;
             }
-
             const userIndex = users.findIndex(u => u.id === user.id);
-            if (userIndex === -1) {
-                showToast('❌ Usuario no encontrado', 'error');
-                return;
-            }
-
+            if (userIndex === -1) { showToast('❌ Usuario no encontrado', 'error'); return; }
             users[userIndex].username = newUsername;
             localStorage.setItem('yx_users', JSON.stringify(users));
-
-            // Actualizar sesión
             const session = JSON.parse(localStorage.getItem('yx_token'));
-            if (session) {
-                session.user.username = newUsername;
-                localStorage.setItem('yx_token', JSON.stringify(session));
-            }
-
-            // Actualizar UI
+            if (session) { session.user.username = newUsername; localStorage.setItem('yx_token', JSON.stringify(session)); }
             document.getElementById('profileDisplayName').textContent = newUsername;
             document.getElementById('profileUsername').textContent = newUsername;
             document.getElementById('userDisplayName').textContent = newUsername;
-
             showToast('✅ Nombre de usuario actualizado', 'success');
         }
 
-        // ============ CAMBIAR APODO ============
         function changeDisplayName() {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('❌ Usuario no autenticado', 'error');
-                return;
-            }
-
+            if (!user) { showToast('❌ Usuario no autenticado', 'error'); return; }
             const newDisplayName = document.getElementById('settingsDisplayName').value.trim() || user.username;
-
             const users = getUsers();
             const userIndex = users.findIndex(u => u.id === user.id);
-            if (userIndex === -1) {
-                showToast('❌ Usuario no encontrado', 'error');
-                return;
-            }
-
+            if (userIndex === -1) { showToast('❌ Usuario no encontrado', 'error'); return; }
             users[userIndex].displayName = newDisplayName;
             localStorage.setItem('yx_users', JSON.stringify(users));
-
             const session = JSON.parse(localStorage.getItem('yx_token'));
-            if (session) {
-                session.user.displayName = newDisplayName;
-                localStorage.setItem('yx_token', JSON.stringify(session));
-            }
-
+            if (session) { session.user.displayName = newDisplayName; localStorage.setItem('yx_token', JSON.stringify(session)); }
             document.getElementById('profileDisplayName').textContent = newDisplayName;
             showToast('✅ Apodo actualizado correctamente', 'success');
         }
 
-        // ============ MOSTRAR CONTRASEÑA ACTUAL (HASH) ============
         function showCurrentPassword() {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('❌ Usuario no autenticado', 'error');
-                return;
-            }
-
+            if (!user) { showToast('❌ Usuario no autenticado', 'error'); return; }
             const users = getUsers();
             const fullUser = users.find(u => u.id === user.id);
-            if (!fullUser) {
-                showToast('❌ Usuario no encontrado', 'error');
-                return;
-            }
-
-            showToast(`🔑 Hash de tu contraseña: ${fullUser.password || 'No disponible'}`, 'info');
+            if (!fullUser) { showToast('❌ Usuario no encontrado', 'error'); return; }
+            showToast(`🔑 Hash: ${fullUser.password || 'No disponible'}`, 'info');
         }
 
-        // ============ CAMBIAR CONTRASEÑA ============
         function changePassword() {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('❌ Usuario no autenticado', 'error');
-                return;
-            }
-
+            if (!user) { showToast('❌ Usuario no autenticado', 'error'); return; }
             const newPassword = document.getElementById('settingsNewPassword').value;
             const confirmPassword = document.getElementById('settingsConfirmPassword').value;
-
             if (!newPassword || newPassword.length < 6) {
                 showToast('❌ La contraseña debe tener al menos 6 caracteres', 'error');
                 return;
             }
-
             if (newPassword !== confirmPassword) {
                 showToast('❌ Las contraseñas no coinciden', 'error');
                 return;
             }
-
             const users = getUsers();
             const userIndex = users.findIndex(u => u.id === user.id);
-            if (userIndex === -1) {
-                showToast('❌ Usuario no encontrado', 'error');
-                return;
-            }
-
+            if (userIndex === -1) { showToast('❌ Usuario no encontrado', 'error'); return; }
             users[userIndex].password = hashPassword(newPassword);
             localStorage.setItem('yx_users', JSON.stringify(users));
-
             showToast('✅ Contraseña actualizada correctamente', 'success');
             document.getElementById('settingsNewPassword').value = '';
             document.getElementById('settingsConfirmPassword').value = '';
@@ -1175,51 +1269,33 @@
                 document.getElementById('strength4')
             ];
             const textEl = document.getElementById('strengthText');
-
-            // Resetear
             bars.forEach(bar => { bar.className = 'bar'; });
-
-            if (!password) {
-                textEl.textContent = 'Ingresa una contraseña';
-                return;
-            }
-
+            if (!password) { textEl.textContent = 'Ingresa una contraseña'; return; }
             let strength = 0;
             if (password.length >= 6) strength++;
             if (password.length >= 10) strength++;
             if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
             if (/[0-9]/.test(password) && /[^a-zA-Z0-9]/.test(password)) strength++;
-
             const levels = ['Muy débil', 'Débil', 'Media', 'Fuerte', 'Muy fuerte'];
             const classes = ['weak', 'weak', 'medium', 'strong', 'strong'];
-            
             for (let i = 0; i < Math.min(strength + 1, 4); i++) {
                 bars[i].className = `bar active ${classes[Math.min(strength, 4)]}`;
             }
-            
             textEl.textContent = `🔒 ${levels[Math.min(strength, 4)]}`;
             textEl.style.color = strength >= 3 ? '#2ecc71' : strength >= 2 ? '#f39c12' : '#e74c3c';
         }
 
         function resetPasswordStrength() {
-            document.querySelectorAll('.password-strength .bar').forEach(bar => {
-                bar.className = 'bar';
-            });
+            document.querySelectorAll('.password-strength .bar').forEach(bar => { bar.className = 'bar'; });
             document.getElementById('strengthText').textContent = 'Ingresa una contraseña';
             document.getElementById('strengthText').style.color = '#5a6575';
         }
 
-        // ============ TOGGLE PASSWORD VISIBILITY ============
         function togglePasswordVisibility(id) {
             const input = document.getElementById(id);
             const icon = input.nextElementSibling.querySelector('.material-icons');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.textContent = 'visibility_off';
-            } else {
-                input.type = 'password';
-                icon.textContent = 'visibility';
-            }
+            if (input.type === 'password') { input.type = 'text'; icon.textContent = 'visibility_off'; } 
+            else { input.type = 'password'; icon.textContent = 'visibility'; }
         }
 
         // ============ TOAST ============
@@ -1240,7 +1316,7 @@
             }, 3000);
         }
 
-        console.log('✅ Profile.js con ajustes cargado correctamente');
+        console.log('✅ Profile.js con banner cargado correctamente');
     </script>
 </body>
 </html>
