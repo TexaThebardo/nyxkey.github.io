@@ -1,6 +1,13 @@
 {
   "admins": [
-    "personalbusiness2626@gmail.com"
+    {
+      "email": "admin@yxcards.com",
+      "key": "admin123"
+    },
+    {
+      "email": "tu-email@dominio.com",
+      "key": "tuclave123"
+    }
   ],
   "insignias": {
     "Owner": {
