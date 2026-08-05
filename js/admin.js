@@ -19,7 +19,7 @@ function loadWhitelist() {
             }
         }
     } catch (e) {}
-    
+
     const defaultWhitelist = {
         admins: ['zgxbrielb@gmail.com', 'admin@yxcards.com'],
         insignias: {
@@ -41,12 +41,14 @@ function saveWhitelist(data) {
     localStorage.setItem(ADMIN_CONFIG.whitelistKey, JSON.stringify(data));
 }
 
+// ============ VERIFICAR ADMIN ============
 function isAdmin(email) {
     if (!email) return false;
     const whitelist = loadWhitelist();
     return whitelist.admins && whitelist.admins.includes(email);
 }
 
+// ============ OBTENER INSIGNIAS ============
 function getUserInsignias(email) {
     try {
         const stored = localStorage.getItem(ADMIN_CONFIG.insigniasKey);
@@ -75,6 +77,7 @@ function getAllInsignias() {
     return whitelist.insignias || {};
 }
 
+// ============ USUARIOS ============
 function getAllUsers() {
     try {
         return JSON.parse(localStorage.getItem('yx_users') || '[]');
@@ -83,17 +86,18 @@ function getAllUsers() {
     }
 }
 
+// ============ ACTUALIZAR SALDO ============
 function updateUserBalanceByEmail(email, amount, concept = 'Ajuste manual') {
     const users = getAllUsers();
     const userIndex = users.findIndex(u => u.email === email);
-    
+
     if (userIndex === -1) {
         return { success: false, message: 'Usuario no encontrado' };
     }
-    
+
     users[userIndex].balance = (users[userIndex].balance || 0) + amount;
     localStorage.setItem('yx_users', JSON.stringify(users));
-    
+
     const transaction = {
         id: 'ADMIN-' + Date.now(),
         userEmail: email,
@@ -103,16 +107,17 @@ function updateUserBalanceByEmail(email, amount, concept = 'Ajuste manual') {
         date: new Date().toISOString(),
         type: amount >= 0 ? 'depósito_admin' : 'retiro_admin'
     };
-    
+
     saveAdminTransaction(transaction);
-    
-    return { 
-        success: true, 
+
+    return {
+        success: true,
         newBalance: users[userIndex].balance,
         message: `✅ Saldo actualizado a $${users[userIndex].balance.toFixed(2)}`
     };
 }
 
+// ============ TRANSACCIONES ============
 function saveAdminTransaction(transaction) {
     let data = { transactions: [] };
     try {
@@ -135,18 +140,19 @@ function getAdminTransactions() {
     return [];
 }
 
+// ============ RENDERIZAR INSIGNIAS ============
 function renderInsignias(email, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    
+
     const insignias = getUserInsignias(email);
     const allInsignias = getAllInsignias();
-    
+
     if (!insignias || insignias.length === 0) {
         container.innerHTML = `<span class="insignia-guest"><span class="material-icons" style="font-size:14px;">person_outline</span> Guest</span>`;
         return;
     }
-    
+
     container.innerHTML = insignias.map(name => {
         const ins = allInsignias[name];
         if (!ins) return '';
@@ -159,12 +165,13 @@ function renderInsignias(email, containerId) {
     }).join('');
 }
 
+// ============ GESTIONAR INSIGNIAS ============
 function addInsigniaToUser(email, insigniaName) {
     const allInsignias = getAllInsignias();
     if (!allInsignias[insigniaName]) {
         return { success: false, message: '❌ Insignia no existe' };
     }
-    
+
     const current = getUserInsignias(email);
     if (!current.includes(insigniaName)) {
         current.push(insigniaName);
@@ -184,6 +191,7 @@ function removeInsigniaFromUser(email, insigniaName) {
     return { success: false, message: `❌ El usuario no tiene "${insigniaName}"` };
 }
 
+// ============ EXPORTAR ============
 window.isAdmin = isAdmin;
 window.loadWhitelist = loadWhitelist;
 window.getAllUsers = getAllUsers;
