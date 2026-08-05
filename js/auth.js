@@ -11,106 +11,45 @@ const AUTH_CONFIG = {
 };
 
 // ============ CARGAR WHITELIST ============
-function loadWhitelistData() {
+function loadWhitelist() {
     try {
         const stored = localStorage.getItem('admin_whitelist');
         if (stored) {
             const data = JSON.parse(stored);
-            if (data.admins && data.insignias) {
+            if (data.admins) {
                 return data;
             }
         }
     } catch (e) {}
 
-    // WHITELIST POR DEFECTO
     const defaultWhitelist = {
         admins: [
-            { email: 'personalbusiness2626@gmail.com', key: 'admin123', insignia: 'Owner' }
-        ],
-        insignias: {
-            'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
-            'Dev': { icon: 'code', color: '#3498db', bgColor: 'rgba(52, 152, 219, 0.15)', description: 'Desarrollador de la plataforma' },
-            'Verificado': { icon: 'verified_user', color: '#2ecc71', bgColor: 'rgba(46, 204, 113, 0.15)', description: 'Usuario verificado' },
-            'Guest': { icon: 'person_outline', color: '#95a5a6', bgColor: 'rgba(149, 165, 166, 0.15)', description: 'Usuario invitado' },
-            'VIP': { icon: 'stars', color: '#e67e22', bgColor: 'rgba(230, 126, 34, 0.15)', description: 'Usuario VIP' },
-            'Moderador': { icon: 'shield', color: '#9b59b6', bgColor: 'rgba(155, 89, 182, 0.15)', description: 'Moderador de la comunidad' },
-            'Colaborador': { icon: 'group', color: '#1abc9c', bgColor: 'rgba(26, 188, 156, 0.15)', description: 'Colaborador activo' },
-            'Fundador': { icon: 'emoji_events', color: '#e74c3c', bgColor: 'rgba(231, 76, 60, 0.15)', description: 'Fundador de la plataforma' }
-        }
+            { email: 'admin@yxcards.com', key: 'admin123' }
+        ]
     };
     localStorage.setItem('admin_whitelist', JSON.stringify(defaultWhitelist));
     return defaultWhitelist;
 }
 
 // ============ VERIFICAR ADMIN ============
-function isUserAdmin(email) {
+function isAdmin(email) {
     if (!email) return false;
-    const whitelist = loadWhitelistData();
+    const whitelist = loadWhitelist();
     if (!whitelist.admins) return false;
     return whitelist.admins.some(a => a.email === email);
 }
 
-function getUserAdminInsignia(email) {
-    if (!email) return null;
-    const whitelist = loadWhitelistData();
-    if (!whitelist.admins) return null;
+function verifyAdminKey(email, key) {
+    if (!email || !key) return false;
+    const whitelist = loadWhitelist();
+    if (!whitelist.admins) return false;
     const admin = whitelist.admins.find(a => a.email === email);
-    return admin ? admin.insignia : null;
-}
-
-// ============ INSIGNIAS ============
-function getInsigniasFromStorage(email) {
-    try {
-        const stored = localStorage.getItem('user_insignias');
-        if (stored) {
-            const data = JSON.parse(stored);
-            return data[email] || ['Guest'];
-        }
-    } catch (e) {}
-    return ['Guest'];
-}
-
-function saveInsigniasToStorage(email, insignias) {
-    let data = {};
-    try {
-        const stored = localStorage.getItem('user_insignias');
-        if (stored) {
-            data = JSON.parse(stored);
-        }
-    } catch (e) {}
-    data[email] = insignias;
-    localStorage.setItem('user_insignias', JSON.stringify(data));
-}
-
-function renderUserInsignias(email, containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    const insignias = getInsigniasFromStorage(email);
-    const whitelist = loadWhitelistData();
-    const allInsignias = whitelist.insignias || {};
-
-    if (!insignias || insignias.length === 0) {
-        container.innerHTML = `<span class="insignia-guest"><span class="material-icons" style="font-size:14px;">person_outline</span> Guest</span>`;
-        return;
-    }
-
-    container.innerHTML = insignias.map(name => {
-        const ins = allInsignias[name];
-        if (!ins) return '';
-        return `
-            <span class="insignia-badge" style="background:${ins.bgColor || 'rgba(149,165,166,0.15)'}; color:${ins.color || '#95a5a6'};">
-                <span class="material-icons" style="font-size:14px;">${ins.icon || 'person_outline'}</span>
-                ${name}
-            </span>
-        `;
-    }).join('');
+    if (!admin) return false;
+    return admin.key === key;
 }
 
 // ============ REGISTRO ============
 function registerUser(email, password, username) {
-    console.log('🔍 registerUser() ejecutado');
-
     if (!email || !password || !username) {
         showToast('Todos los campos son obligatorios', 'error');
         return false;
@@ -160,15 +99,12 @@ function registerUser(email, password, username) {
     users.push(newUser);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
 
-    console.log('✅ Usuario registrado:', username);
     showToast('✅ Registro exitoso. Inicia sesión.', 'success');
     return true;
 }
 
 // ============ LOGIN ============
 function loginUser(email, password) {
-    console.log('🔍 loginUser() ejecutado');
-
     if (!email || !password) {
         showToast('Email y contraseña son obligatorios', 'error');
         return false;
@@ -193,33 +129,6 @@ function loginUser(email, password) {
         return false;
     }
 
-    // ============ SINCORNIZAR INSIGNIAS ============
-    let userInsignias = getInsigniasFromStorage(email);
-    const isAdmin = isUserAdmin(email);
-    const adminInsignia = getUserAdminInsignia(email);
-    
-    let updatedInsignias = [...userInsignias];
-    
-    if (isAdmin && adminInsignia) {
-        if (!updatedInsignias.includes(adminInsignia)) {
-            updatedInsignias.push(adminInsignia);
-        }
-        if (adminInsignia !== 'Owner' && !updatedInsignias.includes('Owner')) {
-            updatedInsignias.push('Owner');
-        }
-    }
-    
-    if (!isAdmin) {
-        updatedInsignias = updatedInsignias.filter(i => i !== 'Owner' && i !== 'Moderador');
-    }
-    
-    if (!updatedInsignias.includes('Guest')) {
-        updatedInsignias.push('Guest');
-    }
-    
-    saveInsigniasToStorage(email, updatedInsignias);
-
-    // Crear sesión
     const session = {
         user: {
             id: user.id,
@@ -228,15 +137,13 @@ function loginUser(email, password) {
             balance: user.balance,
             role: user.role,
             purchases: user.purchases || [],
-            profile: user.profile || { banner: '', avatar: '', bio: '', pronoun: 'él' },
-            insignias: updatedInsignias
+            profile: user.profile || { banner: '', avatar: '', bio: '', pronoun: 'él' }
         },
         token: generateToken(user.id),
         expiresAt: Date.now() + AUTH_CONFIG.sessionTimeout
     };
 
     localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
-    console.log('✅ Sesión creada para:', user.username);
 
     user.lastLogin = new Date().toISOString();
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
@@ -294,13 +201,14 @@ function updateUserUI() {
         if (avatarEl) avatarEl.textContent = 'account_circle';
         if (nameEl) nameEl.textContent = user.username || 'Usuario';
 
-        const isAdmin = isUserAdmin(user.email);
+        // ============ MOSTRAR/OCULTAR BOTÓN ADMIN ============
+        const esAdmin = isAdmin(user.email);
 
         const adminBtn = document.getElementById('adminPanelBtn');
         const adminSidebarBtn = document.getElementById('adminSidebarBtn');
         const adminDropdownBtn = document.getElementById('adminDropdownBtn');
 
-        if (isAdmin) {
+        if (esAdmin) {
             if (adminBtn) adminBtn.style.display = 'inline-flex';
             if (adminSidebarBtn) adminSidebarBtn.style.display = 'flex';
             if (adminDropdownBtn) adminDropdownBtn.style.display = 'flex';
@@ -309,8 +217,6 @@ function updateUserUI() {
             if (adminSidebarBtn) adminSidebarBtn.style.display = 'none';
             if (adminDropdownBtn) adminDropdownBtn.style.display = 'none';
         }
-
-        renderUserInsignias(user.email, 'userInsignias');
     } else {
         if (balanceEl) balanceEl.textContent = '$0.00';
         if (avatarEl) avatarEl.textContent = 'person';
@@ -442,7 +348,7 @@ function showToast(message, type = 'info') {
 
 document.addEventListener('DOMContentLoaded', function() {
     if (!localStorage.getItem('admin_whitelist')) {
-        loadWhitelistData();
+        loadWhitelist();
     }
     updateUserUI();
 });
@@ -458,11 +364,8 @@ window.toggleUserMenu = toggleUserMenu;
 window.showToast = showToast;
 window.getUsers = getUsers;
 window.addPurchaseToHistory = addPurchaseToHistory;
-window.renderUserInsignias = renderUserInsignias;
-window.isUserAdmin = isUserAdmin;
-window.getUserAdminInsignia = getUserAdminInsignia;
-window.getInsigniasFromStorage = getInsigniasFromStorage;
-window.saveInsigniasToStorage = saveInsigniasToStorage;
-window.loadWhitelistData = loadWhitelistData;
+window.isAdmin = isAdmin;
+window.verifyAdminKey = verifyAdminKey;
+window.loadWhitelist = loadWhitelist;
 
 console.log('✅ Auth.js cargado correctamente');
