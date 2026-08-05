@@ -1,5 +1,5 @@
 // ============================================
-// APP.JS - Lógica Principal
+// APP.JS - Lógica Principal (ACTUALIZADO)
 // ============================================
 
 let currentPage = 1;
@@ -93,12 +93,35 @@ function refreshCatalog() {
     }, 800);
 }
 
+// ============ ESTADÍSTICAS ACTUALIZADAS ============
 function updateStats() {
+    // Tarjetas Activas
     const stats = getProductStats();
-    document.getElementById('totalCards').textContent = stats.total;
-    const uniqueBanks = new Set(allProducts.map(c => c.bank));
-    document.getElementById('totalBanks').textContent = uniqueBanks.size;
-    document.getElementById('onlineUsers').textContent = Math.floor(Math.random() * 50) + 10;
+    document.getElementById('totalCards').textContent = stats.total || 0;
+    
+    // Usuarios Registrados (total de cuentas)
+    const users = getUsers();
+    const totalUsers = users.length || 0;
+    document.getElementById('totalUsers').textContent = totalUsers;
+    
+    // Administradores (total de admins desde auth.js)
+    let totalAdmins = 0;
+    if (typeof getAdminList === 'function') {
+        const admins = getAdminList();
+        totalAdmins = admins.length || 0;
+    } else if (typeof ADMIN_LIST !== 'undefined') {
+        totalAdmins = ADMIN_LIST.length || 0;
+    } else {
+        // Fallback: contar admins desde la whitelist
+        try {
+            const stored = localStorage.getItem('admin_whitelist');
+            if (stored) {
+                const data = JSON.parse(stored);
+                totalAdmins = data.admins ? data.admins.length : 0;
+            }
+        } catch (e) {}
+    }
+    document.getElementById('totalAdmins').textContent = totalAdmins;
 }
 
 function updateDateTime() {
@@ -107,6 +130,7 @@ function updateDateTime() {
     if (el) el.textContent = date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
+// ============ CHECKER ============
 function runChecker() {
     const input = document.getElementById('checkerInput');
     const lines = input.value.split('\n').filter(line => line.trim());
@@ -230,3 +254,4 @@ window.openDepositModal = openDepositModal;
 window.closeDepositModal = closeDepositModal;
 window.selectMethod = selectMethod;
 window.copyAddress = copyAddress;
+window.updateStats = updateStats;
