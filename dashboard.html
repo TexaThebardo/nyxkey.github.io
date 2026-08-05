@@ -8,9 +8,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- RUTAS ABSOLUTAS CON EL NOMBRE DE TU REPOSITORIO -->
-    <link rel="stylesheet" href="/nyxkey.github.io/css/style.css">
-    <link rel="stylesheet" href="/nyxkey.github.io/css/dashboard.css">
+    <!-- RUTAS RELATIVAS - CORRECTAS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
     <nav class="navbar">
@@ -34,6 +34,7 @@
     </nav>
     
     <div class="dashboard-container">
+        <!-- SIDEBAR -->
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <a href="#" class="sidebar-link active" data-section="overview">
@@ -48,11 +49,11 @@
                     <span class="material-icons-outlined">receipt_long</span>
                     <span>Transacciones</span>
                 </a>
-                <a href="/nyxkey.github.io/profile.html" class="sidebar-link">
+                <a href="profile.html" class="sidebar-link">
                     <span class="material-icons-outlined">person</span>
                     <span>Mi Perfil</span>
                 </a>
-                <a href="/nyxkey.github.io/" class="sidebar-link">
+                <a href="index.html" class="sidebar-link">
                     <span class="material-icons-outlined">storefront</span>
                     <span>Tienda</span>
                 </a>
@@ -64,8 +65,9 @@
             </nav>
         </aside>
         
+        <!-- MAIN -->
         <main class="dashboard-main">
-            <!-- ============ SECCIÓN OVERVIEW ============ -->
+            <!-- SECCIÓN OVERVIEW -->
             <section id="overview" class="dashboard-section active">
                 <div class="section-header">
                     <h2>Visión General</h2>
@@ -115,24 +117,22 @@
                 </div>
             </section>
 
-            <!-- ============ SECCIÓN MIS COMPRAS ============ -->
+            <!-- SECCIÓN MIS COMPRAS -->
             <section id="purchases" class="dashboard-section">
                 <div class="section-header">
                     <h2>Mis Tarjetas Compradas</h2>
                     <span class="purchase-count" id="purchaseCount">0 tarjetas</span>
                 </div>
-                
                 <div class="purchases-grid" id="purchasesGrid">
                     <!-- Renderizado por JavaScript -->
                 </div>
             </section>
 
-            <!-- ============ SECCIÓN TRANSACCIONES ============ -->
+            <!-- SECCIÓN TRANSACCIONES -->
             <section id="transactions" class="dashboard-section">
                 <div class="section-header">
                     <h2>Historial de Transacciones</h2>
                 </div>
-                
                 <div class="transactions-table">
                     <table>
                         <thead>
@@ -158,10 +158,10 @@
         </main>
     </div>
 
-    <!-- SCRIPTS CON RUTAS ABSOLUTAS -->
-    <script src="/nyxkey.github.io/js/auth.js"></script>
-    <script src="/nyxkey.github.io/js/products.js"></script>
-    <script src="/nyxkey.github.io/js/app.js"></script>
-    <script src="/nyxkey.github.io/js/dashboard.js"></script>
+    <!-- SCRIPTS CON RUTAS RELATIVAS -->
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
