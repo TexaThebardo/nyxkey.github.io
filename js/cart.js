@@ -220,4 +220,54 @@ function checkout() {
                 price: item.price,
                 quantity: item.quantity,
                 cardData: item.cardData || { number: '****', expiry: '**/**', cvv: '***' },
-                purchaseDate:
+                purchaseDate: new Date().toISOString()
+            };
+            if (typeof addPurchaseToHistory === 'function') {
+                addPurchaseToHistory(user.id, purchaseData);
+            }
+        });
+        
+        const transaction = {
+            id: 'TX-' + Date.now(),
+            type: 'compra',
+            amount: total,
+            status: 'completado',
+            date: new Date().toISOString(),
+            items: cartItems.map(i => `${i.network} ${i.bin} x${i.quantity}`).join(', ')
+        };
+        
+        const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
+        const u = users.find(u => u.id === user.id);
+        if (u) {
+            if (!u.transactions) u.transactions = [];
+            u.transactions.push(transaction);
+            localStorage.setItem('yx_users', JSON.stringify(users));
+        }
+        
+        cartItems = [];
+        saveCart();
+        updateCartUI();
+        updateCartBadge();
+        updateUserUI();
+        
+        showToast('✅ Compra realizada con éxito. Revisa tu historial.', 'success');
+        toggleCart();
+    }
+}
+
+// ============ EXPORTAR ============
+window.loadCart = loadCart;
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.updateCartQuantity = updateCartQuantity;
+window.clearCart = clearCart;
+window.toggleCart = toggleCart;
+window.checkout = checkout;
+window.updateCartUI = updateCartUI;
+window.updateCartBadge = updateCartBadge;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadCart();
+});
+
+console.log('✅ Cart.js cargado correctamente - loadCart disponible');
