@@ -11,49 +11,35 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
-        /* ============ LOGO ANIMADO EN NAVBAR ============ */
         .nav-logo .logo-img {
             width: 48px;
             height: 48px;
             border-radius: 12px;
             overflow: hidden;
-            flex-shrink: 0;
             animation: pulseLogo 2.5s ease-in-out infinite;
             display: inline-block;
             vertical-align: middle;
             transition: all 0.3s ease;
         }
-
         .nav-logo .logo-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .nav-logo .logo-img:hover {
             transform: scale(1.08);
             filter: drop-shadow(0 0 25px rgba(240, 185, 11, 0.5));
         }
-
         @keyframes pulseLogo {
-            0%, 100% {
-                transform: scale(1);
-                filter: drop-shadow(0 0 10px rgba(240, 185, 11, 0.15));
-            }
-            50% {
-                transform: scale(1.04);
-                filter: drop-shadow(0 0 25px rgba(240, 185, 11, 0.35));
-            }
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(240, 185, 11, 0.15)); }
+            50% { transform: scale(1.04); filter: drop-shadow(0 0 25px rgba(240, 185, 11, 0.35)); }
         }
-
-        /* ============ STATS MEJORADAS ============ */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
         }
-
         .stat-card {
             background: #131a22;
             border: 1px solid #2a313c;
@@ -64,13 +50,11 @@
             gap: 16px;
             transition: all 0.3s ease;
         }
-
         .stat-card:hover {
             border-color: #f0b90b;
             transform: translateY(-2px);
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
-
         .stat-icon {
             width: 52px;
             height: 52px;
@@ -80,7 +64,6 @@
             justify-content: center;
             flex-shrink: 0;
         }
-
         .stat-icon.green { background: rgba(46, 204, 113, 0.12); }
         .stat-icon.green .material-icons-outlined { color: #2ecc71; }
         .stat-icon.blue { background: rgba(52, 152, 219, 0.12); }
@@ -89,55 +72,22 @@
         .stat-icon.purple .material-icons-outlined { color: #9b59b6; }
         .stat-icon.gold { background: rgba(240, 185, 11, 0.12); }
         .stat-icon.gold .material-icons-outlined { color: #f0b90b; }
-
-        .stat-icon .material-icons-outlined {
-            font-size: 28px;
-        }
-
-        .stat-info {
-            flex: 1;
-        }
-
-        .stat-value {
-            display: block;
-            font-size: 26px;
-            font-weight: 800;
-            color: #e8edf2;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: #a0aab8;
-        }
-
-        /* ============ RESPONSIVE ============ */
+        .stat-icon .material-icons-outlined { font-size: 28px; }
+        .stat-info { flex: 1; }
+        .stat-value { display: block; font-size: 26px; font-weight: 800; color: #e8edf2; }
+        .stat-label { font-size: 13px; color: #a0aab8; }
         @media (max-width: 768px) {
-            .nav-logo .logo-img {
-                width: 38px;
-                height: 38px;
-            }
-            .stat-icon {
-                width: 44px;
-                height: 44px;
-            }
-            .stat-icon .material-icons-outlined {
-                font-size: 22px;
-            }
-            .stat-value {
-                font-size: 20px;
-            }
+            .nav-logo .logo-img { width: 38px; height: 38px; }
+            .stat-icon { width: 44px; height: 44px; }
+            .stat-icon .material-icons-outlined { font-size: 22px; }
+            .stat-value { font-size: 20px; }
         }
-
         @media (max-width: 480px) {
-            .nav-logo .logo-img {
-                width: 32px;
-                height: 32px;
-            }
+            .nav-logo .logo-img { width: 32px; height: 32px; }
         }
     </style>
 </head>
 <body>
-    <!-- ============ NAVBAR ============ -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -150,8 +100,7 @@
             </div>
             <div class="nav-user">
                 <button id="adminPanelBtn" class="btn-admin-link" onclick="window.location.href='admin.html'" style="display:none;">
-                    <span class="material-icons">admin_panel_settings</span>
-                    Admin
+                    <span class="material-icons">admin_panel_settings</span> Admin
                 </button>
                 <div class="user-balance">
                     <span class="material-icons-outlined">account_balance_wallet</span>
@@ -164,59 +113,42 @@
         </div>
     </nav>
 
-    <!-- ============ DASHBOARD CONTAINER ============ -->
     <div class="dashboard-container">
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <span class="sidebar-title">Navegación</span>
-
                 <a href="#" class="sidebar-link active" data-section="overview">
-                    <span class="material-icons-outlined">dashboard</span>
-                    <span>Visión General</span>
+                    <span class="material-icons-outlined">dashboard</span> Visión General
                 </a>
-
                 <a href="#" class="sidebar-link" data-section="purchases">
-                    <span class="material-icons-outlined">shopping_bag</span>
-                    <span>Mis Compras</span>
+                    <span class="material-icons-outlined">shopping_bag</span> Mis Compras
                 </a>
-
                 <a href="#" class="sidebar-link" data-section="transactions">
-                    <span class="material-icons-outlined">receipt_long</span>
-                    <span>Transacciones</span>
+                    <span class="material-icons-outlined">receipt_long</span> Transacciones
                 </a>
-
                 <a href="profile.html" class="sidebar-link">
-                    <span class="material-icons-outlined">person</span>
-                    <span>Mi Perfil</span>
+                    <span class="material-icons-outlined">person</span> Mi Perfil
                 </a>
-
                 <a href="index.html" class="sidebar-link">
-                    <span class="material-icons-outlined">storefront</span>
-                    <span>Tienda</span>
+                    <span class="material-icons-outlined">storefront</span> Tienda
                 </a>
-
                 <a href="admin.html" class="sidebar-link" id="adminSidebarBtn" style="display:none;">
-                    <span class="material-icons-outlined">admin_panel_settings</span>
-                    <span>Admin Manager</span>
+                    <span class="material-icons-outlined">admin_panel_settings</span> Admin Manager
                 </a>
-
                 <div class="sidebar-divider"></div>
-
                 <a href="#" class="sidebar-link logout" onclick="logoutUser()">
-                    <span class="material-icons-outlined">logout</span>
-                    <span>Cerrar Sesión</span>
+                    <span class="material-icons-outlined">logout</span> Cerrar Sesión
                 </a>
             </nav>
         </aside>
 
         <main class="dashboard-main">
-            <!-- ============ SECCIÓN OVERVIEW ============ -->
+            <!-- SECCIÓN OVERVIEW -->
             <section id="overview" class="dashboard-section active">
                 <div class="section-header">
                     <h2>Visión General</h2>
                     <span class="date-badge" id="currentDate"></span>
                 </div>
-
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon green">
@@ -255,7 +187,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="recent-activity">
                     <div class="activity-header">
                         <h3>Últimas Compras</h3>
@@ -269,18 +200,16 @@
                 </div>
             </section>
 
-            <!-- ============ SECCIÓN MIS COMPRAS ============ -->
+            <!-- SECCIÓN MIS COMPRAS -->
             <section id="purchases" class="dashboard-section">
                 <div class="section-header">
                     <h2>Mis Tarjetas Compradas</h2>
                     <span class="purchase-count" id="purchaseCount">0 tarjetas</span>
                 </div>
-                <div class="purchases-grid" id="purchasesGrid">
-                    <!-- Renderizado por JavaScript -->
-                </div>
+                <div class="purchases-grid" id="purchasesGrid"></div>
             </section>
 
-            <!-- ============ SECCIÓN TRANSACCIONES ============ -->
+            <!-- SECCIÓN TRANSACCIONES -->
             <section id="transactions" class="dashboard-section">
                 <div class="section-header">
                     <h2>Historial de Transacciones</h2>
@@ -288,13 +217,7 @@
                 <div class="transactions-table">
                     <table>
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tipo</th>
-                                <th>Monto</th>
-                                <th>Estado</th>
-                                <th>Fecha</th>
-                            </tr>
+                            <tr><th>ID</th><th>Tipo</th><th>Monto</th><th>Estado</th><th>Fecha</th></tr>
                         </thead>
                         <tbody id="transactionsBody">
                             <tr>
@@ -310,9 +233,11 @@
         </main>
     </div>
 
+    <!-- ============ SCRIPTS - ORDEN CORRECTO ============ -->
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
     <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>   <!-- loadCart está AQUÍ -->
     <script src="js/app.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
