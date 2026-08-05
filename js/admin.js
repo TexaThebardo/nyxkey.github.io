@@ -19,7 +19,7 @@ function loadWhitelist() {
     // WHITELIST POR DEFECTO (SOLO SI NO EXISTE)
     const defaultWhitelist = {
         admins: [
-            { email: 'personalbusiness2626@gmai', key: 'admin123', insignia: 'Owner' }
+            { email: 'personalbusiness2626@gmail.com', key: 'admin123', insignia: 'Owner' }
         ],
         insignias: {
             'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
