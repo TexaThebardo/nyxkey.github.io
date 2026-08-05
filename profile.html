@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
         /* ============================================
-           PERFIL REDISEÑADO
+           PERFIL - ESTRUCTURA DIVIDIDA
            ============================================ */
 
         .profile-container {
@@ -31,7 +31,7 @@
         /* ============ BANNER ============ */
         .profile-banner {
             width: 100%;
-            height: 200px;
+            height: 180px;
             background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
             background-size: 400% 400%;
             position: relative;
@@ -108,20 +108,51 @@
             pointer-events: none;
         }
 
-        /* ============ CONTENEDOR AVATAR ============ */
-        .profile-avatar-container {
-            display: flex;
-            justify-content: center;
-            margin-top: -55px;
+        /* ============ GRID PRINCIPAL ============ */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 16px 28px 28px;
+            margin-top: -40px;
             position: relative;
             z-index: 2;
-            padding: 0 20px;
         }
 
+        @media (max-width: 900px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+                padding: 12px 16px 16px;
+                margin-top: -30px;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-grid {
+                padding: 8px 12px 12px;
+                margin-top: -20px;
+                gap: 16px;
+            }
+            .profile-banner {
+                height: 120px;
+            }
+        }
+
+        /* ============================================
+           COLUMNA IZQUIERDA - PERFIL
+           ============================================ */
+        .profile-left-col {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* ============ AVATAR ============ */
         .profile-avatar-wrapper {
             position: relative;
-            width: 130px;
-            height: 130px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             border: 4px solid var(--bg-secondary);
             background: var(--bg-card);
@@ -130,6 +161,7 @@
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             flex-shrink: 0;
+            margin: 0 auto;
         }
 
         .profile-avatar-wrapper:hover {
@@ -150,7 +182,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 56px;
+            font-size: 48px;
             color: var(--text-muted);
             background: var(--bg-card);
             border-radius: 50%;
@@ -163,12 +195,12 @@
             background: var(--primary);
             color: var(--bg-primary);
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px;
             border: 2px solid var(--bg-secondary);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -179,38 +211,41 @@
             background: var(--primary-dark);
         }
 
-        /* ============ INFO USUARIO (DEBAJO DEL AVATAR) ============ */
-        .profile-info-center {
+        input[type="file"] {
+            display: none;
+        }
+
+        /* ============ NOMBRE Y APODO ============ */
+        .profile-name-section {
             text-align: center;
-            padding: 12px 20px 16px;
         }
 
         .profile-name-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .profile-name-row h1 {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--text-primary);
             margin: 0;
         }
 
         .profile-name-row .profile-tag {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-secondary);
             font-weight: 500;
         }
 
         .profile-name-row .pronoun-selector {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
             background: var(--bg-card);
-            padding: 2px 14px;
+            padding: 2px 12px;
             border-radius: 20px;
             border: 1px solid var(--border-light);
             font-weight: 500;
@@ -227,7 +262,7 @@
         }
 
         .profile-name-row .pronoun-selector .material-icons {
-            font-size: 16px;
+            font-size: 14px;
         }
 
         /* ============ INSIGNIAS ============ */
@@ -236,12 +271,12 @@
             gap: 6px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .profile-insignias .insignia-badge {
-            font-size: 11px;
-            padding: 3px 12px;
+            font-size: 10px;
+            padding: 2px 10px;
             border-radius: 20px;
             font-weight: 600;
             display: inline-flex;
@@ -251,8 +286,8 @@
         }
 
         .profile-insignias .insignia-guest {
-            font-size: 11px;
-            padding: 3px 12px;
+            font-size: 10px;
+            padding: 2px 10px;
             border-radius: 20px;
             background: rgba(149, 165, 166, 0.15);
             color: #95a5a6;
@@ -264,18 +299,17 @@
 
         /* ============ BIO ============ */
         .profile-bio {
-            margin: 10px auto 0;
             color: var(--text-secondary);
             font-size: 14px;
-            max-width: 500px;
-            padding: 8px 14px;
+            padding: 10px 14px;
             background: var(--bg-primary);
-            border-radius: 8px;
+            border-radius: 12px;
             border: 1px solid var(--border-light);
-            min-height: 40px;
+            min-height: 44px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
+            word-wrap: break-word;
         }
 
         .profile-bio:hover {
@@ -284,19 +318,17 @@
 
         .profile-bio-input {
             width: 100%;
-            max-width: 500px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 8px 14px;
-            border-radius: 8px;
+            padding: 10px 14px;
+            border-radius: 12px;
             font-family: var(--font);
             font-size: 14px;
             resize: vertical;
             min-height: 60px;
             transition: all 0.3s ease;
             display: none;
-            margin: 10px auto 0;
             text-align: center;
         }
 
@@ -306,104 +338,215 @@
             box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
         }
 
-        /* ============ STATS ROW ============ */
-        .profile-stats-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-top: 14px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .profile-stat {
+        /* ============ MIEMBRO DESDE ============ */
+        .profile-member {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
             background: var(--bg-primary);
-            padding: 10px 14px;
             border-radius: 10px;
             border: 1px solid var(--border-light);
-            text-align: center;
         }
 
-        .profile-stat .stat-value {
+        .profile-member .member-icon {
+            color: var(--text-muted);
+        }
+
+        .profile-member .member-icon .material-icons {
             font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
         }
 
-        .profile-stat .stat-label {
+        .profile-member .member-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .profile-member .member-date {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-left: auto;
+        }
+
+        /* ============ CONEXIONES ============ */
+        .profile-connections {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            padding: 12px 14px;
+        }
+
+        .profile-connections .connections-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .profile-connections .connections-header h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0;
+        }
+
+        .profile-connections .connections-header h4 .material-icons {
+            font-size: 16px;
+        }
+
+        .profile-connections .connections-header .add-connection {
+            font-size: 12px;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .profile-connections .connections-header .add-connection:hover {
+            color: var(--primary-dark);
+        }
+
+        .connection-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .connection-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .connection-item .connection-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .connection-item .connection-icon.instagram { background: rgba(228, 64, 95, 0.2); color: #e4405f; }
+        .connection-item .connection-icon.twitter { background: rgba(29, 161, 242, 0.2); color: #1da1f2; }
+        .connection-item .connection-icon.discord { background: rgba(88, 101, 242, 0.2); color: #5865f2; }
+        .connection-item .connection-icon.telegram { background: rgba(0, 136, 204, 0.2); color: #0088cc; }
+        .connection-item .connection-icon.github { background: rgba(110, 84, 148, 0.2); color: #6e5494; }
+
+        .connection-item .connection-name {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .connection-item .connection-status {
+            font-size: 11px;
+            color: #2ecc71;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .connection-item .connection-status .material-icons {
+            font-size: 14px;
+        }
+
+        .connection-item .connection-remove {
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: none;
+            border: none;
+            padding: 2px;
+            display: flex;
+            align-items: center;
+        }
+
+        .connection-item .connection-remove:hover {
+            color: #e74c3c;
+        }
+
+        .connection-item .connection-remove .material-icons {
+            font-size: 16px;
+        }
+
+        /* ============ NOTA ============ */
+        .profile-note {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            padding: 12px 14px;
+        }
+
+        .profile-note .note-label {
             font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 4px;
+            gap: 6px;
         }
 
-        .profile-stat .stat-label .material-icons {
+        .profile-note .note-label .material-icons {
             font-size: 14px;
         }
 
-        /* ============ MAIN CONTENT ============ */
-        .profile-main {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 24px;
-            padding: 0 28px 28px;
+        .profile-note .note-content {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            cursor: pointer;
+            padding: 4px 0;
+            min-height: 20px;
+            word-wrap: break-word;
         }
 
-        @media (max-width: 768px) {
-            .profile-main {
-                grid-template-columns: 1fr;
-                padding: 0 16px 16px;
-            }
-            .profile-banner {
-                height: 150px;
-            }
-            .profile-avatar-wrapper {
-                width: 100px;
-                height: 100px;
-            }
-            .profile-name-row h1 {
-                font-size: 20px;
-            }
-            .profile-stats-row {
-                grid-template-columns: 1fr 1fr;
-            }
+        .profile-note .note-content:hover {
+            color: var(--text-primary);
         }
 
-        @media (max-width: 480px) {
-            .profile-banner {
-                height: 120px;
-            }
-            .profile-avatar-wrapper {
-                width: 80px;
-                height: 80px;
-            }
-            .profile-avatar-container {
-                margin-top: -40px;
-            }
-            .profile-name-row h1 {
-                font-size: 17px;
-            }
-            .profile-name-row .profile-tag {
-                font-size: 12px;
-            }
-            .profile-main {
-                padding: 0 12px 16px;
-            }
-            .profile-stats-row {
-                grid-template-columns: 1fr 1fr;
-            }
+        .profile-note .note-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: var(--font);
+            font-size: 13px;
+            resize: vertical;
+            min-height: 50px;
+            transition: all 0.3s ease;
+            display: none;
+            margin-top: 4px;
         }
 
-        /* ============ COLUMNA IZQUIERDA ============ */
-        .profile-left-col {
+        .profile-note .note-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
+        }
+
+        /* ============================================
+           COLUMNA DERECHA - ACTIVIDAD Y ESTADÍSTICAS
+           ============================================ */
+        .profile-right-col {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
         }
 
         /* ============ ACTIVIDAD ============ */
@@ -411,14 +554,14 @@
             background: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border-light);
-            padding: 16px;
+            padding: 14px 16px;
         }
 
         .profile-activity .activity-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .profile-activity .activity-header h3 {
@@ -428,6 +571,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            margin: 0;
         }
 
         .profile-activity .activity-header h3 .material-icons {
@@ -443,7 +587,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 6px 10px;
+            padding: 6px 8px;
             border-radius: 8px;
             transition: all 0.3s ease;
         }
@@ -453,8 +597,8 @@
         }
 
         .activity-item .activity-icon {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 8px;
             background: var(--bg-primary);
             display: flex;
@@ -464,7 +608,7 @@
         }
 
         .activity-item .activity-icon .material-icons {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--primary);
         }
 
@@ -496,192 +640,65 @@
             color: #e74c3c;
         }
 
-        /* ============ COLUMNA DERECHA ============ */
-        .profile-right-col {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        .empty-activity {
+            text-align: center;
+            padding: 16px 0;
+            color: var(--text-muted);
+            font-size: 13px;
         }
 
-        /* ============ MIEMBRO DESDE ============ */
-        .profile-member {
-            background: var(--bg-card);
-            border-radius: 12px;
+        /* ============ ESTADÍSTICAS ============ */
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .profile-stat {
+            background: var(--bg-primary);
+            padding: 10px 12px;
+            border-radius: 10px;
             border: 1px solid var(--border-light);
-            padding: 16px;
+            text-align: center;
         }
 
-        .profile-member .member-label {
-            font-size: 11px;
+        .profile-stat .stat-value {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .profile-stat .stat-label {
+            font-size: 10px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .profile-member .member-label .material-icons {
-            font-size: 14px;
-        }
-
-        .profile-member .member-date {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-top: 2px;
-        }
-
-        /* ============ CONEXIONES ============ */
-        .profile-connections {
-            background: var(--bg-card);
-            border-radius: 12px;
-            border: 1px solid var(--border-light);
-            padding: 16px;
-        }
-
-        .profile-connections .connections-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .profile-connections .connections-header h3 {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .profile-connections .connections-header h3 .material-icons {
-            font-size: 18px;
-        }
-
-        .profile-connections .connections-header .add-connection {
-            font-size: 12px;
-            color: var(--primary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .profile-connections .connections-header .add-connection:hover {
-            color: var(--primary-dark);
-        }
-
-        .connection-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 5px 10px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: var(--text-primary);
-        }
-
-        .connection-item:hover {
-            background: var(--bg-hover);
-        }
-
-        .connection-item .connection-icon {
-            width: 26px;
-            height: 26px;
-            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .connection-item .connection-icon.instagram { background: rgba(228, 64, 95, 0.2); color: #e4405f; }
-        .connection-item .connection-icon.twitter { background: rgba(29, 161, 242, 0.2); color: #1da1f2; }
-        .connection-item .connection-icon.discord { background: rgba(88, 101, 242, 0.2); color: #5865f2; }
-        .connection-item .connection-icon.telegram { background: rgba(0, 136, 204, 0.2); color: #0088cc; }
-        .connection-item .connection-icon.github { background: rgba(110, 84, 148, 0.2); color: #6e5494; }
-
-        .connection-item .connection-name {
-            flex: 1;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .connection-item .connection-status {
-            font-size: 11px;
-            color: #2ecc71;
-            display: flex;
-            align-items: center;
             gap: 4px;
+            margin-top: 2px;
         }
 
-        .connection-item .connection-status .material-icons {
-            font-size: 14px;
-        }
-
-        /* ============ NOTA ============ */
-        .profile-note {
-            background: var(--bg-card);
-            border-radius: 12px;
-            border: 1px solid var(--border-light);
-            padding: 16px;
-        }
-
-        .profile-note .note-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .profile-note .note-label .material-icons {
-            font-size: 14px;
-        }
-
-        .profile-note .note-content {
+        .profile-stat .stat-label .material-icons {
             font-size: 13px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-            cursor: pointer;
-            padding: 4px 0;
-            min-height: 20px;
         }
 
-        .profile-note .note-content:hover {
-            color: var(--text-primary);
+        @media (max-width: 600px) {
+            .profile-stats {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
-        .profile-note .note-input {
-            width: 100%;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-family: var(--font);
-            font-size: 13px;
-            resize: vertical;
-            min-height: 50px;
-            transition: all 0.3s ease;
-            display: none;
-            margin-top: 4px;
+        @media (max-width: 400px) {
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .profile-note .note-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
-        }
-
-        /* ============ BOTONES DE ACCIÓN ============ */
+        /* ============================================
+           BOTONES DE ACCIÓN
+           ============================================ */
         .profile-actions {
             display: flex;
             gap: 10px;
@@ -690,7 +707,7 @@
         }
 
         .profile-actions .btn-action {
-            padding: 8px 20px;
+            padding: 8px 18px;
             border-radius: 30px;
             font-weight: 600;
             font-size: 13px;
@@ -701,6 +718,8 @@
             gap: 6px;
             font-family: var(--font);
             border: none;
+            flex: 1;
+            justify-content: center;
         }
 
         .profile-actions .btn-action-primary {
@@ -723,17 +742,6 @@
             background: var(--bg-hover);
             color: var(--text-primary);
             border-color: var(--primary);
-        }
-
-        .profile-actions .btn-action-settings {
-            background: rgba(52, 152, 219, 0.12);
-            border: 1px solid rgba(52, 152, 219, 0.2);
-            color: #3498db;
-        }
-
-        .profile-actions .btn-action-settings:hover {
-            background: rgba(52, 152, 219, 0.2);
-            transform: scale(1.02);
         }
 
         /* ============================================
@@ -762,8 +770,8 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 32px;
-            max-width: 480px;
+            padding: 28px 32px;
+            max-width: 460px;
             width: 90%;
             animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: var(--shadow);
@@ -797,10 +805,10 @@
         }
 
         .settings-modal-box h2 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -812,13 +820,13 @@
 
         .settings-modal-box .subtitle {
             color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 24px;
+            font-size: 13px;
+            margin-bottom: 20px;
         }
 
         .settings-group {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
             border-bottom: 1px solid var(--border-light);
         }
 
@@ -839,7 +847,7 @@
         .settings-group .helper-text {
             font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .settings-group input {
@@ -887,10 +895,10 @@
 
         .settings-group .btn-save-setting {
             margin-top: 8px;
-            padding: 8px 20px;
+            padding: 6px 18px;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             border: none;
@@ -1056,115 +1064,64 @@
                         </div>
                     </div>
 
-                    <!-- ============ AVATAR ============ -->
-                    <div class="profile-avatar-container">
-                        <div class="profile-avatar-wrapper" onclick="document.getElementById('avatarInput').click()">
-                            <div class="avatar-placeholder" id="avatarPlaceholder">
-                                <span class="material-icons-outlined">person</span>
-                            </div>
-                            <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
-                            <div class="avatar-edit">
-                                <span class="material-icons">photo_camera</span>
-                            </div>
-                        </div>
-                        <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
-                    </div>
-
-                    <!-- ============ INFO USUARIO (DEBAJO DEL AVATAR) ============ -->
-                    <div class="profile-info-center">
-                        <div class="profile-name-row">
-                            <h1 id="profileDisplayName">Usuario</h1>
-                            <span class="profile-tag">@<span id="profileUsername">usuario</span></span>
-                            <span class="pronoun-selector" onclick="changePronoun()" id="pronounDisplay">
-                                <span class="material-icons" style="font-size:14px;">person</span>
-                                <span id="pronounText">él</span>
-                            </span>
-                        </div>
-
-                        <!-- INSIGNIAS -->
-                        <div class="profile-insignias" id="profileInsignias">
-                            <!-- Renderizado por JavaScript -->
-                        </div>
-
-                        <!-- BIO -->
-                        <div class="profile-bio" id="bioDisplay" onclick="editBio()">Sin biografía</div>
-                        <textarea class="profile-bio-input" id="bioInput" placeholder="Escribe tu biografía..." onblur="saveBio()"></textarea>
-
-                        <!-- STATS ROW -->
-                        <div class="profile-stats-row">
-                            <div class="profile-stat">
-                                <div class="stat-value" id="profileEmail">-</div>
-                                <div class="stat-label">
-                                    <span class="material-icons">email</span> Correo
-                                </div>
-                            </div>
-                            <div class="profile-stat">
-                                <div class="stat-value" id="profileBalance">$0.00</div>
-                                <div class="stat-label">
-                                    <span class="material-icons">account_balance_wallet</span> Saldo
-                                </div>
-                            </div>
-                            <div class="profile-stat">
-                                <div class="stat-value" id="profilePurchases">0</div>
-                                <div class="stat-label">
-                                    <span class="material-icons">credit_card</span> Tarjetas
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ============ MAIN CONTENT ============ -->
-                    <div class="profile-main">
-                        <!-- COLUMNA IZQUIERDA -->
+                    <!-- ============ GRID PRINCIPAL ============ -->
+                    <div class="profile-grid">
+                        <!-- ============ COLUMNA IZQUIERDA - PERFIL ============ -->
                         <div class="profile-left-col">
-                            <!-- ACTIVIDAD RECIENTE -->
-                            <div class="profile-activity">
-                                <div class="activity-header">
-                                    <h3>
-                                        <span class="material-icons">history</span> Actividad Reciente
-                                    </h3>
-                                    <span>Últimos 30 días</span>
+                            <!-- AVATAR -->
+                            <div class="profile-avatar-wrapper" onclick="document.getElementById('avatarInput').click()">
+                                <div class="avatar-placeholder" id="avatarPlaceholder">
+                                    <span class="material-icons-outlined">person</span>
                                 </div>
-                                <div id="activityList">
-                                    <div style="text-align:center; padding:20px 0; color:var(--text-muted); font-size:14px;">
-                                        No hay actividad reciente
-                                    </div>
+                                <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                                <div class="avatar-edit">
+                                    <span class="material-icons">photo_camera</span>
+                                </div>
+                            </div>
+                            <input type="file" id="avatarInput" accept="image/*" onchange="handleAvatarUpload(event)">
+
+                            <!-- NOMBRE Y APODO -->
+                            <div class="profile-name-section">
+                                <div class="profile-name-row">
+                                    <h1 id="profileDisplayName">Usuario</h1>
+                                    <span class="profile-tag">@<span id="profileUsername">usuario</span></span>
+                                    <span class="pronoun-selector" onclick="changePronoun()" id="pronounDisplay">
+                                        <span class="material-icons" style="font-size:14px;">person</span>
+                                        <span id="pronounText">él</span>
+                                    </span>
+                                </div>
+
+                                <!-- INSIGNIAS -->
+                                <div class="profile-insignias" id="profileInsignias">
+                                    <!-- Renderizado por JavaScript -->
                                 </div>
                             </div>
 
-                            <!-- ACCIONES -->
-                            <div class="profile-actions">
-                                <button class="btn-action btn-action-primary" onclick="saveProfile()">
-                                    <span class="material-icons">save</span> Guardar Cambios
-                                </button>
-                                <button class="btn-action btn-action-settings" onclick="openSettings()">
-                                    <span class="material-icons">settings</span> Ajustes
-                                </button>
-                            </div>
-                        </div>
+                            <!-- BIO -->
+                            <div class="profile-bio" id="bioDisplay" onclick="editBio()">Sin biografía</div>
+                            <textarea class="profile-bio-input" id="bioInput" placeholder="Escribe tu biografía..." onblur="saveBio()"></textarea>
 
-                        <!-- COLUMNA DERECHA -->
-                        <div class="profile-right-col">
                             <!-- MIEMBRO DESDE -->
                             <div class="profile-member">
-                                <div class="member-label">
-                                    <span class="material-icons">event</span> Miembro desde
-                                </div>
-                                <div class="member-date" id="profileSince">-</div>
+                                <span class="member-icon">
+                                    <span class="material-icons">event</span>
+                                </span>
+                                <span class="member-label">Miembro desde</span>
+                                <span class="member-date" id="profileSince">-</span>
                             </div>
 
                             <!-- CONEXIONES -->
                             <div class="profile-connections">
                                 <div class="connections-header">
-                                    <h3>
+                                    <h4>
                                         <span class="material-icons">link</span> Conexiones
-                                    </h3>
+                                    </h4>
                                     <span class="add-connection" onclick="addConnection()">
                                         <span class="material-icons" style="font-size:16px;">add_circle</span> Añadir
                                     </span>
                                 </div>
                                 <div id="connectionsList">
-                                    <div style="text-align:center; padding:12px 0; color:var(--text-muted); font-size:13px;">
+                                    <div style="text-align:center; padding:8px 0; color:var(--text-muted); font-size:12px;">
                                         No hay conexiones añadidas
                                     </div>
                                 </div>
@@ -1177,6 +1134,54 @@
                                 </div>
                                 <div class="note-content" id="noteDisplay" onclick="editNote()">Haz clic para añadir una nota</div>
                                 <textarea class="note-input" id="noteInput" placeholder="Escribe una nota personal..." onblur="saveNote()"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- ============ COLUMNA DERECHA - ACTIVIDAD ============ -->
+                        <div class="profile-right-col">
+                            <!-- ACTIVIDAD RECIENTE -->
+                            <div class="profile-activity">
+                                <div class="activity-header">
+                                    <h3>
+                                        <span class="material-icons">history</span> Actividad Reciente
+                                    </h3>
+                                    <span>Últimos 30 días</span>
+                                </div>
+                                <div id="activityList">
+                                    <div class="empty-activity">No hay actividad reciente</div>
+                                </div>
+                            </div>
+
+                            <!-- ESTADÍSTICAS -->
+                            <div class="profile-stats">
+                                <div class="profile-stat">
+                                    <div class="stat-value" id="profileEmail">-</div>
+                                    <div class="stat-label">
+                                        <span class="material-icons">email</span> Correo
+                                    </div>
+                                </div>
+                                <div class="profile-stat">
+                                    <div class="stat-value" id="profileBalance">$0.00</div>
+                                    <div class="stat-label">
+                                        <span class="material-icons">account_balance_wallet</span> Saldo
+                                    </div>
+                                </div>
+                                <div class="profile-stat">
+                                    <div class="stat-value" id="profilePurchases">0</div>
+                                    <div class="stat-label">
+                                        <span class="material-icons">credit_card</span> Tarjetas
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BOTONES DE ACCIÓN -->
+                            <div class="profile-actions">
+                                <button class="btn-action btn-action-primary" onclick="saveProfile()">
+                                    <span class="material-icons">save</span> Guardar Cambios
+                                </button>
+                                <button class="btn-action btn-action-secondary" onclick="openSettings()">
+                                    <span class="material-icons">settings</span> Ajustes
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1255,7 +1260,7 @@
     <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // PROFILE.JS - VERSIÓN REDISEÑADA
+        // PROFILE.JS - ESTRUCTURA DIVIDIDA
         // ============================================
 
         let tempAvatarData = null;
@@ -1277,7 +1282,6 @@
             const fullUser = users.find(u => u.id === user.id);
 
             if (fullUser) {
-                // Datos básicos
                 document.getElementById('profileDisplayName').textContent = fullUser.displayName || fullUser.username || 'Usuario';
                 document.getElementById('profileUsername').textContent = fullUser.username || 'usuario';
                 document.getElementById('profileEmail').textContent = fullUser.email || '-';
@@ -1285,7 +1289,6 @@
                 document.getElementById('userBalance').textContent = `$${(fullUser.balance || 0).toFixed(2)}`;
                 document.getElementById('profilePurchases').textContent = (fullUser.purchases || []).length;
 
-                // Fecha de registro
                 if (fullUser.createdAt) {
                     const date = new Date(fullUser.createdAt);
                     document.getElementById('profileSince').textContent = date.toLocaleDateString('es-ES', {
@@ -1295,44 +1298,36 @@
                     });
                 }
 
-                // Cargar ajustes
                 document.getElementById('settingsUsername').value = fullUser.username || '';
                 document.getElementById('settingsDisplayName').value = fullUser.displayName || fullUser.username || '';
 
-                // Cargar perfil
                 const profile = fullUser.profile || {};
 
-                // Avatar
                 if (profile.avatar) {
                     document.getElementById('avatarImage').src = profile.avatar;
                     document.getElementById('avatarImage').style.display = 'block';
                     document.getElementById('avatarPlaceholder').style.display = 'none';
                 }
 
-                // Banner
                 if (profile.banner) {
                     document.getElementById('bannerImage').src = profile.banner;
                     document.getElementById('bannerImage').style.display = 'block';
                     document.getElementById('bannerContainer').style.background = 'none';
                 }
 
-                // Bio
                 if (profile.bio) {
                     document.getElementById('bioDisplay').textContent = profile.bio;
                     document.getElementById('bioInput').value = profile.bio;
                 }
 
-                // Pronombre
                 if (profile.pronoun) {
                     document.getElementById('pronounText').textContent = profile.pronoun;
                 }
 
-                // Nota
                 if (profile.note) {
                     document.getElementById('noteDisplay').textContent = profile.note;
                 }
 
-                // Conexiones
                 renderConnections(profile.connections || {});
             }
 
@@ -1351,18 +1346,16 @@
         function renderInsignias() {
             const user = getCurrentUser();
             if (!user) return;
-
             const container = document.getElementById('profileInsignias');
             if (!container) return;
-
             const esAdmin = isAdmin(user.email);
             
             if (esAdmin) {
                 container.innerHTML = `
-                    <span class="insignia-badge" style="background:rgba(240, 185, 11, 0.15); color:#f0b90b;">
+                    <span class="insignia-badge" style="background:rgba(240,185,11,0.15); color:#f0b90b;">
                         <span class="material-icons" style="font-size:14px;">verified</span> Owner
                     </span>
-                    <span class="insignia-badge" style="background:rgba(52, 152, 219, 0.15); color:#3498db;">
+                    <span class="insignia-badge" style="background:rgba(52,152,219,0.15); color:#3498db;">
                         <span class="material-icons" style="font-size:14px;">code</span> Dev
                     </span>
                 `;
@@ -1390,7 +1383,6 @@
 
             purchases.forEach(p => {
                 activities.push({
-                    type: 'compra',
                     date: new Date(p.purchaseDate || Date.now()),
                     description: `Compraste ${p.network || 'tarjeta'} ${p.bin || ''}`,
                     amount: -((p.price || 0) * (p.quantity || 1)),
@@ -1400,7 +1392,6 @@
 
             transactions.forEach(t => {
                 activities.push({
-                    type: t.type || 'transacción',
                     date: new Date(t.date || Date.now()),
                     description: t.concept || t.type || 'Movimiento',
                     amount: t.amount || 0,
@@ -1412,11 +1403,7 @@
             const recent = activities.slice(0, 5);
 
             if (recent.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding:20px 0; color:var(--text-muted); font-size:14px;">
-                        No hay actividad reciente
-                    </div>
-                `;
+                container.innerHTML = `<div class="empty-activity">No hay actividad reciente</div>`;
                 return;
             }
 
@@ -1458,7 +1445,7 @@
 
             if (!hasConnections) {
                 container.innerHTML = `
-                    <div style="text-align:center; padding:12px 0; color:var(--text-muted); font-size:13px;">
+                    <div style="text-align:center; padding:8px 0; color:var(--text-muted); font-size:12px;">
                         No hay conexiones añadidas
                     </div>
                 `;
@@ -1469,7 +1456,7 @@
                 const data = socialData[key];
                 if (!data) return '';
                 return `
-                    <a href="${data.url}${connections[key]}" target="_blank" class="connection-item">
+                    <div class="connection-item">
                         <div class="connection-icon ${key}">
                             <i class="fab fa-${data.icon}"></i>
                         </div>
@@ -1477,9 +1464,27 @@
                         <span class="connection-status">
                             <span class="material-icons">check_circle</span> Conectado
                         </span>
-                    </a>
+                        <button class="connection-remove" onclick="removeConnection('${key}')" title="Eliminar conexión">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
                 `;
             }).join('');
+        }
+
+        function removeConnection(platform) {
+            if (!confirm(`¿Eliminar conexión a ${platform}?`)) return;
+            const user = getCurrentUser();
+            if (!user) return;
+            const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === user.id);
+            if (userIndex === -1) return;
+            if (users[userIndex].profile?.connections) {
+                delete users[userIndex].profile.connections[platform];
+                localStorage.setItem('yx_users', JSON.stringify(users));
+                renderConnections(users[userIndex].profile.connections);
+                showToast(`✅ Conexión a ${platform} eliminada`, 'success');
+            }
         }
 
         // ============ PRONOMBRE ============
@@ -1539,29 +1544,22 @@
         function addConnection() {
             const platform = prompt('📱 ¿Qué plataforma quieres añadir?\n\nOpciones: instagram, twitter, discord, telegram, github');
             if (!platform) return;
-
             const platforms = ['instagram', 'twitter', 'discord', 'telegram', 'github'];
             if (!platforms.includes(platform.toLowerCase())) {
                 showToast('❌ Plataforma no válida', 'error');
                 return;
             }
-
             const username = prompt(`✏️ Ingresa tu nombre de usuario en ${platform}:`);
             if (!username) return;
-
             const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
             const user = getCurrentUser();
             if (!user) return;
-
             const userIndex = users.findIndex(u => u.id === user.id);
             if (userIndex === -1) return;
-
             if (!users[userIndex].profile) users[userIndex].profile = {};
             if (!users[userIndex].profile.connections) users[userIndex].profile.connections = {};
-
             users[userIndex].profile.connections[platform.toLowerCase()] = username;
             localStorage.setItem('yx_users', JSON.stringify(users));
-
             renderConnections(users[userIndex].profile.connections);
             showToast(`✅ Conexión a ${platform} añadida`, 'success');
         }
@@ -1664,7 +1662,6 @@
 
             const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
             const userIndex = users.findIndex(u => u.id === user.id);
-
             if (userIndex === -1) {
                 showToast('❌ Usuario no encontrado', 'error');
                 return;
@@ -1849,7 +1846,7 @@
             }, 3000);
         }
 
-        console.log('✅ Profile.js rediseñado cargado correctamente');
+        console.log('✅ Profile.js - Estructura dividida cargada correctamente');
     </script>
 </body>
 </html>
