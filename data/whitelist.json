@@ -5,40 +5,52 @@
   ],
   "insignias": {
     "Owner": {
-      "icon": "👑",
+      "icon": "verified",
       "color": "#f1c40f",
       "bgColor": "rgba(241, 196, 15, 0.15)",
       "description": "Propietario de la plataforma"
     },
     "Dev": {
-      "icon": "💻",
+      "icon": "code",
       "color": "#3498db",
       "bgColor": "rgba(52, 152, 219, 0.15)",
       "description": "Desarrollador de la plataforma"
     },
     "Verificado": {
-      "icon": "✅",
+      "icon": "verified_user",
       "color": "#2ecc71",
       "bgColor": "rgba(46, 204, 113, 0.15)",
       "description": "Usuario verificado"
     },
     "Guest": {
-      "icon": "👤",
+      "icon": "person_outline",
       "color": "#95a5a6",
       "bgColor": "rgba(149, 165, 166, 0.15)",
       "description": "Usuario invitado"
     },
     "VIP": {
-      "icon": "⭐",
+      "icon": "stars",
       "color": "#e67e22",
       "bgColor": "rgba(230, 126, 34, 0.15)",
       "description": "Usuario VIP"
     },
     "Moderador": {
-      "icon": "🛡️",
+      "icon": "shield",
       "color": "#9b59b6",
       "bgColor": "rgba(155, 89, 182, 0.15)",
       "description": "Moderador de la comunidad"
+    },
+    "Colaborador": {
+      "icon": "group",
+      "color": "#1abc9c",
+      "bgColor": "rgba(26, 188, 156, 0.15)",
+      "description": "Colaborador activo"
+    },
+    "Fundador": {
+      "icon": "emoji_events",
+      "color": "#e74c3c",
+      "bgColor": "rgba(231, 76, 60, 0.15)",
+      "description": "Fundador de la plataforma"
     }
   }
 }
