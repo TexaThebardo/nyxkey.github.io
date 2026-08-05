@@ -149,7 +149,7 @@ function loginUser(email, password) {
             id: user.id,
             email: user.email,
             username: user.username,
-            balance: user.balance,  // <--- SALDO ACTUAL DESDE localStorage
+            balance: user.balance,
             role: user.role,
             purchases: user.purchases || [],
             transactions: user.transactions || [],
@@ -217,7 +217,7 @@ function getUsers() {
     }
 }
 
-// ============ ACTUALIZAR SALDO - DEFINITIVO ============
+// ============ ACTUALIZAR SALDO - CON SINCRONIZACIÓN TOTAL ============
 function updateUserBalance(userId, amount) {
     console.log('💰 updateUserBalance ejecutado - userId:', userId, 'amount:', amount);
     
@@ -249,7 +249,7 @@ function updateUserBalance(userId, amount) {
         }
     }
 
-    // 4. FORZAR ACTUALIZACIÓN DE UI
+    // 4. FORZAR ACTUALIZACIÓN DE UI EN TODAS LAS PÁGINAS
     updateUserUI();
     
     return true;
@@ -387,6 +387,14 @@ function updateUserUI() {
     }
 
     renderUserInsignias(user.email, 'userInsignias');
+    
+    // ============ ACTUALIZAR EL SALDO EN EL DASHBOARD TAMBIÉN ============
+    // Si estamos en dashboard.html, actualizar también ese elemento
+    const dashboardBalanceEl = document.getElementById('dashboardBalance');
+    if (dashboardBalanceEl) {
+        dashboardBalanceEl.textContent = `$${realBalance.toFixed(2)}`;
+        console.log(`✅ Saldo en dashboard actualizado: $${realBalance.toFixed(2)}`);
+    }
 }
 
 // ============ TOAST ============
