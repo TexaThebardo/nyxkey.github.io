@@ -8,11 +8,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- RUTAS RELATIVAS - CORRECTAS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -33,31 +33,44 @@
         </div>
     </nav>
     
+    <!-- DASHBOARD CONTAINER -->
     <div class="dashboard-container">
-        <!-- SIDEBAR -->
+        <!-- SIDEBAR - MENÚ LATERAL -->
         <aside class="sidebar">
             <nav class="sidebar-nav">
+                <span class="sidebar-title">Navegación</span>
+                
                 <a href="#" class="sidebar-link active" data-section="overview">
                     <span class="material-icons-outlined">dashboard</span>
                     <span>Visión General</span>
                 </a>
+                
                 <a href="#" class="sidebar-link" data-section="purchases">
                     <span class="material-icons-outlined">shopping_bag</span>
                     <span>Mis Compras</span>
                 </a>
+                
                 <a href="#" class="sidebar-link" data-section="transactions">
                     <span class="material-icons-outlined">receipt_long</span>
                     <span>Transacciones</span>
                 </a>
+                
+                <div class="sidebar-divider"></div>
+                
+                <span class="sidebar-title">Cuenta</span>
+                
                 <a href="profile.html" class="sidebar-link">
                     <span class="material-icons-outlined">person</span>
                     <span>Mi Perfil</span>
                 </a>
+                
                 <a href="index.html" class="sidebar-link">
                     <span class="material-icons-outlined">storefront</span>
                     <span>Tienda</span>
                 </a>
+                
                 <div class="sidebar-divider"></div>
+                
                 <a href="#" class="sidebar-link logout" onclick="logoutUser()">
                     <span class="material-icons-outlined">logout</span>
                     <span>Cerrar Sesión</span>
@@ -65,7 +78,7 @@
             </nav>
         </aside>
         
-        <!-- MAIN -->
+        <!-- MAIN CONTENT -->
         <main class="dashboard-main">
             <!-- SECCIÓN OVERVIEW -->
             <section id="overview" class="dashboard-section active">
@@ -146,7 +159,7 @@
                         </thead>
                         <tbody id="transactionsBody">
                             <tr>
-                                <td colspan="5" style="text-align:center;padding:40px;color:var(--text-secondary);">
+                                <td colspan="5" style="text-align:center;padding:40px;color:#5a6575;">
                                     <span class="material-icons-outlined" style="font-size:48px;display:block;">receipt_long</span>
                                     No hay transacciones registradas
                                 </td>
@@ -158,7 +171,7 @@
         </main>
     </div>
 
-    <!-- SCRIPTS CON RUTAS RELATIVAS -->
+    <!-- SCRIPTS -->
     <script src="js/auth.js"></script>
     <script src="js/products.js"></script>
     <script src="js/app.js"></script>
