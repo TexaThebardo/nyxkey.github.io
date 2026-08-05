@@ -11,83 +11,206 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
-        .nav-logo .logo-img {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            overflow: hidden;
-            animation: pulseLogo 2.5s ease-in-out infinite;
-            display: inline-block;
-            vertical-align: middle;
-            transition: all 0.3s ease;
-        }
-        .nav-logo .logo-img img {
+        /* ============ MODAL PARA MOSTRAR DATOS DE TARJETA ============ */
+        .card-data-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
         }
-        .nav-logo .logo-img:hover {
-            transform: scale(1.08);
-            filter: drop-shadow(0 0 25px rgba(240, 185, 11, 0.5));
+        .card-data-modal.active {
+            display: flex;
         }
-        @keyframes pulseLogo {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(240, 185, 11, 0.15)); }
-            50% { transform: scale(1.04); filter: drop-shadow(0 0 25px rgba(240, 185, 11, 0.35)); }
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .stat-card {
+        .card-data-box {
             background: #131a22;
             border: 1px solid #2a313c;
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 420px;
+            width: 90%;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+        .card-data-box .close-modal {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: #5a6575;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
             transition: all 0.3s ease;
-        }
-        .stat-card:hover {
-            border-color: #f0b90b;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
-        .stat-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
+            font-size: 20px;
         }
-        .stat-icon.green { background: rgba(46, 204, 113, 0.12); }
-        .stat-icon.green .material-icons-outlined { color: #2ecc71; }
-        .stat-icon.blue { background: rgba(52, 152, 219, 0.12); }
-        .stat-icon.blue .material-icons-outlined { color: #3498db; }
-        .stat-icon.purple { background: rgba(155, 89, 182, 0.12); }
-        .stat-icon.purple .material-icons-outlined { color: #9b59b6; }
-        .stat-icon.gold { background: rgba(240, 185, 11, 0.12); }
-        .stat-icon.gold .material-icons-outlined { color: #f0b90b; }
-        .stat-icon .material-icons-outlined { font-size: 28px; }
-        .stat-info { flex: 1; }
-        .stat-value { display: block; font-size: 26px; font-weight: 800; color: #e8edf2; }
-        .stat-label { font-size: 13px; color: #a0aab8; }
-        @media (max-width: 768px) {
-            .nav-logo .logo-img { width: 38px; height: 38px; }
-            .stat-icon { width: 44px; height: 44px; }
-            .stat-icon .material-icons-outlined { font-size: 22px; }
-            .stat-value { font-size: 20px; }
+        .card-data-box .close-modal:hover {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            transform: rotate(90deg);
         }
-        @media (max-width: 480px) {
-            .nav-logo .logo-img { width: 32px; height: 32px; }
+        .card-data-box .card-number-display {
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: #e8edf2;
+            text-align: center;
+            letter-spacing: 3px;
+            padding: 16px 0;
+            background: #0b0e14;
+            border-radius: 12px;
+            border: 1px solid #2a313c;
+            margin: 12px 0;
+            word-break: break-all;
+        }
+        .card-data-box .card-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #1e2630;
+            font-size: 14px;
+        }
+        .card-data-box .card-detail-row .label {
+            color: #a0aab8;
+        }
+        .card-data-box .card-detail-row .value {
+            color: #f0b90b;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        .card-data-box .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0b90b;
+            color: #0b0e14;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .card-data-box .copy-btn:hover {
+            background: #d4a40a;
+            transform: scale(1.02);
+        }
+        .card-data-box .copy-btn .material-icons {
+            font-size: 18px;
+        }
+        .card-data-box .card-type-badge {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .card-data-box .card-type-badge.visa { background: rgba(26, 83, 154, 0.2); color: #1a539a; }
+        .card-data-box .card-type-badge.mastercard { background: rgba(235, 10, 30, 0.2); color: #eb0a1e; }
+        .card-data-box .card-type-badge.amex { background: rgba(0, 102, 204, 0.2); color: #0066cc; }
+        .card-data-box .card-type-badge.discover { background: rgba(255, 102, 0, 0.2); color: #ff6600; }
+
+        /* Botón "Mostrar Datos" en la tarjeta de compra */
+        .btn-show-data {
+            background: #2a4a6a;
+            color: white;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-show-data:hover {
+            background: #3a5a8a;
+            transform: scale(1.05);
+        }
+        .btn-show-data .material-icons {
+            font-size: 14px;
+        }
+
+        /* Estado "Comprada" con Material Icon */
+        .purchase-status.completed {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(46, 204, 113, 0.12);
+            color: #2ecc71;
+        }
+        .purchase-status.completed .material-icons {
+            font-size: 16px;
+        }
+
+        /* Ajustes en la tarjeta de compra */
+        .purchase-card .purchase-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes slideUpToast {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDownToast {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(20px); }
+        }
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            pointer-events: none;
+            max-width: 90%;
         }
     </style>
 </head>
 <body>
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -113,6 +236,7 @@
         </div>
     </nav>
 
+    <!-- DASHBOARD -->
     <div class="dashboard-container">
         <aside class="sidebar">
             <nav class="sidebar-nav">
@@ -143,7 +267,7 @@
         </aside>
 
         <main class="dashboard-main">
-            <!-- SECCIÓN OVERVIEW -->
+            <!-- OVERVIEW -->
             <section id="overview" class="dashboard-section active">
                 <div class="section-header">
                     <h2>Visión General</h2>
@@ -151,56 +275,31 @@
                 </div>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-icon green">
-                            <span class="material-icons-outlined">shopping_cart</span>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="totalPurchases">0</span>
-                            <span class="stat-label">Tarjetas Compradas</span>
-                        </div>
+                        <div class="stat-icon green"><span class="material-icons-outlined">shopping_cart</span></div>
+                        <div class="stat-info"><span class="stat-value" id="totalPurchases">0</span><span class="stat-label">Tarjetas Compradas</span></div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon blue">
-                            <span class="material-icons-outlined">people</span>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="totalUsers">0</span>
-                            <span class="stat-label">Usuarios Registrados</span>
-                        </div>
+                        <div class="stat-icon blue"><span class="material-icons-outlined">people</span></div>
+                        <div class="stat-info"><span class="stat-value" id="totalUsers">0</span><span class="stat-label">Usuarios Registrados</span></div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon gold">
-                            <span class="material-icons-outlined">admin_panel_settings</span>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="totalAdmins">0</span>
-                            <span class="stat-label">Administradores</span>
-                        </div>
+                        <div class="stat-icon gold"><span class="material-icons-outlined">admin_panel_settings</span></div>
+                        <div class="stat-info"><span class="stat-value" id="totalAdmins">0</span><span class="stat-label">Administradores</span></div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon purple">
-                            <span class="material-icons-outlined">account_balance_wallet</span>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="currentBalance">$0</span>
-                            <span class="stat-label">Saldo Actual</span>
-                        </div>
+                        <div class="stat-icon purple"><span class="material-icons-outlined">account_balance_wallet</span></div>
+                        <div class="stat-info"><span class="stat-value" id="currentBalance">$0</span><span class="stat-label">Saldo Actual</span></div>
                     </div>
                 </div>
                 <div class="recent-activity">
-                    <div class="activity-header">
-                        <h3>Últimas Compras</h3>
-                    </div>
+                    <div class="activity-header"><h3>Últimas Compras</h3></div>
                     <div id="recentPurchases" class="activity-list">
-                        <div class="empty-state">
-                            <span class="material-icons-outlined">shopping_bag</span>
-                            <p>No has realizado compras aún</p>
-                        </div>
+                        <div class="empty-state"><span class="material-icons-outlined">shopping_bag</span><p>No has realizado compras aún</p></div>
                     </div>
                 </div>
             </section>
 
-            <!-- SECCIÓN MIS COMPRAS -->
+            <!-- MIS COMPRAS -->
             <section id="purchases" class="dashboard-section">
                 <div class="section-header">
                     <h2>Mis Tarjetas Compradas</h2>
@@ -209,23 +308,14 @@
                 <div class="purchases-grid" id="purchasesGrid"></div>
             </section>
 
-            <!-- SECCIÓN TRANSACCIONES -->
+            <!-- TRANSACCIONES -->
             <section id="transactions" class="dashboard-section">
-                <div class="section-header">
-                    <h2>Historial de Transacciones</h2>
-                </div>
+                <div class="section-header"><h2>Historial de Transacciones</h2></div>
                 <div class="transactions-table">
                     <table>
-                        <thead>
-                            <tr><th>ID</th><th>Tipo</th><th>Monto</th><th>Estado</th><th>Fecha</th></tr>
-                        </thead>
+                        <thead><tr><th>ID</th><th>Tipo</th><th>Monto</th><th>Estado</th><th>Fecha</th></tr></thead>
                         <tbody id="transactionsBody">
-                            <tr>
-                                <td colspan="5" style="text-align:center;padding:40px;color:#5a6575;">
-                                    <span class="material-icons-outlined" style="font-size:48px;display:block;">receipt_long</span>
-                                    No hay transacciones registradas
-                                </td>
-                            </tr>
+                            <tr><td colspan="5" style="text-align:center;padding:40px;color:#5a6575;"><span class="material-icons-outlined" style="font-size:48px;display:block;">receipt_long</span>No hay transacciones registradas</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -233,11 +323,44 @@
         </main>
     </div>
 
-    <!-- ============ SCRIPTS - ORDEN CORRECTO ============ -->
+    <!-- MODAL PARA MOSTRAR DATOS DE LA TARJETA -->
+    <div class="card-data-modal" id="cardDataModal">
+        <div class="card-data-box">
+            <button class="close-modal" onclick="closeCardDataModal()">
+                <span class="material-icons">close</span>
+            </button>
+            <div style="text-align:center;">
+                <span class="card-type-badge" id="modalCardType">VISA</span>
+            </div>
+            <div class="card-number-display" id="modalCardNumber">**** **** **** ****</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+                <div class="card-detail-row" style="flex-direction:column; align-items:flex-start; border-bottom:none; background:#0b0e14; padding:10px 14px; border-radius:10px;">
+                    <span class="label" style="font-size:11px;">Fecha Exp.</span>
+                    <span class="value" id="modalCardExpiry">**/**</span>
+                </div>
+                <div class="card-detail-row" style="flex-direction:column; align-items:flex-start; border-bottom:none; background:#0b0e14; padding:10px 14px; border-radius:10px;">
+                    <span class="label" style="font-size:11px;">CVV</span>
+                    <span class="value" id="modalCardCvv">***</span>
+                </div>
+            </div>
+            <div class="card-detail-row" style="border-bottom:none; padding-top:12px;">
+                <span class="label">Banco</span>
+                <span class="value" id="modalCardBank" style="color:#e8edf2; font-family:inherit;">-</span>
+            </div>
+            <div class="card-detail-row" style="border-bottom:none; padding-bottom:12px;">
+                <span class="label">País</span>
+                <span class="value" id="modalCardCountry" style="color:#e8edf2; font-family:inherit;">-</span>
+            </div>
+            <button class="copy-btn" onclick="copyCardData()">
+                <span class="material-icons">content_copy</span>
+                Copiar Datos Completos
+            </button>
+        </div>
+    </div>
+
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
     <script src="js/products.js"></script>
-    <script src="js/cart.js"></script>   <!-- loadCart está AQUÍ -->
     <script src="js/app.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
