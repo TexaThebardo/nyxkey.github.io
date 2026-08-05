@@ -1,5 +1,5 @@
 // ============================================
-// CART.JS - Carrito de Compras COMPLETO
+// CART.JS - Carrito de Compras
 // ============================================
 
 let cartItems = [];
@@ -57,7 +57,13 @@ function addToCart(productIndex) {
             country: product.country,
             price: product.price,
             quantity: 1,
-            maxStock: product.stock
+            maxStock: product.stock,
+            // Guardar datos completos para el historial
+            cardData: {
+                number: product.cardData?.number || '****',
+                expiry: product.cardData?.expiry || '**/**',
+                cvv: product.cardData?.cvv || '***'
+            }
         });
     }
     
@@ -178,6 +184,7 @@ function toggleCart() {
     if (overlay) overlay.classList.toggle('active');
 }
 
+// ============ CHECKOUT - GUARDAR EN HISTORIAL ============
 function checkout() {
     if (cartItems.length === 0) {
         showToast('El carrito está vacío', 'error');
@@ -187,7 +194,7 @@ function checkout() {
     const user = getCurrentUser();
     if (!user) {
         showToast('Debes iniciar sesión para comprar', 'error');
-        setTimeout(() => window.location.href = '/login.html', 1500);
+        setTimeout(() => window.location.href = '/nyxkey.github.io/login.html', 1500);
         return;
     }
     
@@ -201,9 +208,25 @@ function checkout() {
     }
     
     if (confirm(`💰 Total a pagar: $${total.toFixed(2)} USD\n¿Procesar pago?`)) {
+        // 1. Descontar saldo
         updateUserBalance(user.id, -total);
         
-        // Registrar transacción
+        // 2. Guardar cada tarjeta comprada en el historial
+        cartItems.forEach(item => {
+            const purchaseData = {
+                network: item.network,
+                bin: item.bin,
+                bank: item.bank,
+                country: item.country,
+                price: item.price,
+                quantity: item.quantity,
+                cardData: item.cardData || { number: '****', expiry: '**/**', cvv: '***' },
+                purchaseDate: new Date().toISOString()
+            };
+            addPurchaseToHistory(user.id, purchaseData);
+        });
+        
+        // 3. Registrar transacción (para el historial de transacciones)
         const transaction = {
             id: 'TX-' + Date.now(),
             type: 'compra',
@@ -221,17 +244,19 @@ function checkout() {
             localStorage.setItem('yx_users', JSON.stringify(users));
         }
         
+        // 4. Vaciar carrito
         cartItems = [];
         saveCart();
         updateCartUI();
         updateCartBadge();
         updateUserUI();
-        showToast('✅ Pago procesado con éxito. Revisa tu historial.', 'success');
+        
+        showToast('✅ Compra realizada con éxito. Revisa tu historial.', 'success');
         toggleCart();
     }
 }
 
-// Inicializar al cargar
+// Inicializar
 document.addEventListener('DOMContentLoaded', function() {
     loadCart();
 });
