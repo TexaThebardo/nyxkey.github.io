@@ -4,15 +4,10 @@
 
 console.log('📊 Dashboard.js cargado');
 
+let currentCardData = null;
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📊 Dashboard iniciado');
-
-    // Verificar que estamos en dashboard.html
-    const dashboardContainer = document.querySelector('.dashboard-container');
-    if (!dashboardContainer) {
-        console.log('ℹ️ dashboard-container no encontrado - no estamos en dashboard.html');
-        return;
-    }
 
     const user = getCurrentUser();
     if (!user) {
@@ -45,7 +40,7 @@ function loadDashboardData() {
     console.log('📦 Transacciones:', transactions.length);
     console.log('💰 Saldo:', balance);
 
-    // ============ ESTADÍSTICAS ============
+    // Estadísticas
     const totalUsers = users.length || 0;
     let totalAdmins = 0;
     try {
@@ -56,7 +51,6 @@ function loadDashboardData() {
         }
     } catch (e) {}
 
-    // ============ ACTUALIZAR ELEMENTOS CON VERIFICACIÓN ============
     const elements = {
         totalPurchases: document.getElementById('totalPurchases'),
         totalUsers: document.getElementById('totalUsers'),
@@ -73,7 +67,6 @@ function loadDashboardData() {
     if (elements.dashboardBalance) elements.dashboardBalance.textContent = `$${balance.toFixed(2)}`;
     if (elements.purchaseCount) elements.purchaseCount.textContent = `${purchases.length} tarjetas`;
 
-    // Renderizar secciones
     renderPurchases(purchases);
     renderRecentPurchases(purchases);
     renderTransactions(transactions);
@@ -95,44 +88,43 @@ function renderPurchases(purchases) {
         return;
     }
 
-    container.innerHTML = purchases.map(p => `
-        <div class="purchase-card">
-            <div class="purchase-header">
-                <span class="purchase-network">${p.network || 'N/A'}</span>
-                <span class="purchase-bin">${p.bin || '****'}</span>
-                <span class="purchase-date">${p.purchaseDate ? new Date(p.purchaseDate).toLocaleDateString() : '-'}</span>
+    container.innerHTML = purchases.map((p, index) => {
+        const networkColor = getNetworkColor(p.network);
+        return `
+            <div class="purchase-card">
+                <div class="purchase-header">
+                    <span class="purchase-network" style="color:${networkColor};">${p.network || 'N/A'}</span>
+                    <span class="purchase-bin">${p.bin || '****'}</span>
+                    <span class="purchase-date">${p.purchaseDate ? new Date(p.purchaseDate).toLocaleDateString() : '-'}</span>
+                </div>
+                <div class="purchase-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Banco</span>
+                        <span class="detail-value">${p.bank || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">País</span>
+                        <span class="detail-value">${p.country || 'N/A'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Cantidad</span>
+                        <span class="detail-value">${p.quantity || 1}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Precio</span>
+                        <span class="detail-value">$${((p.price || 0) * (p.quantity || 1)).toFixed(2)}</span>
+                    </div>
+                </div>
+                <div class="purchase-footer">
+                    <span class="purchase-status completed">✅ Comprada</span>
+                    <button class="btn-show-data" onclick="showCardData(${index})">
+                        <span class="material-icons">visibility</span>
+                        Mostrar Datos
+                    </button>
+                </div>
             </div>
-            <div class="purchase-details">
-                <div class="detail-row">
-                    <span class="detail-label">Banco</span>
-                    <span class="detail-value">${p.bank || 'N/A'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">País</span>
-                    <span class="detail-value">${p.country || 'N/A'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Cantidad</span>
-                    <span class="detail-value">${p.quantity || 1}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Precio</span>
-                    <span class="detail-value">$${((p.price || 0) * (p.quantity || 1)).toFixed(2)}</span>
-                </div>
-                ${p.cardData ? `
-                <div class="detail-row card-data">
-                    <span class="detail-label">Datos</span>
-                    <span class="detail-value" style="font-family:monospace;font-size:13px;">
-                        ${p.cardData.number || '****'} | ${p.cardData.expiry || '**/**'} | ${p.cardData.cvv || '***'}
-                    </span>
-                </div>
-                ` : ''}
-            </div>
-            <div class="purchase-footer">
-                <span class="purchase-status completed">✅ Comprada</span>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // ============ RENDERIZAR COMPRAS RECIENTES ============
@@ -193,36 +185,115 @@ function renderTransactions(transactions) {
     `).join('');
 }
 
+// ============ MOSTRAR DATOS DE LA TARJETA ============
+function showCardData(index) {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    const users = getUsers();
+    const fullUser = users.find(u => u.id === user.id);
+    if (!fullUser) return;
+
+    const purchases = fullUser.purchases || [];
+    const purchase = purchases[index];
+    if (!purchase) {
+        showToast('❌ No se encontraron datos de esta tarjeta', 'error');
+        return;
+    }
+
+    // Guardar datos para copiar
+    currentCardData = purchase;
+
+    // Preparar número de tarjeta con formato
+    const cardNumber = purchase.cardData?.number || '**** **** **** ****';
+    const formattedNumber = cardNumber.replace(/(.{4})/g, '$1 ').trim();
+
+    // Mostrar en el modal
+    document.getElementById('modalCardType').textContent = purchase.network || 'N/A';
+    document.getElementById('modalCardType').className = `card-type-badge ${(purchase.network || '').toLowerCase()}`;
+    document.getElementById('modalCardNumber').textContent = formattedNumber;
+    document.getElementById('modalCardExpiry').textContent = purchase.cardData?.expiry || '**/**';
+    document.getElementById('modalCardCvv').textContent = purchase.cardData?.cvv || '***';
+    document.getElementById('modalCardBank').textContent = purchase.bank || 'N/A';
+    document.getElementById('modalCardCountry').textContent = purchase.country || 'N/A';
+
+    document.getElementById('cardDataModal').classList.add('active');
+}
+
+// ============ CERRAR MODAL ============
+function closeCardDataModal() {
+    document.getElementById('cardDataModal').classList.remove('active');
+    currentCardData = null;
+}
+
+// ============ COPIAR DATOS COMPLETOS ============
+function copyCardData() {
+    if (!currentCardData) {
+        showToast('❌ No hay datos para copiar', 'error');
+        return;
+    }
+
+    const card = currentCardData;
+    const cardNumber = card.cardData?.number || '****';
+    const expiry = card.cardData?.expiry || '**/**';
+    const cvv = card.cardData?.cvv || '***';
+    const network = card.network || 'N/A';
+    const bank = card.bank || 'N/A';
+    const country = card.country || 'N/A';
+
+    const textToCopy = `🃏 DATOS DE LA TARJETA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏷️ Red: ${network}
+💳 Número: ${cardNumber}
+📅 Expira: ${expiry}
+🔐 CVV: ${cvv}
+🏦 Banco: ${bank}
+🌍 País: ${country}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📅 Comprada: ${card.purchaseDate ? new Date(card.purchaseDate).toLocaleDateString() : 'N/A'}`;
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        showToast('✅ Datos copiados al portapapeles', 'success');
+    }).catch(() => {
+        // Fallback: copiar de otra forma
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('✅ Datos copiados al portapapeles', 'success');
+    });
+}
+
+// ============ FUNCIÓN AUXILIAR ============
+function getNetworkColor(network) {
+    const colors = {
+        'VISA': '#1a539a',
+        'MASTERCARD': '#eb0a1e',
+        'AMEX': '#0066cc',
+        'DISCOVER': '#ff6600'
+    };
+    return colors[network] || '#a0aab8';
+}
+
 // ============ NAVEGACIÓN ============
 function setupNavigation() {
     console.log('🔧 Configurando navegación...');
-
     const links = document.querySelectorAll('.sidebar-link[data-section]');
-    console.log('📎 Enlaces encontrados:', links.length);
-
     links.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const sectionId = this.dataset.section;
-            console.log('🔄 Click en:', sectionId);
-
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
             this.classList.add('active');
-
             document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
-
             const section = document.getElementById(sectionId);
-            if (section) {
-                section.classList.add('active');
-                console.log('✅ Sección mostrada:', sectionId);
-            } else {
-                console.log('❌ Sección no encontrada:', sectionId);
-            }
+            if (section) section.classList.add('active');
         });
     });
 }
 
-// ============ ACTUALIZAR FECHA ============
 function updateDateTime() {
     const date = new Date();
     const el = document.getElementById('currentDate');
@@ -235,5 +306,44 @@ function updateDateTime() {
         });
     }
 }
+
+// ============ TOAST ============
+function showToast(message, type = 'info') {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    const colors = { success: '#2ecc71', error: '#e74c3c', info: '#3498db', warning: '#f39c12' };
+    toast.style.cssText = `
+        background: #1a232e;
+        color: #e8edf2;
+        padding: 10px 22px;
+        border-radius: 12px;
+        border-left: 4px solid ${colors[type] || colors.info};
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        font-size: 14px;
+        font-weight: 500;
+        pointer-events: auto;
+        animation: slideUpToast 0.3s ease;
+        min-width: 200px;
+        text-align: center;
+        border: 1px solid #2a313c;
+    `;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'slideDownToast 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// ============ EXPORTAR ============
+window.showCardData = showCardData;
+window.closeCardDataModal = closeCardDataModal;
+window.copyCardData = copyCardData;
+window.showToast = showToast;
 
 console.log('✅ dashboard.js cargado correctamente');
