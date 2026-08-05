@@ -26,8 +26,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.warn('⚠️ loadCart no está definida - asegúrate de cargar cart.js');
     }
     
-    // ============ ACTUALIZAR UI COMPLETAMENTE ============
-    updateUserUI();
+    // ============ ACTUALIZAR UI ============
+    if (typeof updateUserUI === 'function') {
+        updateUserUI();
+    } else {
+        console.warn('⚠️ updateUserUI no está definida - asegúrate de cargar auth.js');
+    }
+    
     renderCatalog();
     updateStats();
     updateDateTime();
@@ -44,58 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ============ FUNCIÓN PRINCIPAL PARA ACTUALIZAR UI ============
-function updateUserUI() {
-    const user = getCurrentUser();
-    const balanceEl = document.getElementById('userBalance');
-    const avatarEl = document.getElementById('userAvatarIcon');
-    const nameEl = document.getElementById('userDisplayName');
-
-    console.log('🔄 Actualizando UI - Usuario:', user);
-
-    if (user) {
-        // Actualizar balance
-        if (balanceEl) {
-            balanceEl.textContent = `$${user.balance.toFixed(2)}`;
-            console.log(`💰 Saldo actualizado: $${user.balance.toFixed(2)}`);
-        }
-        if (avatarEl) avatarEl.textContent = 'account_circle';
-        if (nameEl) nameEl.textContent = user.username || 'Usuario';
-
-        // Verificar admin
-        const esAdmin = isAdmin ? isAdmin(user.email) : false;
-
-        const adminBtn = document.getElementById('adminPanelBtn');
-        const adminSidebarBtn = document.getElementById('adminSidebarBtn');
-        const adminDropdownBtn = document.getElementById('adminDropdownBtn');
-
-        if (esAdmin) {
-            if (adminBtn) adminBtn.style.display = 'inline-flex';
-            if (adminSidebarBtn) adminSidebarBtn.style.display = 'flex';
-            if (adminDropdownBtn) adminDropdownBtn.style.display = 'flex';
-        } else {
-            if (adminBtn) adminBtn.style.display = 'none';
-            if (adminSidebarBtn) adminSidebarBtn.style.display = 'none';
-            if (adminDropdownBtn) adminDropdownBtn.style.display = 'none';
-        }
-
-        // Renderizar insignias
-        if (typeof renderUserInsignias === 'function') {
-            renderUserInsignias(user.email, 'userInsignias');
-        }
-    } else {
-        if (balanceEl) balanceEl.textContent = '$0.00';
-        if (avatarEl) avatarEl.textContent = 'person';
-        if (nameEl) nameEl.textContent = 'Invitado';
-    }
-}
-
-// ============ SOBRESCRIBIR FUNCIONES GLOBALES ============
-// Para que cart.js pueda actualizar la UI
-const originalUpdateUserUI = window.updateUserUI;
-window.updateUserUI = updateUserUI;
-
-// ============ RESTO DE FUNCIONES ============
 function showSection(sectionId) {
     document.querySelectorAll('.catalog-section, .services-section').forEach(el => el.style.display = 'none');
     const section = document.getElementById(sectionId);
@@ -349,6 +302,5 @@ window.closeDepositModal = closeDepositModal;
 window.selectMethod = selectMethod;
 window.copyAddress = copyAddress;
 window.updateStats = updateStats;
-window.updateUserUI = updateUserUI;
 
 console.log('✅ App.js cargado correctamente');
