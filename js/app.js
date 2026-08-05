@@ -1,5 +1,5 @@
 // ============================================
-// APP.JS - Lógica Principal (ACTUALIZADO)
+// APP.JS - Lógica Principal
 // ============================================
 
 let currentPage = 1;
@@ -8,7 +8,12 @@ let currentFilter = { country: '', search: '' };
 
 document.addEventListener('DOMContentLoaded', function() {
     loadProductsFromJSON();
-    loadCart();
+    
+    // Verificar si loadCart existe antes de llamarla
+    if (typeof loadCart === 'function') {
+        loadCart();
+    }
+    
     updateUserUI();
     renderCatalog();
     updateStats();
@@ -93,34 +98,24 @@ function refreshCatalog() {
     }, 800);
 }
 
-// ============ ESTADÍSTICAS ACTUALIZADAS ============
 function updateStats() {
-    // Tarjetas Activas
     const stats = getProductStats();
     document.getElementById('totalCards').textContent = stats.total || 0;
     
-    // Usuarios Registrados (total de cuentas)
+    // Usuarios Registrados
     const users = getUsers();
     const totalUsers = users.length || 0;
     document.getElementById('totalUsers').textContent = totalUsers;
     
-    // Administradores (total de admins desde auth.js)
+    // Administradores
     let totalAdmins = 0;
-    if (typeof getAdminList === 'function') {
-        const admins = getAdminList();
-        totalAdmins = admins.length || 0;
-    } else if (typeof ADMIN_LIST !== 'undefined') {
-        totalAdmins = ADMIN_LIST.length || 0;
-    } else {
-        // Fallback: contar admins desde la whitelist
-        try {
-            const stored = localStorage.getItem('admin_whitelist');
-            if (stored) {
-                const data = JSON.parse(stored);
-                totalAdmins = data.admins ? data.admins.length : 0;
-            }
-        } catch (e) {}
-    }
+    try {
+        const stored = localStorage.getItem('admin_whitelist');
+        if (stored) {
+            const data = JSON.parse(stored);
+            totalAdmins = data.admins ? data.admins.length : 0;
+        }
+    } catch (e) {}
     document.getElementById('totalAdmins').textContent = totalAdmins;
 }
 
@@ -130,7 +125,6 @@ function updateDateTime() {
     if (el) el.textContent = date.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-// ============ CHECKER ============
 function runChecker() {
     const input = document.getElementById('checkerInput');
     const lines = input.value.split('\n').filter(line => line.trim());
