@@ -4,11 +4,323 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil - Yx Cards</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="/nyxkey.github.io/css/style.css">
+    <link rel="stylesheet" href="/nyxkey.github.io/css/dashboard.css">
+    <style>
+        /* ============ PERFIL MEJORADO ============ */
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .profile-banner {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #1a232e, #2a313c);
+            border-radius: var(--radius) var(--radius) 0 0;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-banner:hover {
+            opacity: 0.9;
+        }
+
+        .profile-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-banner .banner-overlay {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            background: rgba(0,0,0,0.7);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+        }
+
+        .profile-banner .banner-overlay .material-icons {
+            font-size: 16px;
+        }
+
+        .profile-header {
+            background: var(--bg-secondary);
+            border-radius: 0 0 var(--radius) var(--radius);
+            padding: 0 30px 30px;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            position: relative;
+            margin-top: -60px;
+        }
+
+        .profile-avatar-section {
+            display: flex;
+            align-items: flex-end;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .profile-avatar-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--bg-secondary);
+            background: var(--bg-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        .profile-avatar-wrapper:hover {
+            border-color: var(--primary);
+        }
+
+        .profile-avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-avatar-wrapper .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border-radius: 50%;
+        }
+
+        .profile-avatar-wrapper .avatar-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            border: 2px solid var(--bg-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-avatar-wrapper .avatar-edit:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-name-section {
+            flex: 1;
+            padding-top: 20px;
+        }
+
+        .profile-name-section h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .profile-name-section .profile-username {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .profile-name-section .profile-bio {
+            margin-top: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            max-width: 400px;
+        }
+
+        .profile-name-section .profile-bio-input {
+            width: 100%;
+            max-width: 400px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: var(--font);
+            font-size: 14px;
+            resize: vertical;
+            min-height: 60px;
+            transition: var(--transition);
+        }
+
+        .profile-name-section .profile-bio-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .profile-actions .btn-secondary {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-actions .btn-secondary:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+
+        .profile-actions .btn-primary {
+            background: var(--primary);
+            color: var(--bg-primary);
+            border: none;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-actions .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+
+        .profile-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .info-card {
+            background: var(--bg-primary);
+            padding: 16px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+        }
+
+        .info-card label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .info-card .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .info-card .info-value .material-icons-outlined {
+            font-size: 18px;
+            color: var(--primary);
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                padding: 0 16px 20px;
+                margin-top: -40px;
+            }
+            
+            .profile-avatar-wrapper {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .profile-avatar-wrapper .avatar-placeholder {
+                font-size: 36px;
+            }
+            
+            .profile-name-section h1 {
+                font-size: 22px;
+            }
+            
+            .profile-info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-avatar-section {
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-banner {
+                height: 120px;
+            }
+            
+            .profile-avatar-wrapper {
+                width: 64px;
+                height: 64px;
+            }
+            
+            .profile-avatar-wrapper .avatar-edit {
+                width: 24px;
+                height: 24px;
+                font-size: 14px;
+            }
+        }
+
+        /* Animación de banner */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .profile-banner.animated {
+            background: linear-gradient(-45deg, #1a232e, #2a313c, #1a232e, #2a313c);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        .profile-banner.animated:hover {
+            animation-duration: 4s;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -33,15 +345,15 @@
     <div class="dashboard-container">
         <aside class="sidebar">
             <nav class="sidebar-nav">
-                <a href="dashboard.html" class="sidebar-link">
+                <a href="/nyxkey.github.io/dashboard.html" class="sidebar-link">
                     <span class="material-icons-outlined">dashboard</span>
                     <span>Dashboard</span>
                 </a>
-                <a href="profile.html" class="sidebar-link active">
+                <a href="/nyxkey.github.io/profile.html" class="sidebar-link active">
                     <span class="material-icons-outlined">person</span>
                     <span>Mi Perfil</span>
                 </a>
-                <a href="index.html" class="sidebar-link">
+                <a href="/nyxkey.github.io/" class="sidebar-link">
                     <span class="material-icons-outlined">storefront</span>
                     <span>Tienda</span>
                 </a>
@@ -54,84 +366,242 @@
         </aside>
         
         <main class="dashboard-main">
-            <div class="section-header">
-                <h2>Mi Perfil</h2>
-            </div>
-            
             <div class="profile-container">
-                <div class="profile-card">
-                    <div class="profile-avatar">
-                        <span class="material-icons-outlined" style="font-size:80px;color:var(--primary);">account_circle</span>
-                        <button class="btn-secondary" onclick="changeAvatar()">Cambiar Avatar</button>
+                <!-- BANNER -->
+                <div class="profile-banner animated" id="bannerContainer" onclick="uploadBanner()">
+                    <img id="bannerImage" src="" alt="Banner" style="display:none;">
+                    <div class="banner-overlay">
+                        <span class="material-icons">photo_camera</span>
+                        Cambiar Banner
                     </div>
-                    <div class="profile-info">
-                        <div class="info-group">
-                            <label>Nombre Completo</label>
-                            <p id="profileFullName">-</p>
+                </div>
+                
+                <!-- PERFIL HEADER -->
+                <div class="profile-header">
+                    <div class="profile-avatar-section">
+                        <div class="profile-avatar-wrapper" onclick="uploadAvatar()">
+                            <div class="avatar-placeholder" id="avatarPlaceholder">
+                                <span class="material-icons-outlined">person</span>
+                            </div>
+                            <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                            <div class="avatar-edit">
+                                <span class="material-icons">photo_camera</span>
+                            </div>
                         </div>
-                        <div class="info-group">
-                            <label>Nombre de Usuario</label>
-                            <p id="profileUsername">-</p>
+                        
+                        <div class="profile-name-section">
+                            <h1 id="profileDisplayName">Usuario</h1>
+                            <span class="profile-username">@<span id="profileUsername">usuario</span></span>
+                            <div id="bioDisplay" class="profile-bio">Sin biografía</div>
+                            <textarea id="bioInput" class="profile-bio-input" style="display:none;" placeholder="Escribe tu biografía..."></textarea>
+                            
+                            <div class="profile-actions">
+                                <button class="btn-primary" onclick="saveProfile()">
+                                    <span class="material-icons">save</span> Guardar Cambios
+                                </button>
+                                <button class="btn-secondary" onclick="toggleBioEdit()">
+                                    <span class="material-icons">edit</span> Editar Biografía
+                                </button>
+                                <button class="btn-secondary" onclick="toggleBannerAnimation()">
+                                    <span class="material-icons">animation</span> Animación
+                                </button>
+                            </div>
                         </div>
-                        <div class="info-group">
+                    </div>
+                    
+                    <!-- INFO GRID -->
+                    <div class="profile-info-grid">
+                        <div class="info-card">
                             <label>Correo Electrónico</label>
-                            <p id="profileEmail">-</p>
+                            <div class="info-value" id="profileEmail">-</div>
                         </div>
-                        <div class="info-group">
+                        <div class="info-card">
                             <label>Saldo Disponible</label>
-                            <p id="profileBalance">$0.00</p>
+                            <div class="info-value" id="profileBalance">$0.00</div>
                         </div>
-                        <div class="info-group">
+                        <div class="info-card">
                             <label>Miembro desde</label>
-                            <p id="profileSince">-</p>
+                            <div class="info-value" id="profileSince">-</div>
                         </div>
-                        <button class="btn-primary" onclick="editProfile()">
-                            <span class="material-icons">edit</span> Editar Perfil
-                        </button>
+                        <div class="info-card">
+                            <label>Tarjetas Compradas</label>
+                            <div class="info-value" id="profilePurchases">0</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <script src="js/auth.js"></script>
+    <script src="/nyxkey.github.io/js/auth.js"></script>
     <script>
+        // ============ VARIABLES ============
+        let isBioEditing = false;
+        let isBannerAnimated = true;
+        let pendingBannerData = null;
+        let pendingAvatarData = null;
+
+        // ============ CARGAR PERFIL ============
         document.addEventListener('DOMContentLoaded', function() {
-            // Verificar autenticación
             const user = getCurrentUser();
             if (!user) {
-                window.location.href = 'login.html';
+                window.location.href = '/nyxkey.github.io/login.html';
                 return;
             }
             
-            // Mostrar datos del usuario
-            document.getElementById('profileFullName').textContent = user.fullName || '-';
-            document.getElementById('profileUsername').textContent = user.username || '-';
-            document.getElementById('profileEmail').textContent = user.email || '-';
-            document.getElementById('profileBalance').textContent = `$${(user.balance || 0).toFixed(2)}`;
-            document.getElementById('userBalance').textContent = `$${(user.balance || 0).toFixed(2)}`;
-            
-            // Obtener fecha de creación
+            // Obtener datos completos
             const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
-            const userData = users.find(u => u.id === user.id);
-            if (userData && userData.createdAt) {
-                document.getElementById('profileSince').textContent = new Date(userData.createdAt).toLocaleDateString('es-ES', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-            } else {
-                document.getElementById('profileSince').textContent = '-';
+            const fullUser = users.find(u => u.id === user.id);
+            
+            if (fullUser) {
+                // Datos básicos
+                document.getElementById('profileDisplayName').textContent = fullUser.username || 'Usuario';
+                document.getElementById('profileUsername').textContent = fullUser.username || 'usuario';
+                document.getElementById('profileEmail').textContent = fullUser.email || '-';
+                document.getElementById('profileBalance').textContent = `$${(fullUser.balance || 0).toFixed(2)}`;
+                document.getElementById('userBalance').textContent = `$${(fullUser.balance || 0).toFixed(2)}`;
+                document.getElementById('profilePurchases').textContent = (fullUser.purchases || []).length;
+                
+                if (fullUser.createdAt) {
+                    document.getElementById('profileSince').textContent = new Date(fullUser.createdAt).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                }
+                
+                // Cargar perfil
+                const profile = fullUser.profile || {};
+                if (profile.banner) {
+                    document.getElementById('bannerImage').src = profile.banner;
+                    document.getElementById('bannerImage').style.display = 'block';
+                }
+                if (profile.avatar) {
+                    document.getElementById('avatarImage').src = profile.avatar;
+                    document.getElementById('avatarImage').style.display = 'block';
+                    document.getElementById('avatarPlaceholder').style.display = 'none';
+                }
+                if (profile.bio) {
+                    document.getElementById('bioDisplay').textContent = profile.bio;
+                    document.getElementById('bioInput').value = profile.bio;
+                }
             }
         });
 
-        function changeAvatar() {
-            showToast('Función de avatar (próximamente)', 'info');
+        // ============ SUBIR BANNER ============
+        function uploadBanner() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const dataUrl = event.target.result;
+                    pendingBannerData = dataUrl;
+                    document.getElementById('bannerImage').src = dataUrl;
+                    document.getElementById('bannerImage').style.display = 'block';
+                    showToast('✅ Banner seleccionado. Guarda los cambios.', 'success');
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
         }
 
-        function editProfile() {
-            showToast('Editar perfil (próximamente)', 'info');
+        // ============ SUBIR AVATAR ============
+        function uploadAvatar() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const dataUrl = event.target.result;
+                    pendingAvatarData = dataUrl;
+                    document.getElementById('avatarImage').src = dataUrl;
+                    document.getElementById('avatarImage').style.display = 'block';
+                    document.getElementById('avatarPlaceholder').style.display = 'none';
+                    showToast('✅ Avatar seleccionado. Guarda los cambios.', 'success');
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
         }
+
+        // ============ TOGGLE BIO ============
+        function toggleBioEdit() {
+            isBioEditing = !isBioEditing;
+            const display = document.getElementById('bioDisplay');
+            const input = document.getElementById('bioInput');
+            
+            if (isBioEditing) {
+                display.style.display = 'none';
+                input.style.display = 'block';
+                input.value = display.textContent !== 'Sin biografía' ? display.textContent : '';
+                input.focus();
+            } else {
+                display.style.display = 'block';
+                input.style.display = 'none';
+                display.textContent = input.value || 'Sin biografía';
+            }
+        }
+
+        // ============ TOGGLE ANIMACIÓN ============
+        function toggleBannerAnimation() {
+            const banner = document.getElementById('bannerContainer');
+            isBannerAnimated = !isBannerAnimated;
+            if (isBannerAnimated) {
+                banner.classList.add('animated');
+                showToast('🎨 Animación activada', 'info');
+            } else {
+                banner.classList.remove('animated');
+                showToast('⏸️ Animación pausada', 'info');
+            }
+        }
+
+        // ============ GUARDAR PERFIL ============
+        function saveProfile() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('Usuario no autenticado', 'error');
+                return;
+            }
+            
+            const bio = document.getElementById('bioInput').value || document.getElementById('bioDisplay').textContent;
+            const finalBio = bio !== 'Sin biografía' ? bio : '';
+            
+            const profileData = {
+                banner: pendingBannerData || document.getElementById('bannerImage').src || '',
+                avatar: pendingAvatarData || document.getElementById('avatarImage').src || '',
+                bio: finalBio
+            };
+            
+            const result = updateUserProfile(user.id, profileData);
+            
+            if (result) {
+                showToast('✅ Perfil actualizado correctamente', 'success');
+                pendingBannerData = null;
+                pendingAvatarData = null;
+                
+                // Actualizar UI
+                document.getElementById('bioDisplay').textContent = finalBio || 'Sin biografía';
+                if (isBioEditing) {
+                    isBioEditing = false;
+                    document.getElementById('bioDisplay').style.display = 'block';
+                    document.getElementById('bioInput').style.display = 'none';
+                }
+            } else {
+                showToast('❌ Error al guardar el perfil', 'error');
+            }
+        }
+
+        // ============ TOAST - Usar el mismo sistema ============
+        // El showToast ya está definido en auth.js
     </script>
 </body>
 </html>
