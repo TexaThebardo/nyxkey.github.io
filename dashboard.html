@@ -22,6 +22,9 @@
                 <span class="logo-badge">DASH</span>
             </div>
             <div class="nav-user">
+                <button id="adminPanelBtn" class="btn-admin-link" onclick="window.location.href='admin.html'" style="display:none;">
+                    <span class="material-icons">admin_panel_settings</span> Admin
+                </button>
                 <div class="user-balance">
                     <span class="material-icons-outlined">account_balance_wallet</span>
                     <span class="balance-amount" id="dashboardBalance">$0.00</span>
@@ -32,53 +35,52 @@
             </div>
         </div>
     </nav>
-    
-    <!-- DASHBOARD CONTAINER -->
+
+    <!-- DASHBOARD -->
     <div class="dashboard-container">
-        <!-- SIDEBAR - MENÚ LATERAL -->
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <span class="sidebar-title">Navegación</span>
-                
+
                 <a href="#" class="sidebar-link active" data-section="overview">
                     <span class="material-icons-outlined">dashboard</span>
                     <span>Visión General</span>
                 </a>
-                
+
                 <a href="#" class="sidebar-link" data-section="purchases">
                     <span class="material-icons-outlined">shopping_bag</span>
                     <span>Mis Compras</span>
                 </a>
-                
+
                 <a href="#" class="sidebar-link" data-section="transactions">
                     <span class="material-icons-outlined">receipt_long</span>
                     <span>Transacciones</span>
                 </a>
-                
-                <div class="sidebar-divider"></div>
-                
-                <span class="sidebar-title">Cuenta</span>
-                
+
                 <a href="profile.html" class="sidebar-link">
                     <span class="material-icons-outlined">person</span>
                     <span>Mi Perfil</span>
                 </a>
-                
+
                 <a href="index.html" class="sidebar-link">
                     <span class="material-icons-outlined">storefront</span>
                     <span>Tienda</span>
                 </a>
-                
+
+                <a href="admin.html" class="sidebar-link" id="adminSidebarBtn" style="display:none;">
+                    <span class="material-icons-outlined">admin_panel_settings</span>
+                    <span>Admin Manager</span>
+                </a>
+
                 <div class="sidebar-divider"></div>
-                
+
                 <a href="#" class="sidebar-link logout" onclick="logoutUser()">
                     <span class="material-icons-outlined">logout</span>
                     <span>Cerrar Sesión</span>
                 </a>
             </nav>
         </aside>
-        
-        <!-- MAIN CONTENT -->
+
         <main class="dashboard-main">
             <!-- SECCIÓN OVERVIEW -->
             <section id="overview" class="dashboard-section active">
@@ -86,7 +88,7 @@
                     <h2>Visión General</h2>
                     <span class="date-badge" id="currentDate"></span>
                 </div>
-                
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon green">
@@ -116,7 +118,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="recent-activity">
                     <div class="activity-header">
                         <h3>Últimas Compras</h3>
@@ -173,6 +175,7 @@
 
     <!-- SCRIPTS -->
     <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
     <script src="js/products.js"></script>
     <script src="js/app.js"></script>
     <script src="js/dashboard.js"></script>
