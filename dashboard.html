@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Yx Cards</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="/nyxkey.github.io/css/style.css">
+    <link rel="stylesheet" href="/nyxkey.github.io/css/dashboard.css">
 </head>
 <body>
     <nav class="navbar">
@@ -38,19 +39,19 @@
                     <span class="material-icons-outlined">dashboard</span>
                     <span>Visión General</span>
                 </a>
-                <a href="#" class="sidebar-link" data-section="inventory">
-                    <span class="material-icons-outlined">inventory_2</span>
-                    <span>Inventario</span>
+                <a href="#" class="sidebar-link" data-section="purchases">
+                    <span class="material-icons-outlined">shopping_bag</span>
+                    <span>Mis Compras</span>
                 </a>
                 <a href="#" class="sidebar-link" data-section="transactions">
                     <span class="material-icons-outlined">receipt_long</span>
                     <span>Transacciones</span>
                 </a>
-                <a href="profile.html" class="sidebar-link">
+                <a href="/nyxkey.github.io/profile.html" class="sidebar-link">
                     <span class="material-icons-outlined">person</span>
                     <span>Mi Perfil</span>
                 </a>
-                <a href="index.html" class="sidebar-link">
+                <a href="/nyxkey.github.io/" class="sidebar-link">
                     <span class="material-icons-outlined">storefront</span>
                     <span>Tienda</span>
                 </a>
@@ -76,77 +77,52 @@
                             <span class="material-icons-outlined">shopping_cart</span>
                         </div>
                         <div class="stat-info">
-                            <span class="stat-value" id="totalProducts">0</span>
-                            <span class="stat-label">Productos Total</span>
+                            <span class="stat-value" id="totalPurchases">0</span>
+                            <span class="stat-label">Tarjetas Compradas</span>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon blue">
-                            <span class="material-icons-outlined">inventory_2</span>
+                            <span class="material-icons-outlined">attach_money</span>
                         </div>
                         <div class="stat-info">
-                            <span class="stat-value" id="totalStock">0</span>
-                            <span class="stat-label">Stock Disponible</span>
+                            <span class="stat-value" id="totalSpent">$0</span>
+                            <span class="stat-label">Total Gastado</span>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon purple">
-                            <span class="material-icons-outlined">attach_money</span>
+                            <span class="material-icons-outlined">account_balance_wallet</span>
                         </div>
                         <div class="stat-info">
-                            <span class="stat-value" id="totalRevenue">$0</span>
-                            <span class="stat-label">Ingresos Totales</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon orange">
-                            <span class="material-icons-outlined">people</span>
-                        </div>
-                        <div class="stat-info">
-                            <span class="stat-value" id="totalCustomers">0</span>
-                            <span class="stat-label">Clientes Activos</span>
+                            <span class="stat-value" id="currentBalance">$0</span>
+                            <span class="stat-label">Saldo Actual</span>
                         </div>
                     </div>
                 </div>
                 
                 <div class="recent-activity">
                     <div class="activity-header">
-                        <h3>Actividad Reciente</h3>
+                        <h3>Últimas Compras</h3>
                     </div>
-                    <div id="activityList" class="activity-list">
+                    <div id="recentPurchases" class="activity-list">
                         <div class="empty-state">
-                            <p>No hay actividad reciente</p>
+                            <span class="material-icons-outlined">shopping_bag</span>
+                            <p>No has realizado compras aún</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Sección Inventario -->
-            <section id="inventory" class="dashboard-section">
+            <!-- Sección Mis Compras -->
+            <section id="purchases" class="dashboard-section">
                 <div class="section-header">
-                    <h2>Gestión de Inventario</h2>
-                    <button class="btn-primary" onclick="addProduct()">
-                        <span class="material-icons">add</span> Nuevo Producto
-                    </button>
+                    <h2>Mis Tarjetas Compradas</h2>
+                    <span class="purchase-count" id="purchaseCount">0 tarjetas</span>
                 </div>
                 
-                <div class="inventory-controls">
-                    <div class="filter-group">
-                        <input type="text" placeholder="Buscar productos..." oninput="filterInventory(this.value)">
-                        <span class="material-icons-outlined">search</span>
-                    </div>
-                    <select onchange="filterInventoryByStatus(this.value)">
-                        <option value="all">Todos</option>
-                        <option value="active">Activos</option>
-                        <option value="low">Stock Bajo</option>
-                    </select>
-                </div>
-                
-                <div id="inventoryList" class="inventory-list">
-                    <div class="empty-state">
-                        <span class="material-icons-outlined">inventory_2</span>
-                        <p>No hay productos para mostrar</p>
-                    </div>
+                <div class="purchases-grid" id="purchasesGrid">
+                    <!-- Renderizado por JavaScript -->
                 </div>
             </section>
 
@@ -181,9 +157,9 @@
         </main>
     </div>
 
-    <script src="js/auth.js"></script>
-    <script src="js/products.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="/nyxkey.github.io/js/auth.js"></script>
+    <script src="/nyxkey.github.io/js/products.js"></script>
+    <script src="/nyxkey.github.io/js/app.js"></script>
+    <script src="/nyxkey.github.io/js/dashboard.js"></script>
 </body>
 </html>
