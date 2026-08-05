@@ -12,7 +12,7 @@ const AUTH_CONFIG = {
 
 // ============ ADMINISTRADORES ============
 const ADMIN_LIST = [
-    'admin@yxcards.com',
+    'xsteeven0000@gmail.com',
     'personalbusiness2626@gmail.com'
 ];
 
@@ -39,7 +39,7 @@ function loadWhitelist() {
 
     const defaultWhitelist = {
         admins: [
-            { email: 'admin@yxcards.com', key: 'admin123' },
+            { email: 'xsteeven0000@gmail.com', key: 'admin123' },
             { email: 'personalbusiness2626@gmail.com', key: 'admin123' }
         ]
     };
