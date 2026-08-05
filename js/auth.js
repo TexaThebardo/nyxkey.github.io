@@ -10,7 +10,7 @@ const AUTH_CONFIG = {
     sessionTimeout: 3600000
 };
 
-// ============ FUNCIONES INTERNAS (SOLO LEE EL JSON) ============
+// ============ FUNCIONES INTERNAS ============
 function getInsigniasFromStorage(email) {
     try {
         const stored = localStorage.getItem('user_insignias');
@@ -48,6 +48,21 @@ function isUserAdmin(email) {
     return false;
 }
 
+function getUserAdminInsignia(email) {
+    if (!email) return null;
+    try {
+        const stored = localStorage.getItem('admin_whitelist');
+        if (stored) {
+            const data = JSON.parse(stored);
+            if (data.admins) {
+                const admin = data.admins.find(a => a.email === email);
+                return admin ? admin.insignia : null;
+            }
+        }
+    } catch (e) {}
+    return null;
+}
+
 function loadWhitelistData() {
     try {
         const stored = localStorage.getItem('admin_whitelist');
@@ -59,11 +74,9 @@ function loadWhitelistData() {
         }
     } catch (e) {}
 
-    // ============ WHITELIST POR DEFECTO (SOLO PARA PRIMERA VEZ) ============
-    // ⚠️ SI YA TIENES TU ARCHIVO whitelist.json, ESTO NO SE USA
     const defaultWhitelist = {
         admins: [
-            { email: 'admin@yxcards.com', key: 'admin123' }
+            { email: 'admin@yxcards.com', key: 'admin123', insignia: 'Owner' }
         ],
         insignias: {
             'Owner': { icon: 'verified', color: '#f1c40f', bgColor: 'rgba(241, 196, 15, 0.15)', description: 'Propietario de la plataforma' },
@@ -169,15 +182,26 @@ function loginUser(email, password) {
     // ============ SINCORNIZAR INSIGNIAS ============
     let userInsignias = getInsigniasFromStorage(email);
     const isAdmin = isUserAdmin(email);
+    const adminInsignia = getUserAdminInsignia(email);
     
     let updatedInsignias = [...userInsignias];
     
-    if (isAdmin && !updatedInsignias.includes('Owner')) {
-        updatedInsignias.push('Owner');
+    if (isAdmin && adminInsignia) {
+        // Si es admin, asegurar que tenga su insignia asignada
+        if (!updatedInsignias.includes(adminInsignia)) {
+            updatedInsignias.push(adminInsignia);
+        }
+        // También asegurar Owner si es admin
+        if (adminInsignia !== 'Owner' && !updatedInsignias.includes('Owner')) {
+            updatedInsignias.push('Owner');
+        }
     }
     
-    if (!isAdmin && updatedInsignias.includes('Owner')) {
+    if (!isAdmin) {
+        // Si no es admin, quitar Owner y cualquier insignia de admin
         updatedInsignias = updatedInsignias.filter(i => i !== 'Owner');
+        // También quitar Moderador si no es admin (opcional)
+        updatedInsignias = updatedInsignias.filter(i => i !== 'Moderador');
     }
     
     saveInsigniasToStorage(email, updatedInsignias);
@@ -462,6 +486,7 @@ window.getUsers = getUsers;
 window.addPurchaseToHistory = addPurchaseToHistory;
 window.renderUserInsignias = renderUserInsignias;
 window.isUserAdmin = isUserAdmin;
+window.getUserAdminInsignia = getUserAdminInsignia;
 window.getInsigniasFromStorage = getInsigniasFromStorage;
 window.saveInsigniasToStorage = saveInsigniasToStorage;
 window.loadWhitelistData = loadWhitelistData;
