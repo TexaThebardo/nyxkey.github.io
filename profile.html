@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
         /* ============================================
-           PERFIL - ALINEADO A LA IZQUIERDA
+           PERFIL - COMPLETO CON SOPORTE VIDEO
            ============================================ */
 
         .profile-container {
@@ -28,15 +28,14 @@
             box-shadow: var(--shadow);
         }
 
-        /* ============ BANNER ============ */
+        /* ============ BANNER CON SOPORTE VIDEO ============ */
         .profile-banner {
             width: 100%;
-            height: 160px;
+            height: 200px;
             background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
             background-size: 400% 400%;
             position: relative;
             overflow: hidden;
-            cursor: pointer;
             transition: all 0.3s ease;
         }
 
@@ -54,6 +53,34 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: none;
+        }
+
+        .profile-banner video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .profile-banner .banner-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ============ YOUTUBE EMBED ============ */
+        .profile-banner .youtube-embed {
+            width: 100%;
+            height: 100%;
+            display: none;
+            border: none;
+        }
+
+        .profile-banner .youtube-embed iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .profile-banner .banner-actions {
@@ -64,6 +91,9 @@
             gap: 8px;
             opacity: 0;
             transition: all 0.3s ease;
+            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .profile-banner:hover .banner-actions {
@@ -91,6 +121,10 @@
             border-color: var(--primary);
         }
 
+        .profile-banner .banner-actions button .material-icons {
+            font-size: 16px;
+        }
+
         .profile-banner .banner-overlay {
             position: absolute;
             bottom: 12px;
@@ -106,9 +140,197 @@
             gap: 4px;
             border: 1px solid rgba(255,255,255,0.05);
             pointer-events: none;
+            z-index: 5;
         }
 
-        /* ============ CONTENEDOR PERFIL (Avatar + Info) ============ */
+        /* ============ CONTROLES DE AUDIO ============ */
+        .banner-audio-controls {
+            position: absolute;
+            bottom: 12px;
+            left: 16px;
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.3s ease;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .profile-banner:hover .banner-audio-controls {
+            opacity: 1;
+        }
+
+        .banner-audio-controls button {
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+            font-family: var(--font);
+        }
+
+        .banner-audio-controls button:hover {
+            background: rgba(240, 185, 11, 0.3);
+            border-color: var(--primary);
+        }
+
+        .banner-audio-controls button .material-icons {
+            font-size: 16px;
+        }
+
+        .banner-audio-controls .volume-slider {
+            width: 80px;
+            accent-color: var(--primary);
+            background: rgba(0,0,0,0.7);
+            border-radius: 10px;
+            padding: 2px 6px;
+            cursor: pointer;
+        }
+
+        .banner-audio-controls .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+
+        .banner-audio-controls .volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+
+        /* ============ MODAL PARA URL ============ */
+        .url-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .url-modal-overlay.active {
+            display: flex;
+        }
+
+        .url-modal-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 28px 32px;
+            max-width: 480px;
+            width: 90%;
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .url-modal-box .close-modal {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            color: var(--text-muted);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .url-modal-box .close-modal:hover {
+            background: rgba(231,76,60,0.2);
+            color: #e74c3c;
+            transform: rotate(90deg);
+        }
+
+        .url-modal-box h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .url-modal-box p {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .url-modal-box input {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-family: var(--font);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .url-modal-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
+        }
+
+        .url-modal-box .btn-confirm {
+            margin-top: 12px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: var(--font);
+            background: var(--primary);
+            color: var(--bg-primary);
+            width: 100%;
+        }
+
+        .url-modal-box .btn-confirm:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+
+        .url-modal-box .url-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        /* ============ TOP SECTION ============ */
         .profile-top-section {
             display: flex;
             align-items: flex-start;
@@ -128,7 +350,18 @@
                 gap: 16px;
             }
             .profile-banner {
-                height: 120px;
+                height: 150px;
+            }
+            .banner-audio-controls {
+                opacity: 1;
+                bottom: 8px;
+                left: 8px;
+            }
+            .banner-audio-controls .volume-slider {
+                width: 60px;
+            }
+            .profile-banner .banner-actions {
+                opacity: 1;
             }
         }
 
@@ -139,7 +372,16 @@
                 gap: 12px;
             }
             .profile-banner {
-                height: 100px;
+                height: 120px;
+            }
+            .banner-audio-controls .volume-slider {
+                width: 40px;
+            }
+            .banner-audio-controls button span:not(.material-icons) {
+                display: none;
+            }
+            .profile-banner .banner-actions button span:not(.material-icons) {
+                display: none;
             }
         }
 
@@ -365,7 +607,6 @@
             gap: 12px;
         }
 
-        /* ============ MIEMBRO DESDE ============ */
         .profile-member {
             display: flex;
             align-items: center;
@@ -571,7 +812,6 @@
             gap: 14px;
         }
 
-        /* ============ ACTIVIDAD ============ */
         .profile-activity {
             background: var(--bg-card);
             border-radius: 12px;
@@ -719,7 +959,7 @@
             }
         }
 
-        /* ============ BOTONES DE ACCIÓN ============ */
+        /* ============ BOTONES ============ */
         .profile-actions {
             display: flex;
             gap: 10px;
@@ -1068,15 +1308,39 @@
                 <div class="profile-card">
                     <!-- ============ BANNER ============ -->
                     <div class="profile-banner animated" id="bannerContainer">
+                        <!-- Imagen -->
                         <img id="bannerImage" src="" alt="Banner" style="display:none; width:100%; height:100%; object-fit:cover;">
+                        <!-- Video local -->
+                        <video id="bannerVideo" src="" muted loop playsinline style="display:none; width:100%; height:100%; object-fit:cover;"></video>
+                        <!-- YouTube Embed -->
+                        <div class="youtube-embed" id="youtubeEmbed" style="display:none;">
+                            <iframe id="youtubeIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+
                         <div class="banner-overlay">
                             <span class="material-icons">photo_camera</span> Cambiar Banner
                         </div>
+
+                        <!-- CONTROLES DE AUDIO -->
+                        <div class="banner-audio-controls" id="audioControls">
+                            <button onclick="toggleMute()" id="muteBtn" title="Mutar/Desmutar">
+                                <span class="material-icons" id="muteIcon">volume_up</span>
+                            </button>
+                            <button onclick="toggleLoop()" id="loopBtn" title="Repetir">
+                                <span class="material-icons" id="loopIcon">repeat</span>
+                            </button>
+                            <input type="range" min="0" max="1" step="0.01" value="1" class="volume-slider" id="volumeSlider" oninput="changeVolume(this.value)">
+                        </div>
+
+                        <!-- ACCIONES DEL BANNER -->
                         <div class="banner-actions">
-                            <button onclick="uploadBanner()">
+                            <button onclick="uploadBannerMedia()">
                                 <span class="material-icons">upload</span> Subir
                             </button>
-                            <button onclick="removeBanner()">
+                            <button onclick="showUrlModal()">
+                                <span class="material-icons">link</span> URL
+                            </button>
+                            <button onclick="removeBannerMedia()">
                                 <span class="material-icons">delete</span> Eliminar
                             </button>
                             <button onclick="toggleBannerAnimation()" id="bannerAnimBtn">
@@ -1085,7 +1349,7 @@
                         </div>
                     </div>
 
-                    <!-- ============ TOP SECTION (Avatar + Info) ============ -->
+                    <!-- ============ TOP SECTION ============ -->
                     <div class="profile-top-section">
                         <!-- AVATAR -->
                         <div class="profile-avatar-wrapper" onclick="document.getElementById('avatarInput').click()">
@@ -1123,13 +1387,10 @@
 
                     <!-- ============ GRID PRINCIPAL ============ -->
                     <div class="profile-grid">
-                        <!-- COLUMNA IZQUIERDA -->
                         <div class="profile-left-col">
                             <!-- MIEMBRO DESDE -->
                             <div class="profile-member">
-                                <span class="member-icon">
-                                    <span class="material-icons">event</span>
-                                </span>
+                                <span class="member-icon"><span class="material-icons">event</span></span>
                                 <span class="member-label">Miembro desde</span>
                                 <span class="member-date" id="profileSince">-</span>
                             </div>
@@ -1137,9 +1398,7 @@
                             <!-- CONEXIONES -->
                             <div class="profile-connections">
                                 <div class="connections-header">
-                                    <h4>
-                                        <span class="material-icons">link</span> Conexiones
-                                    </h4>
+                                    <h4><span class="material-icons">link</span> Conexiones</h4>
                                     <span class="add-connection" onclick="addConnection()">
                                         <span class="material-icons" style="font-size:16px;">add_circle</span> Añadir
                                     </span>
@@ -1161,14 +1420,11 @@
                             </div>
                         </div>
 
-                        <!-- COLUMNA DERECHA -->
                         <div class="profile-right-col">
                             <!-- ACTIVIDAD -->
                             <div class="profile-activity">
                                 <div class="activity-header">
-                                    <h3>
-                                        <span class="material-icons">history</span> Actividad Reciente
-                                    </h3>
+                                    <h3><span class="material-icons">history</span> Actividad Reciente</h3>
                                     <span>Últimos 30 días</span>
                                 </div>
                                 <div id="activityList">
@@ -1180,25 +1436,19 @@
                             <div class="profile-stats">
                                 <div class="profile-stat">
                                     <div class="stat-value" id="profileEmail">-</div>
-                                    <div class="stat-label">
-                                        <span class="material-icons">email</span> Correo
-                                    </div>
+                                    <div class="stat-label"><span class="material-icons">email</span> Correo</div>
                                 </div>
                                 <div class="profile-stat">
                                     <div class="stat-value" id="profileBalance">$0.00</div>
-                                    <div class="stat-label">
-                                        <span class="material-icons">account_balance_wallet</span> Saldo
-                                    </div>
+                                    <div class="stat-label"><span class="material-icons">account_balance_wallet</span> Saldo</div>
                                 </div>
                                 <div class="profile-stat">
                                     <div class="stat-value" id="profilePurchases">0</div>
-                                    <div class="stat-label">
-                                        <span class="material-icons">credit_card</span> Tarjetas
-                                    </div>
+                                    <div class="stat-label"><span class="material-icons">credit_card</span> Tarjetas</div>
                                 </div>
                             </div>
 
-                            <!-- BOTONES DE ACCIÓN -->
+                            <!-- BOTONES -->
                             <div class="profile-actions">
                                 <button class="btn-action btn-action-primary" onclick="saveProfile()">
                                     <span class="material-icons">save</span> Guardar Cambios
@@ -1215,6 +1465,30 @@
     </div>
 
     <!-- ==========================================
+    MODAL PARA URL DE VIDEO
+    ========================================== -->
+    <div class="url-modal-overlay" id="urlModal">
+        <div class="url-modal-box">
+            <button class="close-modal" onclick="closeUrlModal()">
+                <span class="material-icons">close</span>
+            </button>
+            <h3>
+                <span class="material-icons" style="color:var(--primary);">link</span>
+                Cargar Video por URL
+            </h3>
+            <p>Pega el enlace de un video de YouTube, Vimeo o cualquier URL directa de video.</p>
+            <input type="url" id="videoUrlInput" placeholder="https://www.youtube.com/watch?v=...">
+            <button class="btn-confirm" onclick="loadVideoFromUrl()">
+                <span class="material-icons">play_circle</span> Cargar Video
+            </button>
+            <div class="url-hint">
+                <span class="material-icons" style="font-size:14px; vertical-align:middle;">info</span>
+                Soporta YouTube, Vimeo y enlaces directos de video (mp4, webm)
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
     MODAL DE AJUSTES
     ========================================== -->
     <div class="settings-modal-overlay" id="settingsModal">
@@ -1223,33 +1497,25 @@
                 <span class="material-icons">close</span>
             </button>
 
-            <h2>
-                <span class="material-icons">settings</span> Ajustes de Cuenta
-            </h2>
+            <h2><span class="material-icons">settings</span> Ajustes de Cuenta</h2>
             <p class="subtitle">Gestiona tu información de acceso</p>
 
             <div class="settings-group">
-                <label>
-                    <span class="material-icons" style="font-size:16px; vertical-align:middle;">person</span> Nombre de Usuario
-                </label>
+                <label><span class="material-icons" style="font-size:16px; vertical-align:middle;">person</span> Nombre de Usuario</label>
                 <p class="helper-text">Este es tu identificador único en la plataforma</p>
                 <input type="text" id="settingsUsername" placeholder="Nuevo nombre de usuario">
                 <button class="btn-save-setting" onclick="changeUsername()">Actualizar</button>
             </div>
 
             <div class="settings-group">
-                <label>
-                    <span class="material-icons" style="font-size:16px; vertical-align:middle;">badge</span> Apodo
-                </label>
+                <label><span class="material-icons" style="font-size:16px; vertical-align:middle;">badge</span> Apodo</label>
                 <p class="helper-text">Cómo te mostrarás en el perfil</p>
                 <input type="text" id="settingsDisplayName" placeholder="Nuevo apodo">
                 <button class="btn-save-setting" onclick="changeDisplayName()">Actualizar</button>
             </div>
 
             <div class="settings-group">
-                <label>
-                    <span class="material-icons" style="font-size:16px; vertical-align:middle;">lock</span> Cambiar Contraseña
-                </label>
+                <label><span class="material-icons" style="font-size:16px; vertical-align:middle;">lock</span> Cambiar Contraseña</label>
                 <p class="helper-text">Mínimo 6 caracteres</p>
                 <div class="input-with-toggle">
                     <input type="password" id="settingsNewPassword" placeholder="Nueva contraseña">
@@ -1281,15 +1547,242 @@
     <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // PROFILE.JS - ALINEADO A LA IZQUIERDA
+        // PROFILE.JS - COMPLETO CON VIDEO LOCAL Y URL
         // ============================================
 
         let tempAvatarData = null;
         let tempBannerData = null;
+        let tempBannerType = 'image'; // 'image', 'video', 'youtube'
         let isBannerAnimated = true;
         let isEditingBio = false;
         let isEditingNote = false;
+        let isMuted = false;
+        let isLooping = false;
         const PRONOUNS = ['él', 'ella', 'elle', 'ellos', 'ellas'];
+
+        // ============ REFERENCIAS AL BANNER ============
+        const bannerContainer = document.getElementById('bannerContainer');
+        const bannerImage = document.getElementById('bannerImage');
+        const bannerVideo = document.getElementById('bannerVideo');
+        const youtubeEmbed = document.getElementById('youtubeEmbed');
+        const youtubeIframe = document.getElementById('youtubeIframe');
+        const muteBtn = document.getElementById('muteBtn');
+        const muteIcon = document.getElementById('muteIcon');
+        const loopBtn = document.getElementById('loopBtn');
+        const loopIcon = document.getElementById('loopIcon');
+        const volumeSlider = document.getElementById('volumeSlider');
+
+        // ============ SUBIR BANNER LOCAL ============
+        function uploadBannerMedia() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*,video/*,audio/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const fileSize = file.size / (1024 * 1024);
+                if (fileSize > 20) {
+                    showToast('❌ El archivo no puede superar los 20MB', 'error');
+                    return;
+                }
+
+                const fileType = file.type;
+                const isVideo = fileType.startsWith('video/');
+                const isAudio = fileType.startsWith('audio/');
+                const isImage = fileType.startsWith('image/');
+
+                if (!isVideo && !isAudio && !isImage) {
+                    showToast('❌ Solo se permiten imágenes, videos o audio', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const dataUrl = event.target.result;
+
+                    if (isImage) {
+                        tempBannerType = 'image';
+                        tempBannerData = dataUrl;
+                        bannerImage.src = dataUrl;
+                        bannerImage.style.display = 'block';
+                        bannerVideo.style.display = 'none';
+                        youtubeEmbed.style.display = 'none';
+                        bannerVideo.pause();
+                        bannerContainer.style.background = 'none';
+                        showToast('✅ Banner seleccionado. Guarda los cambios.', 'success');
+                    } else {
+                        tempBannerType = 'video';
+                        tempBannerData = dataUrl;
+                        bannerVideo.src = dataUrl;
+                        bannerVideo.style.display = 'block';
+                        bannerImage.style.display = 'none';
+                        youtubeEmbed.style.display = 'none';
+                        bannerContainer.style.background = 'none';
+                        bannerVideo.load();
+                        bannerVideo.play().catch(() => {});
+                        showToast('✅ Video/audio seleccionado. Guarda los cambios.', 'success');
+                    }
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+
+        // ============ CARGAR VIDEO POR URL ============
+        function showUrlModal() {
+            document.getElementById('urlModal').classList.add('active');
+            document.getElementById('videoUrlInput').value = '';
+            document.getElementById('videoUrlInput').focus();
+        }
+
+        function closeUrlModal() {
+            document.getElementById('urlModal').classList.remove('active');
+        }
+
+        function loadVideoFromUrl() {
+            const url = document.getElementById('videoUrlInput').value.trim();
+            if (!url) {
+                showToast('❌ Ingresa una URL válida', 'error');
+                return;
+            }
+
+            // Detectar YouTube
+            const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
+            if (youtubeMatch) {
+                const videoId = youtubeMatch[1];
+                const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}`;
+                tempBannerType = 'youtube';
+                tempBannerData = embedUrl;
+                
+                youtubeIframe.src = embedUrl;
+                youtubeEmbed.style.display = 'block';
+                bannerImage.style.display = 'none';
+                bannerVideo.style.display = 'none';
+                bannerVideo.pause();
+                bannerContainer.style.background = 'none';
+                closeUrlModal();
+                showToast('✅ Video de YouTube cargado correctamente', 'success');
+                return;
+            }
+
+            // Detectar Vimeo
+            const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+            if (vimeoMatch) {
+                const videoId = vimeoMatch[1];
+                const embedUrl = `https://player.vimeo.com/video/${videoID}?autoplay=1&muted=1&loop=1`;
+                tempBannerType = 'youtube';
+                tempBannerData = embedUrl;
+                
+                youtubeIframe.src = embedUrl;
+                youtubeEmbed.style.display = 'block';
+                bannerImage.style.display = 'none';
+                bannerVideo.style.display = 'none';
+                bannerVideo.pause();
+                bannerContainer.style.background = 'none';
+                closeUrlModal();
+                showToast('✅ Video de Vimeo cargado correctamente', 'success');
+                return;
+            }
+
+            // URL directa de video (mp4, webm, etc.)
+            if (url.match(/\.(mp4|webm|ogg|mov|avi|mkv)$/i)) {
+                tempBannerType = 'video';
+                tempBannerData = url;
+                bannerVideo.src = url;
+                bannerVideo.style.display = 'block';
+                bannerImage.style.display = 'none';
+                youtubeEmbed.style.display = 'none';
+                bannerContainer.style.background = 'none';
+                bannerVideo.load();
+                bannerVideo.play().catch(() => {});
+                closeUrlModal();
+                showToast('✅ Video cargado correctamente', 'success');
+                return;
+            }
+
+            showToast('❌ URL no válida. Usa YouTube, Vimeo o enlace directo de video.', 'error');
+        }
+
+        // ============ ELIMINAR BANNER ============
+        function removeBannerMedia() {
+            if (confirm('¿Eliminar el banner actual?')) {
+                tempBannerData = null;
+                tempBannerType = 'image';
+                bannerImage.src = '';
+                bannerImage.style.display = 'none';
+                bannerVideo.src = '';
+                bannerVideo.style.display = 'none';
+                bannerVideo.pause();
+                youtubeEmbed.style.display = 'none';
+                youtubeIframe.src = '';
+                bannerContainer.style.background = 'linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)';
+                bannerContainer.style.backgroundSize = '400% 400%';
+                if (isBannerAnimated) {
+                    bannerContainer.classList.add('animated');
+                }
+                showToast('🗑️ Banner eliminado', 'info');
+            }
+        }
+
+        // ============ CONTROLES DE AUDIO ============
+        function toggleMute() {
+            isMuted = !isMuted;
+            bannerVideo.muted = isMuted;
+            // Para YouTube, no podemos controlar el mute directamente
+            if (isMuted) {
+                muteIcon.textContent = 'volume_off';
+                showToast('🔇 Sonido desactivado', 'info');
+            } else {
+                muteIcon.textContent = 'volume_up';
+                showToast('🔊 Sonido activado', 'info');
+            }
+        }
+
+        function toggleLoop() {
+            isLooping = !isLooping;
+            bannerVideo.loop = isLooping;
+            if (isLooping) {
+                loopIcon.textContent = 'repeat_one';
+                showToast('🔁 Repetición activada', 'info');
+            } else {
+                loopIcon.textContent = 'repeat';
+                showToast('🔁 Repetición desactivada', 'info');
+            }
+        }
+
+        function changeVolume(value) {
+            bannerVideo.volume = parseFloat(value);
+        }
+
+        // ============ ANIMACIÓN DEL BANNER ============
+        function toggleBannerAnimation() {
+            const animBtn = document.getElementById('bannerAnimBtn');
+            isBannerAnimated = !isBannerAnimated;
+
+            if (isBannerAnimated) {
+                bannerContainer.classList.add('animated');
+                animBtn.innerHTML = '<span class="material-icons">animation</span> Animación';
+                showToast('🎨 Animación activada', 'info');
+            } else {
+                bannerContainer.classList.remove('animated');
+                animBtn.innerHTML = '<span class="material-icons">pause</span> Pausada';
+                showToast('⏸️ Animación pausada', 'info');
+            }
+        }
+
+        // ============ CERRAR MODAL URL CON ESC ============
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeUrlModal();
+                closeSettings();
+            }
+        });
+
+        // Cerrar modal URL al hacer clic fuera
+        document.getElementById('urlModal').addEventListener('click', function(e) {
+            if (e.target === this) closeUrlModal();
+        });
 
         // ============ CARGAR PERFIL ============
         document.addEventListener('DOMContentLoaded', function() {
@@ -1324,16 +1817,41 @@
 
                 const profile = fullUser.profile || {};
 
+                // Avatar
                 if (profile.avatar) {
                     document.getElementById('avatarImage').src = profile.avatar;
                     document.getElementById('avatarImage').style.display = 'block';
                     document.getElementById('avatarPlaceholder').style.display = 'none';
                 }
 
+                // Banner (imagen, video o youtube)
                 if (profile.banner) {
-                    document.getElementById('bannerImage').src = profile.banner;
-                    document.getElementById('bannerImage').style.display = 'block';
-                    document.getElementById('bannerContainer').style.background = 'none';
+                    if (profile.bannerType === 'youtube') {
+                        tempBannerType = 'youtube';
+                        tempBannerData = profile.banner;
+                        youtubeIframe.src = profile.banner;
+                        youtubeEmbed.style.display = 'block';
+                        bannerImage.style.display = 'none';
+                        bannerVideo.style.display = 'none';
+                        bannerContainer.style.background = 'none';
+                    } else if (profile.bannerType === 'video') {
+                        tempBannerType = 'video';
+                        tempBannerData = profile.banner;
+                        bannerVideo.src = profile.banner;
+                        bannerVideo.style.display = 'block';
+                        bannerImage.style.display = 'none';
+                        youtubeEmbed.style.display = 'none';
+                        bannerContainer.style.background = 'none';
+                        bannerVideo.load();
+                    } else {
+                        tempBannerType = 'image';
+                        tempBannerData = profile.banner;
+                        bannerImage.src = profile.banner;
+                        bannerImage.style.display = 'block';
+                        bannerVideo.style.display = 'none';
+                        youtubeEmbed.style.display = 'none';
+                        bannerContainer.style.background = 'none';
+                    }
                 }
 
                 if (profile.bio) {
@@ -1363,6 +1881,55 @@
             document.getElementById('settingsNewPassword').addEventListener('input', checkPasswordStrength);
         });
 
+        // ============ GUARDAR PERFIL ============
+        function saveProfile() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('❌ Usuario no autenticado', 'error');
+                return;
+            }
+
+            const currentAvatar = document.getElementById('avatarImage').src;
+            const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === user.id);
+            if (userIndex === -1) {
+                showToast('❌ Usuario no encontrado', 'error');
+                return;
+            }
+
+            if (!users[userIndex].profile) users[userIndex].profile = {};
+
+            // Avatar
+            if (tempAvatarData) {
+                users[userIndex].profile.avatar = tempAvatarData;
+            } else if (!currentAvatar || currentAvatar === '') {
+                users[userIndex].profile.avatar = '';
+            }
+
+            // Banner
+            if (tempBannerData) {
+                users[userIndex].profile.banner = tempBannerData;
+                users[userIndex].profile.bannerType = tempBannerType;
+            }
+
+            const bio = document.getElementById('bioInput').value || document.getElementById('bioDisplay').textContent;
+            users[userIndex].profile.bio = bio !== 'Sin biografía' ? bio : '';
+            users[userIndex].profile.pronoun = document.getElementById('pronounText').textContent;
+            users[userIndex].profile.note = document.getElementById('noteDisplay').textContent;
+
+            localStorage.setItem('yx_users', JSON.stringify(users));
+
+            const session = JSON.parse(localStorage.getItem('yx_token'));
+            if (session) {
+                session.user.profile = users[userIndex].profile;
+                localStorage.setItem('yx_token', JSON.stringify(session));
+            }
+
+            tempAvatarData = null;
+            tempBannerData = null;
+            showToast('✅ Perfil actualizado correctamente', 'success');
+        }
+
         // ============ INSIGNIAS ============
         function renderInsignias() {
             const user = getCurrentUser();
@@ -1370,7 +1937,7 @@
             const container = document.getElementById('profileInsignias');
             if (!container) return;
             const esAdmin = isAdmin(user.email);
-            
+
             if (esAdmin) {
                 container.innerHTML = `
                     <span class="insignia-badge" style="background:rgba(240,185,11,0.15); color:#f0b90b;">
@@ -1432,7 +1999,7 @@
                 const isPositive = a.amount > 0;
                 const amountClass = isPositive ? 'positive' : 'negative';
                 const amountText = isPositive ? `+$${a.amount.toFixed(2)}` : `-$${Math.abs(a.amount).toFixed(2)}`;
-                
+
                 return `
                     <div class="activity-item">
                         <div class="activity-icon">
@@ -1585,63 +2152,6 @@
             showToast(`✅ Conexión a ${platform} añadida`, 'success');
         }
 
-        // ============ BANNER ============
-        function uploadBanner() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('❌ El banner no puede superar los 5MB', 'error');
-                    return;
-                }
-                if (!file.type.startsWith('image/')) {
-                    showToast('❌ Solo se permiten imágenes', 'error');
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    tempBannerData = event.target.result;
-                    document.getElementById('bannerImage').src = tempBannerData;
-                    document.getElementById('bannerImage').style.display = 'block';
-                    document.getElementById('bannerContainer').style.background = 'none';
-                    showToast('✅ Banner seleccionado. Guarda los cambios.', 'success');
-                };
-                reader.readAsDataURL(file);
-            };
-            input.click();
-        }
-
-        function removeBanner() {
-            if (confirm('¿Eliminar el banner actual?')) {
-                tempBannerData = null;
-                document.getElementById('bannerImage').src = '';
-                document.getElementById('bannerImage').style.display = 'none';
-                document.getElementById('bannerContainer').style.background = 'linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)';
-                document.getElementById('bannerContainer').style.backgroundSize = '400% 400%';
-                if (isBannerAnimated) {
-                    document.getElementById('bannerContainer').classList.add('animated');
-                }
-                showToast('🗑️ Banner eliminado', 'info');
-            }
-        }
-
-        function toggleBannerAnimation() {
-            const banner = document.getElementById('bannerContainer');
-            isBannerAnimated = !isBannerAnimated;
-            if (isBannerAnimated) {
-                banner.classList.add('animated');
-                document.getElementById('bannerAnimBtn').innerHTML = '<span class="material-icons">animation</span> Animación';
-                showToast('🎨 Animación activada', 'info');
-            } else {
-                banner.classList.remove('animated');
-                document.getElementById('bannerAnimBtn').innerHTML = '<span class="material-icons">pause</span> Pausada';
-                showToast('⏸️ Animación pausada', 'info');
-            }
-        }
-
         // ============ AVATAR ============
         function handleAvatarUpload(event) {
             const file = event.target.files[0];
@@ -1664,59 +2174,6 @@
             };
             reader.readAsDataURL(file);
             event.target.value = '';
-        }
-
-        // ============ GUARDAR PERFIL ============
-        function saveProfile() {
-            const user = getCurrentUser();
-            if (!user) {
-                showToast('❌ Usuario no autenticado', 'error');
-                return;
-            }
-
-            const currentAvatar = document.getElementById('avatarImage').src;
-            const currentBanner = document.getElementById('bannerImage').src;
-            const bio = document.getElementById('bioInput').value || document.getElementById('bioDisplay').textContent;
-            const finalBio = bio !== 'Sin biografía' ? bio : '';
-            const pronoun = document.getElementById('pronounText').textContent;
-            const note = document.getElementById('noteDisplay').textContent;
-
-            const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
-            const userIndex = users.findIndex(u => u.id === user.id);
-            if (userIndex === -1) {
-                showToast('❌ Usuario no encontrado', 'error');
-                return;
-            }
-
-            if (!users[userIndex].profile) users[userIndex].profile = {};
-
-            if (tempAvatarData) {
-                users[userIndex].profile.avatar = tempAvatarData;
-            } else if (!currentAvatar || currentAvatar === '') {
-                users[userIndex].profile.avatar = '';
-            }
-
-            if (tempBannerData) {
-                users[userIndex].profile.banner = tempBannerData;
-            } else if (!currentBanner || currentBanner === '') {
-                users[userIndex].profile.banner = '';
-            }
-
-            users[userIndex].profile.bio = finalBio;
-            users[userIndex].profile.pronoun = pronoun;
-            users[userIndex].profile.note = note;
-
-            localStorage.setItem('yx_users', JSON.stringify(users));
-
-            const session = JSON.parse(localStorage.getItem('yx_token'));
-            if (session) {
-                session.user.profile = users[userIndex].profile;
-                localStorage.setItem('yx_token', JSON.stringify(session));
-            }
-
-            tempAvatarData = null;
-            tempBannerData = null;
-            showToast('✅ Perfil actualizado correctamente', 'success');
         }
 
         // ============ MODAL AJUSTES ============
@@ -1867,7 +2324,7 @@
             }, 3000);
         }
 
-        console.log('✅ Profile.js - Alineado a la izquierda cargado correctamente');
+        console.log('✅ Profile.js con soporte video local y URL cargado correctamente');
     </script>
 </body>
 </html>
