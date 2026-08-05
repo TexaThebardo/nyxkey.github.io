@@ -85,12 +85,16 @@
                     <label><span class="material-icons-outlined">email</span> Correo Administrador</label>
                     <input type="email" id="adminEmail" placeholder="admin@yxcards.com" required>
                 </div>
+                <div class="input-group">
+                    <label><span class="material-icons-outlined">key</span> Clave de Acceso</label>
+                    <input type="password" id="adminKey" placeholder="Ingresa tu clave" required>
+                </div>
                 <button type="submit" class="btn-admin btn-admin-primary">
                     <span class="material-icons">login</span> Acceder
                 </button>
             </form>
             <div class="admin-hint">
-                ⚠️ Solo administradores autorizados pueden ingresar
+                ⚠️ Solo administradores autorizados con clave pueden ingresar
             </div>
         </div>
     </div>
@@ -164,17 +168,18 @@
         // ADMIN - SCRIPT COMPLETO
         // ============================================
 
-        // LOGIN
+        // LOGIN CON EMAIL + KEY
         document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('adminEmail').value.trim();
+            const key = document.getElementById('adminKey').value.trim();
 
-            if (isAdmin(email)) {
+            if (verifyAdminKey(email, key)) {
                 localStorage.setItem('admin_session', JSON.stringify({ email: email, loggedIn: true, timestamp: Date.now() }));
                 showAdminPanel();
                 showToast('✅ Bienvenido Administrador', 'success');
             } else {
-                showToast('❌ No eres administrador', 'error');
+                showToast('❌ Credenciales incorrectas', 'error');
             }
         });
 
