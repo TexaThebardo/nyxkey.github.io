@@ -6,6 +6,7 @@ console.log('📊 Dashboard.js cargado');
 
 let currentCardData = null;
 let currentCardIndex = -1;
+let isCardNumberRevealed = false;
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📊 Dashboard iniciado');
@@ -41,7 +42,6 @@ function loadDashboardData() {
     console.log('📦 Transacciones:', transactions.length);
     console.log('💰 Saldo:', balance);
 
-    // Estadísticas
     const totalUsers = users.length || 0;
     let totalAdmins = 0;
     try {
@@ -225,8 +225,9 @@ function showCardData(index) {
     // Guardar datos para copiar
     currentCardData = purchase;
     currentCardIndex = index;
+    isCardNumberRevealed = false;
 
-    // Preparar número de tarjeta con formato
+    // Preparar número de tarjeta
     const cardNumber = purchase.cardData?.number || '**** **** **** ****';
     const formattedNumber = cardNumber.replace(/(.{4})/g, '$1 ').trim();
 
@@ -241,8 +242,34 @@ function showCardData(index) {
     document.getElementById('modalCardBank').textContent = purchase.bank || 'N/A';
     document.getElementById('modalCardCountry').textContent = purchase.country || 'N/A';
 
+    // Resetear estado de revelado
+    const display = document.getElementById('cardNumberDisplay');
+    display.classList.add('blurred');
+    document.getElementById('revealIcon').textContent = 'visibility';
+    document.getElementById('revealText').textContent = 'Mostrar Número';
+
     document.getElementById('cardDataModal').classList.add('active');
     console.log('✅ Modal abierto');
+}
+
+// ============ TOGGLE REVELAR NÚMERO ============
+function toggleCardNumberReveal() {
+    const display = document.getElementById('cardNumberDisplay');
+    const icon = document.getElementById('revealIcon');
+    const text = document.getElementById('revealText');
+
+    isCardNumberRevealed = !isCardNumberRevealed;
+
+    if (isCardNumberRevealed) {
+        display.classList.remove('blurred');
+        icon.textContent = 'visibility_off';
+        text.textContent = 'Ocultar Número';
+        showToast('👁️ Número de tarjeta visible', 'info');
+    } else {
+        display.classList.add('blurred');
+        icon.textContent = 'visibility';
+        text.textContent = 'Mostrar Número';
+    }
 }
 
 // ============ CERRAR MODAL ============
@@ -250,6 +277,7 @@ function closeCardDataModal() {
     document.getElementById('cardDataModal').classList.remove('active');
     currentCardData = null;
     currentCardIndex = -1;
+    isCardNumberRevealed = false;
 }
 
 // ============ COPIAR DATOS COMPLETOS ============
@@ -281,7 +309,6 @@ function copyCardData() {
     navigator.clipboard.writeText(textToCopy).then(() => {
         showToast('✅ Datos copiados al portapapeles', 'success');
     }).catch(() => {
-        // Fallback
         const textarea = document.createElement('textarea');
         textarea.value = textToCopy;
         document.body.appendChild(textarea);
@@ -342,22 +369,7 @@ function showToast(message, type = 'info') {
         document.body.appendChild(container);
     }
     const toast = document.createElement('div');
-    const colors = { success: '#2ecc71', error: '#e74c3c', info: '#3498db', warning: '#f39c12' };
-    toast.style.cssText = `
-        background: #1a232e;
-        color: #e8edf2;
-        padding: 10px 22px;
-        border-radius: 12px;
-        border-left: 4px solid ${colors[type] || colors.info};
-        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-        font-size: 14px;
-        font-weight: 500;
-        pointer-events: auto;
-        animation: slideUpToast 0.3s ease;
-        min-width: 200px;
-        text-align: center;
-        border: 1px solid #2a313c;
-    `;
+    toast.className = `toast ${type}`;
     toast.textContent = message;
     container.appendChild(toast);
     setTimeout(() => {
@@ -370,6 +382,7 @@ function showToast(message, type = 'info') {
 window.showCardData = showCardData;
 window.closeCardDataModal = closeCardDataModal;
 window.copyCardData = copyCardData;
+window.toggleCardNumberReveal = toggleCardNumberReveal;
 window.showToast = showToast;
 
 console.log('✅ dashboard.js cargado correctamente');
