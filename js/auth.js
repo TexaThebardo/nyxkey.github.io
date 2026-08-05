@@ -95,6 +95,7 @@ function registerUser(email, password, username) {
         createdAt: new Date().toISOString(),
         lastLogin: null,
         purchases: [],
+        transactions: [],
         profile: {
             banner: '',
             avatar: '',
@@ -139,7 +140,6 @@ function loginUser(email, password) {
         return false;
     }
 
-    // Verificar admin
     const esAdmin = isAdmin(email);
     console.log('👑 ¿Es admin?', esAdmin);
 
@@ -151,6 +151,7 @@ function loginUser(email, password) {
             balance: user.balance,
             role: user.role,
             purchases: user.purchases || [],
+            transactions: user.transactions || [],
             profile: user.profile || { banner: '', avatar: '', bio: '', pronoun: 'él' },
             isAdmin: esAdmin
         },
@@ -165,7 +166,6 @@ function loginUser(email, password) {
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
 
-    // ============ ACTUALIZAR UI ============
     if (typeof updateUserUI === 'function') {
         updateUserUI();
     }
@@ -225,7 +225,6 @@ function updateUserBalance(userId, amount) {
         user.balance = (user.balance || 0) + amount;
         localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
 
-        // Actualizar sesión también
         const currentUser = getCurrentUser();
         if (currentUser && currentUser.id === userId) {
             const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
@@ -235,7 +234,6 @@ function updateUserBalance(userId, amount) {
             }
         }
         
-        // ============ ACTUALIZAR UI ============
         if (typeof updateUserUI === 'function') {
             updateUserUI();
         }
@@ -285,6 +283,73 @@ function generateToken(userId) {
     return btoa(`${userId}:${Date.now()}:${Math.random()}`);
 }
 
+// ============ RENDERIZAR INSIGNIAS ============
+function renderUserInsignias(email, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    const esAdmin = isAdmin(email);
+    
+    if (esAdmin) {
+        container.innerHTML = `
+            <span class="insignia-badge" style="background:rgba(240, 185, 11, 0.15); color:#f0b90b;">
+                <span class="material-icons" style="font-size:14px;">verified</span>
+                Admin
+            </span>
+        `;
+    } else {
+        container.innerHTML = `
+            <span class="insignia-guest">
+                <span class="material-icons" style="font-size:14px;">person_outline</span> Guest
+            </span>
+        `;
+    }
+}
+
+// ============ TOGGLE MENÚ ============
+function toggleUserMenu() {
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) dropdown.classList.toggle('active');
+}
+
+// ============ ACTUALIZAR UI ============
+function updateUserUI() {
+    console.log('🔄 updateUserUI ejecutado');
+    
+    const user = getCurrentUser();
+    const balanceEl = document.getElementById('userBalance');
+    const avatarEl = document.getElementById('userAvatarIcon');
+    const nameEl = document.getElementById('userDisplayName');
+
+    if (user) {
+        if (balanceEl) balanceEl.textContent = `$${user.balance.toFixed(2)}`;
+        if (avatarEl) avatarEl.textContent = 'account_circle';
+        if (nameEl) nameEl.textContent = user.username || 'Usuario';
+
+        const esAdmin = isAdmin(user.email);
+
+        const adminBtn = document.getElementById('adminPanelBtn');
+        const adminSidebarBtn = document.getElementById('adminSidebarBtn');
+        const adminDropdownBtn = document.getElementById('adminDropdownBtn');
+
+        if (esAdmin) {
+            if (adminBtn) adminBtn.style.display = 'inline-flex';
+            if (adminSidebarBtn) adminSidebarBtn.style.display = 'flex';
+            if (adminDropdownBtn) adminDropdownBtn.style.display = 'flex';
+        } else {
+            if (adminBtn) adminBtn.style.display = 'none';
+            if (adminSidebarBtn) adminSidebarBtn.style.display = 'none';
+            if (adminDropdownBtn) adminDropdownBtn.style.display = 'none';
+        }
+
+        renderUserInsignias(user.email, 'userInsignias');
+    } else {
+        if (balanceEl) balanceEl.textContent = '$0.00';
+        if (avatarEl) avatarEl.textContent = 'person';
+        if (nameEl) nameEl.textContent = 'Invitado';
+    }
+}
+
 // ============ TOAST ============
 function showToast(message, type = 'info') {
     let container = document.querySelector('.toast-container');
@@ -327,34 +392,19 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// ============ RENDERIZAR INSIGNIAS ============
-function renderUserInsignias(email, containerId) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    const esAdmin = isAdmin(email);
-    
-    if (esAdmin) {
-        container.innerHTML = `
-            <span class="insignia-badge" style="background:rgba(240, 185, 11, 0.15); color:#f0b90b;">
-                <span class="material-icons" style="font-size:14px;">verified</span>
-                Admin
-            </span>
-        `;
-    } else {
-        container.innerHTML = `
-            <span class="insignia-guest">
-                <span class="material-icons" style="font-size:14px;">person_outline</span> Guest
-            </span>
-        `;
-    }
-}
-
 // ============ INICIALIZAR ============
 document.addEventListener('DOMContentLoaded', function() {
     if (!localStorage.getItem('admin_whitelist')) {
         loadWhitelist();
     }
+    // Cerrar dropdown al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('userDropdown');
+        const avatar = document.querySelector('.user-avatar');
+        if (dropdown && avatar && !avatar.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
     if (typeof updateUserUI === 'function') {
         updateUserUI();
     }
@@ -367,6 +417,7 @@ window.logoutUser = logoutUser;
 window.getCurrentUser = getCurrentUser;
 window.checkSession = checkSession;
 window.updateUserBalance = updateUserBalance;
+window.updateUserUI = updateUserUI;
 window.toggleUserMenu = toggleUserMenu;
 window.showToast = showToast;
 window.getUsers = getUsers;
