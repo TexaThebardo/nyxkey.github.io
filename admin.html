@@ -20,7 +20,7 @@
             padding: 20px;
         }
 
-        /* ============ HEADER ============ */
+        /* ============ HEADER CON LOGO ============ */
         .admin-header {
             background: #131a22;
             border: 1px solid #2a313c;
@@ -33,6 +33,39 @@
             flex-wrap: wrap;
             gap: 16px;
         }
+
+        .admin-header .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-header .header-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+            animation: pulseLogo 3s ease-in-out infinite;
+        }
+
+        .admin-header .header-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes pulseLogo {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 8px rgba(240, 185, 11, 0.2));
+            }
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 20px rgba(240, 185, 11, 0.4));
+            }
+        }
+
         .admin-header h1 {
             font-size: 24px;
             font-weight: 700;
@@ -193,14 +226,6 @@
             background: #1e2a38;
             color: #e8edf2;
         }
-        .btn-admin-danger {
-            background: #e74c3c;
-            color: white;
-        }
-        .btn-admin-danger:hover {
-            background: #c0392b;
-            transform: scale(1.02);
-        }
 
         /* ============ TABLES ============ */
         .users-table {
@@ -248,7 +273,7 @@
         }
 
         /* ============================================
-           ADMIN LOGIN MODAL - CON BLUR Y CIERRE
+           ADMIN LOGIN MODAL - CON LOGO
            ============================================ */
         .admin-login-overlay {
             position: fixed;
@@ -284,6 +309,22 @@
             -webkit-backdrop-filter: blur(20px);
         }
 
+        /* ============ LOGO EN MODAL ============ */
+        .admin-login-box .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            border-radius: 16px;
+            overflow: hidden;
+            animation: pulseLogo 3s ease-in-out infinite;
+        }
+
+        .admin-login-box .login-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         /* ============ CERRAR BOTÓN ============ */
         .admin-login-box .close-btn {
             position: absolute;
@@ -309,18 +350,6 @@
         }
         .admin-login-box .close-btn .material-icons {
             font-size: 20px;
-        }
-
-        .admin-login-box .login-icon {
-            text-align: center;
-            margin-bottom: 16px;
-        }
-        .admin-login-box .login-icon .material-icons-outlined {
-            font-size: 52px;
-            color: #f0b90b;
-            background: rgba(240, 185, 11, 0.1);
-            padding: 12px;
-            border-radius: 50%;
         }
 
         .admin-login-box h2 {
@@ -518,6 +547,16 @@
                 transform: translateY(0) scale(1);
             }
         }
+        @keyframes pulseLogo {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 8px rgba(240, 185, 11, 0.2));
+            }
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 20px rgba(240, 185, 11, 0.4));
+            }
+        }
         @keyframes slideUpToast {
             from {
                 opacity: 0;
@@ -555,9 +594,9 @@
                 width: 30px;
                 height: 30px;
             }
-            .admin-login-box .login-icon .material-icons-outlined {
-                font-size: 40px;
-                padding: 8px;
+            .admin-login-box .login-logo {
+                width: 60px;
+                height: 60px;
             }
             .admin-login-box h2 {
                 font-size: 20px;
@@ -568,6 +607,10 @@
             .admin-header h1 {
                 font-size: 18px;
             }
+            .admin-header .header-logo {
+                width: 40px;
+                height: 40px;
+            }
             .admin-panel {
                 padding: 16px;
             }
@@ -576,18 +619,18 @@
 </head>
 <body>
     <!-- ==========================================
-    ADMIN LOGIN MODAL - CON BLUR Y CIERRE
+    ADMIN LOGIN MODAL - CON LOGO
     ========================================== -->
     <div class="admin-login-overlay" id="adminLoginOverlay">
         <div class="admin-login-box">
-            <!-- BOTÓN CERRAR - REDIRIGE A INDEX -->
+            <!-- BOTÓN CERRAR -->
             <button class="close-btn" onclick="closeAdminLogin()" title="Cerrar">
                 <span class="material-icons">close</span>
             </button>
 
-            <!-- ICONO -->
-            <div class="login-icon">
-                <span class="material-icons-outlined">admin_panel_settings</span>
+            <!-- LOGO -->
+            <div class="login-logo">
+                <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards Logo">
             </div>
 
             <!-- TÍTULO -->
@@ -632,16 +675,20 @@
     </div>
 
     <!-- ==========================================
-    ADMIN PANEL
+    ADMIN PANEL - CON LOGO
     ========================================== -->
     <div id="adminPanel" class="admin-container hidden">
-        <!-- HEADER -->
+        <!-- HEADER CON LOGO -->
         <div class="admin-header">
-            <h1>
-                <span class="material-icons-outlined">admin_panel_settings</span>
-                Panel de Administración
-                <span class="admin-badge">ADMIN</span>
-            </h1>
+            <div class="header-left">
+                <div class="header-logo">
+                    <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards Logo">
+                </div>
+                <h1>
+                    Panel de Administración
+                    <span class="admin-badge">ADMIN</span>
+                </h1>
+            </div>
             <div style="display:flex; gap:12px; flex-wrap:wrap;">
                 <button class="admin-logout-btn" onclick="logoutAdmin()">
                     <span class="material-icons">logout</span>
@@ -741,7 +788,6 @@
         // ============ CERRAR MODAL Y REDIRIGIR ============
         function closeAdminLogin() {
             document.getElementById('adminLoginOverlay').classList.add('hidden');
-            // Redirigir a index.html al cerrar la modal
             window.location.href = 'index.html';
         }
 
@@ -829,21 +875,16 @@
             showToast('Sesión de administrador cerrada', 'info');
         }
 
-        // ============ CARGAR DATOS DE TODOS LOS USUARIOS ============
+        // ============ CARGAR DATOS ============
         function loadAdminData() {
-            // Obtener TODOS los usuarios de localStorage
             const users = getUsers();
             const admins = getAdminList ? getAdminList() : [];
-            
-            // Calcular total de saldo
             const totalBalance = users.reduce((sum, u) => sum + (u.balance || 0), 0);
 
-            // Actualizar estadísticas
             document.getElementById('totalUsers').textContent = users.length;
             document.getElementById('totalBalance').textContent = `$${totalBalance.toFixed(2)}`;
             document.getElementById('totalAdmins').textContent = admins.length;
 
-            // Renderizar tabla de usuarios
             renderUsersTable(users);
         }
 
@@ -864,7 +905,6 @@
                 return;
             }
 
-            // Mostrar usuarios ordenados por fecha de creación (más recientes primero)
             const sortedUsers = [...users].sort((a, b) => {
                 const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
                 const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
@@ -873,12 +913,6 @@
 
             tbody.innerHTML = sortedUsers.map(u => {
                 const isUserAdmin = admins.some(a => a.email === u.email);
-                const memberSince = u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-ES', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                }) : 'N/A';
-                
                 return `
                     <tr>
                         <td><strong>${u.username || 'N/A'}</strong></td>
@@ -1071,10 +1105,8 @@
 
         // ============ INICIALIZAR ============
         document.addEventListener('DOMContentLoaded', function() {
-            // Cargar credenciales guardadas
             loadRememberedCredentials();
             
-            // Verificar si ya hay sesión activa
             if (!checkAdminSession()) {
                 document.getElementById('adminLoginOverlay').classList.remove('hidden');
             }
