@@ -5,10 +5,225 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Yx Cards</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/login.css">
+    <style>
+        /* ============ MODAL RECUPERAR CONTRASEÑA ============ */
+        .forgot-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.4s ease;
+        }
+        .forgot-modal-overlay.active {
+            display: flex;
+        }
+
+        .forgot-modal-box {
+            background: rgba(19, 26, 34, 0.95);
+            border: 1px solid rgba(42, 49, 60, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 420px;
+            width: 100%;
+            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .forgot-modal-box .close-btn {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: #5a6575;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .forgot-modal-box .close-btn:hover {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            transform: rotate(90deg) scale(1.1);
+        }
+        .forgot-modal-box .close-btn .material-icons {
+            font-size: 20px;
+        }
+
+        .forgot-modal-box .modal-icon {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .forgot-modal-box .modal-icon .material-icons-outlined {
+            font-size: 52px;
+            color: #f0b90b;
+            background: rgba(240, 185, 11, 0.1);
+            padding: 12px;
+            border-radius: 50%;
+        }
+
+        .forgot-modal-box h2 {
+            color: #e8edf2;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+        .forgot-modal-box .subtitle {
+            color: #a0aab8;
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .forgot-modal-box .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+        .forgot-modal-box .input-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #a0aab8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .forgot-modal-box .input-group label .material-icons-outlined {
+            font-size: 18px;
+            color: #f0b90b;
+        }
+        .forgot-modal-box .input-group input {
+            background: rgba(11, 14, 20, 0.8);
+            border: 1px solid #2a313c;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #e8edf2;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            width: 100%;
+            backdrop-filter: blur(4px);
+        }
+        .forgot-modal-box .input-group input:focus {
+            outline: none;
+            border-color: #f0b90b;
+            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
+        }
+
+        .forgot-modal-box .btn-forgot {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+            background: #f0b90b;
+            color: #0b0e14;
+        }
+        .forgot-modal-box .btn-forgot:hover {
+            background: #d4a40a;
+            transform: scale(1.02);
+        }
+
+        .forgot-modal-box .btn-forgot-secondary {
+            background: #1a232e;
+            color: #a0aab8;
+            border: 1px solid #2a313c;
+            margin-top: 8px;
+        }
+        .forgot-modal-box .btn-forgot-secondary:hover {
+            background: #1e2a38;
+            color: #e8edf2;
+        }
+
+        .forgot-modal-box .forgot-hint {
+            font-size: 12px;
+            color: #5a6575;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .forgot-modal-box .forgot-hint .material-icons-outlined {
+            font-size: 14px;
+            vertical-align: middle;
+            color: #f39c12;
+        }
+
+        .forgot-modal-box .success-message {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #2ecc71;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .forgot-modal-box .success-message.show {
+            display: block;
+        }
+        .forgot-modal-box .success-message .material-icons-outlined {
+            font-size: 18px;
+            vertical-align: middle;
+        }
+
+        .forgot-modal-box .new-password-display {
+            background: rgba(11, 14, 20, 0.8);
+            border: 1px solid #2a313c;
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #f0b90b;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 2px;
+            margin: 12px 0;
+            display: none;
+        }
+        .forgot-modal-box .new-password-display.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
 </head>
 <body>
     <div class="auth-container">
@@ -49,7 +264,8 @@
                         <input type="checkbox" id="rememberMe">
                         <span>Recordarme</span>
                     </label>
-                    <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+                    <!-- ============ LINK OLVIDASTE CONTRASEÑA ============ -->
+                    <a href="#" class="forgot-link" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
                 </div>
                 
                 <button type="submit" class="btn-primary btn-auth" id="loginBtn">
@@ -98,22 +314,78 @@
         </div>
     </div>
 
-    <!-- PRIMERO auth.js (tiene funciones internas) -->
+    <!-- ==========================================
+    MODAL RECUPERAR CONTRASEÑA
+    ========================================== -->
+    <div class="forgot-modal-overlay" id="forgotModal">
+        <div class="forgot-modal-box">
+            <!-- BOTÓN CERRAR -->
+            <button class="close-btn" onclick="closeForgotModal()" title="Cerrar">
+                <span class="material-icons">close</span>
+            </button>
+
+            <!-- ICONO -->
+            <div class="modal-icon">
+                <span class="material-icons-outlined">lock_reset</span>
+            </div>
+
+            <!-- TÍTULO -->
+            <h2>Recuperar Contraseña</h2>
+            <p class="subtitle">Ingresa tu correo y te enviaremos una nueva contraseña</p>
+
+            <!-- MENSAJE DE ÉXITO -->
+            <div class="success-message" id="forgotSuccessMessage">
+                <span class="material-icons-outlined">check_circle</span>
+                <span id="forgotSuccessText">Contraseña restablecida</span>
+            </div>
+
+            <!-- NUEVA CONTRASEÑA GENERADA -->
+            <div class="new-password-display" id="newPasswordDisplay">
+                <!-- Se llena con JavaScript -->
+            </div>
+
+            <!-- FORMULARIO -->
+            <form id="forgotForm">
+                <div class="input-group">
+                    <label>
+                        <span class="material-icons-outlined">email</span>
+                        Correo Electrónico
+                    </label>
+                    <input type="email" id="forgotEmail" placeholder="ejemplo@correo.com" required>
+                </div>
+
+                <button type="submit" class="btn-forgot" id="forgotBtn">
+                    <span class="material-icons">send</span>
+                    Restablecer Contraseña
+                </button>
+
+                <button type="button" class="btn-forgot btn-forgot-secondary" onclick="closeForgotModal()">
+                    <span class="material-icons">arrow_back</span>
+                    Volver al inicio de sesión
+                </button>
+            </form>
+
+            <div class="forgot-hint">
+                <span class="material-icons-outlined">info</span>
+                Se generará una nueva contraseña y se mostrará en pantalla
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
     <script src="js/auth.js"></script>
-    <!-- LUEGO admin.js (para sobrescribir si es necesario) -->
-    <script src="js/admin.js"></script>
     <script>
+        // ============================================
+        // LOGIN.JS - CON RECUPERACIÓN DE CONTRASEÑA
+        // ============================================
+
         // ============ FUNCIÓN DE LOGIN ============
         function handleLoginDirect(e) {
             e.preventDefault();
-            console.log('📝 LOGIN INICIADO');
             
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const btn = document.getElementById('loginBtn');
-            
-            console.log('📧 Email:', email);
-            console.log('🔑 Password:', password ? '***' : '(vacío)');
             
             if (!email || !password) {
                 showToast('Email y contraseña son obligatorios', 'error');
@@ -124,12 +396,8 @@
             btn.innerHTML = '<span class="material-icons">sync</span> Iniciando...';
             
             const result = loginUser(email, password);
-            console.log('🔍 Resultado loginUser():', result);
             
             if (result === true) {
-                console.log('✅ LOGIN EXITOSO! Redirigiendo a /');
-                showToast('✅ Sesión iniciada', 'success');
-                
                 setTimeout(function() {
                     window.location.href = 'index.html';
                 }, 500);
@@ -160,20 +428,129 @@
             }, 1500);
         }
 
+        // ============ RECUPERAR CONTRASEÑA ============
+        function generateRandomPassword() {
+            const length = 10;
+            const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return password;
+        }
+
+        function handleForgotPassword(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('forgotEmail').value.trim();
+            const btn = document.getElementById('forgotBtn');
+            const successMsg = document.getElementById('forgotSuccessMessage');
+            const newPassDisplay = document.getElementById('newPasswordDisplay');
+            
+            if (!email) {
+                showToast('❌ Ingresa un correo electrónico', 'error');
+                return;
+            }
+
+            // Verificar si el usuario existe
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.email === email);
+            
+            if (userIndex === -1) {
+                showToast('❌ No existe una cuenta con este correo', 'error');
+                return;
+            }
+
+            // Generar nueva contraseña
+            const newPassword = generateRandomPassword();
+            
+            // Actualizar contraseña del usuario
+            users[userIndex].password = hashPassword(newPassword);
+            localStorage.setItem('yx_users', JSON.stringify(users));
+
+            // Mostrar mensaje de éxito y nueva contraseña
+            successMsg.classList.add('show');
+            document.getElementById('forgotSuccessText').textContent = '✅ Contraseña restablecida correctamente';
+            
+            newPassDisplay.textContent = newPassword;
+            newPassDisplay.classList.add('show');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons">check</span> Contraseña restablecida';
+            
+            showToast('✅ Nueva contraseña generada. Revisa la pantalla.', 'success');
+            
+            // Botón para copiar contraseña
+            if (!document.getElementById('copyPasswordBtn')) {
+                const copyBtn = document.createElement('button');
+                copyBtn.id = 'copyPasswordBtn';
+                copyBtn.className = 'btn-forgot';
+                copyBtn.style.marginTop = '8px';
+                copyBtn.style.background = '#3498db';
+                copyBtn.style.color = 'white';
+                copyBtn.innerHTML = '<span class="material-icons">content_copy</span> Copiar Contraseña';
+                copyBtn.onclick = function() {
+                    navigator.clipboard.writeText(newPassword).then(() => {
+                        showToast('📋 Contraseña copiada al portapapeles', 'success');
+                    });
+                };
+                document.getElementById('forgotForm').appendChild(copyBtn);
+            }
+        }
+
+        // ============ ABRIR/CERRAR MODAL ============
+        function openForgotModal() {
+            document.getElementById('forgotModal').classList.add('active');
+            // Resetear formulario
+            document.getElementById('forgotForm').reset();
+            document.getElementById('forgotSuccessMessage').classList.remove('show');
+            document.getElementById('newPasswordDisplay').classList.remove('show');
+            document.getElementById('newPasswordDisplay').textContent = '';
+            document.getElementById('forgotBtn').disabled = false;
+            document.getElementById('forgotBtn').innerHTML = '<span class="material-icons">send</span> Restablecer Contraseña';
+            // Eliminar botón de copiar si existe
+            const copyBtn = document.getElementById('copyPasswordBtn');
+            if (copyBtn) copyBtn.remove();
+        }
+
+        function closeForgotModal() {
+            document.getElementById('forgotModal').classList.remove('active');
+        }
+
         // ============ INICIALIZAR ============
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ login.html cargado');
-            
             // Verificar si ya hay sesión
             const user = getCurrentUser();
             if (user) {
-                console.log('👤 Usuario ya logueado:', user.username);
                 window.location.href = 'index.html';
                 return;
             }
             
             const form = document.getElementById('loginForm');
             form.addEventListener('submit', handleLoginDirect);
+            
+            // Link de olvidaste contraseña
+            document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                openForgotModal();
+            });
+            
+            // Formulario de recuperación
+            document.getElementById('forgotForm').addEventListener('submit', handleForgotPassword);
+            
+            // Cerrar modal con Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeForgotModal();
+                }
+            });
+            
+            // Cerrar modal al hacer clic fuera
+            document.getElementById('forgotModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeForgotModal();
+                }
+            });
         });
     </script>
 </body>
