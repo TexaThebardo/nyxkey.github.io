@@ -209,8 +209,11 @@ function checkout() {
     }
     
     if (confirm(`💰 Total a pagar: $${total.toFixed(2)} USD\n¿Procesar pago?`)) {
-        updateUserBalance(user.id, -total);
+        // ============ ACTUALIZAR SALDO ============
+        const result = updateUserBalance(user.id, -total);
+        console.log('💰 Resultado actualización saldo:', result);
         
+        // Guardar compras en historial
         cartItems.forEach(item => {
             const purchaseData = {
                 network: item.network,
@@ -227,6 +230,7 @@ function checkout() {
             }
         });
         
+        // Guardar transacción
         const transaction = {
             id: 'TX-' + Date.now(),
             type: 'compra',
@@ -248,7 +252,11 @@ function checkout() {
         saveCart();
         updateCartUI();
         updateCartBadge();
-        updateUserUI();
+        
+        // ============ FORZAR ACTUALIZACIÓN DE UI ============
+        if (typeof updateUserUI === 'function') {
+            updateUserUI();
+        }
         
         showToast('✅ Compra realizada con éxito. Revisa tu historial.', 'success');
         toggleCart();
