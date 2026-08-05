@@ -20,7 +20,6 @@ function loadWhitelist() {
         }
     } catch (e) {}
     
-    // Whitelist por defecto
     const defaultWhitelist = {
         admins: ['zgxbrielb@gmail.com', 'admin@yxcards.com'],
         insignias: {
@@ -42,14 +41,12 @@ function saveWhitelist(data) {
     localStorage.setItem(ADMIN_CONFIG.whitelistKey, JSON.stringify(data));
 }
 
-// ============ VERIFICAR SI ES ADMIN ============
 function isAdmin(email) {
     if (!email) return false;
     const whitelist = loadWhitelist();
     return whitelist.admins && whitelist.admins.includes(email);
 }
 
-// ============ OBTENER INSIGNIAS DE UN USUARIO ============
 function getUserInsignias(email) {
     try {
         const stored = localStorage.getItem(ADMIN_CONFIG.insigniasKey);
@@ -61,7 +58,6 @@ function getUserInsignias(email) {
     return ['Guest'];
 }
 
-// ============ GUARDAR INSIGNIAS DE UN USUARIO ============
 function saveUserInsignias(email, insignias) {
     let data = {};
     try {
@@ -74,38 +70,11 @@ function saveUserInsignias(email, insignias) {
     localStorage.setItem(ADMIN_CONFIG.insigniasKey, JSON.stringify(data));
 }
 
-// ============ OBTENER TODAS LAS INSIGNIAS ============
 function getAllInsignias() {
     const whitelist = loadWhitelist();
     return whitelist.insignias || {};
 }
 
-// ============ AÑADIR ADMIN A LA WHITELIST ============
-function addAdminToWhitelist(email) {
-    const whitelist = loadWhitelist();
-    if (!whitelist.admins) {
-        whitelist.admins = [];
-    }
-    if (!whitelist.admins.includes(email)) {
-        whitelist.admins.push(email);
-        saveWhitelist(whitelist);
-        return true;
-    }
-    return false;
-}
-
-// ============ QUITAR ADMIN DE LA WHITELIST ============
-function removeAdminFromWhitelist(email) {
-    const whitelist = loadWhitelist();
-    if (whitelist.admins) {
-        whitelist.admins = whitelist.admins.filter(e => e !== email);
-        saveWhitelist(whitelist);
-        return true;
-    }
-    return false;
-}
-
-// ============ OBTENER TODOS LOS USUARIOS ============
 function getAllUsers() {
     try {
         return JSON.parse(localStorage.getItem('yx_users') || '[]');
@@ -114,7 +83,6 @@ function getAllUsers() {
     }
 }
 
-// ============ ACTUALIZAR SALDO DE USUARIO ============
 function updateUserBalanceByEmail(email, amount, concept = 'Ajuste manual') {
     const users = getAllUsers();
     const userIndex = users.findIndex(u => u.email === email);
@@ -145,7 +113,6 @@ function updateUserBalanceByEmail(email, amount, concept = 'Ajuste manual') {
     };
 }
 
-// ============ GUARDAR TRANSACCIÓN ADMIN ============
 function saveAdminTransaction(transaction) {
     let data = { transactions: [] };
     try {
@@ -158,7 +125,6 @@ function saveAdminTransaction(transaction) {
     localStorage.setItem(ADMIN_CONFIG.transactionsKey, JSON.stringify(data));
 }
 
-// ============ OBTENER TRANSACCIONES ADMIN ============
 function getAdminTransactions() {
     try {
         const stored = localStorage.getItem(ADMIN_CONFIG.transactionsKey);
@@ -169,7 +135,6 @@ function getAdminTransactions() {
     return [];
 }
 
-// ============ RENDERIZAR INSIGNIAS ============
 function renderInsignias(email, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -194,7 +159,6 @@ function renderInsignias(email, containerId) {
     }).join('');
 }
 
-// ============ AÑADIR INSIGNIA A USUARIO ============
 function addInsigniaToUser(email, insigniaName) {
     const allInsignias = getAllInsignias();
     if (!allInsignias[insigniaName]) {
@@ -210,7 +174,6 @@ function addInsigniaToUser(email, insigniaName) {
     return { success: false, message: `❌ El usuario ya tiene "${insigniaName}"` };
 }
 
-// ============ QUITAR INSIGNIA DE USUARIO ============
 function removeInsigniaFromUser(email, insigniaName) {
     const current = getUserInsignias(email);
     const filtered = current.filter(i => i !== insigniaName);
@@ -221,11 +184,8 @@ function removeInsigniaFromUser(email, insigniaName) {
     return { success: false, message: `❌ El usuario no tiene "${insigniaName}"` };
 }
 
-// ============ EXPORTAR ============
 window.isAdmin = isAdmin;
 window.loadWhitelist = loadWhitelist;
-window.addAdminToWhitelist = addAdminToWhitelist;
-window.removeAdminFromWhitelist = removeAdminFromWhitelist;
 window.getAllUsers = getAllUsers;
 window.updateUserBalanceByEmail = updateUserBalanceByEmail;
 window.getAdminTransactions = getAdminTransactions;
