@@ -10,19 +10,50 @@ const AUTH_CONFIG = {
     sessionTimeout: 3600000
 };
 
-// ============ ADMINISTRADORES - CORREGIDO ============
-const ADMIN_LIST = [
-    'admin@yxcards.com',
-    'personalbusiness2626@gmail.com'  // ✅ CON LA "l" - COPIA EXACTA
-];
+// ============ CARGAR ACCESOS ============
+function loadAccessData() {
+    try {
+        const stored = localStorage.getItem('admin_access');
+        if (stored) {
+            const data = JSON.parse(stored);
+            if (data.admins) {
+                return data;
+            }
+        }
+    } catch (e) {}
 
+    // ACCESOS POR DEFECTO
+    const defaultAccess = {
+        admins: [
+            { email: 'personalbusiness2626@gmail.com', key: 'admin123' },
+            { email: 'admin@yxcards.com', key: 'admin123' }
+        ]
+    };
+    localStorage.setItem('admin_access', JSON.stringify(defaultAccess));
+    return defaultAccess;
+}
+
+// ============ VERIFICAR ADMIN ============
 function isAdmin(email) {
     if (!email) return false;
-    return ADMIN_LIST.includes(email);
+    const access = loadAccessData();
+    if (!access.admins) return false;
+    return access.admins.some(a => a.email === email);
+}
+
+function verifyAdminKey(email, key) {
+    if (!email || !key) return false;
+    const access = loadAccessData();
+    if (!access.admins) return false;
+    const admin = access.admins.find(a => a.email === email);
+    if (!admin) return false;
+    return admin.key === key;
 }
 
 // ============ REGISTRO ============
 function registerUser(email, password, username) {
+    console.log('🔍 registerUser() ejecutado');
+
     if (!email || !password || !username) {
         showToast('Todos los campos son obligatorios', 'error');
         return false;
@@ -72,12 +103,15 @@ function registerUser(email, password, username) {
     users.push(newUser);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
 
+    console.log('✅ Usuario registrado:', username);
     showToast('✅ Registro exitoso. Inicia sesión.', 'success');
     return true;
 }
 
 // ============ LOGIN ============
 function loginUser(email, password) {
+    console.log('🔍 LOGIN EJECUTADO');
+    
     if (!email || !password) {
         showToast('Email y contraseña son obligatorios', 'error');
         return false;
@@ -102,6 +136,7 @@ function loginUser(email, password) {
         return false;
     }
 
+    // ============ VERIFICAR ADMIN ============
     const esAdmin = isAdmin(email);
     console.log('👑 ¿Es admin?', esAdmin);
 
@@ -121,11 +156,13 @@ function loginUser(email, password) {
     };
 
     localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
+    console.log('✅ Sesión creada para:', user.username);
 
     user.lastLogin = new Date().toISOString();
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
 
+    // Actualizar UI
     updateUserUI();
     showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
@@ -177,7 +214,7 @@ function renderUserInsignias(email, containerId) {
         container.innerHTML = `
             <span class="insignia-badge" style="background:rgba(240, 185, 11, 0.15); color:#f0b90b;">
                 <span class="material-icons" style="font-size:14px;">verified</span>
-                Owner
+                Admin
             </span>
         `;
     } else {
@@ -191,7 +228,10 @@ function renderUserInsignias(email, containerId) {
 
 // ============ ACTUALIZAR UI ============
 function updateUserUI() {
+    console.log('🔄 updateUserUI ejecutado');
+    
     const user = getCurrentUser();
+    console.log('👤 Usuario actual:', user);
 
     // Actualizar balance
     const balanceEl = document.getElementById('userBalance');
@@ -207,6 +247,7 @@ function updateUserUI() {
 
     // ============ MOSTRAR/OCULTAR BOTÓN ADMIN ============
     const esAdmin = user ? isAdmin(user.email) : false;
+    console.log('👑 ¿Es admin?', esAdmin);
 
     const adminElements = [
         document.getElementById('adminPanelBtn'),
@@ -216,7 +257,13 @@ function updateUserUI() {
 
     adminElements.forEach(el => {
         if (el) {
-            el.style.display = esAdmin ? 'flex' : 'none';
+            console.log('🔍 Elemento encontrado:', el.id);
+            if (esAdmin) {
+                el.style.display = 'flex';
+                el.style.display = 'inline-flex';
+            } else {
+                el.style.display = 'none';
+            }
         }
     });
 
@@ -350,6 +397,9 @@ function showToast(message, type = 'info') {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    if (!localStorage.getItem('admin_access')) {
+        loadAccessData();
+    }
     updateUserUI();
 });
 
@@ -366,7 +416,9 @@ window.showToast = showToast;
 window.getUsers = getUsers;
 window.addPurchaseToHistory = addPurchaseToHistory;
 window.isAdmin = isAdmin;
+window.verifyAdminKey = verifyAdminKey;
 window.renderUserInsignias = renderUserInsignias;
+window.loadAccessData = loadAccessData;
 
 console.log('✅ Auth.js cargado correctamente');
-console.log('👑 Administradores configurados:', ADMIN_LIST);
+console.log('👑 Administradores configurados en access.json');
