@@ -10,42 +10,18 @@ const AUTH_CONFIG = {
     sessionTimeout: 3600000
 };
 
-// ============ CARGAR WHITELIST ============
-function loadWhitelist() {
-    try {
-        const stored = localStorage.getItem('admin_whitelist');
-        if (stored) {
-            const data = JSON.parse(stored);
-            if (data.admins) {
-                return data;
-            }
-        }
-    } catch (e) {}
-
-    const defaultWhitelist = {
-        admins: [
-            { email: 'personalbusiness2626@gmail.com', key: 'admin123' }
-        ]
-    };
-    localStorage.setItem('admin_whitelist', JSON.stringify(defaultWhitelist));
-    return defaultWhitelist;
-}
+// ============ ADMINISTRADORES DEFINIDOS EN CÓDIGO ============
+// ⚠️ AÑADE AQUÍ LOS EMAILS DE LOS ADMINISTRADORES
+const ADMIN_LIST = [
+    'personabusiness2626@gmail.com',
+    'tu-email@dominio.com'
+    // AÑADE MÁS CORREOS AQUÍ
+];
 
 // ============ VERIFICAR ADMIN ============
 function isAdmin(email) {
     if (!email) return false;
-    const whitelist = loadWhitelist();
-    if (!whitelist.admins) return false;
-    return whitelist.admins.some(a => a.email === email);
-}
-
-function verifyAdminKey(email, key) {
-    if (!email || !key) return false;
-    const whitelist = loadWhitelist();
-    if (!whitelist.admins) return false;
-    const admin = whitelist.admins.find(a => a.email === email);
-    if (!admin) return false;
-    return admin.key === key;
+    return ADMIN_LIST.includes(email);
 }
 
 // ============ REGISTRO ============
@@ -224,14 +200,12 @@ function updateUserUI() {
     const adminElements = [
         document.getElementById('adminPanelBtn'),
         document.getElementById('adminSidebarBtn'),
-        document.getElementById('adminDropdownBtn'),
-        document.querySelector('.admin-link'),
-        document.querySelector('[data-admin="true"]')
+        document.getElementById('adminDropdownBtn')
     ];
 
     adminElements.forEach(el => {
         if (el) {
-            console.log('🔍 Elemento encontrado:', el.id || el.className);
+            console.log('🔍 Elemento encontrado:', el.id);
             if (esAdmin) {
                 el.style.display = 'flex';
                 el.style.display = 'inline-flex';
@@ -240,21 +214,6 @@ function updateUserUI() {
             }
         }
     });
-
-    // Si no se encontraron elementos por ID, buscar por texto
-    if (!adminElements.some(el => el)) {
-        console.log('⚠️ No se encontraron elementos de admin por ID, buscando por texto...');
-        document.querySelectorAll('a, button').forEach(el => {
-            if (el.textContent.includes('Admin') || el.textContent.includes('Administrador')) {
-                console.log('🔍 Elemento encontrado por texto:', el);
-                if (esAdmin) {
-                    el.style.display = 'flex';
-                } else {
-                    el.style.display = 'none';
-                }
-            }
-        });
-    }
 }
 
 // ============ TOGGLE MENÚ ============
@@ -381,12 +340,10 @@ function showToast(message, type = 'info') {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    if (!localStorage.getItem('admin_whitelist')) {
-        loadWhitelist();
-    }
     updateUserUI();
 });
 
+// ============ EXPORTAR ============
 window.registerUser = registerUser;
 window.loginUser = loginUser;
 window.logoutUser = logoutUser;
@@ -399,7 +356,6 @@ window.showToast = showToast;
 window.getUsers = getUsers;
 window.addPurchaseToHistory = addPurchaseToHistory;
 window.isAdmin = isAdmin;
-window.verifyAdminKey = verifyAdminKey;
-window.loadWhitelist = loadWhitelist;
 
 console.log('✅ Auth.js cargado correctamente');
+console.log('👑 Administradores configurados:', ADMIN_LIST);
