@@ -23,38 +23,34 @@ function loadDashboardData() {
     const user = getCurrentUser();
     if (!user) return;
 
-    const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
+    // Obtener TODOS los usuarios
+    const users = getUsers();
     const fullUser = users.find(u => u.id === user.id);
 
-    console.log('📦 Datos completos:', fullUser);
+    console.log('📦 Usuarios totales:', users.length);
+    console.log('📦 Usuario actual:', fullUser);
 
+    // Obtener compras y transacciones del usuario
     const purchases = fullUser?.purchases || [];
     const transactions = fullUser?.transactions || [];
     const balance = fullUser?.balance || 0;
 
-    // ============ ESTADÍSTICAS ACTUALIZADAS ============
-    // Total de usuarios registrados
+    console.log('📦 Compras:', purchases.length);
+    console.log('📦 Transacciones:', transactions.length);
+    console.log('💰 Saldo:', balance);
+
+    // ============ ESTADÍSTICAS ============
     const totalUsers = users.length || 0;
 
     // Total de administradores
     let totalAdmins = 0;
-    if (typeof getAdminList === 'function') {
-        const admins = getAdminList();
-        totalAdmins = admins.length || 0;
-    } else if (typeof ADMIN_LIST !== 'undefined') {
-        totalAdmins = ADMIN_LIST.length || 0;
-    } else {
-        try {
-            const stored = localStorage.getItem('admin_whitelist');
-            if (stored) {
-                const data = JSON.parse(stored);
-                totalAdmins = data.admins ? data.admins.length : 0;
-            }
-        } catch (e) {}
-    }
-
-    console.log('📦 Usuarios totales:', totalUsers);
-    console.log('📦 Administradores:', totalAdmins);
+    try {
+        const whitelist = localStorage.getItem('admin_whitelist');
+        if (whitelist) {
+            const data = JSON.parse(whitelist);
+            totalAdmins = data.admins ? data.admins.length : 0;
+        }
+    } catch (e) {}
 
     // Actualizar estadísticas
     document.getElementById('totalPurchases').textContent = purchases.length;
@@ -73,10 +69,7 @@ function loadDashboardData() {
 // ============ RENDERIZAR COMPRAS ============
 function renderPurchases(purchases) {
     const container = document.getElementById('purchasesGrid');
-    if (!container) {
-        console.log('❌ purchasesGrid no encontrado');
-        return;
-    }
+    if (!container) return;
 
     if (purchases.length === 0) {
         container.innerHTML = `
@@ -132,10 +125,7 @@ function renderPurchases(purchases) {
 // ============ RENDERIZAR COMPRAS RECIENTES ============
 function renderRecentPurchases(purchases) {
     const container = document.getElementById('recentPurchases');
-    if (!container) {
-        console.log('❌ recentPurchases no encontrado');
-        return;
-    }
+    if (!container) return;
 
     const recent = purchases.slice(-5).reverse();
 
@@ -165,10 +155,7 @@ function renderRecentPurchases(purchases) {
 // ============ RENDERIZAR TRANSACCIONES ============
 function renderTransactions(transactions) {
     const tbody = document.getElementById('transactionsBody');
-    if (!tbody) {
-        console.log('❌ transactionsBody no encontrado');
-        return;
-    }
+    if (!tbody) return;
 
     if (!transactions || transactions.length === 0) {
         tbody.innerHTML = `
