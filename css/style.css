@@ -1868,3 +1868,100 @@ tbody tr:last-child td {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+
+/* ============================================
+   MEJORAS PARA EL CATÁLOGO DE TARJETAS
+   ============================================ */
+
+/* Badges de categoría */
+.network-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.network-badge.visa { background: rgba(26, 83, 154, 0.2); color: #1a539a; }
+.network-badge.mastercard { background: rgba(235, 10, 30, 0.2); color: #eb0a1e; }
+.network-badge.amex { background: rgba(0, 102, 204, 0.2); color: #0066cc; }
+.network-badge.discover { background: rgba(255, 102, 0, 0.2); color: #ff6600; }
+
+/* Stock indicator */
+.stock-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.stock-indicator .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.stock-indicator .dot.high { background: #2ecc71; }
+.stock-indicator .dot.medium { background: #f39c12; }
+.stock-indicator .dot.low { background: #e74c3c; animation: pulse-dot 1.5s infinite; }
+
+/* Rating stars */
+.rating-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    color: #f1c40f;
+    font-size: 14px;
+}
+
+.rating-stars .material-icons {
+    font-size: 16px;
+}
+
+.rating-stars .empty {
+    color: #3a3a4a;
+}
+
+/* Hover effects en tabla */
+.table-container table tbody tr {
+    cursor: default;
+    transition: all 0.3s ease;
+}
+
+.table-container table tbody tr:hover {
+    background: rgba(240, 185, 11, 0.05);
+    transform: translateX(2px);
+}
+
+/* Badge de "Nuevo" en productos */
+.product-new-badge {
+    display: inline-block;
+    background: #2ecc71;
+    color: #0b0e14;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    animation: pulse-new 2s infinite;
+}
+
+@keyframes pulse-new {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .network-badge {
+        font-size: 9px;
+        padding: 1px 8px;
+    }
+    
+    .rating-stars .material-icons {
+        font-size: 14px;
+    }
+}
