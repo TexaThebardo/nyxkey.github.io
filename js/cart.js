@@ -210,8 +210,7 @@ function checkout() {
     
     if (confirm(`💰 Total a pagar: $${total.toFixed(2)} USD\n¿Procesar pago?`)) {
         // ============ ACTUALIZAR SALDO ============
-        const result = updateUserBalance(user.id, -total);
-        console.log('💰 Resultado actualización saldo:', result);
+        updateUserBalance(user.id, -total);
         
         // Guardar compras en historial
         cartItems.forEach(item => {
