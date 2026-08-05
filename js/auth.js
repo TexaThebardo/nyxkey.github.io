@@ -105,6 +105,8 @@ function registerUser(email, password, username) {
 
 // ============ LOGIN ============
 function loginUser(email, password) {
+    console.log('🔍 LOGIN EJECUTADO');
+    
     if (!email || !password) {
         showToast('Email y contraseña son obligatorios', 'error');
         return false;
@@ -129,6 +131,10 @@ function loginUser(email, password) {
         return false;
     }
 
+    // Verificar si es admin
+    const esAdmin = isAdmin(email);
+    console.log('👑 ¿Es admin?', esAdmin);
+
     const session = {
         user: {
             id: user.id,
@@ -137,7 +143,8 @@ function loginUser(email, password) {
             balance: user.balance,
             role: user.role,
             purchases: user.purchases || [],
-            profile: user.profile || { banner: '', avatar: '', bio: '', pronoun: 'él' }
+            profile: user.profile || { banner: '', avatar: '', bio: '', pronoun: 'él' },
+            isAdmin: esAdmin
         },
         token: generateToken(user.id),
         expiresAt: Date.now() + AUTH_CONFIG.sessionTimeout
@@ -149,6 +156,7 @@ function loginUser(email, password) {
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
 
+    // Actualizar UI
     updateUserUI();
     showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
@@ -191,39 +199,65 @@ function getCurrentUser() {
 
 // ============ ACTUALIZAR UI ============
 function updateUserUI() {
+    console.log('🔄 updateUserUI ejecutado');
+    
     const user = getCurrentUser();
+    console.log('👤 Usuario actual:', user);
+
+    // Actualizar balance
     const balanceEl = document.getElementById('userBalance');
-    const avatarEl = document.getElementById('userAvatarIcon');
+    if (balanceEl && user) {
+        balanceEl.textContent = `$${user.balance.toFixed(2)}`;
+    }
+
+    // Actualizar nombre
     const nameEl = document.getElementById('userDisplayName');
+    if (nameEl && user) {
+        nameEl.textContent = user.username || 'Usuario';
+    }
 
-    if (user) {
-        if (balanceEl) balanceEl.textContent = `$${user.balance.toFixed(2)}`;
-        if (avatarEl) avatarEl.textContent = 'account_circle';
-        if (nameEl) nameEl.textContent = user.username || 'Usuario';
+    // ============ MOSTRAR/OCULTAR BOTÓN ADMIN ============
+    const esAdmin = user ? isAdmin(user.email) : false;
+    console.log('👑 ¿Es admin?', esAdmin);
 
-        // ============ MOSTRAR/OCULTAR BOTÓN ADMIN ============
-        const esAdmin = isAdmin(user.email);
+    // Buscar TODOS los elementos relacionados con admin
+    const adminElements = [
+        document.getElementById('adminPanelBtn'),
+        document.getElementById('adminSidebarBtn'),
+        document.getElementById('adminDropdownBtn'),
+        document.querySelector('.admin-link'),
+        document.querySelector('[data-admin="true"]')
+    ];
 
-        const adminBtn = document.getElementById('adminPanelBtn');
-        const adminSidebarBtn = document.getElementById('adminSidebarBtn');
-        const adminDropdownBtn = document.getElementById('adminDropdownBtn');
-
-        if (esAdmin) {
-            if (adminBtn) adminBtn.style.display = 'inline-flex';
-            if (adminSidebarBtn) adminSidebarBtn.style.display = 'flex';
-            if (adminDropdownBtn) adminDropdownBtn.style.display = 'flex';
-        } else {
-            if (adminBtn) adminBtn.style.display = 'none';
-            if (adminSidebarBtn) adminSidebarBtn.style.display = 'none';
-            if (adminDropdownBtn) adminDropdownBtn.style.display = 'none';
+    adminElements.forEach(el => {
+        if (el) {
+            console.log('🔍 Elemento encontrado:', el.id || el.className);
+            if (esAdmin) {
+                el.style.display = 'flex';
+                el.style.display = 'inline-flex';
+            } else {
+                el.style.display = 'none';
+            }
         }
-    } else {
-        if (balanceEl) balanceEl.textContent = '$0.00';
-        if (avatarEl) avatarEl.textContent = 'person';
-        if (nameEl) nameEl.textContent = 'Invitado';
+    });
+
+    // Si no se encontraron elementos por ID, buscar por texto
+    if (!adminElements.some(el => el)) {
+        console.log('⚠️ No se encontraron elementos de admin por ID, buscando por texto...');
+        document.querySelectorAll('a, button').forEach(el => {
+            if (el.textContent.includes('Admin') || el.textContent.includes('Administrador')) {
+                console.log('🔍 Elemento encontrado por texto:', el);
+                if (esAdmin) {
+                    el.style.display = 'flex';
+                } else {
+                    el.style.display = 'none';
+                }
+            }
+        });
     }
 }
 
+// ============ TOGGLE MENÚ ============
 function toggleUserMenu() {
     const dropdown = document.getElementById('userDropdown');
     if (dropdown) dropdown.classList.toggle('active');
