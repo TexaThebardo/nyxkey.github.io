@@ -7,8 +7,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/nyxkey.github.io/css/style.css">
-    <link rel="stylesheet" href="/nyxkey.github.io/css/login.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/login.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="auth-container">
@@ -24,26 +25,17 @@
             
             <form id="registerForm" class="auth-form">
                 <div class="form-group">
-                    <label>
-                        <span class="material-icons">person</span>
-                        Nombre de Usuario
-                    </label>
+                    <label><span class="material-icons">person</span> Nombre de Usuario</label>
                     <input type="text" id="regUsername" placeholder="Usuario único" required>
                 </div>
                 
                 <div class="form-group">
-                    <label>
-                        <span class="material-icons">email</span>
-                        Correo Electrónico
-                    </label>
+                    <label><span class="material-icons">email</span> Correo Electrónico</label>
                     <input type="email" id="regEmail" placeholder="ejemplo@correo.com" required>
                 </div>
                 
                 <div class="form-group">
-                    <label>
-                        <span class="material-icons">lock</span>
-                        Contraseña
-                    </label>
+                    <label><span class="material-icons">lock</span> Contraseña</label>
                     <div class="password-input">
                         <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required>
                         <button type="button" onclick="togglePassword('regPassword')">
@@ -53,10 +45,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>
-                        <span class="material-icons">lock_outline</span>
-                        Confirmar Contraseña
-                    </label>
+                    <label><span class="material-icons">lock_outline</span> Confirmar Contraseña</label>
                     <div class="password-input">
                         <input type="password" id="regConfirmPassword" placeholder="Repite la contraseña" required>
                         <button type="button" onclick="togglePassword('regConfirmPassword')">
@@ -73,13 +62,12 @@
                 </div>
                 
                 <button type="submit" class="btn-primary btn-auth" id="registerBtn">
-                    <span class="material-icons">how_to_reg</span>
-                    Registrarse
+                    <span class="material-icons">how_to_reg</span> Registrarse
                 </button>
             </form>
             
             <div class="auth-footer">
-                <p>¿Ya tienes cuenta? <a href="/nyxkey.github.io/login.html">Inicia sesión aquí</a></p>
+                <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p>
             </div>
         </div>
         
@@ -105,10 +93,11 @@
         </div>
     </div>
 
-    <script src="/nyxkey.github.io/js/auth.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/supabase-auth.js"></script>
+    <script src="js/auth.js"></script>
     <script>
-        // ============ FUNCIÓN DE REGISTRO ============
-        function handleRegisterDirect(e) {
+        async function handleRegisterDirect(e) {
             e.preventDefault();
             
             const username = document.getElementById('regUsername').value.trim();
@@ -118,42 +107,22 @@
             const termsChecked = document.getElementById('termsCheck').checked;
             const btn = document.getElementById('registerBtn');
             
-            if (!username) {
-                showToast('Ingresa un nombre de usuario', 'error');
-                return;
-            }
-            if (!email) {
-                showToast('Ingresa un correo electrónico', 'error');
-                return;
-            }
-            if (!password) {
-                showToast('Ingresa una contraseña', 'error');
-                return;
-            }
-            if (password.length < 6) {
-                showToast('Mínimo 6 caracteres', 'error');
-                return;
-            }
-            if (password !== confirmPassword) {
-                showToast('Las contraseñas no coinciden', 'error');
-                return;
-            }
-            if (!termsChecked) {
-                showToast('Acepta los términos', 'error');
-                return;
-            }
+            if (!username) { showToast('Ingresa un nombre de usuario', 'error'); return; }
+            if (!email) { showToast('Ingresa un correo electrónico', 'error'); return; }
+            if (!password) { showToast('Ingresa una contraseña', 'error'); return; }
+            if (password.length < 6) { showToast('Mínimo 6 caracteres', 'error'); return; }
+            if (password !== confirmPassword) { showToast('Las contraseñas no coinciden', 'error'); return; }
+            if (!termsChecked) { showToast('Acepta los términos', 'error'); return; }
             
             btn.disabled = true;
             btn.innerHTML = '<span class="material-icons">sync</span> Registrando...';
             
-            const result = registerUser(email, password, username);
+            const result = await supabaseRegister(email, password, username);
             
             if (result === true) {
-                showToast('✅ Registro exitoso', 'success');
-                // REDIRECCIÓN AL LOGIN CON LA CARPETA
                 setTimeout(function() {
-                    window.location.href = '/nyxkey.github.io/login.html';
-                }, 500);
+                    window.location.href = 'login.html';
+                }, 1500);
             } else {
                 btn.disabled = false;
                 btn.innerHTML = '<span class="material-icons">how_to_reg</span> Registrarse';
@@ -172,14 +141,7 @@
             }
         }
 
-        // ============ INICIALIZAR ============
         document.addEventListener('DOMContentLoaded', function() {
-            const user = getCurrentUser();
-            if (user) {
-                window.location.href = '/nyxkey.github.io/';
-                return;
-            }
-            
             const form = document.getElementById('registerForm');
             form.addEventListener('submit', handleRegisterDirect);
         });
