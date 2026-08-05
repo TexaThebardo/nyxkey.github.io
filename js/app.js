@@ -1,5 +1,5 @@
 // ============================================
-// APP.JS - Lógica Principal
+// APP.JS - Lógica Principal (SOLO PARA INDEX.HTML)
 // ============================================
 
 console.log('🚀 App.js cargado');
@@ -11,9 +11,16 @@ let currentFilter = { country: '', search: '' };
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 DOM cargado - iniciando app');
     
+    // Verificar si estamos en index.html (existe catalogBody)
+    const catalogBody = document.getElementById('catalogBody');
+    if (!catalogBody) {
+        console.log('ℹ️ catalogBody no encontrado - probablemente estamos en dashboard.html');
+        // No ejecutar lógica de catálogo si no estamos en index.html
+        return;
+    }
+    
     loadProductsFromJSON();
     
-    // Verificar si loadCart existe antes de llamarla
     if (typeof loadCart === 'function') {
         console.log('🔄 loadCart encontrada, ejecutando...');
         loadCart();
@@ -49,7 +56,7 @@ function showSection(sectionId) {
 function renderCatalog() {
     const tbody = document.getElementById('catalogBody');
     if (!tbody) {
-        console.warn('⚠️ catalogBody no encontrado');
+        console.warn('⚠️ catalogBody no encontrado - saltando renderizado');
         return;
     }
     const products = getProducts();
