@@ -10,9 +10,9 @@
     padding: 24px 0;
 }
 
-/* ============ SIDEBAR ============ */
+/* ============ SIDEBAR - MENÚ LATERAL ============ */
 .sidebar {
-    width: 220px;
+    width: 240px;
     flex-shrink: 0;
     background: #131a22;
     border-radius: 16px;
@@ -21,6 +21,7 @@
     height: fit-content;
     position: sticky;
     top: 90px;
+    min-height: 400px;
 }
 
 .sidebar-nav {
@@ -37,10 +38,15 @@
     border-radius: 10px;
     color: #a0aab8;
     text-decoration: none;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     font-weight: 500;
     font-size: 14px;
     cursor: pointer;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
 }
 
 .sidebar-link:hover {
@@ -51,10 +57,17 @@
 .sidebar-link.active {
     background: rgba(240, 185, 11, 0.1);
     color: #f0b90b;
+    border-left: 3px solid #f0b90b;
 }
 
 .sidebar-link .material-icons-outlined {
     font-size: 22px;
+    flex-shrink: 0;
+}
+
+.sidebar-link .material-icons {
+    font-size: 22px;
+    flex-shrink: 0;
 }
 
 .sidebar-divider {
@@ -69,6 +82,16 @@
 
 .sidebar-link.logout:hover {
     background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+.sidebar .sidebar-title {
+    color: #5a6575;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 16px 4px;
+    font-weight: 600;
 }
 
 /* ============ MAIN CONTENT ============ */
@@ -131,7 +154,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
 }
 
 .stat-card:hover {
@@ -187,7 +210,7 @@
     border: 1px solid #2a313c;
     border-radius: 16px;
     overflow: hidden;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
 }
 
 .purchase-card:hover {
@@ -324,7 +347,7 @@
     gap: 12px;
     padding: 8px 12px;
     border-radius: 8px;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
 }
 
 .activity-item:hover {
@@ -482,7 +505,8 @@
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
 }
 
 .btn-secondary:hover {
@@ -527,8 +551,9 @@
     font-weight: 700;
     font-size: 15px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
     width: 100%;
+    font-family: 'Inter', sans-serif;
 }
 
 .btn-primary:hover {
@@ -564,6 +589,7 @@
         width: 100%;
         position: static;
         padding: 12px;
+        min-height: auto;
     }
     
     .sidebar-nav {
@@ -577,7 +603,16 @@
         font-size: 13px;
     }
     
+    .sidebar-link.active {
+        border-left: none;
+        border-bottom: 2px solid #f0b90b;
+    }
+    
     .sidebar-divider {
+        display: none;
+    }
+    
+    .sidebar .sidebar-title {
         display: none;
     }
 }
