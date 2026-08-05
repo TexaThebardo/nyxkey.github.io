@@ -11,402 +11,74 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
-        /* ============ PERFIL MEJORADO ============ */
-        .profile-container {
-            max-width: 900px;
-            margin: 0 auto;
+        .profile-insignias-container {
+            margin-top: 12px;
         }
-
-        /* ============ BANNER ============ */
-        .profile-banner {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #1a232e 0%, #2a313c 50%, #1a232e 100%);
-            background-size: 400% 400%;
-            border-radius: 16px 16px 0 0;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .profile-banner:hover {
-            opacity: 0.9;
-        }
-
-        .profile-banner.animated {
-            animation: gradientShift 8s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .profile-banner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-banner .banner-overlay {
-            position: absolute;
-            bottom: 12px;
-            right: 16px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            padding: 6px 14px;
-            border-radius: 20px;
+        .profile-insignias-container label {
             font-size: 12px;
-            color: #a0aab8;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            pointer-events: none;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .profile-banner .banner-overlay .material-icons {
-            font-size: 16px;
-        }
-
-        .profile-banner .banner-actions {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            display: flex;
-            gap: 8px;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .profile-banner:hover .banner-actions {
-            opacity: 1;
-        }
-
-        .profile-banner .banner-actions button {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #e8edf2;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .profile-banner .banner-actions button:hover {
-            background: rgba(240, 185, 11, 0.3);
-            border-color: #f0b90b;
-        }
-
-        /* ============ HEADER PERFIL ============ */
-        .profile-header {
-            background: #131a22;
-            border-radius: 0 0 16px 16px;
-            padding: 0 30px 30px;
-            border: 1px solid #2a313c;
-            border-top: none;
-            position: relative;
-            margin-top: -60px;
-        }
-
-        /* ============ AVATAR ============ */
-        .profile-avatar-section {
-            display: flex;
-            align-items: flex-end;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .profile-avatar-wrapper {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid #131a22;
-            background: #0b0e14;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-
-        .profile-avatar-wrapper:hover {
-            border-color: #f0b90b;
-            transform: scale(1.02);
-        }
-
-        .profile-avatar-wrapper img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .profile-avatar-wrapper .avatar-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 56px;
-            color: #5a6575;
-            background: #0b0e14;
-            border-radius: 50%;
-        }
-
-        .profile-avatar-wrapper .avatar-edit {
-            position: absolute;
-            bottom: 4px;
-            right: 4px;
-            background: #f0b90b;
-            color: #0b0e14;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            border: 2px solid #131a22;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .profile-avatar-wrapper .avatar-edit:hover {
-            transform: scale(1.1);
-            background: #d4a40a;
-        }
-
-        .profile-avatar-wrapper .avatar-edit .material-icons {
-            font-size: 18px;
-        }
-
-        /* ============ INFO USUARIO ============ */
-        .profile-name-section {
-            flex: 1;
-            padding-top: 20px;
-        }
-
-        .profile-name-section h1 {
-            font-size: 28px;
-            font-weight: 800;
-            color: #e8edf2;
-            margin-bottom: 4px;
-        }
-
-        .profile-name-section .profile-username {
-            color: #a0aab8;
-            font-size: 16px;
-        }
-
-        .profile-name-section .profile-bio {
-            margin-top: 8px;
-            color: #a0aab8;
-            font-size: 14px;
-            max-width: 400px;
-            padding: 8px 12px;
-            background: #0b0e14;
-            border-radius: 8px;
-            border: 1px solid #1e2630;
-            min-height: 40px;
-        }
-
-        .profile-name-section .profile-bio-input {
-            width: 100%;
-            max-width: 400px;
-            background: #0b0e14;
-            border: 1px solid #2a313c;
-            color: #e8edf2;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 60px;
-            transition: all 0.3s ease;
-        }
-
-        .profile-name-section .profile-bio-input:focus {
-            outline: none;
-            border-color: #f0b90b;
-            box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
-        }
-
-        /* ============ BOTONES DE ACCIÓN ============ */
-        .profile-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-
-        .profile-actions .btn-secondary {
-            background: #1a232e;
-            border: 1px solid #2a313c;
-            color: #a0aab8;
-            padding: 8px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .profile-actions .btn-secondary:hover {
-            background: #1e2a38;
-            color: #e8edf2;
-            border-color: #f0b90b;
-        }
-
-        .profile-actions .btn-primary {
-            background: #f0b90b;
-            color: #0b0e14;
-            border: none;
-            padding: 8px 24px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .profile-actions .btn-primary:hover {
-            background: #d4a40a;
-            transform: scale(1.02);
-        }
-
-        /* ============ INFO GRID ============ */
-        .profile-info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid #1e2630;
-        }
-
-        .info-card {
-            background: #0b0e14;
-            padding: 16px 20px;
-            border-radius: 10px;
-            border: 1px solid #1e2630;
-        }
-
-        .info-card label {
-            display: block;
-            font-size: 11px;
             color: #5a6575;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 4px;
+            display: block;
+            margin-bottom: 6px;
         }
-
-        .info-card .info-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: #e8edf2;
+        .profile-insignias-container .user-insignias {
+            justify-content: flex-start;
+            gap: 6px;
         }
-
-        .info-card .info-value .material-icons-outlined {
+        .profile-insignias-container .insignia-badge {
+            font-size: 13px;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+        .profile-insignias-container .insignia-badge .material-icons {
             font-size: 18px;
-            color: #f0b90b;
-            vertical-align: middle;
         }
-
-        /* ============ INPUT OCULTO PARA ARCHIVOS ============ */
-        .file-input-hidden {
+        .admin-tools-container {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #1e2630;
             display: none;
         }
-
-        /* ============ RESPONSIVE ============ */
-        @media (max-width: 768px) {
-            .profile-header {
-                padding: 0 16px 20px;
-                margin-top: -40px;
-            }
-            
-            .profile-avatar-wrapper {
-                width: 80px;
-                height: 80px;
-            }
-            
-            .profile-avatar-wrapper .avatar-placeholder {
-                font-size: 36px;
-            }
-            
-            .profile-avatar-wrapper .avatar-edit {
-                width: 26px;
-                height: 26px;
-                font-size: 14px;
-            }
-            
-            .profile-name-section h1 {
-                font-size: 22px;
-            }
-            
-            .profile-info-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .profile-avatar-section {
-                gap: 16px;
-            }
-
-            .profile-banner {
-                height: 150px;
-            }
-
-            .profile-banner .banner-actions {
-                opacity: 1;
-            }
+        .admin-tools-container .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-
-        @media (max-width: 480px) {
-            .profile-banner {
-                height: 120px;
-            }
-            
-            .profile-avatar-wrapper {
-                width: 64px;
-                height: 64px;
-            }
-            
-            .profile-avatar-wrapper .avatar-edit {
-                width: 22px;
-                height: 22px;
-                font-size: 12px;
-            }
-
-            .profile-actions {
-                flex-direction: column;
-            }
-
-            .profile-actions .btn-secondary,
-            .profile-actions .btn-primary {
-                justify-content: center;
-                width: 100%;
-            }
+        .admin-tools-container .btn-group .btn-primary,
+        .admin-tools-container .btn-group .btn-secondary {
+            width: auto;
+            padding: 10px 24px;
+            font-size: 14px;
+        }
+        .btn-admin-link {
+            display: none;
+            align-items: center;
+            gap: 4px;
+            background: rgba(240, 185, 11, 0.15);
+            border: 1px solid rgba(240, 185, 11, 0.3);
+            color: #f0b90b;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            margin-left: 8px;
+        }
+        .btn-admin-link:hover {
+            background: rgba(240, 185, 11, 0.25);
+            border-color: #f0b90b;
+            transform: scale(1.05);
+        }
+        .btn-admin-link .material-icons {
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -415,6 +87,12 @@
                 <span class="logo-text-full">Cards</span>
             </div>
             <div class="nav-user">
+                <!-- BOTÓN ADMIN MANAGER (solo visible para admins) -->
+                <button id="adminPanelBtn" class="btn-admin-link" onclick="window.location.href='admin.html'" style="display:none;">
+                    <span class="material-icons">admin_panel_settings</span>
+                    Admin
+                </button>
+                
                 <div class="user-balance">
                     <span class="material-icons-outlined">account_balance_wallet</span>
                     <span class="balance-amount" id="userBalance">$0.00</span>
@@ -426,9 +104,7 @@
         </div>
     </nav>
     
-    <!-- DASHBOARD CONTAINER -->
     <div class="dashboard-container">
-        <!-- SIDEBAR -->
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <span class="sidebar-title">Navegación</span>
@@ -444,6 +120,13 @@
                     <span class="material-icons-outlined">storefront</span>
                     <span>Tienda</span>
                 </a>
+                
+                <!-- ADMIN MANAGER - SOLO VISIBLE PARA ADMINS -->
+                <a href="admin.html" class="sidebar-link" id="adminSidebarBtn" style="display:none;">
+                    <span class="material-icons-outlined">admin_panel_settings</span>
+                    <span>Admin Manager</span>
+                </a>
+                
                 <div class="sidebar-divider"></div>
                 <a href="#" class="sidebar-link logout" onclick="logoutUser()">
                     <span class="material-icons-outlined">logout</span>
@@ -452,87 +135,66 @@
             </nav>
         </aside>
         
-        <!-- MAIN CONTENT -->
         <main class="dashboard-main">
+            <div class="section-header">
+                <h2>Mi Perfil</h2>
+            </div>
+            
             <div class="profile-container">
-                <!-- ============ BANNER ============ -->
-                <div class="profile-banner animated" id="bannerContainer">
-                    <img id="bannerImage" src="" alt="Banner" style="display:none; width:100%; height:100%; object-fit:cover;">
-                    <div class="banner-overlay">
-                        <span class="material-icons">photo_camera</span>
-                        Cambiar Banner
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <span class="material-icons-outlined" style="font-size:80px;color:#f0b90b;">account_circle</span>
+                        <button class="btn-secondary" onclick="changeAvatar()">Cambiar Avatar</button>
                     </div>
-                    <div class="banner-actions">
-                        <button onclick="uploadBanner()">
-                            <span class="material-icons">upload</span>
-                            Subir
-                        </button>
-                        <button onclick="removeBanner()">
-                            <span class="material-icons">delete</span>
-                            Eliminar
-                        </button>
-                        <button onclick="toggleBannerAnimation()" id="bannerAnimBtn">
-                            <span class="material-icons">animation</span>
-                            Animación
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- ============ HEADER PERFIL ============ -->
-                <div class="profile-header">
-                    <div class="profile-avatar-section">
-                        <!-- AVATAR -->
-                        <div class="profile-avatar-wrapper" onclick="document.getElementById('avatarInput').click()">
-                            <div class="avatar-placeholder" id="avatarPlaceholder">
-                                <span class="material-icons-outlined">person</span>
-                            </div>
-                            <img id="avatarImage" src="" alt="Avatar" style="display:none; width:100%; height:100%; border-radius:50%; object-fit:cover;">
-                            <div class="avatar-edit">
-                                <span class="material-icons">photo_camera</span>
-                            </div>
+                    <div class="profile-info">
+                        <div class="info-group">
+                            <label>Nombre de Usuario</label>
+                            <p id="profileUsername">-</p>
                         </div>
-                        <input type="file" id="avatarInput" class="file-input-hidden" accept="image/*" onchange="handleAvatarUpload(event)">
-                        
-                        <!-- INFO USUARIO -->
-                        <div class="profile-name-section">
-                            <h1 id="profileDisplayName">Usuario</h1>
-                            <span class="profile-username">@<span id="profileUsername">usuario</span></span>
-                            
-                            <div id="bioDisplay" class="profile-bio">Sin biografía</div>
-                            <textarea id="bioInput" class="profile-bio-input" style="display:none;" placeholder="Escribe tu biografía..."></textarea>
-                            
-                            <div class="profile-actions">
-                                <button class="btn-primary" onclick="saveProfile()">
-                                    <span class="material-icons">save</span> Guardar Cambios
-                                </button>
-                                <button class="btn-secondary" onclick="toggleBioEdit()">
-                                    <span class="material-icons">edit</span> Editar Biografía
-                                </button>
-                                <button class="btn-secondary" onclick="removeAvatar()">
-                                    <span class="material-icons">delete</span> Eliminar Avatar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- INFO GRID -->
-                    <div class="profile-info-grid">
-                        <div class="info-card">
+                        <div class="info-group">
                             <label>Correo Electrónico</label>
-                            <div class="info-value" id="profileEmail">-</div>
+                            <p id="profileEmail">-</p>
                         </div>
-                        <div class="info-card">
+                        <div class="info-group">
                             <label>Saldo Disponible</label>
-                            <div class="info-value" id="profileBalance">$0.00</div>
+                            <p id="profileBalance">$0.00</p>
                         </div>
-                        <div class="info-card">
+                        <div class="info-group">
                             <label>Miembro desde</label>
-                            <div class="info-value" id="profileSince">-</div>
+                            <p id="profileSince">-</p>
                         </div>
-                        <div class="info-card">
+                        <div class="info-group">
                             <label>Tarjetas Compradas</label>
-                            <div class="info-value" id="profilePurchases">0</div>
+                            <p id="profilePurchases">0</p>
                         </div>
+                        
+                        <!-- INSIGNIAS -->
+                        <div class="profile-insignias-container">
+                            <label>Insignias</label>
+                            <div id="profileInsignias" class="user-insignias"></div>
+                        </div>
+                        
+                        <!-- HERRAMIENTAS DE ADMIN -->
+                        <div id="adminToolsContainer" class="admin-tools-container">
+                            <div class="btn-group">
+                                <button class="btn-primary" onclick="window.location.href='admin.html'">
+                                    <span class="material-icons">admin_panel_settings</span>
+                                    Panel Admin
+                                </button>
+                                <button class="btn-secondary" onclick="manageInsignias()">
+                                    <span class="material-icons">stars</span>
+                                    Gestionar Insignias
+                                </button>
+                                <button class="btn-secondary" onclick="manageUsers()">
+                                    <span class="material-icons">people</span>
+                                    Gestionar Usuarios
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-primary" onclick="editProfile()">
+                            <span class="material-icons">edit</span> Editar Perfil
+                        </button>
                     </div>
                 </div>
             </div>
@@ -540,18 +202,12 @@
     </div>
 
     <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // PROFILE.JS - Sistema de Perfil con Avatar y Banner
+        // PROFILE.JS - CON INSIGNIAS Y ADMIN
         // ============================================
 
-        // ============ VARIABLES ============
-        let isBioEditing = false;
-        let isBannerAnimated = true;
-        let tempAvatarData = null;
-        let tempBannerData = null;
-
-        // ============ CARGAR PERFIL ============
         document.addEventListener('DOMContentLoaded', function() {
             const user = getCurrentUser();
             if (!user) {
@@ -559,14 +215,11 @@
                 return;
             }
             
-            // Obtener datos completos
             const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
             const fullUser = users.find(u => u.id === user.id);
             
             if (fullUser) {
-                // Datos básicos
-                document.getElementById('profileDisplayName').textContent = fullUser.username || 'Usuario';
-                document.getElementById('profileUsername').textContent = fullUser.username || 'usuario';
+                document.getElementById('profileUsername').textContent = fullUser.username || '-';
                 document.getElementById('profileEmail').textContent = fullUser.email || '-';
                 document.getElementById('profileBalance').textContent = `$${(fullUser.balance || 0).toFixed(2)}`;
                 document.getElementById('userBalance').textContent = `$${(fullUser.balance || 0).toFixed(2)}`;
@@ -579,280 +232,198 @@
                         day: 'numeric'
                     });
                 }
-                
-                // Cargar perfil (avatar y banner)
-                const profile = fullUser.profile || {};
-                
-                // Avatar
-                if (profile.avatar) {
-                    document.getElementById('avatarImage').src = profile.avatar;
-                    document.getElementById('avatarImage').style.display = 'block';
-                    document.getElementById('avatarPlaceholder').style.display = 'none';
+            }
+            
+            // Renderizar insignias
+            renderProfileInsignias();
+            renderInsignias(user.email, 'userInsignias');
+            
+            // ============ VERIFICAR SI ES ADMIN ============
+            let isUserAdmin = false;
+            try {
+                const whitelistData = localStorage.getItem('admin_whitelist');
+                if (whitelistData) {
+                    const whitelist = JSON.parse(whitelistData);
+                    if (whitelist.admins && whitelist.admins.includes(user.email)) {
+                        isUserAdmin = true;
+                    }
                 }
-                
-                // Banner
-                if (profile.banner) {
-                    document.getElementById('bannerImage').src = profile.banner;
-                    document.getElementById('bannerImage').style.display = 'block';
-                    document.getElementById('bannerContainer').style.background = 'none';
-                }
-                
-                // Biografía
-                if (profile.bio) {
-                    document.getElementById('bioDisplay').textContent = profile.bio;
-                    document.getElementById('bioInput').value = profile.bio;
-                }
+            } catch (e) {}
+            
+            // Mostrar/ocultar herramientas de admin
+            const adminTools = document.getElementById('adminToolsContainer');
+            const adminBtn = document.getElementById('adminPanelBtn');
+            const adminSidebarBtn = document.getElementById('adminSidebarBtn');
+            
+            if (isUserAdmin) {
+                console.log('👑 Usuario ADMIN detectado en perfil:', user.email);
+                if (adminTools) adminTools.style.display = 'block';
+                if (adminBtn) adminBtn.style.display = 'flex';
+                if (adminSidebarBtn) adminSidebarBtn.style.display = 'flex';
+            } else {
+                if (adminTools) adminTools.style.display = 'none';
+                if (adminBtn) adminBtn.style.display = 'none';
+                if (adminSidebarBtn) adminSidebarBtn.style.display = 'none';
             }
         });
 
-        // ============ SUBIR AVATAR ============
-        function handleAvatarUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            // Validar tamaño (máximo 2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                showToast('❌ La imagen no puede superar los 2MB', 'error');
-                return;
-            }
-            
-            // Validar tipo
-            if (!file.type.startsWith('image/')) {
-                showToast('❌ Solo se permiten imágenes', 'error');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const dataUrl = e.target.result;
-                tempAvatarData = dataUrl;
-                
-                // Mostrar previsualización
-                document.getElementById('avatarImage').src = dataUrl;
-                document.getElementById('avatarImage').style.display = 'block';
-                document.getElementById('avatarPlaceholder').style.display = 'none';
-                
-                showToast('✅ Avatar seleccionado. Guarda los cambios.', 'success');
-            };
-            reader.readAsDataURL(file);
-            
-            // Limpiar input para permitir subir el mismo archivo
-            event.target.value = '';
-        }
-
-        // ============ SUBIR BANNER ============
-        function uploadBanner() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                // Validar tamaño (máximo 5MB para banner)
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('❌ El banner no puede superar los 5MB', 'error');
-                    return;
-                }
-                
-                if (!file.type.startsWith('image/')) {
-                    showToast('❌ Solo se permiten imágenes', 'error');
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const dataUrl = event.target.result;
-                    tempBannerData = dataUrl;
-                    
-                    document.getElementById('bannerImage').src = dataUrl;
-                    document.getElementById('bannerImage').style.display = 'block';
-                    document.getElementById('bannerContainer').style.background = 'none';
-                    
-                    showToast('✅ Banner seleccionado. Guarda los cambios.', 'success');
-                };
-                reader.readAsDataURL(file);
-            };
-            input.click();
-        }
-
-        // ============ ELIMINAR BANNER ============
-        function removeBanner() {
-            if (confirm('¿Eliminar el banner actual?')) {
-                tempBannerData = null;
-                document.getElementById('bannerImage').src = '';
-                document.getElementById('bannerImage').style.display = 'none';
-                document.getElementById('bannerContainer').style.background = 'linear-gradient(135deg, #1a232e, #2a313c, #1a232e)';
-                document.getElementById('bannerContainer').style.backgroundSize = '400% 400%';
-                if (isBannerAnimated) {
-                    document.getElementById('bannerContainer').classList.add('animated');
-                }
-                showToast('🗑️ Banner eliminado', 'info');
-            }
-        }
-
-        // ============ ELIMINAR AVATAR ============
-        function removeAvatar() {
-            if (confirm('¿Eliminar tu avatar actual?')) {
-                tempAvatarData = null;
-                document.getElementById('avatarImage').src = '';
-                document.getElementById('avatarImage').style.display = 'none';
-                document.getElementById('avatarPlaceholder').style.display = 'flex';
-                showToast('🗑️ Avatar eliminado', 'info');
-            }
-        }
-
-        // ============ TOGGLE ANIMACIÓN BANNER ============
-        function toggleBannerAnimation() {
-            const banner = document.getElementById('bannerContainer');
-            isBannerAnimated = !isBannerAnimated;
-            
-            if (isBannerAnimated) {
-                banner.classList.add('animated');
-                document.getElementById('bannerAnimBtn').innerHTML = '<span class="material-icons">animation</span> Animación';
-                showToast('🎨 Animación activada', 'info');
-            } else {
-                banner.classList.remove('animated');
-                document.getElementById('bannerAnimBtn').innerHTML = '<span class="material-icons">pause</span> Pausada';
-                showToast('⏸️ Animación pausada', 'info');
-            }
-        }
-
-        // ============ TOGGLE BIOGRAFÍA ============
-        function toggleBioEdit() {
-            isBioEditing = !isBioEditing;
-            const display = document.getElementById('bioDisplay');
-            const input = document.getElementById('bioInput');
-            
-            if (isBioEditing) {
-                display.style.display = 'none';
-                input.style.display = 'block';
-                input.value = display.textContent !== 'Sin biografía' ? display.textContent : '';
-                input.focus();
-            } else {
-                display.style.display = 'block';
-                input.style.display = 'none';
-                display.textContent = input.value || 'Sin biografía';
-            }
-        }
-
-        // ============ GUARDAR PERFIL ============
-        function saveProfile() {
+        function renderProfileInsignias() {
             const user = getCurrentUser();
-            if (!user) {
-                showToast('❌ Usuario no autenticado', 'error');
+            if (!user) return;
+            
+            const container = document.getElementById('profileInsignias');
+            if (!container) return;
+            
+            const insignias = getUserInsignias(user.email);
+            const allInsignias = getAllInsignias();
+            
+            if (!insignias || insignias.length === 0) {
+                container.innerHTML = `
+                    <span class="insignia-guest">
+                        <span class="material-icons" style="font-size:14px;">person_outline</span> Guest
+                    </span>
+                `;
                 return;
             }
             
-            // Obtener biografía
-            const bio = document.getElementById('bioInput').value || document.getElementById('bioDisplay').textContent;
-            const finalBio = bio !== 'Sin biografía' ? bio : '';
+            container.innerHTML = insignias.map(name => {
+                const ins = allInsignias[name];
+                if (!ins) return '';
+                return `
+                    <span class="insignia-badge" style="background:${ins.bgColor || 'rgba(149,165,166,0.15)'}; color:${ins.color || '#95a5a6'};">
+                        <span class="material-icons" style="font-size:16px;">${ins.icon || 'person_outline'}</span>
+                        ${name}
+                    </span>
+                `;
+            }).join('');
+        }
+
+        function manageInsignias() {
+            const user = getCurrentUser();
+            if (!user) return;
             
-            // Obtener imágenes (usar las temporales o las existentes)
-            const currentAvatar = document.getElementById('avatarImage').src;
-            const currentBanner = document.getElementById('bannerImage').src;
+            // Verificar si es admin
+            let isUserAdmin = false;
+            try {
+                const whitelistData = localStorage.getItem('admin_whitelist');
+                if (whitelistData) {
+                    const whitelist = JSON.parse(whitelistData);
+                    if (whitelist.admins && whitelist.admins.includes(user.email)) {
+                        isUserAdmin = true;
+                    }
+                }
+            } catch (e) {}
             
-            const profileData = {
-                avatar: tempAvatarData || currentAvatar || '',
-                banner: tempBannerData || currentBanner || '',
-                bio: finalBio
-            };
+            if (!isUserAdmin) {
+                showToast('❌ No tienes permisos de administrador', 'error');
+                return;
+            }
             
-            // Guardar en localStorage
-            const users = JSON.parse(localStorage.getItem('yx_users') || '[]');
-            const userIndex = users.findIndex(u => u.id === user.id);
+            const email = prompt('📧 Ingresa el correo del usuario para gestionar insignias:');
+            if (!email) return;
             
-            if (userIndex === -1) {
+            const current = getUserInsignias(email);
+            const allInsignias = getAllInsignias();
+            const insigniaNames = Object.keys(allInsignias);
+            
+            let message = `👤 Usuario: ${email}\n`;
+            message += `📛 Insignias actuales: ${current.join(', ') || 'Ninguna'}\n\n`;
+            message += `📋 Insignias disponibles:\n`;
+            insigniaNames.forEach((name, i) => {
+                const ins = allInsignias[name];
+                message += `  ${i+1}. ${name} - ${ins.description || ''}\n`;
+            });
+            message += `\n✏️ Escribe el nombre de la insignia para AÑADIR (ej: VIP)`;
+            message += `\n🗑️ Escribe -NOMBRE para QUITAR (ej: -VIP)`;
+            message += `\n📌 Escribe "lista" para ver las insignias de este usuario`;
+            message += `\n❌ Escribe "cancelar" para salir`;
+            
+            const action = prompt(message);
+            if (!action || action.toLowerCase() === 'cancelar') return;
+            
+            if (action.toLowerCase() === 'lista') {
+                const currentIns = getUserInsignias(email);
+                alert(`📛 Insignias de ${email}:\n${currentIns.join(', ') || 'Ninguna'}`);
+                manageInsignias();
+                return;
+            }
+            
+            let result;
+            if (action.startsWith('-')) {
+                const name = action.substring(1).trim();
+                result = removeInsigniaFromUser(email, name);
+            } else {
+                const name = action.trim();
+                result = addInsigniaToUser(email, name);
+            }
+            
+            showToast(result.message, result.success ? 'success' : 'error');
+            renderProfileInsignias();
+            renderInsignias(user.email, 'userInsignias');
+        }
+
+        function manageUsers() {
+            const user = getCurrentUser();
+            if (!user) return;
+            
+            // Verificar si es admin
+            let isUserAdmin = false;
+            try {
+                const whitelistData = localStorage.getItem('admin_whitelist');
+                if (whitelistData) {
+                    const whitelist = JSON.parse(whitelistData);
+                    if (whitelist.admins && whitelist.admins.includes(user.email)) {
+                        isUserAdmin = true;
+                    }
+                }
+            } catch (e) {}
+            
+            if (!isUserAdmin) {
+                showToast('❌ No tienes permisos de administrador', 'error');
+                return;
+            }
+            
+            const users = getAllUsers();
+            let message = '📋 LISTA DE USUARIOS\n\n';
+            users.forEach((u, i) => {
+                message += `${i+1}. ${u.username} - ${u.email}\n`;
+                message += `   Saldo: $${(u.balance || 0).toFixed(2)}\n`;
+                message += `   Tarjetas: ${(u.purchases || []).length}\n\n`;
+            });
+            
+            const action = prompt(message + '\n✏️ Escribe el EMAIL del usuario para gestionar su saldo:\n❌ Escribe "cancelar" para salir');
+            if (!action || action.toLowerCase() === 'cancelar') return;
+            
+            const targetEmail = action.trim();
+            const targetUser = users.find(u => u.email === targetEmail);
+            if (!targetUser) {
                 showToast('❌ Usuario no encontrado', 'error');
                 return;
             }
             
-            if (!users[userIndex].profile) {
-                users[userIndex].profile = {};
+            const amount = prompt(`💰 Usuario: ${targetUser.username}\nSaldo actual: $${(targetUser.balance || 0).toFixed(2)}\n\nIngresa el monto a AÑADIR (positivo) o QUITAR (negativo):`);
+            if (amount === null) return;
+            
+            const parsedAmount = parseFloat(amount);
+            if (isNaN(parsedAmount)) {
+                showToast('❌ Ingresa un número válido', 'error');
+                return;
             }
             
-            users[userIndex].profile = { ...users[userIndex].profile, ...profileData };
-            localStorage.setItem('yx_users', JSON.stringify(users));
+            const concept = prompt('📝 Concepto de la transacción:', 'Ajuste manual por admin');
+            if (concept === null) return;
             
-            // Actualizar sesión
-            const session = JSON.parse(localStorage.getItem('yx_token'));
-            if (session) {
-                session.user.profile = users[userIndex].profile;
-                localStorage.setItem('yx_token', JSON.stringify(session));
-            }
-            
-            // Limpiar temporales
-            tempAvatarData = null;
-            tempBannerData = null;
-            
-            // Actualizar UI
-            document.getElementById('bioDisplay').textContent = finalBio || 'Sin biografía';
-            if (isBioEditing) {
-                isBioEditing = false;
-                document.getElementById('bioDisplay').style.display = 'block';
-                document.getElementById('bioInput').style.display = 'none';
-            }
-            
-            showToast('✅ Perfil actualizado correctamente', 'success');
+            const result = updateUserBalanceByEmail(targetEmail, parsedAmount, concept || 'Ajuste manual');
+            showToast(result.message, result.success ? 'success' : 'error');
         }
 
-        // ============ TOAST ============
-        function showToast(message, type = 'info') {
-            let container = document.querySelector('.toast-container');
-            if (!container) {
-                container = document.createElement('div');
-                container.className = 'toast-container';
-                container.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;max-width:90%;';
-                document.body.appendChild(container);
-            }
-            
-            const toast = document.createElement('div');
-            const colors = {
-                success: '#2ecc71',
-                error: '#e74c3c',
-                info: '#3498db',
-                warning: '#f39c12'
-            };
-            
-            toast.style.cssText = `
-                background: #1a232e;
-                color: #e8edf2;
-                padding: 12px 24px;
-                border-radius: 12px;
-                border-left: 4px solid ${colors[type] || colors.info};
-                box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-                font-size: 14px;
-                font-weight: 500;
-                pointer-events: auto;
-                animation: slideUp 0.3s ease;
-                min-width: 200px;
-                text-align: center;
-                border: 1px solid #2a313c;
-            `;
-            toast.textContent = message;
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.animation = 'slideDown 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+        function changeAvatar() {
+            showToast('Función de avatar (próximamente)', 'info');
         }
 
-        // ============ ESTILOS DE ANIMACIÓN ============
-        const styleSheet = document.createElement("style");
-        styleSheet.textContent = `
-            @keyframes slideUp {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            @keyframes slideDown {
-                from { opacity: 1; transform: translateY(0); }
-                to { opacity: 0; transform: translateY(20px); }
-            }
-        `;
-        document.head.appendChild(styleSheet);
-
-        console.log('✅ Profile.js con sistema de avatar y banner cargado');
+        function editProfile() {
+            showToast('Editar perfil (próximamente)', 'info');
+        }
     </script>
 </body>
 </html>
