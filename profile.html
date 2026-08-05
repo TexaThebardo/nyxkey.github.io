@@ -8,12 +8,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- RUTAS CORRECTAS -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- ESTILOS DEL PERFIL PREMIUM -->
     <style>
-        /* ============================================
-           PROFILE PREMIUM - ESTILOS COMPLETOS
-           ============================================ */
-
         .profile-premium-container {
             max-width: 900px;
             margin: 0 auto;
@@ -24,7 +23,6 @@
             position: relative;
         }
 
-        /* ============ BANNER ============ */
         .profile-banner-premium {
             width: 100%;
             height: 220px;
@@ -108,7 +106,6 @@
             border-color: var(--primary);
         }
 
-        /* ============ AVATAR Y PERFIL ============ */
         .profile-premium-header {
             padding: 0 30px 30px;
             margin-top: -60px;
@@ -188,7 +185,6 @@
             font-size: 18px;
         }
 
-        /* ============ INFO USUARIO ============ */
         .profile-premium-info {
             flex: 1;
             padding-top: 20px;
@@ -238,7 +234,6 @@
             margin-top: 2px;
         }
 
-        /* ============ INSIGNIAS ============ */
         .profile-premium-insignias {
             display: flex;
             gap: 6px;
@@ -278,7 +273,6 @@
             font-size: 16px;
         }
 
-        /* ============ BIO ============ */
         .profile-premium-bio {
             margin-top: 12px;
             color: var(--text-secondary);
@@ -314,7 +308,6 @@
             box-shadow: 0 0 0 3px rgba(240, 185, 11, 0.1);
         }
 
-        /* ============ ACCIONES ============ */
         .profile-premium-actions {
             display: flex;
             gap: 10px;
@@ -370,7 +363,6 @@
             transform: scale(1.03);
         }
 
-        /* ============ STATS ============ */
         .profile-premium-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -402,7 +394,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* ============ TOOLS ADMIN ============ */
         .profile-premium-admin-tools {
             margin-top: 20px;
             padding-top: 20px;
@@ -434,79 +425,64 @@
             width: auto;
         }
 
-        /* ============ INPUT OCULTO ============ */
         .file-input-hidden {
             display: none;
         }
 
-        /* ============ RESPONSIVE ============ */
         @media (max-width: 768px) {
             .profile-premium-header {
                 padding: 0 16px 20px;
                 margin-top: -40px;
             }
-
             .profile-premium-avatar {
                 width: 80px;
                 height: 80px;
             }
-
             .profile-premium-avatar .avatar-placeholder {
                 font-size: 36px;
             }
-
             .profile-premium-avatar .avatar-edit {
                 width: 26px;
                 height: 26px;
                 font-size: 14px;
             }
-
             .profile-premium-name-row h1 {
                 font-size: 22px;
             }
-
-            .profile-premium-banner {
+            .profile-banner-premium {
                 height: 150px;
             }
-
             .profile-premium-stats {
                 grid-template-columns: 1fr 1fr;
             }
         }
 
         @media (max-width: 480px) {
-            .profile-premium-banner {
+            .profile-banner-premium {
                 height: 120px;
             }
-
             .profile-premium-avatar {
                 width: 64px;
                 height: 64px;
             }
-
             .profile-premium-avatar .avatar-edit {
                 width: 22px;
                 height: 22px;
                 font-size: 12px;
             }
-
             .profile-premium-avatar-section {
                 gap: 12px;
             }
-
             .profile-premium-name-row h1 {
                 font-size: 18px;
             }
-
             .profile-premium-actions {
                 flex-direction: column;
             }
-
             .profile-premium-actions .btn-action {
                 justify-content: center;
                 width: 100%;
             }
-
             .profile-premium-stats {
                 grid-template-columns: 1fr;
             }
@@ -514,7 +490,7 @@
     </style>
 </head>
 <body>
-    <!-- ============ NAVBAR ============ -->
+    <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -523,6 +499,9 @@
                 <span class="logo-text-full">Cards</span>
             </div>
             <div class="nav-user">
+                <button id="adminPanelBtn" class="btn-admin-link" onclick="window.location.href='admin.html'" style="display:none;">
+                    <span class="material-icons">admin_panel_settings</span> Admin
+                </button>
                 <div class="user-balance">
                     <span class="material-icons-outlined">account_balance_wallet</span>
                     <span class="balance-amount" id="userBalance">$0.00</span>
@@ -534,7 +513,7 @@
         </div>
     </nav>
 
-    <!-- ============ PROFILE PREMIUM ============ -->
+    <!-- DASHBOARD CONTAINER -->
     <div class="dashboard-container">
         <aside class="sidebar">
             <nav class="sidebar-nav">
@@ -565,7 +544,7 @@
 
         <main class="dashboard-main">
             <div class="profile-premium-container">
-                <!-- ============ BANNER ============ -->
+                <!-- BANNER -->
                 <div class="profile-banner-premium animated" id="bannerContainer">
                     <img id="bannerImage" src="" alt="Banner" style="display:none; width:100%; height:100%; object-fit:cover;">
                     <div class="banner-overlay">
@@ -574,21 +553,18 @@
                     </div>
                     <div class="banner-actions">
                         <button onclick="uploadBanner()">
-                            <span class="material-icons">upload</span>
-                            Subir
+                            <span class="material-icons">upload</span> Subir
                         </button>
                         <button onclick="removeBanner()">
-                            <span class="material-icons">delete</span>
-                            Eliminar
+                            <span class="material-icons">delete</span> Eliminar
                         </button>
                         <button onclick="toggleBannerAnimation()" id="bannerAnimBtn">
-                            <span class="material-icons">animation</span>
-                            Animación
+                            <span class="material-icons">animation</span> Animación
                         </button>
                     </div>
                 </div>
 
-                <!-- ============ HEADER PERFIL ============ -->
+                <!-- HEADER PERFIL -->
                 <div class="profile-premium-header">
                     <div class="profile-premium-avatar-section">
                         <!-- AVATAR -->
@@ -614,9 +590,7 @@
                             <div class="profile-premium-username">@<span id="profileUsername">usuario</span></div>
 
                             <!-- INSIGNIAS -->
-                            <div class="profile-premium-insignias" id="profileInsignias">
-                                <!-- Renderizado por JavaScript -->
-                            </div>
+                            <div class="profile-premium-insignias" id="profileInsignias"></div>
 
                             <!-- BIO -->
                             <div class="profile-premium-bio" id="bioDisplay">Sin biografía</div>
@@ -633,7 +607,7 @@
                                 <button class="btn-action btn-action-secondary" onclick="removeAvatar()">
                                     <span class="material-icons">delete</span> Eliminar Avatar
                                 </button>
-                                <button class="btn-action btn-action-admin" id="adminPanelBtn" onclick="window.location.href='admin.html'" style="display:none;">
+                                <button class="btn-action btn-action-admin" id="adminPanelBtn2" onclick="window.location.href='admin.html'" style="display:none;">
                                     <span class="material-icons">admin_panel_settings</span> Admin Manager
                                 </button>
                             </div>
@@ -683,7 +657,7 @@
         </main>
     </div>
 
-    <!-- ============ SCRIPTS ============ -->
+    <!-- SCRIPTS -->
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
     <script>
@@ -691,14 +665,12 @@
         // PROFILE PREMIUM - SCRIPT COMPLETO
         // ============================================
 
-        // ============ VARIABLES ============
         let isBioEditing = false;
         let isBannerAnimated = true;
         let tempAvatarData = null;
         let tempBannerData = null;
         const PRONOUNS = ['él', 'ella', 'elle'];
 
-        // ============ CARGAR PERFIL ============
         document.addEventListener('DOMContentLoaded', function() {
             const user = getCurrentUser();
             if (!user) {
@@ -725,39 +697,32 @@
                     });
                 }
 
-                // Cargar perfil
                 const profile = fullUser.profile || {};
 
-                // Avatar
                 if (profile.avatar) {
                     document.getElementById('avatarImage').src = profile.avatar;
                     document.getElementById('avatarImage').style.display = 'block';
                     document.getElementById('avatarPlaceholder').style.display = 'none';
                 }
 
-                // Banner
                 if (profile.banner) {
                     document.getElementById('bannerImage').src = profile.banner;
                     document.getElementById('bannerImage').style.display = 'block';
                     document.getElementById('bannerContainer').style.background = 'none';
                 }
 
-                // Bio
                 if (profile.bio) {
                     document.getElementById('bioDisplay').textContent = profile.bio;
                     document.getElementById('bioInput').value = profile.bio;
                 }
 
-                // Pronombre
                 if (profile.pronoun) {
                     document.getElementById('pronounText').textContent = profile.pronoun;
                 }
             }
 
-            // Renderizar insignias
             renderProfileInsignias();
 
-            // ============ VERIFICAR ADMIN ============
             let isUserAdmin = false;
             try {
                 const whitelistData = localStorage.getItem('admin_whitelist');
@@ -769,19 +734,19 @@
                 }
             } catch (e) {}
 
-            // Mostrar/ocultar botones admin
             const adminTools = document.getElementById('adminToolsContainer');
             const adminBtn = document.getElementById('adminPanelBtn');
+            const adminBtn2 = document.getElementById('adminPanelBtn2');
             const adminSidebarBtn = document.getElementById('adminSidebarBtn');
 
             if (isUserAdmin) {
                 if (adminTools) adminTools.style.display = 'block';
                 if (adminBtn) adminBtn.style.display = 'inline-flex';
+                if (adminBtn2) adminBtn2.style.display = 'inline-flex';
                 if (adminSidebarBtn) adminSidebarBtn.style.display = 'flex';
             }
         });
 
-        // ============ RENDERIZAR INSIGNIAS ============
         function renderProfileInsignias() {
             const user = getCurrentUser();
             if (!user) return;
@@ -793,11 +758,7 @@
             const allInsignias = getAllInsignias();
 
             if (!insignias || insignias.length === 0) {
-                container.innerHTML = `
-                    <span class="insignia-guest">
-                        <span class="material-icons">person_outline</span> Guest
-                    </span>
-                `;
+                container.innerHTML = `<span class="insignia-guest"><span class="material-icons">person_outline</span> Guest</span>`;
                 return;
             }
 
@@ -813,7 +774,6 @@
             }).join('');
         }
 
-        // ============ AVATAR ============
         function handleAvatarUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -849,7 +809,6 @@
             }
         }
 
-        // ============ BANNER ============
         function uploadBanner() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -909,7 +868,6 @@
             }
         }
 
-        // ============ PRONOMBRE ============
         function changePronoun() {
             const current = document.getElementById('pronounText').textContent;
             let idx = PRONOUNS.indexOf(current);
@@ -918,7 +876,6 @@
             showToast(`Pronombre cambiado a "${PRONOUNS[idx]}"`, 'info');
         }
 
-        // ============ BIO ============
         function toggleBioEdit() {
             isBioEditing = !isBioEditing;
             const display = document.getElementById('bioDisplay');
@@ -936,7 +893,6 @@
             }
         }
 
-        // ============ GUARDAR PERFIL ============
         function saveProfile() {
             const user = getCurrentUser();
             if (!user) {
@@ -973,7 +929,6 @@
             users[userIndex].profile = { ...users[userIndex].profile, ...profileData };
             localStorage.setItem('yx_users', JSON.stringify(users));
 
-            // Actualizar sesión
             const session = JSON.parse(localStorage.getItem('yx_token'));
             if (session) {
                 session.user.profile = users[userIndex].profile;
@@ -993,7 +948,6 @@
             showToast('✅ Perfil actualizado correctamente', 'success');
         }
 
-        // ============ ADMIN - GESTIONAR INSIGNIAS ============
         function manageInsignias() {
             const user = getCurrentUser();
             if (!user) return;
@@ -1057,7 +1011,6 @@
             renderInsignias(user.email, 'userInsignias');
         }
 
-        // ============ ADMIN - GESTIONAR USUARIOS ============
         function manageUsers() {
             const user = getCurrentUser();
             if (!user) return;
