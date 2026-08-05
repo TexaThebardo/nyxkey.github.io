@@ -1,0 +1,16 @@
+{
+  "admins": [
+    {
+      "email": "admin@yxcards.com",
+      "password": "admin123",
+      "role": "superadmin",
+      "name": "Administrador Principal"
+    }
+  ],
+  "settings": {
+    "minDeposit": 1,
+    "maxDeposit": 10000,
+    "transactionFee": 0
+  },
+  "transactions": []
+}
