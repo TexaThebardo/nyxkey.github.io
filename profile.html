@@ -692,10 +692,6 @@
             align-items: center;
         }
 
-        .connection-item .connection-remove:hover {
-            color: #e74c3c;
-        }
-
         .profile-note {
             background: var(--bg-primary);
             border-radius: 12px;
@@ -1459,7 +1455,7 @@
     <script src="js/admin.js"></script>
     <script>
         // ============================================
-        // PROFILE.JS - CORREGIDO
+        // PROFILE.JS - VERSIÓN CORREGIDA (YouTube + Guardado)
         // ============================================
 
         let tempAvatarData = null;
@@ -1539,7 +1535,7 @@
             input.click();
         }
 
-        // ============ CARGAR VIDEO POR URL ============
+        // ============ CARGAR VIDEO POR URL - CORREGIDO ============
         function showUrlModal() {
             document.getElementById('urlModal').classList.add('active');
             document.getElementById('videoUrlInput').value = '';
@@ -1557,10 +1553,42 @@
                 return;
             }
 
-            // Detectar YouTube
-            const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
-            if (youtubeMatch) {
-                const videoId = youtubeMatch[1];
+            console.log('🔗 URL ingresada:', url);
+
+            // ============ DETECTAR YOUTUBE ============
+            // Soporta: youtube.com/watch?v=ID, youtu.be/ID, con o sin parámetros adicionales
+            let videoId = null;
+            
+            // Patrón para youtube.com/watch?v=
+            const watchMatch = url.match(/youtube\.com\/watch\?v=([^&]+)/);
+            if (watchMatch) {
+                videoId = watchMatch[1];
+                console.log('🎬 YouTube ID detectado (watch):', videoId);
+            }
+            
+            // Patrón para youtu.be/
+            if (!videoId) {
+                const shortMatch = url.match(/youtu\.be\/([^?&]+)/);
+                if (shortMatch) {
+                    videoId = shortMatch[1];
+                    console.log('🎬 YouTube ID detectado (short):', videoId);
+                }
+            }
+            
+            // Patrón para youtube.com/embed/
+            if (!videoId) {
+                const embedMatch = url.match(/youtube\.com\/embed\/([^?&]+)/);
+                if (embedMatch) {
+                    videoId = embedMatch[1];
+                    console.log('🎬 YouTube ID detectado (embed):', videoId);
+                }
+            }
+
+            if (videoId) {
+                // Limpiar ID (eliminar posibles parámetros adicionales)
+                videoId = videoId.split('&')[0];
+                console.log('✅ Video ID final:', videoId);
+                
                 const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&enablejsapi=1`;
                 tempBannerType = 'youtube';
                 tempBannerData = embedUrl;
@@ -1573,14 +1601,15 @@
                 bannerContainer.style.background = 'none';
                 closeUrlModal();
                 showToast('✅ Video de YouTube cargado correctamente', 'success');
+                console.log('✅ YouTube embed URL:', embedUrl);
                 return;
             }
 
-            // Detectar Vimeo
+            // ============ DETECTAR VIMEO ============
             const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
             if (vimeoMatch) {
-                const videoId = vimeoMatch[1];
-                const embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1`;
+                const videoIdVimeo = vimeoMatch[1];
+                const embedUrl = `https://player.vimeo.com/video/${videoIdVimeo}?autoplay=1&muted=1&loop=1`;
                 tempBannerType = 'youtube';
                 tempBannerData = embedUrl;
                 
@@ -1595,7 +1624,7 @@
                 return;
             }
 
-            // URL directa de video (mp4, webm, etc.)
+            // ============ URL DIRECTA DE VIDEO ============
             if (url.match(/\.(mp4|webm|ogg|mov|avi|mkv)$/i)) {
                 tempBannerType = 'video';
                 tempBannerData = url;
@@ -1741,6 +1770,7 @@
                         bannerImage.style.display = 'none';
                         bannerVideo.style.display = 'none';
                         bannerContainer.style.background = 'none';
+                        console.log('🎬 Banner YouTube cargado:', profile.banner);
                     } else if (profile.bannerType === 'video') {
                         tempBannerType = 'video';
                         tempBannerData = profile.banner;
@@ -1788,7 +1818,7 @@
             document.getElementById('settingsNewPassword').addEventListener('input', checkPasswordStrength);
         });
 
-        // ============ GUARDAR PERFIL ============
+        // ============ GUARDAR PERFIL - CORREGIDO ============
         function saveProfile() {
             console.log('📝 Guardando perfil...');
             const user = getCurrentUser();
@@ -1807,36 +1837,48 @@
 
             if (!users[userIndex].profile) users[userIndex].profile = {};
 
-            // Avatar
+            // ============ AVATAR ============
             if (tempAvatarData) {
                 users[userIndex].profile.avatar = tempAvatarData;
-                console.log('✅ Avatar guardado');
+                console.log('✅ Avatar guardado (temp)');
             } else if (!currentAvatar || currentAvatar === '') {
                 users[userIndex].profile.avatar = '';
                 console.log('✅ Avatar eliminado');
+            } else if (currentAvatar && !tempAvatarData) {
+                // Mantener avatar existente
+                users[userIndex].profile.avatar = currentAvatar;
+                console.log('✅ Avatar mantenido');
             }
 
-            // Banner
+            // ============ BANNER ============
             if (tempBannerData) {
                 users[userIndex].profile.banner = tempBannerData;
                 users[userIndex].profile.bannerType = tempBannerType;
-                console.log('✅ Banner guardado');
+                console.log(`✅ Banner guardado (${tempBannerType}):`, tempBannerData.substring(0, 50) + '...');
+            } else {
+                // Si no hay banner temporal, mantener el existente
+                const currentBanner = document.getElementById('bannerImage').src || 
+                                     document.getElementById('bannerVideo').src || 
+                                     document.getElementById('youtubeIframe').src;
+                if (currentBanner) {
+                    users[userIndex].profile.banner = currentBanner;
+                    users[userIndex].profile.bannerType = tempBannerType;
+                    console.log('✅ Banner mantenido');
+                }
             }
 
-            // Bio
+            // ============ BIO ============
             const bio = document.getElementById('bioInput').value || document.getElementById('bioDisplay').textContent;
             users[userIndex].profile.bio = bio !== 'Sin biografía' ? bio : '';
             console.log('✅ Bio guardada');
 
-            // Pronombre
+            // ============ PRONOMBRE ============
             users[userIndex].profile.pronoun = document.getElementById('pronounText').textContent;
             console.log('✅ Pronombre guardado');
 
-            // Nota
+            // ============ NOTA ============
             users[userIndex].profile.note = document.getElementById('noteDisplay').textContent;
             console.log('✅ Nota guardada');
-
-            // Conexiones (ya se guardan al añadir/eliminar)
 
             localStorage.setItem('yx_users', JSON.stringify(users));
 
@@ -1849,7 +1891,7 @@
             }
 
             tempAvatarData = null;
-            tempBannerData = null;
+            // NO limpiar tempBannerData aquí para mantenerlo en sesión
             showToast('✅ Perfil actualizado correctamente', 'success');
             console.log('✅ Perfil guardado correctamente');
         }
@@ -2245,7 +2287,8 @@
             }, 3000);
         }
 
-        console.log('✅ Profile.js cargado correctamente');
+        console.log('✅ Profile.js - Versión corregida cargada correctamente');
+        console.log('📝 Para probar YouTube, pega: https://youtu.be/-YafsY8FcE8');
     </script>
 </body>
 </html>
