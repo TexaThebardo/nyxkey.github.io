@@ -142,6 +142,7 @@ function loginUser(email, password) {
     const esAdmin = isAdmin(email);
     console.log('👑 ¿Es admin?', esAdmin);
 
+    // ============ CREAR SESIÓN CON DATOS ACTUALIZADOS ============
     const session = {
         user: {
             id: user.id,
@@ -160,11 +161,13 @@ function loginUser(email, password) {
 
     localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
     console.log('✅ Sesión creada para:', user.username);
+    console.log('💰 Saldo en sesión:', user.balance);
 
     user.lastLogin = new Date().toISOString();
     const updatedUsers = users.map(u => u.id === user.id ? user : u);
     localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(updatedUsers));
 
+    // ============ ACTUALIZAR UI ============
     updateUserUI();
     showToast(`👋 Bienvenido, ${user.username}!`, 'success');
     return true;
@@ -214,27 +217,45 @@ function getUsers() {
     }
 }
 
-// ============ ACTUALIZAR SALDO ============
+// ============ ACTUALIZAR SALDO - CON SINCRONIZACIÓN COMPLETA ============
 function updateUserBalance(userId, amount) {
+    console.log('💰 updateUserBalance ejecutado - userId:', userId, 'amount:', amount);
+    
+    // 1. Obtener todos los usuarios
     const users = getUsers();
-    const user = users.find(u => u.id === userId);
-    if (user) {
-        user.balance = (user.balance || 0) + amount;
-        localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex === -1) {
+        console.error('❌ Usuario no encontrado:', userId);
+        return false;
+    }
 
-        const currentUser = getCurrentUser();
-        if (currentUser && currentUser.id === userId) {
-            const session = JSON.parse(localStorage.getItem(AUTH_CONFIG.tokenKey));
-            if (session) {
-                session.user.balance = user.balance;
+    // 2. Actualizar balance en la lista de usuarios
+    const oldBalance = users[userIndex].balance || 0;
+    users[userIndex].balance = oldBalance + amount;
+    localStorage.setItem(AUTH_CONFIG.usersKey, JSON.stringify(users));
+    console.log(`💰 Balance actualizado: $${oldBalance.toFixed(2)} → $${users[userIndex].balance.toFixed(2)}`);
+
+    // 3. Actualizar la sesión del usuario actual si es el mismo
+    const currentUser = getCurrentUser();
+    if (currentUser && currentUser.id === userId) {
+        const sessionData = localStorage.getItem(AUTH_CONFIG.tokenKey);
+        if (sessionData) {
+            try {
+                const session = JSON.parse(sessionData);
+                session.user.balance = users[userIndex].balance;
                 localStorage.setItem(AUTH_CONFIG.tokenKey, JSON.stringify(session));
+                console.log('✅ Sesión actualizada con nuevo saldo:', session.user.balance);
+            } catch (e) {
+                console.error('❌ Error actualizando sesión:', e);
             }
         }
-        
-        updateUserUI();
-        return true;
     }
-    return false;
+
+    // 4. Actualizar UI en tiempo real
+    updateUserUI();
+    
+    return true;
 }
 
 // ============ AÑADIR COMPRA ============
@@ -309,11 +330,14 @@ function toggleUserMenu() {
     }
 }
 
-// ============ ACTUALIZAR UI ============
+// ============ ACTUALIZAR UI - VERSIÓN DEFINITIVA ============
 function updateUserUI() {
     console.log('🔄 updateUserUI ejecutado');
     
+    // Obtener usuario actual de la sesión
     const user = getCurrentUser();
+    
+    // Obtener elementos DOM
     const balanceEl = document.getElementById('userBalance');
     const avatarEl = document.getElementById('userAvatarIcon');
     const nameEl = document.getElementById('userDisplayName');
@@ -321,13 +345,22 @@ function updateUserUI() {
     console.log('👤 Usuario actual:', user);
 
     if (user) {
+        // ============ ACTUALIZAR SALDO DESDE LOCALSTORAGE ============
+        // Obtener el saldo más actualizado desde localStorage
+        const users = getUsers();
+        const fullUser = users.find(u => u.id === user.id);
+        const realBalance = fullUser ? fullUser.balance : user.balance;
+        
+        // Actualizar balance en pantalla
         if (balanceEl) {
-            balanceEl.textContent = `$${user.balance.toFixed(2)}`;
-            console.log(`💰 Saldo actualizado: $${user.balance.toFixed(2)}`);
+            balanceEl.textContent = `$${realBalance.toFixed(2)}`;
+            console.log(`💰 Saldo mostrado en UI: $${realBalance.toFixed(2)}`);
         }
+        
         if (avatarEl) avatarEl.textContent = 'account_circle';
         if (nameEl) nameEl.textContent = user.username || 'Usuario';
 
+        // Verificar admin
         const esAdmin = isAdmin(user.email);
 
         const adminBtn = document.getElementById('adminPanelBtn');
@@ -410,7 +443,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    updateUserUI();
+    // Actualizar UI al cargar la página
+    setTimeout(function() {
+        updateUserUI();
+    }, 100);
 });
 
 // ============ EXPORTAR ============
