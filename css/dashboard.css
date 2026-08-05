@@ -1,13 +1,181 @@
 /* ============================================
-   DASHBOARD STYLES - AÑADIR AL FINAL
+   DASHBOARD STYLES - COMPLETO
    ============================================ */
 
-/* ============ PURCHASES GRID ============ */
+.dashboard-container {
+    display: flex;
+    max-width: 1440px;
+    margin: 0 auto;
+    gap: 24px;
+    padding: 24px 0;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    padding: 20px 12px;
+    height: fit-content;
+    position: sticky;
+    top: 90px;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition);
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.sidebar-link:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.sidebar-link.active {
+    background: rgba(240, 185, 11, 0.1);
+    color: var(--primary);
+}
+
+.sidebar-link .material-icons-outlined {
+    font-size: 22px;
+}
+
+.sidebar-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 8px 16px;
+}
+
+.sidebar-link.logout {
+    color: #e74c3c;
+}
+
+.sidebar-link.logout:hover {
+    background: rgba(231, 76, 60, 0.1);
+}
+
+/* ============ MAIN ============ */
+.dashboard-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.dashboard-section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.dashboard-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.section-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.date-badge {
+    background: var(--bg-card);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-light);
+}
+
+/* ============ STATS ============ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stat-icon.green { background: rgba(46, 204, 113, 0.1); }
+.stat-icon.green .material-icons-outlined { color: #2ecc71; }
+.stat-icon.blue { background: rgba(52, 152, 219, 0.1); }
+.stat-icon.blue .material-icons-outlined { color: #3498db; }
+.stat-icon.purple { background: rgba(155, 89, 182, 0.1); }
+.stat-icon.purple .material-icons-outlined { color: #9b59b6; }
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-value {
+    display: block;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ============ COMPRAS ============ */
 .purchases-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
 }
 
 .purchase-card {
@@ -28,37 +196,40 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
+    padding: 12px 16px;
     background: var(--bg-card);
     border-bottom: 1px solid var(--border-light);
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .purchase-network {
     font-weight: 700;
     color: var(--primary);
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .purchase-bin {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     color: var(--text-primary);
 }
 
 .purchase-date {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
 }
 
 .purchase-details {
-    padding: 16px 20px;
+    padding: 12px 16px;
 }
 
 .detail-row {
     display: flex;
     justify-content: space-between;
-    padding: 6px 0;
+    padding: 4px 0;
     border-bottom: 1px solid var(--border-light);
+    font-size: 13px;
 }
 
 .detail-row:last-child {
@@ -67,31 +238,29 @@
 
 .detail-label {
     color: var(--text-secondary);
-    font-size: 13px;
 }
 
 .detail-value {
     color: var(--text-primary);
     font-weight: 500;
-    font-size: 14px;
 }
 
 .detail-row.card-data {
     background: var(--bg-primary);
-    padding: 8px 12px;
-    border-radius: 8px;
-    margin-top: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-top: 6px;
     border-bottom: none;
 }
 
 .detail-row.card-data .detail-value {
     font-family: 'Courier New', monospace;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--primary);
 }
 
 .purchase-footer {
-    padding: 12px 20px;
+    padding: 8px 16px;
     background: var(--bg-card);
     border-top: 1px solid var(--border-light);
     display: flex;
@@ -99,9 +268,9 @@
 }
 
 .purchase-status {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    padding: 4px 14px;
+    padding: 2px 12px;
     border-radius: 20px;
 }
 
@@ -118,14 +287,203 @@
     border-radius: 20px;
 }
 
+/* ============ ACTIVIDAD ============ */
+.recent-activity {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-top: 16px;
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.activity-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.activity-item {
+    display: flex;
+    gap: 12px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.activity-item:hover {
+    background: var(--bg-hover);
+}
+
+.activity-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.activity-icon .material-icons-outlined {
+    font-size: 20px;
+    color: var(--primary);
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-content p {
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.activity-time {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* ============ TRANSACCIONES ============ */
+.transactions-table {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.transactions-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.transactions-table th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.transactions-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.transaction-type {
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.transaction-type.compra {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+}
+
+.transaction-type.depósito {
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+}
+
+.transaction-type.verificación {
+    background: rgba(155, 89, 182, 0.1);
+    color: #9b59b6;
+}
+
+.status-badge {
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-badge.completado {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+}
+
+.status-badge.pendiente {
+    background: rgba(243, 156, 18, 0.1);
+    color: #f39c12;
+}
+
+.status-badge.fallido {
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
+}
+
+/* ============ EMPTY STATE ============ */
+.empty-state {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-state .material-icons-outlined {
+    font-size: 40px;
+    color: var(--text-muted);
+}
+
 /* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        position: static;
+        padding: 12px;
+    }
+    
+    .sidebar-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .sidebar-link {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    
+    .sidebar-divider {
+        display: none;
+    }
+}
+
 @media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
     .purchases-grid {
         grid-template-columns: 1fr;
     }
-    
-    .purchase-header {
-        flex-wrap: wrap;
-        gap: 8px;
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
 }
