@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.warn('⚠️ loadCart no está definida - asegúrate de cargar cart.js');
     }
     
-    // ============ ACTUALIZAR UI ============
     if (typeof updateUserUI === 'function') {
         updateUserUI();
     } else {
@@ -36,7 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
     renderCatalog();
     updateStats();
     updateDateTime();
-    updateCartBadge();
+    if (typeof updateCartBadge === 'function') {
+        updateCartBadge();
+    }
     
     const overlay = document.getElementById('cartOverlay');
     if (overlay) overlay.addEventListener('click', toggleCart);
