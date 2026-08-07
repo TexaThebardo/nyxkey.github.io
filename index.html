@@ -39,18 +39,22 @@
             </div>
             
             <div class="nav-user">
+                <!-- CARRITO -->
                 <button class="btn-cart" onclick="toggleCart()">
                     <span class="material-icons">shopping_cart</span>
                     <span class="cart-badge" id="cartBadge">0</span>
                 </button>
                 
+                <!-- INFO USUARIO CON INSIGNIAS -->
                 <div class="user-info">
                     <span id="userDisplayName" class="user-name">Invitado</span>
                     <div id="userInsignias" class="user-insignias"></div>
                 </div>
                 
+                <!-- BOTÓN ADMIN -->
                 <button id="adminPanelBtn" class="btn-admin-link" onclick="window.location.href='admin.html'" style="display:none;">
-                    <span class="material-icons">admin_panel_settings</span> Admin
+                    <span class="material-icons">admin_panel_settings</span>
+                    Admin
                 </button>
                 
                 <div class="user-balance" id="userBalanceContainer">
@@ -77,7 +81,7 @@
         </div>
     </nav>
 
-    <!-- ============ HERO ============ -->
+    <!-- ============ HERO CON LOGO ============ -->
     <section class="hero-section">
         <div class="hero-container">
             <div class="hero-content">
@@ -85,16 +89,27 @@
                     <div class="hero-logo-img">
                         <img src="https://www.image2url.com/r2/default/images/1785899642935-9ccd40b0-2e76-44e9-b334-cb4bb35430e4.png" alt="Yx Cards">
                     </div>
-                    <div class="hero-brand">Yx <span>Cards</span></div>
+                    <div class="hero-brand">
+                        Yx <span>Cards</span>
+                    </div>
                 </div>
                 <h1><span class="hero-highlight">Tarjetas</span> en Tiempo Real <span class="hero-badge">LIVE</span></h1>
                 <p>Inventario verificado al instante con más del 99% de precisión</p>
                 <div class="hero-stats">
-                    <div class="stat-item"><span class="stat-number" id="totalCards">0</span><span class="stat-label">Tarjetas Activas</span></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalCards">0</span>
+                        <span class="stat-label">Tarjetas Activas</span>
+                    </div>
                     <div class="stat-divider"></div>
-                    <div class="stat-item"><span class="stat-number" id="totalUsers">0</span><span class="stat-label">Usuarios Registrados</span></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalUsers">0</span>
+                        <span class="stat-label">Usuarios Registrados</span>
+                    </div>
                     <div class="stat-divider"></div>
-                    <div class="stat-item"><span class="stat-number" id="totalAdmins">0</span><span class="stat-label">Administradores</span></div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalAdmins">0</span>
+                        <span class="stat-label">Administradores</span>
+                    </div>
                 </div>
             </div>
             <div class="hero-status">
@@ -115,7 +130,9 @@
                 <h2>Catálogo Disponible</h2>
                 <span class="catalog-badge">Stock Verificado</span>
             </div>
+            
             <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                <!-- ============ BOTONES DE VISTA ============ -->
                 <div class="view-controls">
                     <button class="view-btn active" data-view="grid" onclick="changeView('grid')" title="Vista en tarjetas">
                         <span class="material-icons">grid_view</span>
@@ -130,6 +147,7 @@
                         <span>Compacto</span>
                     </button>
                 </div>
+                
                 <div class="catalog-filters">
                     <div class="filter-group">
                         <span class="material-icons-outlined">filter_alt</span>
@@ -153,7 +171,9 @@
         
         <div class="table-container">
             <div class="table-responsive">
-                <div id="catalogBody"></div>
+                <div id="catalogBody">
+                    <!-- Renderizado por JavaScript -->
+                </div>
             </div>
             <div class="table-footer">
                 <span>Mostrando <span id="showingCount">0</span> tarjetas</span>
@@ -196,7 +216,7 @@
         </div>
     </section>
 
-    <!-- ============ OTP ============ -->
+    <!-- ============ BOT OTP ============ -->
     <section id="otp" class="services-section" style="display:none;">
         <div class="services-grid">
             <div class="service-card full-width">
@@ -254,7 +274,7 @@
         </div>
     </section>
 
-    <!-- ============ CARRITO ============ -->
+    <!-- ============ CARRITO PANEL ============ -->
     <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
     <div class="cart-panel" id="cartPanel">
         <div class="cart-header">
@@ -298,13 +318,18 @@
     <!-- ============ FOOTER ============ -->
     <footer class="footer">
         <div class="footer-container">
-            <div class="footer-brand"><span class="material-icons-outlined">flash_on</span><span>Yx Cards</span><span class="footer-version">v2.0</span></div>
+            <div class="footer-brand">
+                <span class="material-icons-outlined">flash_on</span>
+                <span>Yx Cards</span>
+                <span class="footer-version">v2.0</span>
+            </div>
             <div class="footer-links"><a href="#">Términos</a><a href="#">Privacidad</a><a href="#">Soporte</a><a href="#">API</a></div>
             <div class="footer-social"><a href="#"><i class="fab fa-telegram"></i></a><a href="#"><i class="fab fa-discord"></i></a><a href="#"><i class="fab fa-github"></i></a></div>
         </div>
         <div class="footer-bottom"><span>© 2026 Yx Cards · Plataforma de servicios en tiempo real</span></div>
     </footer>
 
+    <!-- ============ SCRIPTS ============ -->
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
     <script src="js/products.js"></script>
