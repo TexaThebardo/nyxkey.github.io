@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/login.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Eliminado script de Supabase -->
 </head>
 <body>
     <div class="auth-container">
@@ -93,42 +93,54 @@
         </div>
     </div>
 
-    <script src="js/supabase-config.js"></script>
-    <script src="js/supabase-auth.js"></script>
-    <script src="js/auth.js"></script>
     <script>
-        async function handleRegisterDirect(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('regUsername').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('regConfirmPassword').value;
-            const termsChecked = document.getElementById('termsCheck').checked;
-            const btn = document.getElementById('registerBtn');
-            
-            if (!username) { showToast('Ingresa un nombre de usuario', 'error'); return; }
-            if (!email) { showToast('Ingresa un correo electrónico', 'error'); return; }
-            if (!password) { showToast('Ingresa una contraseña', 'error'); return; }
-            if (password.length < 6) { showToast('Mínimo 6 caracteres', 'error'); return; }
-            if (password !== confirmPassword) { showToast('Las contraseñas no coinciden', 'error'); return; }
-            if (!termsChecked) { showToast('Acepta los términos', 'error'); return; }
-            
-            btn.disabled = true;
-            btn.innerHTML = '<span class="material-icons">sync</span> Registrando...';
-            
-            const result = await supabaseRegister(email, password, username);
-            
-            if (result === true) {
-                setTimeout(function() {
-                    window.location.href = 'login.html';
-                }, 1500);
-            } else {
-                btn.disabled = false;
-                btn.innerHTML = '<span class="material-icons">how_to_reg</span> Registrarse';
+        // Función para mostrar mensajes (toast)
+        function showToast(message, type = 'info') {
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.style.position = 'fixed';
+                toastContainer.style.top = '20px';
+                toastContainer.style.right = '20px';
+                toastContainer.style.zIndex = '9999';
+                toastContainer.style.display = 'flex';
+                toastContainer.style.flexDirection = 'column';
+                toastContainer.style.gap = '10px';
+                document.body.appendChild(toastContainer);
             }
+
+            const toast = document.createElement('div');
+            toast.style.background = type === 'error' ? '#dc3545' : (type === 'success' ? '#28a745' : '#17a2b8');
+            toast.style.color = 'white';
+            toast.style.padding = '12px 20px';
+            toast.style.borderRadius = '8px';
+            toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            toast.style.fontFamily = "'Inter', sans-serif";
+            toast.style.fontSize = '0.95rem';
+            toast.style.minWidth = '250px';
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(20px)';
+            toast.style.transition = 'all 0.3s ease';
+            toast.textContent = message;
+
+            toastContainer.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(0)';
+            });
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    if (toast.parentNode) toast.remove();
+                }, 300);
+            }, 3500);
         }
 
+        // Función para alternar visibilidad de contraseña
         function togglePassword(id) {
             const input = document.getElementById(id);
             const icon = input.nextElementSibling.querySelector('.material-icons');
@@ -141,9 +153,109 @@
             }
         }
 
+        // Función de registro SIN Supabase (usando localStorage)
+        function registerUser(email, password, username) {
+            // Validaciones
+            if (!username || !email || !password) {
+                return { success: false, message: 'Todos los campos son obligatorios.' };
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return { success: false, message: 'Correo electrónico no válido.' };
+            }
+
+            if (password.length < 6) {
+                return { success: false, message: 'La contraseña debe tener al menos 6 caracteres.' };
+            }
+
+            // Verificar si el usuario ya existe
+            const users = JSON.parse(localStorage.getItem('yx_users')) || [];
+            const existingUser = users.find(u => u.email === email || u.username === username);
+            if (existingUser) {
+                if (existingUser.email === email) {
+                    return { success: false, message: 'Este correo ya está registrado.' };
+                }
+                if (existingUser.username === username) {
+                    return { success: false, message: 'Este nombre de usuario ya está en uso.' };
+                }
+            }
+
+            // Guardar nuevo usuario
+            const newUser = {
+                id: Date.now().toString(),
+                username: username,
+                email: email,
+                password: password,
+                created_at: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            localStorage.setItem('yx_users', JSON.stringify(users));
+
+            return { success: true, message: 'Registro exitoso. ¡Bienvenido!' };
+        }
+
+        // Manejador del formulario
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('registerForm');
-            form.addEventListener('submit', handleRegisterDirect);
+            const registerBtn = document.getElementById('registerBtn');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const username = document.getElementById('regUsername').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('regConfirmPassword').value;
+                const termsChecked = document.getElementById('termsCheck').checked;
+
+                // Validaciones
+                if (!username) {
+                    showToast('Ingresa un nombre de usuario', 'error');
+                    return;
+                }
+                if (!email) {
+                    showToast('Ingresa un correo electrónico', 'error');
+                    return;
+                }
+                if (!password) {
+                    showToast('Ingresa una contraseña', 'error');
+                    return;
+                }
+                if (password.length < 6) {
+                    showToast('Mínimo 6 caracteres', 'error');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    showToast('Las contraseñas no coinciden', 'error');
+                    return;
+                }
+                if (!termsChecked) {
+                    showToast('Acepta los términos y condiciones', 'error');
+                    return;
+                }
+
+                // Deshabilitar botón
+                registerBtn.disabled = true;
+                registerBtn.innerHTML = '<span class="material-icons">sync</span> Registrando...';
+
+                // Registrar usuario
+                setTimeout(() => {
+                    const result = registerUser(email, password, username);
+
+                    if (result.success) {
+                        showToast(result.message, 'success');
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 1500);
+                    } else {
+                        showToast(result.message, 'error');
+                        registerBtn.disabled = false;
+                        registerBtn.innerHTML = '<span class="material-icons">how_to_reg</span> Registrarse';
+                    }
+                }, 800);
+            });
         });
     </script>
 </body>
