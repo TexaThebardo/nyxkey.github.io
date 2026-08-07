@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="/nyxkey.github.io/css/style.css">
+    <link rel="stylesheet" href="/nyxkey.github.io/css/login.css">
 </head>
 <body>
     <div class="auth-container">
@@ -79,7 +79,7 @@
             </form>
             
             <div class="auth-footer">
-                <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a></p>
+                <p>¿Ya tienes cuenta? <a href="/nyxkey.github.io/login.html">Inicia sesión aquí</a></p>
             </div>
         </div>
         
@@ -89,30 +89,27 @@
                 <p>Accede a herramientas exclusivas para el manejo de tarjetas, verificación en tiempo real y mucho más.</p>
                 <div class="info-features">
                     <div class="feature">
-                        <span class="material-icons">verified</span>
-                        <span>Verificación en tiempo real</span>
+                        <span class="material-icons">shopping_cart</span>
+                        <span>Catálogo actualizado</span>
                     </div>
                     <div class="feature">
-                        <span class="material-icons">android</span>
-                        <span>Bot OTP con IA</span>
+                        <span class="material-icons">analytics</span>
+                        <span>Estadísticas en vivo</span>
                     </div>
                     <div class="feature">
-                        <span class="material-icons">security</span>
-                        <span>100% Seguro</span>
+                        <span class="material-icons">support_agent</span>
+                        <span>Soporte 24/7</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="js/auth.js"></script>
+    <script src="/nyxkey.github.io/js/auth.js"></script>
     <script>
-        // ============ FUNCIÓN DE REGISTRO CON DEPURACIÓN ============
+        // ============ FUNCIÓN DE REGISTRO ============
         function handleRegisterDirect(e) {
             e.preventDefault();
-            console.log('========================================');
-            console.log('📝 REGISTRO INICIADO');
-            console.log('========================================');
             
             const username = document.getElementById('regUsername').value.trim();
             const email = document.getElementById('regEmail').value.trim();
@@ -121,98 +118,48 @@
             const termsChecked = document.getElementById('termsCheck').checked;
             const btn = document.getElementById('registerBtn');
             
-            console.log('📋 Datos ingresados:');
-            console.log('  - Usuario:', username);
-            console.log('  - Email:', email);
-            console.log('  - Password:', password ? '***' : '(vacío)');
-            console.log('  - Confirmar:', confirmPassword ? '***' : '(vacío)');
-            console.log('  - Términos:', termsChecked);
-            
-            // ============ VALIDACIONES ============
             if (!username) {
-                console.log('❌ ERROR: Usuario vacío');
                 showToast('Ingresa un nombre de usuario', 'error');
                 return;
             }
-            
             if (!email) {
-                console.log('❌ ERROR: Email vacío');
                 showToast('Ingresa un correo electrónico', 'error');
                 return;
             }
-            
             if (!password) {
-                console.log('❌ ERROR: Password vacío');
                 showToast('Ingresa una contraseña', 'error');
                 return;
             }
-            
             if (password.length < 6) {
-                console.log('❌ ERROR: Password muy corta (', password.length, 'caracteres)');
                 showToast('Mínimo 6 caracteres', 'error');
                 return;
             }
-            
             if (password !== confirmPassword) {
-                console.log('❌ ERROR: Las contraseñas no coinciden');
                 showToast('Las contraseñas no coinciden', 'error');
                 return;
             }
-            
             if (!termsChecked) {
-                console.log('❌ ERROR: Términos no aceptados');
                 showToast('Acepta los términos', 'error');
                 return;
             }
             
-            console.log('✅ Validaciones pasadas correctamente');
-            
-            // ============ DESHABILITAR BOTÓN ============
             btn.disabled = true;
             btn.innerHTML = '<span class="material-icons">sync</span> Registrando...';
             
-            // ============ LLAMAR AL REGISTRO ============
-            console.log('🔍 Llamando a registerUser()...');
             const result = registerUser(email, password, username);
-            console.log('🔍 Resultado de registerUser():', result);
             
             if (result === true) {
-                console.log('✅ REGISTRO EXITOSO!');
                 showToast('✅ Registro exitoso', 'success');
-                
-                // ============ REDIRECCIÓN ============
-                console.log('🔄 Redirigiendo a login.html...');
-                
-                // Método 1: window.location.href
+                // REDIRECCIÓN AL LOGIN CON LA CARPETA
                 setTimeout(function() {
-                    window.location.href = 'login.html';
+                    window.location.href = '/nyxkey.github.io/login.html';
                 }, 500);
-                
-                // Método 2: fallback
-                setTimeout(function() {
-                    if (window.location.pathname.includes('register.html')) {
-                        console.log('⚠️ Fallback: redirigiendo con replace()');
-                        window.location.replace('login.html');
-                    }
-                }, 1000);
-                
-                // Método 3: último fallback
-                setTimeout(function() {
-                    if (window.location.pathname.includes('register.html')) {
-                        console.log('⚠️ Último fallback: redirigiendo con assign()');
-                        window.location.assign('login.html');
-                    }
-                }, 1500);
-                
             } else {
-                console.log('❌ REGISTRO FALLÓ');
                 btn.disabled = false;
                 btn.innerHTML = '<span class="material-icons">how_to_reg</span> Registrarse';
-                showToast('Error al registrar. Intenta de nuevo.', 'error');
             }
         }
 
-        // ============ TOGGLE PASSWORD ============
         function togglePassword(id) {
             const input = document.getElementById(id);
             const icon = input.nextElementSibling.querySelector('.material-icons');
@@ -227,14 +174,14 @@
 
         // ============ INICIALIZAR ============
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ register.html cargado correctamente');
+            const user = getCurrentUser();
+            if (user) {
+                window.location.href = '/nyxkey.github.io/';
+                return;
+            }
+            
             const form = document.getElementById('registerForm');
             form.addEventListener('submit', handleRegisterDirect);
-            
-            // Verificar localStorage
-            console.log('📦 localStorage disponible:', typeof localStorage !== 'undefined');
-            const users = localStorage.getItem('yx_users');
-            console.log('📦 Usuarios guardados:', users ? JSON.parse(users).length : 0);
         });
     </script>
 </body>
