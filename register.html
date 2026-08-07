@@ -94,10 +94,8 @@
 
     <script>
         // ============================================
-        // FUNCIONES DE UTILIDAD
+        // FUNCIÓN DE HASH (MISMA EN REGISTER Y LOGIN)
         // ============================================
-
-        // Función de hash (DEBE SER LA MISMA QUE EN LOGIN)
         function hashPassword(password) {
             let hash = '';
             for (let i = 0; i < password.length; i++) {
@@ -107,7 +105,9 @@
             return hash;
         }
 
-        // Mostrar mensajes (toast)
+        // ============================================
+        // MOSTRAR MENSAJES
+        // ============================================
         function showToast(message, type = 'info') {
             let toastContainer = document.getElementById('toast-container');
             if (!toastContainer) {
@@ -153,7 +153,9 @@
             }, 3500);
         }
 
-        // Alternar visibilidad de contraseña
+        // ============================================
+        // ALTERNAR CONTRASEÑA
+        // ============================================
         function togglePassword(id) {
             const input = document.getElementById(id);
             const icon = input.nextElementSibling.querySelector('.material-icons');
@@ -167,9 +169,8 @@
         }
 
         // ============================================
-        // FUNCIÓN DE REGISTRO CORREGIDA
+        // FUNCIÓN DE REGISTRO
         // ============================================
-
         function registerUser(email, password, username) {
             // Validaciones
             if (!username || !email || !password) {
@@ -197,14 +198,14 @@
                 }
             }
 
-            // 🔑 GUARDAR CONTRASEÑA HASHEDA (IMPORTANTE)
+            // 🔑 GUARDAR CONTRASEÑA HASHEDA
             const hashedPassword = hashPassword(password);
 
             const newUser = {
                 id: Date.now().toString(),
                 username: username,
                 email: email,
-                password: hashedPassword, // 🔑 Guardamos la contraseña hasheada
+                password: hashedPassword,
                 created_at: new Date().toISOString()
             };
 
@@ -217,7 +218,6 @@
         // ============================================
         // MANEJADOR DEL FORMULARIO
         // ============================================
-
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('registerForm');
             const registerBtn = document.getElementById('registerBtn');
@@ -267,6 +267,7 @@
 
                     if (result.success) {
                         showToast(result.message, 'success');
+                        // ✅ Redirigir al login después de 1.5 segundos
                         setTimeout(() => {
                             window.location.href = 'login.html';
                         }, 1500);
