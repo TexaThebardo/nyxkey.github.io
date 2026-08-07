@@ -24,17 +24,26 @@
             
             <form id="registerForm" class="auth-form">
                 <div class="form-group">
-                    <label><span class="material-icons">person</span> Nombre de Usuario</label>
+                    <label>
+                        <span class="material-icons">person</span>
+                        Nombre de Usuario
+                    </label>
                     <input type="text" id="regUsername" placeholder="Usuario único" required>
                 </div>
                 
                 <div class="form-group">
-                    <label><span class="material-icons">email</span> Correo Electrónico</label>
+                    <label>
+                        <span class="material-icons">email</span>
+                        Correo Electrónico
+                    </label>
                     <input type="email" id="regEmail" placeholder="ejemplo@correo.com" required>
                 </div>
                 
                 <div class="form-group">
-                    <label><span class="material-icons">lock</span> Contraseña</label>
+                    <label>
+                        <span class="material-icons">lock</span>
+                        Contraseña
+                    </label>
                     <div class="password-input">
                         <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required>
                         <button type="button" onclick="togglePassword('regPassword')">
@@ -44,7 +53,10 @@
                 </div>
                 
                 <div class="form-group">
-                    <label><span class="material-icons">lock_outline</span> Confirmar Contraseña</label>
+                    <label>
+                        <span class="material-icons">lock_outline</span>
+                        Confirmar Contraseña
+                    </label>
                     <div class="password-input">
                         <input type="password" id="regConfirmPassword" placeholder="Repite la contraseña" required>
                         <button type="button" onclick="togglePassword('regConfirmPassword')">
@@ -61,7 +73,8 @@
                 </div>
                 
                 <button type="submit" class="btn-primary btn-auth" id="registerBtn">
-                    <span class="material-icons">how_to_reg</span> Registrarse
+                    <span class="material-icons">how_to_reg</span>
+                    Registrarse
                 </button>
             </form>
             
@@ -76,86 +89,130 @@
                 <p>Accede a herramientas exclusivas para el manejo de tarjetas, verificación en tiempo real y mucho más.</p>
                 <div class="info-features">
                     <div class="feature">
-                        <span class="material-icons">shopping_cart</span>
-                        <span>Catálogo actualizado</span>
+                        <span class="material-icons">verified</span>
+                        <span>Verificación en tiempo real</span>
                     </div>
                     <div class="feature">
-                        <span class="material-icons">analytics</span>
-                        <span>Estadísticas en vivo</span>
+                        <span class="material-icons">android</span>
+                        <span>Bot OTP con IA</span>
                     </div>
                     <div class="feature">
-                        <span class="material-icons">support_agent</span>
-                        <span>Soporte 24/7</span>
+                        <span class="material-icons">security</span>
+                        <span>100% Seguro</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="js/auth.js"></script>
     <script>
-        // ============================================
-        // FUNCIÓN DE HASH (MISMA EN REGISTER Y LOGIN)
-        // ============================================
-        function hashPassword(password) {
-            let hash = '';
-            for (let i = 0; i < password.length; i++) {
-                const char = password.charCodeAt(i);
-                hash += ((char << 5) - char).toString(16);
+        // ============ FUNCIÓN DE REGISTRO CON DEPURACIÓN ============
+        function handleRegisterDirect(e) {
+            e.preventDefault();
+            console.log('========================================');
+            console.log('📝 REGISTRO INICIADO');
+            console.log('========================================');
+            
+            const username = document.getElementById('regUsername').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const termsChecked = document.getElementById('termsCheck').checked;
+            const btn = document.getElementById('registerBtn');
+            
+            console.log('📋 Datos ingresados:');
+            console.log('  - Usuario:', username);
+            console.log('  - Email:', email);
+            console.log('  - Password:', password ? '***' : '(vacío)');
+            console.log('  - Confirmar:', confirmPassword ? '***' : '(vacío)');
+            console.log('  - Términos:', termsChecked);
+            
+            // ============ VALIDACIONES ============
+            if (!username) {
+                console.log('❌ ERROR: Usuario vacío');
+                showToast('Ingresa un nombre de usuario', 'error');
+                return;
             }
-            return hash;
+            
+            if (!email) {
+                console.log('❌ ERROR: Email vacío');
+                showToast('Ingresa un correo electrónico', 'error');
+                return;
+            }
+            
+            if (!password) {
+                console.log('❌ ERROR: Password vacío');
+                showToast('Ingresa una contraseña', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                console.log('❌ ERROR: Password muy corta (', password.length, 'caracteres)');
+                showToast('Mínimo 6 caracteres', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                console.log('❌ ERROR: Las contraseñas no coinciden');
+                showToast('Las contraseñas no coinciden', 'error');
+                return;
+            }
+            
+            if (!termsChecked) {
+                console.log('❌ ERROR: Términos no aceptados');
+                showToast('Acepta los términos', 'error');
+                return;
+            }
+            
+            console.log('✅ Validaciones pasadas correctamente');
+            
+            // ============ DESHABILITAR BOTÓN ============
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons">sync</span> Registrando...';
+            
+            // ============ LLAMAR AL REGISTRO ============
+            console.log('🔍 Llamando a registerUser()...');
+            const result = registerUser(email, password, username);
+            console.log('🔍 Resultado de registerUser():', result);
+            
+            if (result === true) {
+                console.log('✅ REGISTRO EXITOSO!');
+                showToast('✅ Registro exitoso', 'success');
+                
+                // ============ REDIRECCIÓN ============
+                console.log('🔄 Redirigiendo a login.html...');
+                
+                // Método 1: window.location.href
+                setTimeout(function() {
+                    window.location.href = 'login.html';
+                }, 500);
+                
+                // Método 2: fallback
+                setTimeout(function() {
+                    if (window.location.pathname.includes('register.html')) {
+                        console.log('⚠️ Fallback: redirigiendo con replace()');
+                        window.location.replace('login.html');
+                    }
+                }, 1000);
+                
+                // Método 3: último fallback
+                setTimeout(function() {
+                    if (window.location.pathname.includes('register.html')) {
+                        console.log('⚠️ Último fallback: redirigiendo con assign()');
+                        window.location.assign('login.html');
+                    }
+                }, 1500);
+                
+            } else {
+                console.log('❌ REGISTRO FALLÓ');
+                btn.disabled = false;
+                btn.innerHTML = '<span class="material-icons">how_to_reg</span> Registrarse';
+                showToast('Error al registrar. Intenta de nuevo.', 'error');
+            }
         }
 
-        // ============================================
-        // MOSTRAR MENSAJES
-        // ============================================
-        function showToast(message, type = 'info') {
-            let toastContainer = document.getElementById('toast-container');
-            if (!toastContainer) {
-                toastContainer = document.createElement('div');
-                toastContainer.id = 'toast-container';
-                toastContainer.style.position = 'fixed';
-                toastContainer.style.top = '20px';
-                toastContainer.style.right = '20px';
-                toastContainer.style.zIndex = '9999';
-                toastContainer.style.display = 'flex';
-                toastContainer.style.flexDirection = 'column';
-                toastContainer.style.gap = '10px';
-                document.body.appendChild(toastContainer);
-            }
-
-            const toast = document.createElement('div');
-            toast.style.background = type === 'error' ? '#dc3545' : (type === 'success' ? '#28a745' : '#17a2b8');
-            toast.style.color = 'white';
-            toast.style.padding = '12px 20px';
-            toast.style.borderRadius = '8px';
-            toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-            toast.style.fontFamily = "'Inter', sans-serif";
-            toast.style.fontSize = '0.95rem';
-            toast.style.minWidth = '250px';
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(20px)';
-            toast.style.transition = 'all 0.3s ease';
-            toast.textContent = message;
-
-            toastContainer.appendChild(toast);
-
-            requestAnimationFrame(() => {
-                toast.style.opacity = '1';
-                toast.style.transform = 'translateX(0)';
-            });
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(20px)';
-                setTimeout(() => {
-                    if (toast.parentNode) toast.remove();
-                }, 300);
-            }, 3500);
-        }
-
-        // ============================================
-        // ALTERNAR CONTRASEÑA
-        // ============================================
+        // ============ TOGGLE PASSWORD ============
         function togglePassword(id) {
             const input = document.getElementById(id);
             const icon = input.nextElementSibling.querySelector('.material-icons');
@@ -168,116 +225,16 @@
             }
         }
 
-        // ============================================
-        // FUNCIÓN DE REGISTRO
-        // ============================================
-        function registerUser(email, password, username) {
-            // Validaciones
-            if (!username || !email || !password) {
-                return { success: false, message: 'Todos los campos son obligatorios.' };
-            }
-
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                return { success: false, message: 'Correo electrónico no válido.' };
-            }
-
-            if (password.length < 6) {
-                return { success: false, message: 'La contraseña debe tener al menos 6 caracteres.' };
-            }
-
-            // Verificar si el usuario ya existe
-            const users = JSON.parse(localStorage.getItem('yx_users')) || [];
-            const existingUser = users.find(u => u.email === email || u.username === username);
-            if (existingUser) {
-                if (existingUser.email === email) {
-                    return { success: false, message: 'Este correo ya está registrado.' };
-                }
-                if (existingUser.username === username) {
-                    return { success: false, message: 'Este nombre de usuario ya está en uso.' };
-                }
-            }
-
-            // 🔑 GUARDAR CONTRASEÑA HASHEDA
-            const hashedPassword = hashPassword(password);
-
-            const newUser = {
-                id: Date.now().toString(),
-                username: username,
-                email: email,
-                password: hashedPassword,
-                created_at: new Date().toISOString()
-            };
-
-            users.push(newUser);
-            localStorage.setItem('yx_users', JSON.stringify(users));
-
-            return { success: true, message: 'Registro exitoso. ¡Bienvenido!' };
-        }
-
-        // ============================================
-        // MANEJADOR DEL FORMULARIO
-        // ============================================
+        // ============ INICIALIZAR ============
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ register.html cargado correctamente');
             const form = document.getElementById('registerForm');
-            const registerBtn = document.getElementById('registerBtn');
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const username = document.getElementById('regUsername').value.trim();
-                const email = document.getElementById('regEmail').value.trim();
-                const password = document.getElementById('regPassword').value;
-                const confirmPassword = document.getElementById('regConfirmPassword').value;
-                const termsChecked = document.getElementById('termsCheck').checked;
-
-                // Validaciones
-                if (!username) {
-                    showToast('Ingresa un nombre de usuario', 'error');
-                    return;
-                }
-                if (!email) {
-                    showToast('Ingresa un correo electrónico', 'error');
-                    return;
-                }
-                if (!password) {
-                    showToast('Ingresa una contraseña', 'error');
-                    return;
-                }
-                if (password.length < 6) {
-                    showToast('Mínimo 6 caracteres', 'error');
-                    return;
-                }
-                if (password !== confirmPassword) {
-                    showToast('Las contraseñas no coinciden', 'error');
-                    return;
-                }
-                if (!termsChecked) {
-                    showToast('Acepta los términos y condiciones', 'error');
-                    return;
-                }
-
-                // Deshabilitar botón
-                registerBtn.disabled = true;
-                registerBtn.innerHTML = '<span class="material-icons">sync</span> Registrando...';
-
-                // Registrar usuario
-                setTimeout(() => {
-                    const result = registerUser(email, password, username);
-
-                    if (result.success) {
-                        showToast(result.message, 'success');
-                        // ✅ Redirigir al login después de 1.5 segundos
-                        setTimeout(() => {
-                            window.location.href = 'login.html';
-                        }, 1500);
-                    } else {
-                        showToast(result.message, 'error');
-                        registerBtn.disabled = false;
-                        registerBtn.innerHTML = '<span class="material-icons">how_to_reg</span> Registrarse';
-                    }
-                }, 800);
-            });
+            form.addEventListener('submit', handleRegisterDirect);
+            
+            // Verificar localStorage
+            console.log('📦 localStorage disponible:', typeof localStorage !== 'undefined');
+            const users = localStorage.getItem('yx_users');
+            console.log('📦 Usuarios guardados:', users ? JSON.parse(users).length : 0);
         });
     </script>
 </body>
