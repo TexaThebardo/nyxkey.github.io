@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/login.css">
-    <!-- Eliminado script de Supabase -->
 </head>
 <body>
     <div class="auth-container">
@@ -94,7 +93,21 @@
     </div>
 
     <script>
-        // Función para mostrar mensajes (toast)
+        // ============================================
+        // FUNCIONES DE UTILIDAD
+        // ============================================
+
+        // Función de hash (DEBE SER LA MISMA QUE EN LOGIN)
+        function hashPassword(password) {
+            let hash = '';
+            for (let i = 0; i < password.length; i++) {
+                const char = password.charCodeAt(i);
+                hash += ((char << 5) - char).toString(16);
+            }
+            return hash;
+        }
+
+        // Mostrar mensajes (toast)
         function showToast(message, type = 'info') {
             let toastContainer = document.getElementById('toast-container');
             if (!toastContainer) {
@@ -140,7 +153,7 @@
             }, 3500);
         }
 
-        // Función para alternar visibilidad de contraseña
+        // Alternar visibilidad de contraseña
         function togglePassword(id) {
             const input = document.getElementById(id);
             const icon = input.nextElementSibling.querySelector('.material-icons');
@@ -153,7 +166,10 @@
             }
         }
 
-        // Función de registro SIN Supabase (usando localStorage)
+        // ============================================
+        // FUNCIÓN DE REGISTRO CORREGIDA
+        // ============================================
+
         function registerUser(email, password, username) {
             // Validaciones
             if (!username || !email || !password) {
@@ -181,12 +197,14 @@
                 }
             }
 
-            // Guardar nuevo usuario
+            // 🔑 GUARDAR CONTRASEÑA HASHEDA (IMPORTANTE)
+            const hashedPassword = hashPassword(password);
+
             const newUser = {
                 id: Date.now().toString(),
                 username: username,
                 email: email,
-                password: password,
+                password: hashedPassword, // 🔑 Guardamos la contraseña hasheada
                 created_at: new Date().toISOString()
             };
 
@@ -196,7 +214,10 @@
             return { success: true, message: 'Registro exitoso. ¡Bienvenido!' };
         }
 
-        // Manejador del formulario
+        // ============================================
+        // MANEJADOR DEL FORMULARIO
+        // ============================================
+
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('registerForm');
             const registerBtn = document.getElementById('registerBtn');
